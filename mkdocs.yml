@@ -1,6 +1,6 @@
 ---
-site_name: "LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" # This must begin with the session ID, e.g. LABXXX-1234 This is my Cisco Live Lab
-site_description: "LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant"
+site_name: "LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant"
+site_description: "LAB-31123: Building an AI Assistant to Manage and Troubleshoot Your Organization"
 site_author: Diego Manuel Jimenez Moreno
 copyright: Copyright &copy; 2026 Cisco
 theme:
@@ -17,14 +17,12 @@ theme:
     - toc.integrate
   custom_dir: docs/overrides
   palette:
-    # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: custom
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
-    # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: custom
@@ -36,7 +34,7 @@ theme:
 extra:
   generator: false
   repo: "https://github.com/WebexCC-SA/LAB-31123.git"
-  site_event: test
+  site_event: WebexOne 2026
 extra_css:
   - stylesheets/extra.css
 extra_javascript:
@@ -45,10 +43,6 @@ extra_javascript:
 plugins:
   - search
   - macros
-  # - with-pdf:
-  #     cover_title: LABXXX-1234
-  #     cover_subtitle: My famous WebexOne Lab
-  #     cover_logo: template_assets/wx1Splash_new.gif
   - glightbox:
       touchNavigation: true
       loop: false
@@ -73,12 +67,11 @@ markdown_extensions:
   - tables
   - pymdownx.details
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.highlight
   - pymdownx.tabbed:
       alternate_style: true
-      
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
@@ -86,21 +79,16 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
 nav:
   - Home: index.md
-  - Welcome: welcome.md
   - Lab:
+      - Welcome: welcome.md
       - Overview: overview.md
-      - Lab 1 - Getting Started: lab1_getting_started.md
+      - Getting Started: lab1_getting_started.md
+      - Lab 1 - AI Assistants and Architecture: lab2_ai-assistant-and-architecture.md
+      - Lab 2 - MCP Fundamentals: lab3_mcp-fundamentals.md
+      - Lab 3 - Webex MCP Servers in Your IDE: lab4_webex-mcp-in-ide.md
+      - Lab 4 - Webex APIs for Troubleshooting: lab5_webex-apis-troubleshooting.md
+      - Lab 5 - Integrate an AI Assistant with a Webex Bot: lab6_bot-integration.md
+      - Lab 6 - Agent Skills for Operational Runbooks: lab7_agent-skills.md
+      - Lab 7 - Build a Custom MCP Server: lab8_custom-mcp-server.md
+      - Lab 8 - Capstone Troubleshooting Workflow: lab9_capstone-workflow.md
       - Conclusion: conclusion.md
-  - Topologies: topologies.md
-  - How to use this guide:
-      - Setting up and using the tool:
-        - Initial Setup: howToUse/initialSetup.md
-        - Using the tool after the initial setup: howToUse/postInitial.md
-        - Publishing your changes: howToUse/syncChanges.md
-      - Useful Tools and Resources: howToUse/usefulTools.md
-      - Importing from Word (docx): howToUse/importingFromWord.md
-      - Styling and Advanced Features:
-        - Custom Features: howToUse/customFeatures.md
-        - Custom Admonitions: howToUse/admonition.md
-      - Looking for Inspiration: howToUse/previousEventLabs.md
-      - Before the Event: howToUse/beforeTheEvent.md
