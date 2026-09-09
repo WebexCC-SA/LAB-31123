@@ -8,10 +8,10 @@ Reference: [Webex Bots Guide](https://developer.webex.com/messaging/docs/bots){:
 
 Upon completion of this section, you will be able to:
 
-- Create a Webex Bot and store its access token securely
-- Receive user messages via WebSocket (Mercury) or webhooks
-- Forward bot messages to an AI agent that calls MCP tools
-- Post assistant responses back to Webex
+1. Create a **Bot** in Webex.
+2. Receive user messages via WebSocket (Mercury)
+3. Forward bot messages to an AI agent that calls MCP tools
+4. Post assistant responses back to Webex
 
 ## Architecture
 
@@ -27,23 +27,33 @@ flowchart LR
 
 The bot handles **transport**. The agent handles **reasoning and tool selection**.
 
-## Step 5.1: Create your lab bot
+## Step 5.1: Create a Bot
 
-1. Log into [Webex for Developers](https://developer.webex.com/my-apps){:target="_blank"}.
-2. Create a bot named **WebexOne-AI-*USERNAME***.
-3. Copy the bot access token into `.env`:
+First you need to create your bot:
+
+1. Log into [developer.webex.com](https://developer.webex.com/){:target="_blank"} with credentials that were provided.
+2. Up on the top right corner of the page, click your avatar and then select [My Webex Apps](https://developer.webex.com/my-apps){:target="_blank"}.
+3. On the ‘Create a New App’ page, find the Bot card and click the ‘Create a Bot’ button.
+
+![Bot](assets/bot_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+4. Fill out the webform to register a new service app.  
+   1. **Bot Name:** WebexOne-*USERNAME*
+   2. **Bot Username:** WebexOne-*USERNAME*
+   3. **Icon:** *Select any color icon*.
+   4. **Description**: “Bot for WebexOne”
+
+![Bot](assets/bot_2.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+5. Copy the bot access token into `.env`:
 
     ```env
     BOT_TOKEN=your_bot_access_token
-    LAB_SPACE_ID=your_lab_space_id
     ```
-
-!!! Note "Screenshot needed"
-    Add screenshot of bot registration in the Developer Portal.
 
 ## Step 5.2: Bot message handler
 
-Review `bot/handler.py` in the lab repository:
+1. Navigate to 05-bots/01_echo.py and review the code:
 
 ```python
 """Receive Webex messages and forward them to the AI assistant."""
@@ -78,6 +88,11 @@ if __name__ == "__main__":
 
 !!! Note
     This lab uses **WebSockets (Mercury)** so no public URL or ngrok tunnel is required. For production, you may use [webhooks](https://developer.webex.com/messaging/docs/api/guides/webhooks){:target="_blank"} instead.
+
+2. Make sure that in your terminal you are in the right folder:
+   * cd 03-bots
+4. Run your code with the following command:  
+   * python 01_echo.py
 
 ## Step 5.3: AI agent loop
 
