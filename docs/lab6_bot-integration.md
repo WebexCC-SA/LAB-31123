@@ -27,6 +27,28 @@ flowchart LR
     Bot --> User
 ```
 
+```mermaid
+sequenceDiagram
+    participant U as Webex User
+    participant B as Webex Bot
+    participant A as AI Assistant
+    participant C as MCP Client
+    participant S as MCP Server
+    participant W as Webex API
+
+    U->>B: "Why are agents offline in Pod 3?"
+    B->>A: Forward message + context
+    A->>A: LLM plans next action
+    A->>C: Call tool list_agents
+    C->>S: tools/call
+    S->>W: GET /v1/telephony/agents
+    W-->>S: Agent status data
+    S-->>C: Filtered JSON
+    C-->>A: Tool result
+    A->>B: Summary + recommended actions
+    B->>U: Response in Webex space
+```
+
 The bot handles **transport**. The agent handles **reasoning and tool selection**.
 
 ## Visual Studio Code
@@ -361,6 +383,30 @@ Now, we will integrate the bot with an LLM. In this scenario we will be using Op
     ```
 
 ## Step 5.5: Build the MCP Client
+
+MCP components
+
+| Component | Role | Analogy |
+| --- | --- | --- |
+| **Host** | Runs the LLM, UI, and one or more MCP clients | The office building |
+| **Client** | Maintains a 1:1 session with one MCP server | The receptionist |
+| **Server** | Exposes tools, resources, prompts; holds credentials | The department |
+
+```mermaid
+flowchart TB
+    subgraph Host[MCP Host]
+        UI[User Interface]
+        LLM[LLM]
+        C1[MCP Client 1]
+        C2[MCP Client 2]
+    end
+    S1[MCP Server - Webex Suite]
+    S2[MCP Server - Custom]
+    C1 <-->|stdio or HTTP| S1
+    C2 <-->|stdio or HTTP| S2
+    LLM --> C1
+    LLM --> C2
+```
 
 To be able to integrate the Webex MCP Clients into your Assistant, you need to have a MCP Client.
 
