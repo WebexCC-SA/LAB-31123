@@ -15,7 +15,7 @@ Upon completion of this section, you will be able to:
 | Interface | Context | Best for |
 | --- | --- | --- |
 | Web chat (e.g., claude.ai) | Manual prompts and pasted content | Questions, brainstorming, one-off code |
-| IDE assistant (Cursor, Copilot) | Open files, workspace, selected code | Development, refactoring, in-flow automation |
+| IDE + API LLM (this lab: VS Code + OpenAI) | Project files, terminal, MCP config | Development and OpenAI-powered assistant in Python |
 | AI agent | Tools, MCP, skills, guardrails | 24/7 operational tasks, multi-step workflows |
 
 !!! Note

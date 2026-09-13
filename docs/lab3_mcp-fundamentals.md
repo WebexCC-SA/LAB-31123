@@ -64,7 +64,7 @@ flowchart TB
 
 | Transport | Use case | Notes |
 | --- | --- | --- |
-| **stdio** | Local subprocess (Cursor, Claude Desktop) | Same machine, no TLS required |
+| **stdio** | Local subprocess (`mcp-remote` in VS Code, Claude Desktop, etc.) | Same machine, no TLS required |
 | **Streamable HTTP** | Remote / shared infrastructure | Requires TLS, auth, CORS |
 
 ## Step 2.4: Elicitation and guardrails

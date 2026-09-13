@@ -1,6 +1,8 @@
 # Lab 3 - Webex MCP Servers in Visual Studio Code
 
-In this section, you will connect **official Webex MCP servers** to **Visual Studio Code** (with GitHub Copilot) and execute organizational tasks through natural language.
+In this section, you will connect **official Webex MCP servers** in **Visual Studio Code** and prepare to use them with the **OpenAI-powered lab assistant** (Python + API key from your instructor).
+
+This lab **does not use GitHub Copilot**. VS Code is your editor and MCP configuration surface; the LLM runs in the lab Python code using `OPENAI_API_KEY` (see Getting Started and Lab 5).
 
 References:
 
@@ -17,7 +19,8 @@ Upon completion of this section, you will be able to:
 - Identify which Webex MCP servers are available and when to use the unified Suite server
 - Confirm your organization has provisioned MCP access in Control Hub
 - Choose an authentication method appropriate for VS Code
-- Connect to a Webex MCP server and run tools from Copilot Chat
+- Register a Webex MCP server in VS Code and confirm it connects
+- Understand how Webex MCP authentication pairs with the OpenAI assistant in later labs
 
 ## Prerequisites — Control Hub provisioning
 
@@ -83,8 +86,8 @@ Webex documents **two authorization methods** for AI clients:
 
 | Method | Best for | How it works |
 | --- | --- | --- |
-| **1. Token-based (WCIT)** | **This lab** — VS Code with GitHub Copilot | You generate a **WCIT** (Webex Client Identity Token) on the [Webex Agentic Token](https://developer.webex.com/agentic-token){:target="_blank"} page. The token is issued with only `spark:mcp`. Extra scopes are requested at runtime through **MCP elicitation** when a tool needs them. |
-| **2. OAuth 2.0 (Integration)** | Clients without elicitation, shared team setups, production | You create a **Webex Integration** with `spark:mcp` plus the scopes your tools need, then connect via `mcp-remote` in VS Code. |
+| **1. Token-based (WCIT)** | Quick personal setup; works with MCP clients that support **elicitation** | Generate a **WCIT** on [Webex Agentic Token](https://developer.webex.com/agentic-token){:target="_blank"} (`spark:mcp` only; extra scopes via elicitation at tool time). |
+| **2. OAuth 2.0 (Integration)** | **Recommended for this lab** when not using GitHub Copilot | Create a **Webex Integration** with `spark:mcp` and the tool scopes you need; connect via `mcp-remote` in VS Code. Avoids relying on a Copilot-style elicitation UI. |
 
 Reference: [Authentication](https://developer.webex.com/mcp/docs/webex-agentic-mcp-servers#authentication){:target="_blank"}
 
@@ -107,13 +110,25 @@ Reference: [Provisioning on Control Hub — Authentication](https://developer.we
 
 **User Token** here means an org-level Control Hub setting for the app — not a token you paste into VS Code. For hands-on work in VS Code, you still use **WCIT** or **OAuth** as described in the developer guide.
 
-### Which method should this lab use?
+### Which Webex auth method should this lab use?
 
 | Scenario | Recommendation |
 | --- | --- |
-| Individual lab workstation, Copilot supports elicitation | **WCIT** (fastest) |
-| Tool calls fail because scopes were not granted | Regenerate WCIT and approve elicitation prompts, **or** switch to OAuth Integration with full scopes |
-| Shared automation, CI, or no elicitation support | **OAuth Integration** |
+| **LAB-31123 (VS Code + OpenAI, no Copilot)** | **OAuth Integration** for MCP (Step 3.6), or **WCIT** if your instructor confirms elicitation works in your MCP setup |
+| Instructor provides only WCIT and a simple MCP connectivity check | **WCIT** (Step 3.1–3.2) |
+| Tool calls fail with scope errors | OAuth Integration with full scopes from the server product page |
+| Production shared bot / service account | OAuth Integration or Service App (Lab 5) |
+
+### OpenAI authentication (separate from Webex)
+
+The **OpenAI API key** is independent of Webex MCP:
+
+| Variable | Purpose |
+| --- | --- |
+| `OPENAI_API_KEY` | Instructor-provided key for chat completions in lab Python (`05-bots/02_llm.py` and later) |
+| `OPENAI_MODEL` | Model id (for example `gpt-5-nano` — use the value specified for your pod) |
+
+Configure these in `.env` during Getting Started. The OpenAI key is **never** sent to Webex MCP servers.
 
 ## Step 3.1: Generate a WCIT token (lab default)
 
@@ -135,29 +150,28 @@ WEBEX_WCIT_TOKEN=your_wcit_token_here
 
 See also: [Integrate Webex MCP — Token-Based Authentication](https://developer.webex.com/mcp/docs/webex-agentic-mcp-servers#authentication){:target="_blank"}.
 
-## Step 3.2: Connect Webex Suite MCP in VS Code (WCIT)
+## Step 3.2: Connect Webex Suite MCP in VS Code
 
 Prerequisites:
 
-- [GitHub Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot) extension installed and signed in
-- Copilot updated to a version that supports MCP and elicitation
+- [Node.js](https://nodejs.org/){:target="_blank"} installed (`npx` available for `mcp-remote`)
+- VS Code with MCP support (use the version documented for your event image)
+- **Webex:** WCIT (Step 3.1) **or** OAuth Integration (Step 3.6)
 
-### Option A — One-click install (recommended)
+Official reference: [VS Code + Webex MCP](https://developer.webex.com/mcp/docs/webex-agentic-mcp-servers-vscode){:target="_blank"} (Cisco also documents a Copilot-based flow; this lab uses **OpenAI in Python** instead of Copilot Chat).
 
-Follow [VS Code — Method 1: Token-based (WCIT)](https://developer.webex.com/mcp/docs/webex-agentic-mcp-servers-vscode){:target="_blank"}:
+### Option A — WCIT + manual `mcp.json` (token-based)
 
-1. On the developer doc page, use the install widget with:
-   - **Server name:** `webex-suite`
-   - **Server URL:** `https://mcp.webexapis.com/mcp/webex-suite`
-   - **WCIT Token:** your generated token
-2. After install, open the MCP server entry and select **Start Server**.
+Follow [VS Code — Method 1: Token-based (WCIT)](https://developer.webex.com/mcp/docs/webex-agentic-mcp-servers-vscode){:target="_blank"} if you use WCIT:
+
+1. Use the install widget on the doc page **or** add the workspace file below.
+2. In VS Code, open the **Command Palette** and run **MCP: List Servers** (or your build’s equivalent).
+3. Start the **webex-suite** server and confirm it reports connected.
 
 !!! Note "Screenshot needed"
-    Add screenshot of VS Code MCP view showing **webex-suite** connected and tools discovered.
+    Add screenshot of VS Code MCP view showing **webex-suite** connected.
 
-### Option B — Manual `mcp.json`
-
-Add a workspace file `.vscode/mcp.json` (or edit your user-level `mcp.json` per VS Code docs):
+Add a workspace file `.vscode/mcp.json` (or edit your user-level `mcp.json`):
 
 ```json
 {
@@ -182,26 +196,36 @@ Replace `YOUR_WCIT_TOKEN` with your WCIT. Reload the VS Code window after saving
 !!! Note
     Exact `mcp-remote` flags may vary by version. Prefer the **one-click install** from the official VS Code guide if manual JSON fails.
 
-## Step 3.3: Approve scope elicitation
+## Step 3.3: Scope elicitation (WCIT only)
 
-When a tool needs scopes beyond `spark:mcp`, the server uses **MCP elicitation** to ask you to approve access (for example `spark:messages_read` before searching messages).
+If you use **WCIT**, tools that need more than `spark:mcp` may trigger **MCP elicitation** (scope approval in the MCP client).
 
-1. Run a tool that requires extra scopes (see Step 3.4).
-2. When prompted, review the requested scopes and approve.
-3. If you deny or dismiss the prompt, the tool call fails — this is expected.
+1. When your MCP client prompts you, review requested scopes and approve.
+2. If nothing prompts you and tools fail, switch to **OAuth Integration** (Step 3.6).
 
-If elicitation never appears and tools fail with **401** or scope errors, ask your admin whether the app and tools are enabled in Control Hub, then try **OAuth Integration** (Step 3.6).
+If you use **OAuth Integration** with scopes pre-selected on the Integration, you typically **skip** elicitation for those scopes.
 
-## Step 3.4: Verify connectivity and run tools
+## Step 3.4: Verify connectivity
 
-In **Copilot Chat** (Agent mode if available), try:
+### A. Confirm the MCP server in VS Code
 
-```text
-List the Webex MCP tools from the webex-suite server and group them by area (Meetings, Messaging, Vidcast, Calling).
+1. **MCP: List Servers** — `webex-suite` appears and can start without errors.
+2. Check the MCP output log for authentication success (no repeated 401 errors).
+
+### B. Confirm OpenAI (for the assistant path)
+
+From the lab repo root with your venv active:
+
+```bash
+python -c "import os; from dotenv import load_dotenv; load_dotenv(); assert os.getenv('OPENAI_API_KEY'), 'Set OPENAI_API_KEY in .env'"
 ```
 
+You will run natural-language + MCP tool workflows through the **Python bot** in Lab 5 (`05-bots/02_llm.py` and following steps), not through Copilot Chat.
+
+**Sample user messages to try in Webex after Lab 5 MCP integration:**
+
 ```text
-Search my Webex spaces and show the title and ID for each one.
+List my Webex spaces and show the title and ID for each one.
 ```
 
 ```text
@@ -227,11 +251,11 @@ To add **Messaging-only** or **Vidcast-only** servers, repeat Step 3.2 with:
 
 Use separate MCP server entries in VS Code (for example `webex-messaging`, `webex-vidcast`).
 
-## Step 3.6: OAuth Integration (alternative to WCIT)
+## Step 3.6: OAuth Integration (recommended without GitHub Copilot)
 
 Use this path when:
 
-- Your client does not support elicitation
+- You are **not** using GitHub Copilot for MCP chat (this lab)
 - You need all scopes pre-authorized for demos or automation
 - Your security team requires a registered Integration with redirect URI control
 
@@ -275,7 +299,7 @@ Complete the browser login when VS Code starts the server.
 | Multi-user / shared agents | Each user generates WCIT | One Integration; each user completes OAuth |
 | Audit and compliance | User-bound tokens | Clear app registration in Control Hub |
 
-**Lab:** WCIT is the fastest way to learn MCP in VS Code.
+**Lab:** Use **OAuth Integration** for Webex MCP if you are on **OpenAI + Python** only; use **WCIT** if your instructor standardizes on token-based MCP connectivity checks.
 
 **Production assistants** (shared bots, 24/7 agents, strict governance) usually standardize on **OAuth Integration** (or org-configured OAuth in Control Hub) so scopes, redirect URIs, and app ownership are explicit.
 
@@ -289,10 +313,10 @@ To build an Integration for later labs:
 ## Exercise checklist
 
 - [ ] Admin confirmed MCP servers enabled in Control Hub
-- [ ] WCIT generated and configured in VS Code
-- [ ] `webex-suite` server started successfully
-- [ ] At least one elicitation prompt approved for additional scopes
-- [ ] Successful tool call (spaces, meetings, or messages)
+- [ ] `OPENAI_API_KEY` and `OPENAI_MODEL` set in `.env`
+- [ ] WCIT **or** OAuth Integration configured for Webex MCP
+- [ ] `webex-suite` server started successfully in VS Code
+- [ ] Ready for Lab 5 bot + OpenAI + MCP exercises
 - [ ] Notes on whether OAuth Integration would be better for your org's production assistant
 
 ## Troubleshooting
@@ -301,7 +325,8 @@ To build an Integration for later labs:
 | --- | --- |
 | Connection failed | Server URL, WCIT not expired, internet access |
 | 401 Unauthorized | Generate a new WCIT on [agentic-token](https://developer.webex.com/agentic-token){:target="_blank"}; verify `Bearer` prefix; confirm token was not revoked |
-| Tools not listed | Valid JSON in `mcp.json`, reload VS Code, Copilot extension updated |
+| Tools not listed | Valid JSON in `mcp.json`, reload VS Code, Node/`mcp-remote` installed |
+| OpenAI 401 / 403 | Check instructor key and `OPENAI_MODEL`; do not commit `.env` |
 | Tool fails after connect | Scope not granted — approve elicitation or use OAuth with full scopes |
 | Server not visible at all | **Control Hub** — app blocked or tools disabled for org |
 
@@ -310,5 +335,5 @@ More detail: [Integrate Webex MCP — Troubleshooting](https://developer.webex.c
 ## Content still to define
 
 - Lab-specific Control Hub screenshots (Agentic Apps → Webex Suite → Tools enabled)
-- Confirmed `mcp-remote` / Copilot versions for event workstations
-- Whether instructors demo OAuth Integration in addition to WCIT
+- Confirmed `mcp-remote` and VS Code versions for event workstations
+- Standard pod choice: WCIT vs OAuth Integration for Webex MCP

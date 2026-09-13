@@ -88,7 +88,7 @@ Configure your MCP host or agent framework to load skills from the lab repositor
 ```
 
 !!! Note
-    Exact configuration varies by client. Update this section with Cursor / custom agent settings before the event.
+    Exact configuration varies by client. Update this section with the lab OpenAI agent settings before the event.
 
 ## Step 6.4: Run a skill-guided scenario
 
@@ -115,6 +115,6 @@ Create a second skill for one of:
 
 ## Content still to define
 
-- Supported skill clients in the lab (Cursor, custom agent, etc.)
+- How skills are loaded in the lab Python OpenAI agent
 - Sample skill folders in the lab code repository
 - Evaluation rubric for skill quality (under 500 lines, gotchas, output templates)
