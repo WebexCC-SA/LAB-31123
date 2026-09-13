@@ -1,4 +1,4 @@
-# Lab 3 - Webex MCP Servers in Your IDE
+# Lab 1 - Webex MCP Servers in Your IDE
 
 In this section, you will connect **official Webex MCP servers** to your IDE to execute organizational tasks through natural language.
 
