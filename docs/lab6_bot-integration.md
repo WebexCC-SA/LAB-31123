@@ -29,6 +29,32 @@ flowchart LR
 
 The bot handles **transport**. The agent handles **reasoning and tool selection**.
 
+## Visual Studio Code
+
+We will continue using Visual Studio Code from now on for the development using Python
+
+1. Go to the **Source Control** tab and click **Clone Repository**:
+
+    ![vsc_clone](./assets/docx-image-005.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+2. Type the following:
+
+    - https://github.com/diegomjimenez/WebexOne2026.git
+
+    ![vsc_repo](./assets/docx-image-006.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+3. Select a directory to save the project.
+4. Click on **Yes, I trust the authors** if a pop-up appears.
+5. From the top bar, click on **Terminal** > **New terminal**.
+6. Create a virtual environment:
+
+    - python -m venv webexone2026
+    - .\webexone2026\Scripts\activate.ps1
+
+7. Install the requirements:
+
+    - pip install -r requirements.txt
+
 ## Step 5.1: Create a Bot
 
 First you need to create your bot:
