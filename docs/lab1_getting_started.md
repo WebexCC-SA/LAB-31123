@@ -5,7 +5,7 @@ Welcome to **LAB-31123: Troubleshoot and Manage Your Organization with an AI Ass
 ## Tools used in this lab
 
 - **Webex Client** — interact with your bot and verify assistant responses
-- **Cursor or VS Code** — MCP host and development environment
+- **Visual Studio Code** (with GitHub Copilot) — MCP host and development environment
 - **Webex for Developers** — create bots and review API documentation
 - **Python 3.10+** — run bot and MCP server samples
 
@@ -20,7 +20,7 @@ Use the credentials provided by your lab instructor:
 
 ## Clone the lab repository
 
-1. Open **Visual Studio Code** or **Cursor** on your lab workstation.
+1. Open **Visual Studio Code** on your lab workstation and sign in to **GitHub Copilot**.
 2. Clone the lab code repository:
 
     ```bash
@@ -45,34 +45,19 @@ Use the credentials provided by your lab instructor:
 
     ```env
     BOT_TOKEN=
-    WEBEX_ACCESS_TOKEN=
+    WEBEX_WCIT_TOKEN=
     WEBEX_ORG_ID=
     OPENAI_API_KEY=
     MCP_SERVER_COMMAND=
     ```
 
-## Configure your MCP host
+## Prepare for Webex MCP (Lab 3)
 
-Add Webex MCP servers to your IDE configuration file.
+You will connect to hosted Webex MCP servers from VS Code in **Lab 3 — Webex MCP Servers in Visual Studio Code**.
 
-**Cursor** (`~/.cursor/mcp.json` on macOS/Linux):
+Before the event, confirm with your instructor that required MCP servers are **enabled in Control Hub** ([provisioning guide](https://developer.webex.com/mcp/docs/provisioning-on-control-hub){:target="_blank"}).
 
-```json
-{
-  "mcpServers": {
-    "webex-suite": {
-      "command": "npx",
-      "args": ["-y", "@webex/mcp-server-suite"],
-      "env": {
-        "WEBEX_ACCESS_TOKEN": "YOUR_LAB_ACCESS_TOKEN"
-      }
-    }
-  }
-}
-```
-
-!!! Note "Screenshot needed"
-    Add screenshot of Cursor Settings → MCP showing connected Webex MCP servers and available tools.
+Generate a **WCIT** (Webex Client Identity Token) from the Developer Portal when you reach Lab 3 — see [Integrate Webex MCP with AI Clients](https://developer.webex.com/mcp/docs/webex-agentic-mcp-servers){:target="_blank"}.
 
 ## Create your lab Webex space
 

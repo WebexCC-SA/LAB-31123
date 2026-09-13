@@ -36,7 +36,7 @@ The bot is the interaction channel. The agent is the system that reasons, select
 Upon completion of this lab, you will be able to:
 
 - Explain the difference between a web chat interface, an IDE-embedded assistant, and an operational AI agent
-- Configure Webex MCP servers in an MCP-compatible IDE such as Cursor or VS Code
+- Configure official Webex MCP servers in Visual Studio Code with GitHub Copilot
 - Use MCP tools, resources, and prompts to manage and troubleshoot Webex organization data
 - Connect a Webex Bot to an AI assistant for interactive troubleshooting workflows
 - Apply Agent Skills to encode operational runbooks and best practices
@@ -46,7 +46,7 @@ Upon completion of this lab, you will be able to:
 ## Prerequisites
 
 - Basic familiarity with REST APIs and JSON
-- Comfort using an IDE (VS Code or Cursor)
+- Comfort using Visual Studio Code with GitHub Copilot
 - Webex lab credentials provided for the session
 - Python 3.10+ (for bot and custom MCP exercises)
 
@@ -55,7 +55,7 @@ Upon completion of this lab, you will be able to:
 | Tool | Purpose |
 | --- | --- |
 | Webex Client | Verify bot messages and assistant outcomes |
-| Cursor or VS Code | IDE with MCP client configuration |
+| Visual Studio Code + GitHub Copilot | MCP host for Webex MCP servers |
 | Webex for Developers | Bots, integrations, and API documentation |
 | Python | Bot handler and custom MCP server samples |
 
