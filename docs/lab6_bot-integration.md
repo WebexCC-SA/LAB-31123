@@ -206,22 +206,142 @@ First you need to create your bot:
 
 ## Step 5.4: LLM
 
-1. Navigate to 05-bots/02_llm.py and review the code:
+Now, we will integrate the bot with an LLM. In this scenario we will be using OpenAI models.
 
-```python
-"""One turn of the assistant: plan → MCP tools → respond."""
+1. Make sure you have your key in `.env`:
 
-def run_assistant_turn(user_message: str, user_email: str, room_id: str) -> str:
-    # 1. Build context (user, space, org policies from skills)
-    # 2. Call LLM with available MCP tool definitions
-    # 3. Execute tool calls through MCP client
-    # 4. Return human-readable summary for Webex
-    return "Placeholder: connect LLM + MCP client here."
-```
+    ```env
+    BOT_TOKEN=your_bot_access_token
+    OPENAI_API_KEY=your_openai_api_key
+    ```
+    
+2. Navigate to 05-bots/02_llm.py and review the code:
+
+    ```python
+    import logging
+    import os
+    
+    import requests
+    from dotenv import load_dotenv
+    
+    from websocket_client import WebSocketClient
+    
+    # Prefer the OS trust store (Windows/macOS/Linux) so company HTTPS inspection, whose CA
+    # lives there but not in certifi, still verifies. Falls back to certifi if unavailable.
+    try:
+        import truststore
+    
+        truststore.inject_into_ssl()
+    except ImportError:
+        pass
+    
+    load_dotenv()
+    
+    OPENAI_URL = "https://api.openai.com/v1/chat/completions"
+    OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-5-nano")
+    ERROR_REPLY = "Sorry, I could not reach the AI service right now. Please try again in a moment."
+    
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    log = logging.getLogger("llm-bot")
+    
+    BOT_TOKEN = os.getenv("BOT_TOKEN")
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+    if not BOT_TOKEN:
+        raise SystemExit("Set BOT_TOKEN in your .env file")
+    if not OPENAI_API_KEY:
+        raise SystemExit("Set OPENAI_API_KEY in your .env file")
+    
+    
+    def ask_llm(user_text: str) -> str:
+        response = requests.post(
+            OPENAI_URL,
+            headers={
+                "Authorization": f"Bearer {OPENAI_API_KEY}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": OPENAI_MODEL,
+                "messages": [{"role": "user", "content": user_text}],
+            },
+            timeout=60,
+        )
+        response.raise_for_status()
+        return response.json()["choices"][0]["message"]["content"]
+    
+    
+    def handle_message(message):
+        text = (message.get("text") or "").strip()
+        if not text:
+            return
+    
+        sender = message["personEmail"]
+        log.info(f"Received from {sender}: {text}")
+    
+        # Details stay in the terminal; the user only ever sees ERROR_REPLY.
+        try:
+            reply = ask_llm(text)
+        except requests.exceptions.SSLError:
+            log.error(
+                "TLS verification failed. If your company inspects HTTPS traffic, install the "
+                "requirements (truststore) or point SSL_CERT_FILE at your corporate CA bundle."
+            )
+            reply = ERROR_REPLY
+        except Exception:
+            log.exception("LLM call failed")
+            reply = ERROR_REPLY
+    
+        bot.send_message(message["roomId"], reply)
+        log.info(f"Sent to {sender}: {reply}")
+    
+    
+    if __name__ == "__main__":
+        bot = WebSocketClient(access_token=BOT_TOKEN, on_message=handle_message)
+        log.info(f"Listening as {bot.me['emails'][0]} via WebSocket... (Ctrl+C to stop)")
+        log.info(f"OpenAI model: {OPENAI_MODEL}")
+        try:
+            bot.run()
+        except KeyboardInterrupt:
+            log.info("Stopped.")
+    ```
+
+    !!! Warning "Model"
+        Note that for this lab "gpt-5-nano" model is forced. If you try to change it you will get 403.
+
+
+3. Run your code with the following command:
+
+   * python 02_llm.py
+
+4. You should instantly get an answer:
+
+    ![Bot](assets/bot_4.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+5. You can see something similar in the terminal:
+
+    ```bash
+    2026-09-13 14:44:01,915 INFO Received from diejimen@cisco.com: Hello
+    2026-09-13 14:44:05,830 INFO Sent to diejimen@cisco.com: Hi there! 👋 How can I help today?
+    
+    I can: 
+    - answer questions and explain topics
+    - help with writing, editing, or brainstorming
+    - assist with math, coding, or debugging
+    - translate or summarize text
+    - plan projects or study goals
+    - chat about nearly anything
+    
+    Tell me what you’re working on or ask me to do something, and we’ll start from there.
+    ```
+
+## Step 5.5: Build the MCP Client
+
+To be able to integrate the Webex MCP Clients into your Assistant, you need to have a MCP Client.
+
+
 
 Replace the placeholder with your lab LLM and MCP client integration.
 
-## Step 5.4: Test the integration
+## Step 5.6: Webex MCP Integration
 
 1. Start the bot handler:
 
@@ -239,22 +359,11 @@ Replace the placeholder with your lab LLM and MCP client integration.
 
 4. Verify the assistant response appears in the conversation.
 
-## Step 5.5: Optional — webhook alternative
 
-For webhook-based bots, you need a publicly reachable HTTPS endpoint. Tools like ngrok or Localtunnel can expose a local server during development.
+## Extra: Security
 
-!!! Note "Content still to define"
-    Document webhook URL registration steps if the lab offers a hosted tunnel service.
+So far, we have not introduce any security, therefore any user in or outsite your organization is able right now to run queries against your assistant.
 
-## Exercise checklist
+You may want to introduce some security, to not only do not allow users outside your organization to access it, but also to only allow admin to run specific calls.
 
-- [ ] Bot created and token stored in `.env`
-- [ ] Bot receives messages over WebSocket
-- [ ] At least one MCP tool invoked in response to a user question
-- [ ] Reply posted back to the Webex space
-
-## Content still to define
-
-- Final `run_assistant_turn()` implementation (OpenAI, Azure OpenAI, or lab-provided LLM)
-- Rate limits and max tool calls per user message
 - Allowed sender domain restrictions for the lab bot
