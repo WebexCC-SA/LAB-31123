@@ -8,6 +8,7 @@ References:
 - [Integrate Webex MCP with AI Clients](https://developer.webex.com/mcp/docs/webex-agentic-mcp-servers){:target="_blank"}
 - [VS Code Configuration](https://developer.webex.com/mcp/docs/webex-agentic-mcp-servers-vscode){:target="_blank"}
 - [Provisioning on Control Hub](https://developer.webex.com/mcp/docs/provisioning-on-control-hub){:target="_blank"}
+- [Webex Agentic Token (WCIT)](https://developer.webex.com/agentic-token){:target="_blank"}
 
 ## Learning Objectives
 
@@ -35,18 +36,42 @@ Administrators configure governance per app (allow/block, tool enablement, schem
 
 ## Available Webex MCP servers
 
-Cisco hosts remote MCP servers at `https://mcp.webexapis.com/mcp/...`. Use the [overview](https://developer.webex.com/mcp/docs/webex-mcp-server-overview){:target="_blank"} and per-server docs for the latest list.
+Use the [Webex MCP Server Overview](https://developer.webex.com/mcp/docs/webex-mcp-server-overview){:target="_blank"} for the latest catalog. The official servers available today are:
 
-| Server | Server URL | When to use |
+| MCP server | Documentation | Server URL |
 | --- | --- | --- |
-| **Webex Suite MCP** (recommended starting point) | `https://mcp.webexapis.com/mcp/webex-suite` | One connection for Meetings, Messaging, Calling, and core Vidcast workflows ([docs](https://developer.webex.com/mcp/docs/webex-suite-mcp-server){:target="_blank"}) |
-| **Meetings MCP** | `https://mcp.webexapis.com/mcp/webex-meeting` | Meeting-focused agents ([docs](https://developer.webex.com/mcp/docs/meetings-mcp-server){:target="_blank"}) |
-| **Messaging MCP** | `https://mcp.webexapis.com/mcp/webex-messaging` | Spaces, messages, memberships, files ([docs](https://developer.webex.com/mcp/docs/messaging-mcp-server){:target="_blank"}) |
-| **Vidcast MCP** | `https://mcp.webexapis.com/mcp/vidcast` | Full Vidcast library, analytics, and search ([docs](https://developer.webex.com/mcp/docs/vidcast-mcp-server){:target="_blank"}) |
+| **Connect CPaaS MCP Server** | [Connect CPaaS MCP](https://developer.webex.com/mcp/docs/connect-mcp-server){:target="_blank"} | **Regional** — use the URL that matches your Webex Connect tenant (see table below) |
+| **Contact Center MCP Server** | [Contact Center MCP](https://developer.webex.com/mcp/docs/contact-center-mcp-server){:target="_blank"} | **Tenant-specific** — sign in on the product page to copy your regional URL |
+| **Contact Center Operation MCP Server** | [Contact Center Operation MCP](https://developer.webex.com/mcp/docs/contact-center-operation-mcp-server){:target="_blank"} | **Tenant-specific** — sign in on the product page to copy your server URL |
+| **Meetings MCP Server** | [Meetings MCP](https://developer.webex.com/mcp/docs/meetings-mcp-server){:target="_blank"} | `https://mcp.webexapis.com/mcp/webex-meeting` |
+| **Messaging MCP Server** | [Messaging MCP](https://developer.webex.com/mcp/docs/messaging-mcp-server){:target="_blank"} | `https://mcp.webexapis.com/mcp/webex-messaging` |
+| **Vidcast MCP Server** | [Vidcast MCP](https://developer.webex.com/mcp/docs/vidcast-mcp-server){:target="_blank"} | `https://mcp.webexapis.com/mcp/vidcast` |
+| **Webex Suite MCP Server** | [Webex Suite MCP](https://developer.webex.com/mcp/docs/webex-suite-mcp-server){:target="_blank"} | `https://mcp.webexapis.com/mcp/webex-suite` |
+| **Workspaces MCP Server** | [Workspaces MCP](https://developer.webex.com/mcp/docs/workspaces-mcp-server){:target="_blank"} | `https://mcp.webexapis.com/mcp/workspaces` |
 
-For this lab, start with **Webex Suite MCP** unless your instructor directs you to a product-specific server.
+### Connect CPaaS MCP — regional URLs
 
-All connections require the **`spark:mcp`** scope. Additional scopes depend on the tools you invoke (see each server's documentation).
+Pick the endpoint for your Webex Connect tenant region ([source](https://developer.webex.com/mcp/docs/connect-mcp-server){:target="_blank"}):
+
+| Connect tenant region | MCP server URL |
+| --- | --- |
+| AWS Canada (ca) | `https://agentic-server-platform.prodca1.ciscoccservice.com/mcp/cpaas` |
+| AWS Ireland (eu) | `https://agentic-server-platform.prodeu2.ciscoccservice.com/mcp/cpaas` |
+| AWS London (uk) | `https://agentic-server-platform.prodeu1.ciscoccservice.com/mcp/cpaas` |
+| AWS Oregon (us) | `https://agentic-server-platform.produs1.ciscoccservice.com/mcp/cpaas` |
+| AWS Mumbai (in) | `https://agentic-server-platform.prodin1.ciscoccservice.com/mcp/cpaas` |
+| AWS Sydney (au) | `https://agentic-server-platform.prodanz1.ciscoccservice.com/mcp/cpaas` |
+| AWS Singapore (sg) | `https://agentic-server-platform.prodsg1.ciscoccservice.com/mcp/cpaas` |
+
+CPaaS has additional prerequisites: MCP messaging must be enabled in **Webex Connect Tenant Settings**, and approved SMS/email assets must be configured for AI Agent Messaging.
+
+### Lab recommendation
+
+- **Start with Webex Suite MCP Server** for general collaboration workflows (meetings, messaging, calling, core Vidcast).
+- Add **Contact Center Operation MCP** or **Contact Center MCP** when your scenario involves WxCC flows, routing, or operational reporting (if enabled for your lab org).
+- Add **Connect CPaaS MCP** only if your lab tenant has Webex Connect messaging configured.
+
+Every server requires **`spark:mcp`** to connect. Additional scopes depend on the tools you invoke (listed on each server's documentation page).
 
 ## Authentication — what is available?
 
@@ -58,7 +83,7 @@ Webex documents **two authorization methods** for AI clients:
 
 | Method | Best for | How it works |
 | --- | --- | --- |
-| **1. Token-based (WCIT)** | **This lab** — VS Code with GitHub Copilot | You generate a **WCIT** (Webex Client Identity Token) with only `spark:mcp`. Extra scopes are requested at runtime through **MCP elicitation** when a tool needs them. |
+| **1. Token-based (WCIT)** | **This lab** — VS Code with GitHub Copilot | You generate a **WCIT** (Webex Client Identity Token) on the [Webex Agentic Token](https://developer.webex.com/agentic-token){:target="_blank"} page. The token is issued with only `spark:mcp`. Extra scopes are requested at runtime through **MCP elicitation** when a tool needs them. |
 | **2. OAuth 2.0 (Integration)** | Clients without elicitation, shared team setups, production | You create a **Webex Integration** with `spark:mcp` plus the scopes your tools need, then connect via `mcp-remote` in VS Code. |
 
 Reference: [Authentication](https://developer.webex.com/mcp/docs/webex-agentic-mcp-servers#authentication){:target="_blank"}
@@ -92,18 +117,23 @@ Reference: [Provisioning on Control Hub — Authentication](https://developer.we
 
 ## Step 3.1: Generate a WCIT token (lab default)
 
-1. Sign in to [Webex for Developers](https://developer.webex.com){:target="_blank"} with your **lab user** account.
-2. Open the **Generate WCIT Token** page (linked from [Integrate Webex MCP with AI Clients](https://developer.webex.com/mcp/docs/webex-agentic-mcp-servers){:target="_blank"}).
-3. Enter a name such as `WebexOne-LAB-31123-VSCode`.
-4. Click **Generate New Token** and copy the token immediately.
-5. Store it in a local secret store — **do not** commit it to git.
+A **WCIT** (Webex Client Identity Token) is the token-based credential for Webex MCP servers. Generate it on the official **Webex Agentic Token** page — not from the short-lived bearer token on the Developer Portal homepage.
+
+1. Sign in to [Webex for Developers](https://developer.webex.com){:target="_blank"} with your **lab user** account (same identity you use for Webex Client).
+2. Open **[Webex Agentic Token](https://developer.webex.com/agentic-token){:target="_blank"}**.
+3. Enter a descriptive name, for example `WebexOne-LAB-31123-VSCode`.
+4. Click **Generate New Token** (or the equivalent action on the page).
+5. **Copy the token immediately** and store it securely. You may not be able to view the full token again later.
+6. Paste it into your local `.env` for lab scripts (optional) and into the VS Code MCP connection in Step 3.2.
 
 ```env
 # .env (local only — never commit)
 WEBEX_WCIT_TOKEN=your_wcit_token_here
 ```
 
-To revoke a token later, use **Manage WCIT Tokens** in the Developer Portal.
+**Manage or revoke tokens:** return to [Webex Agentic Token](https://developer.webex.com/agentic-token){:target="_blank"}, locate your token in the list, and delete/revoke it if compromised or no longer needed. Any VS Code MCP server using that token will lose access immediately.
+
+See also: [Integrate Webex MCP — Token-Based Authentication](https://developer.webex.com/mcp/docs/webex-agentic-mcp-servers#authentication){:target="_blank"}.
 
 ## Step 3.2: Connect Webex Suite MCP in VS Code (WCIT)
 
@@ -270,7 +300,7 @@ To build an Integration for later labs:
 | Problem | Things to check |
 | --- | --- |
 | Connection failed | Server URL, WCIT not expired, internet access |
-| 401 Unauthorized | Regenerate WCIT; verify `Bearer` prefix; token revoked |
+| 401 Unauthorized | Generate a new WCIT on [agentic-token](https://developer.webex.com/agentic-token){:target="_blank"}; verify `Bearer` prefix; confirm token was not revoked |
 | Tools not listed | Valid JSON in `mcp.json`, reload VS Code, Copilot extension updated |
 | Tool fails after connect | Scope not granted — approve elicitation or use OAuth with full scopes |
 | Server not visible at all | **Control Hub** — app blocked or tools disabled for org |

@@ -57,7 +57,7 @@ You will connect to hosted Webex MCP servers from VS Code in **Lab 3 — Webex M
 
 Before the event, confirm with your instructor that required MCP servers are **enabled in Control Hub** ([provisioning guide](https://developer.webex.com/mcp/docs/provisioning-on-control-hub){:target="_blank"}).
 
-Generate a **WCIT** (Webex Client Identity Token) from the Developer Portal when you reach Lab 3 — see [Integrate Webex MCP with AI Clients](https://developer.webex.com/mcp/docs/webex-agentic-mcp-servers){:target="_blank"}.
+Generate a **WCIT** (Webex Client Identity Token) when you reach Lab 3 on the **[Webex Agentic Token](https://developer.webex.com/agentic-token){:target="_blank"}** page. See [Integrate Webex MCP with AI Clients](https://developer.webex.com/mcp/docs/webex-agentic-mcp-servers){:target="_blank"} for how WCIT is used in VS Code.
 
 ## Create your lab Webex space
 
