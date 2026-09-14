@@ -2,20 +2,33 @@
 
 In this section, you will start exploring Webex REST APIs. You will do a quick review on how to use Bruno and how to call them using Python. Later, we will talk about the APIs that can used to manage and troubleshoot an organization — status, audit, compliance, reports, calling, and meetings.
 
-## 2.1 General Webex APIs
+## Step 1 - General Webex APIs
 
-### 2.1.1 Documentation
+In the previous section, we enabled our Agent to use MCP Servers to do actions in our name.
+
+At the end and MCP server is just a list of tools, that our agent can use. Those tools are doing API calls. Now, we will be doing those API calls ourselves.
+
+### Webex For Developers
+
+Navigate to:<br />
+
+- [Webex for Developers](https://developer.webex.com/){:target="_blank"}
+
+Use the same Webex credentials provided for the lab. 
 
 
-### 2.1.2 Calling APIs using Bruno
-
-### 2.1.3 Calling APIs using Python
+https://developer.webex.com/messaging/docs/messaging
 
 
+### Calling APIs using Bruno
 
-## 2.2 Webex APIs for Troubleshooting
+### Calling APIs using Python
 
-### 2.2.1: Webex Status API
+
+
+## Step 2 - Webex APIs for Troubleshooting
+
+### Webex Status API
 
 Check platform health before deep-diving into org-specific issues.
 
@@ -34,7 +47,7 @@ Typical checks:
 !!! Note "Screenshot needed"
     Add screenshot of status summary JSON or Control Hub status page alongside API output.
 
-### 2.2.2: Audit and compliance
+### Audit and compliance
 
 | API area | Use case |
 | --- | --- |
@@ -49,7 +62,7 @@ curl -s -H "Authorization: Bearer $WEBEX_ACCESS_TOKEN" \
   "https://webexapis.com/v1/adminAudit/events?max=10" | python -m json.tool
 ```
 
-### 2.2.3: Reports
+### Reports
 
 Generate usage and activity reports for analysis:
 
@@ -63,7 +76,7 @@ curl -s -X POST -H "Authorization: Bearer $WEBEX_ACCESS_TOKEN" \
 !!! Note
     Report templates and scopes vary by license. Your lab instructor will provide the template IDs available in the lab org.
 
-### 2.2.4: Calling and meetings troubleshooting
+### Calling and meetings troubleshooting
 
 | Scenario | API starting point |
 | --- | --- |
@@ -88,7 +101,7 @@ response.raise_for_status()
 print(response.json())
 ```
 
-### Step 2.2.5: Troubleshooting guide
+### Troubleshooting guide
 
 Review the official guide for diagnostic workflows:
 
