@@ -72,6 +72,16 @@ Visual Studio Code will be used for Python-based bot development, service app co
     cp .env.example .env
     ```
 
+### Chat
+
+1. Open the chat, open the Command Palette `Ctrl+Shift+P` and type "Chat: Open Chat (Agent)"
+
+    ![Create_token](./assets/vscode_6.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+    Chat should open on the side:
+
+    ![Create_token](./assets/vscode_16.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
 ### Bruno / Postman
 
 
