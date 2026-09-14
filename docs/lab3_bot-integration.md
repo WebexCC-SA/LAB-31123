@@ -363,4 +363,58 @@ So far, we have not introduce any security, therefore any user in or outsite you
 
 You may want to introduce some security, to not only do not allow users outside your organization to access it, but also to only allow admin to run specific calls.
 
-- Allowed sender domain restrictions for the lab bot
+1. Navigate to 03_bots/03_security.py and review the code:
+    
+    ```python
+    DENIED_DOMAIN_REPLY = "This bot only accepts messages from allowed organization domains."
+    DENIED_ADMIN_REPLY = "This bot only accepts messages from allowed users."
+    
+    def parse_csv(value: str) -> set[str]:
+        return {item.strip().lower() for item in (value or "").split(",") if item.strip()}
+    
+    ALLOWED_DOMAINS = parse_csv(os.getenv("ALLOWED_DOMAINS", ""))
+    ALLOWED_ADMINS = parse_csv(os.getenv("ALLOWED_ADMINS", ""))
+    
+    def sender_domain(email: str) -> str:
+        if not email or "@" not in email:
+            return ""
+        return email.rsplit("@", 1)[-1].strip().lower()
+    
+    
+    def is_allowed_sender(email: str) -> bool:
+        """True when no domain list is set, or the sender's domain is in ALLOWED_DOMAINS."""
+        if not ALLOWED_DOMAINS:
+            return True
+        return sender_domain(email) in ALLOWED_DOMAINS
+    
+    
+    def is_admin(email: str) -> bool:
+        """True when no admin list is set, or the sender is listed in ALLOWED_ADMINS."""
+        if not ALLOWED_ADMINS:
+            return True
+        return (email or "").strip().lower() in ALLOWED_ADMINS
+    
+    def handle_message(message):
+        text = (message.get("text") or "").strip()
+        if not text:
+            return
+    
+        sender = message.get("personEmail") or ""
+        log.info(f"Received from {sender}: {text}")
+    
+        if not is_allowed_sender(sender):
+            log.warning(f"Rejected (domain): {sender}")
+            bot.send_message(message["roomId"], DENIED_DOMAIN_REPLY)
+            return
+    
+        if not is_admin(sender):
+            log.warning(f"Rejected (user): {sender}")
+            bot.send_message(message["roomId"], DENIED_ADMIN_REPLY)
+            return
+    
+        reply = f"Authorized ({sender_domain(sender)}): {text}"
+        bot.send_message(message["roomId"], reply)
+        log.info(f"Sent to {sender}: {reply}")
+    ```
+
+2. Add different domains and admins to test the access.
