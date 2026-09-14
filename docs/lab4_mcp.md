@@ -426,6 +426,46 @@ Now, we will
 
     * python 04_bot.py
 
+4. Ask your bot for the meetings that you have schedule for tomorrow:
+
+    ![Meeting](assets/meeting_6.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+5. In the console you will see the following:
+
+    ```terminal
+    2026-09-14 20:06:58,631 INFO Received from admin@webexone-ai-assistant.wbx.ai: What meetings do I have tomorrow?
+    2026-09-14 20:06:59,998 INFO HTTP Request: POST https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 200 OK"
+    2026-09-14 20:06:59,998 INFO Received session ID: d63ce8b4-0609-4d39-9f77-4ccc26fac9a2
+    2026-09-14 20:07:00,257 INFO HTTP Request: POST https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 202 Accepted"
+    2026-09-14 20:07:01,200 INFO HTTP Request: POST https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 200 OK"
+    2026-09-14 20:07:02,111 INFO HTTP Request: GET https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 200 OK"
+    2026-09-14 20:07:02,112 INFO GET stream disconnected, reconnecting in 1000ms...
+    2026-09-14 20:07:02,113 INFO HTTP Request: DELETE https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 200 OK"
+    2026-09-14 20:07:02,114 INFO Offering 8 Meetings MCP tool(s) to gpt-5-nano
+    2026-09-14 20:07:08,344 INFO LLM asked for webex-list-meetings {'from': '2026-09-15T00:00:00Z', 'to': '2026-09-16T00:00:00Z', 'max': 50, 'includeParticipants': False}
+    2026-09-14 20:07:09,152 INFO HTTP Request: POST https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 200 OK"
+    2026-09-14 20:07:09,152 INFO Received session ID: b909621b-a64c-4a33-979f-8be53f25e9e9
+    2026-09-14 20:07:09,405 INFO HTTP Request: POST https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 202 Accepted"
+    2026-09-14 20:07:11,683 INFO HTTP Request: POST https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 200 OK"
+    2026-09-14 20:07:13,539 INFO HTTP Request: POST https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 200 OK"
+    2026-09-14 20:07:14,831 INFO HTTP Request: DELETE https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 200 OK"
+    2026-09-14 20:07:22,913 INFO Sent to admin@webexone-ai-assistant.wbx.ai: Tomorrow (2026-09-15) you have one meeting:
+    
+    - Title: Meeting with user1@webexone-ai-assistant.wbx.ai
+    - Time: 16:00–17:00 UTC
+    - Meeting number: 26604791633
+    - Join link: https://webexone-ai-assistant-sbx.webex.com/webexone-ai-assistant-sbx/j.php?MTID=mea0739a573d6ff87dbab949d46715c08
+    - Host: admin@webexone-ai-assistant.wbx.ai
+    - SIP: 26604791633@webexone-ai-assistant-sbx.webex.com
+    
+    Would you like me to set a reminder or share invitees?
+    ```
+
+
+## Extra: Adaptive Card
+
+
+
 ---
 
 Now you have a bot that can access the Webex MCP servers. This still give us some limitations, we need to adapt to the tools available, but also, token will expire after 12 hours. In the next sections we will explore how to work with those.
