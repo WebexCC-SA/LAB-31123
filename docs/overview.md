@@ -43,27 +43,6 @@ Upon completion of this lab, you will be able to:
 - Build a custom MCP server that exposes Webex API operations as tools
 - Execute an end-to-end troubleshooting scenario (status check, audit review, reporting)
 
-## Prerequisites
-
-- Basic familiarity with REST APIs and JSON
-- Comfort using Visual Studio Code and running Python from the integrated terminal
-- Webex lab credentials provided for the session
-- Python 3.10+ (for bot and custom MCP exercises)
-
-## Lab Environment
-
-| Tool | Purpose |
-| --- | --- |
-| Webex Client | Verify bot messages and assistant outcomes |
-| Visual Studio Code | Editor, MCP configuration, and terminal for the OpenAI-powered lab assistant |
-| OpenAI API | LLM for the bot and agent exercises (instructor-provided key) |
-| Webex for Developers | Bots, integrations, and API documentation |
-| Python | Bot handler and custom MCP server samples |
-
-Lab code repository (placeholder — update before the event):
-
-- [https://github.com/diegomjimenez/WebexOne2026_AI_Assistant](https://github.com/diegomjimenez/WebexOne2026_AI_Assistant){:target="_blank"}
-
 ## Disclaimer
 
 Although the lab design and configuration examples could be used as a reference, for design related questions please contact your representative at Cisco, or a Cisco partner.
