@@ -435,3 +435,7 @@ You may want to introduce some security, to not only do not allow users outside 
 4. You will get an answer, but it will be the pre-determined message:
 
     ![Bot](assets/bot_7.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+---
+
+In the next section, we will give our bot the capabilities from the Webex MCP servers
