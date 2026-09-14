@@ -32,6 +32,9 @@ To begin, you'll log into your dedicated Webex lab account. This will allow you 
 1. **Open the Webex Client:** Launch the Webex Desktop App on your lab workstation.
 2. **Enter Lab Credentials:** When prompted, enter the **Webex email address and password** provided to you.
 
+!!! Note
+    You can also login at [Webex](https://web.webex.com/){:target="_blank"} 
+
 ## Visual Studio
 
 Visual Studio Code will be used for Python-based bot development, service app configuration, and the agentic app and MCP server exercises.
