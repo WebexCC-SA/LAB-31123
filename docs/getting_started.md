@@ -85,10 +85,7 @@ Each participant will have also an **OpenAI API key** for this session. Use it o
 
     Chat should open on the side:
 
-    ![Create_token](./assets/vscode_16.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-   
-    !!! Note
-        Note that you can see the MCP server attached.
+    ![Create_token](./assets/vscode_16.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
    
 3. Open the Command Palette `Ctrl+Shift+P` and type "Chat: Manage Language Models"
 
