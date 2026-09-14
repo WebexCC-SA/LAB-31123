@@ -4,29 +4,8 @@ In this section, you will connect **official Webex MCP servers** to your IDE to 
 
 In this lab we will be using **Visual Studio Code**.
 
-## Visual Studio
-
-Visual Studio Code will be used for Python-based bot development, service app configuration, and the agentic app and MCP server exercises.
-
-1. Open Visual Studio Code from the desktop:
-
-   ![vsc_logo](./assets/docx-image-004.png){ width="150" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-2. Go to the **Source Control** tab and click **Clone Repository**:
-
-    ![vsc_clone](./assets/docx-image-005.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-3. Type the following:
-
-    - https://github.com/diegomjimenez/WebexOne2026.git
-
-    ![vsc_repo](./assets/github_1.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-4. Select a directory to save the project.
-5. Click on **Yes, I trust the authors** if a pop-up appears.
-
 !!! Note
-    This contains all the exercises in this lab, but for now, the only relevant file is .vscode/mcp.json
+    The only relevant file for this sectino is .vscode/mcp.json
 
 ## Available Webex MCP servers
 
@@ -34,14 +13,14 @@ As of today, these are the official Webex MCP servers available.
 
 | MCP server | Documentation | Server URL |
 | --- | --- | --- |
-| **Connect CPaaS MCP Server** | [Connect CPaaS MCP](https://developer.webex.com/mcp/docs/connect-mcp-server){:target="_blank"} | **Regional** — use the URL that matches your Webex Connect tenant (see table below) |
-| **Contact Center MCP Server** | [Contact Center MCP](https://developer.webex.com/mcp/docs/contact-center-mcp-server){:target="_blank"} | **Tenant-specific** — sign in on the product page to copy your regional URL |
-| **Contact Center Operation MCP Server** | [Contact Center Operation MCP](https://developer.webex.com/mcp/docs/contact-center-operation-mcp-server){:target="_blank"} | **Tenant-specific** — sign in on the product page to copy your server URL |
 | **Meetings MCP Server** | [Meetings MCP](https://developer.webex.com/mcp/docs/meetings-mcp-server){:target="_blank"} | `https://mcp.webexapis.com/mcp/webex-meeting` |
 | **Messaging MCP Server** | [Messaging MCP](https://developer.webex.com/mcp/docs/messaging-mcp-server){:target="_blank"} | `https://mcp.webexapis.com/mcp/webex-messaging` |
 | **Vidcast MCP Server** | [Vidcast MCP](https://developer.webex.com/mcp/docs/vidcast-mcp-server){:target="_blank"} | `https://mcp.webexapis.com/mcp/vidcast` |
 | **Webex Suite MCP Server** | [Webex Suite MCP](https://developer.webex.com/mcp/docs/webex-suite-mcp-server){:target="_blank"} | `https://mcp.webexapis.com/mcp/webex-suite` |
 | **Workspaces MCP Server** | [Workspaces MCP](https://developer.webex.com/mcp/docs/workspaces-mcp-server){:target="_blank"} | `https://mcp.webexapis.com/mcp/workspaces` |
+| **Connect CPaaS MCP Server (New)** | [Connect CPaaS MCP](https://developer.webex.com/mcp/docs/connect-mcp-server){:target="_blank"} | **Regional** — use the URL that matches your Webex Connect tenant (see table below) |
+| **Contact Center MCP Server (New)** | [Contact Center MCP](https://developer.webex.com/mcp/docs/contact-center-mcp-server){:target="_blank"} | **Tenant-specific** — sign in on the product page to copy your regional URL |
+| **Contact Center Operation MCP Server (New)** | [Contact Center Operation MCP](https://developer.webex.com/mcp/docs/contact-center-operation-mcp-server){:target="_blank"} | **Tenant-specific** — sign in on the product page to copy your server URL |
 
 Use the [Webex MCP Server Overview](https://developer.webex.com/mcp/docs/webex-mcp-server-overview){:target="_blank"} for the latest catalog.
 
@@ -100,49 +79,19 @@ First thing that you will need to do is to get the token to access the MCP serve
 The MCP server itself it is just a bunch of tools that an agent can call, but you need to add the brain, that will be the LLM. In this lab we will be using OpenAI models,
 The Webex MCP server is only the tool layer (list spaces, search messages, etc.). The LLM is the brain that reads your question, chooses tools, and turns results into an answer.
 
-1. Open the chat, open the Command Palette `Ctrl+Shift+P` and type "Chat: Open Chat (Agent)"
-
-    ![Create_token](./assets/vscode_6.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-    Chat should open on the side:
-
-    ![Create_token](./assets/vscode_12.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-   
-    !!! Note
-        Note that you can see the MCP server attached.
-   
-3. Open the Command Palette `Ctrl+Shift+P` and type "Chat: Manage Language Models"
-
-    ![Create_token](./assets/vscode_7.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-4. Select Add Models..." > OpenAI":
-
-    ![Create_token](./assets/vscode_8.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-5. Keep "OpenAI" as Group Name and press Enter
-
-    ![Create_token](./assets/vscode_9.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-6. And introduce the API Key that was provided to you. You should see it now:
-
-    ![Create_token](./assets/vscode_10.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-   !!! Note
-       GPT-5 Nano is the only model available.
-
-7. To test it, make sure you select the model in the chat, and say "Hello":
+1. To test it, make sure you select the model in the chat, and say "Hello":
 
    ![Create_token](./assets/vscode_11.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-8. You can ask the agent to list the tools available:
+2. You can ask the agent to list the tools available:
 
    ![Create_token](./assets/vscode_13.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-10. Now, ask to create a space for you. In this case, I will ask the following "Create a Webex Space, with title "WebexOne - Diejimen"":
+3. Now, ask to create a space for you. In this case, I will ask the following "Create a Webex Space, with title "WebexOne - Diejimen"":
 
    ![Create_token](./assets/vscode_14.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-11. You will get a confirmation, click on "Allow in this Session", after few seconds, you will get the confirmation:
+4. You will get a confirmation, click on "Allow in this Session", after few seconds, you will get the confirmation:
 
     ![Create_token](./assets/vscode_15.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
