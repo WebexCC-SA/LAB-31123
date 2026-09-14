@@ -14,7 +14,7 @@ flowchart LR
 
 The bot handles **transport**. The agent handles **reasoning and tool selection**.
 
-## Step 5.1: Create a Bot
+## Step 3.1: Create a Bot
 
 First you need to create your bot:
 
@@ -52,7 +52,7 @@ First you need to create your bot:
     BOT_TOKEN=your_bot_access_token
     ```
 
-## Step 5.2: WebSocket Client
+## Step 3.2: WebSocket Client
 
 As discussed, we will be using WebSockets in this lab. Websockets will keep open a communication channel with Cisco to receivie and send messages. We will be using the following Class during this lab to run the bot.
 
@@ -181,7 +181,7 @@ As discussed, we will be using WebSockets in this lab. Websockets will keep open
 !!! Note
     This lab uses **WebSockets (Mercury)** so no public URL or ngrok tunnel is required. For production, you may use [webhooks](https://developer.webex.com/messaging/docs/api/guides/webhooks){:target="_blank"} instead.
 
-## Step 5.3: Echo
+## Step 3.3: Echo
 
 In this exercise, we will create a bot that will answer back the same message using the WebSocket class showed before.
 
@@ -247,7 +247,7 @@ In this exercise, we will create a bot that will answer back the same message us
     ```
 6. You can press now Ctrl+C to stop the bot.
 
-## Step 5.4: LLM
+## Step 3.4: LLM
 
 You have seem now how a bot works, but now we will make it "smarter". To be able to help us do some actions, we will integrate the bot with an LLM, that will be the brain of our assistant. 
 
