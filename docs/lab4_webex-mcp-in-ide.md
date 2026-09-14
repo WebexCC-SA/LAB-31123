@@ -20,7 +20,7 @@ Visual Studio Code will be used for Python-based bot development, service app co
 
     - https://github.com/diegomjimenez/WebexOne2026.git
 
-    ![vsc_repo](./assets/docx-image-006.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![vsc_repo](./assets/github_1.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 4. Select a directory to save the project.
 5. Click on **Yes, I trust the authors** if a pop-up appears.
