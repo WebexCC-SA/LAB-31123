@@ -16,41 +16,41 @@ Use the credentials provided by your lab instructor:
 
 | Item | Value |
 | --- | --- |
-| Username | `podX@cb127.dc-02.com` (replace X with your pod number) |
+| Username | `userX@webexone-ai-assistant.wbx.ai` (replace X with your pod number) |
 | Password | Provided in the lab handout |
 
-## OpenAI API key (instructor-provided)
 
-Each participant receives an **OpenAI API key** for this session. Use it only for lab exercises on your assigned workstation.
+## Visual Studio
 
-1. Copy the key from the handout or pod instructions (do not share it in Webex spaces or email).
-2. Add it to your local `.env` file (see below).
-3. Use the **model name** your instructor specifies (the lab code defaults to `gpt-5-nano` unless changed in `.env`).
+Visual Studio Code will be used for Python-based bot development, service app configuration, and the agentic app and MCP server exercises.
 
-```env
-OPENAI_API_KEY=sk-your-lab-key-here
-OPENAI_MODEL=gpt-5-nano
-```
+1. Open Visual Studio Code from the desktop:
 
-!!! Note
-    Never commit `.env` to git. If a key is exposed, tell your instructor immediately so it can be rotated.
+   ![vsc_logo](./assets/docx-image-004.png){ width="150" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-## Clone the lab repository
 
-1. Open **Visual Studio Code** on your lab workstation.
-2. Clone the lab code repository:
+### Clone the lab repository
 
-    ```bash
-    git clone https://github.com/diegomjimenez/WebexOne2026_AI_Assistant.git
-    cd WebexOne2026_AI_Assistant
-    ```
+3. Go to the **Source Control** tab and click **Clone Repository**:
+
+    ![vsc_clone](./assets/docx-image-005.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+4. Type the following:
+
+    - https://github.com/diegomjimenez/WebexOne2026.git
+
+    ![vsc_repo](./assets/github_1.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+5. Select a directory to save the project.
+6. Click on **Yes, I trust the authors** if a pop-up appears.
+
+### Virtual Enviroment
 
 3. Create a virtual environment and install dependencies:
 
     ```bash
     python -m venv .venv
-    source .venv/bin/activate   # macOS/Linux
-    # .\.venv\Scripts\activate  # Windows PowerShell
+    .\webexone2026\Scripts\activate.ps1
     pip install -r requirements.txt
     ```
 
@@ -60,47 +60,41 @@ OPENAI_MODEL=gpt-5-nano
     cp .env.example .env
     ```
 
-    ```env
-    BOT_TOKEN=
-    WEBEX_WCIT_TOKEN=
-    OPENAI_API_KEY=
-    OPENAI_MODEL=gpt-5-nano
-    WEBEX_ORG_ID=
-    ```
+### Chat
 
-## Prepare for Webex MCP (Lab 3)
+Each participant will have also an **OpenAI API key** for this session. Use it only for lab exercises on your assigned workstation.
 
-You will register hosted Webex MCP servers in VS Code in **Lab 3 — Webex MCP Servers in Visual Studio Code**.
+1. Copy the key from the handout or pod instructions (do not share it in Webex spaces or email).
+2. Add it to your local `.env` file (see below).
 
-This lab **does not use GitHub Copilot**. You will:
+1. Open the chat, open the Command Palette `Ctrl+Shift+P` and type "Chat: Open Chat (Agent)"
 
-- Configure MCP servers in VS Code (`.vscode/mcp.json` or user `mcp.json`)
-- Run the **OpenAI-powered Python assistant** from the VS Code terminal (starting in Lab 5)
+    ![Create_token](./assets/vscode_6.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-Before the event, confirm with your instructor that required MCP servers are **enabled in Control Hub** ([provisioning guide](https://developer.webex.com/mcp/docs/provisioning-on-control-hub){:target="_blank"}).
+    Chat should open on the side:
 
-Generate a **WCIT** on **[Webex Agentic Token](https://developer.webex.com/agentic-token){:target="_blank"}** when you reach Lab 3, or use **OAuth Integration** if your instructor directs you to that path (recommended when you are not using a Copilot-style MCP chat UI).
+    ![Create_token](./assets/vscode_12.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+   
+    !!! Note
+        Note that you can see the MCP server attached.
+   
+3. Open the Command Palette `Ctrl+Shift+P` and type "Chat: Manage Language Models"
 
-## Create your lab Webex space
+    ![Create_token](./assets/vscode_7.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-1. In Webex Client, create a space named **[Your Name] - AI Assistant Lab**.
-2. Save the space ID — you will use it when testing the bot integration in Lab 5.
+4. Select Add Models..." > OpenAI":
 
-## Lab flow
+    ![Create_token](./assets/vscode_8.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-| Section | Focus |
-| --- | --- |
-| Lab 1 | AI assistants, agents, and session architecture |
-| Lab 2 | MCP host, client, server, tools, resources, and prompts |
-| Lab 3 | Connect and validate Webex MCP servers in VS Code |
-| Lab 4 | Webex APIs for status, audit, reports, and troubleshooting |
-| Lab 5 | Webex Bot + OpenAI + MCP integration |
-| Lab 6 | Agent Skills for operational runbooks |
-| Lab 7 | Build a custom MCP server with Webex API tools |
-| Lab 8 | Capstone — investigate and resolve an org issue end-to-end |
+5. Keep "OpenAI" as Group Name and press Enter
 
-## Content still to define
+    ![Create_token](./assets/vscode_9.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-- Final lab code repository URL and branch
-- Pod-specific credential table and OpenAI model name for the event
-- Slido / Q&A embed URL for the welcome page
+6. And introduce the API Key that was provided to you. You should see it now:
+
+    ![Create_token](./assets/vscode_10.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+   !!! Note
+       GPT-5 Nano is the only model available.
+
+### Bruno / Postman
