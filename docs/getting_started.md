@@ -6,7 +6,7 @@ Welcome to **LAB-31123: Troubleshoot and Manage Your Organization with an AI Ass
 
 Scan the QR code to be added to the Webex space for Q&A and more
 
-![Webex](./assets/webex_space.png){ width="150" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![Webex](./assets/webex_space.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ## Tools used in this lab
 
@@ -51,7 +51,7 @@ Visual Studio Code will be used for Python-based bot development, service app co
 
     - https://github.com/diegomjimenez/WebexOne2026.git
 
-    ![vsc_repo](./assets/github_1.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![vsc_repo](./assets/github_1.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 5. Select a directory to save the project.
 6. Click on **Yes, I trust the authors** if a pop-up appears.
@@ -81,32 +81,34 @@ Each participant will have also an **OpenAI API key** for this session. Use it o
 
 1. Open the chat, open the Command Palette `Ctrl+Shift+P` and type "Chat: Open Chat (Agent)"
 
-    ![Create_token](./assets/vscode_6.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_6.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     Chat should open on the side:
 
-    ![Create_token](./assets/vscode_12.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_12.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
    
     !!! Note
         Note that you can see the MCP server attached.
    
 3. Open the Command Palette `Ctrl+Shift+P` and type "Chat: Manage Language Models"
 
-    ![Create_token](./assets/vscode_7.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_7.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 4. Select Add Models..." > OpenAI":
 
-    ![Create_token](./assets/vscode_8.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_8.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 5. Keep "OpenAI" as Group Name and press Enter
 
-    ![Create_token](./assets/vscode_9.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_9.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 6. And introduce the API Key that was provided to you. You should see it now:
 
-    ![Create_token](./assets/vscode_10.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_10.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
    !!! Note
        GPT-5 Nano is the only model available.
 
 ### Bruno / Postman
+
+
