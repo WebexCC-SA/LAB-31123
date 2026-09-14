@@ -80,7 +80,7 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Lab:
-      - Welcome: welcome.md
+      #- Welcome: welcome.md
       - Overview: overview.md
       - Getting Started: getting_started.md
       #- Lab 1 - AI Assistants and Architecture: lab2_ai-assistant-and-architecture.md
