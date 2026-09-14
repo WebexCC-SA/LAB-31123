@@ -418,3 +418,12 @@ You may want to introduce some security, to not only do not allow users outside 
     ```
 
 2. Add different domains and admins to test the access.
+
+    ```
+    ALLOWED_DOMAINS=example.com
+    ALLOWED_ADMINS=admin@example.com
+    ```
+   
+4. Run your code with the following command:
+
+   * python 03_security.py
