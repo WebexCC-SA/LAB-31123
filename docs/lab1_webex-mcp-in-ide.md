@@ -33,7 +33,7 @@ MCP server are **NOT** enabled by default in your organization, and you need to 
 
 1. If you try to enable MCP for the first time, you will see a message **No allowed MCP servers found**.
 
-    ![Create_token](./assets/token_4.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/token_4.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 2. To enable them, you need to go in **Collaboration Control Hub** -> **Apps** -> **Agentic Apps** and go to **Webex** tab:
 
@@ -78,11 +78,11 @@ As an user, the first thing that you will need to do is to get the token to acce
 
 4. You need a token per MCP server, in this case we will start using **Webex Messaging**:
 
-    ![Create_token](./assets/token_2.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/token_2.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 5. You will now see the token:
 
-    ![Create_token](./assets/token_3.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/token_3.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     !!! Warning
         You need to copy the token now, as you won't be able to see it again later.
@@ -134,11 +134,11 @@ As an user, the first thing that you will need to do is to get the token to acce
     !!! Note
     Note that you can see also see now the MCP server attached in the Chat.
 
-    ![Create_token](./assets/vscode_16.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_16.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 10. After that, the Output view should open automatically, if not, choose View -> Output.
 
-    ![Create_token](./assets/vscode_5.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_5.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     You should see that tools were discovered. If you see a message like the following, you have connected to the MCP successfully:
    
@@ -150,7 +150,7 @@ As an user, the first thing that you will need to do is to get the token to acce
 
     These are the 20 tools available in this MCP server:
     
-    ![Tools](./assets/tools_2.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Tools](./assets/tools_2.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ## LLM
 
@@ -169,7 +169,7 @@ Before we have opened the Chat, but now we will set up the agent.
 
 3. Keep "OpenAI" as Group Name and press Enter
 
-    ![Create_token](./assets/vscode_9.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_9.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 4. And introduce the API Key that was provided to you. You should see it now:
 
@@ -180,26 +180,26 @@ Before we have opened the Chat, but now we will set up the agent.
 
 5. To test it, make sure you select the model in the chat, and say "Hello":
 
-    ![Create_token](./assets/vscode_11.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_11.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     !!! Note
         Now, the LLM is answering so the answer can vary from what you see in the screenshot as it is not predictable.
 
 7. You can ask the agent to list the tools available:
 
-    ![Create_token](./assets/vscode_13.png){ width="800" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_13.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 8. Now, ask to create a space for you. In this case, I will ask the following `Create a Webex Space, with title "WebexOne - Diejimen"`:
 
-    ![Create_token](./assets/vscode_14.png){ width="800" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_14.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 9. You will get a confirmation, click on "Allow in this Session", after few seconds, you will get the confirmation:
 
-    ![Create_token](./assets/vscode_15.png){ width="800" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_15.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     And you can see it in the Webex App!
 
-    ![Webex](./assets/webex_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Webex](./assets/webex_1.png){ width="800" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 Congrats! Now you have your agent set up in your VS Code and it is connected to the MCP server. Now you will have to integrate the Meetings MCP and be able to schedule a meeting.
 
@@ -215,7 +215,7 @@ In this exercise, you need to add the [Meetings MCP](https://developer.webex.com
 
     1. To add the new MCP server, you will first need to create a new token.
 
-        ![Create_token](./assets/token_5.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        ![Create_token](./assets/token_5.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     2. Once you have the token, add the server to the `mcp.json` file:
 
@@ -256,7 +256,7 @@ In this exercise, you need to add the [Meetings MCP](https://developer.webex.com
 
         These are the tools available in this MCP server:
 
-        ![Tools](./assets/tools_1.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        ![Tools](./assets/tools_1.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ### Organize a meeting using your AI Assistant
 
@@ -270,11 +270,11 @@ Once the MCP is added, schedule a meeting together with the admin of the organiz
 
     It may ask your for confirmation:
 
-    ![Meeting](./assets/meeting_1.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Meeting](./assets/meeting_1.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     Once done, it will provide you with the meeting details:
 
-    ![Meeting](./assets/meeting_2.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Meeting](./assets/meeting_2.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     You can check from your Webex App that the meeting was scheduled:
 
@@ -282,6 +282,6 @@ Once the MCP is added, schedule a meeting together with the admin of the organiz
 
     And confirm the participants:
 
-    ![Meeting](./assets/meeting_4.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Meeting](./assets/meeting_4.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     You can also test now the other functionalities.
