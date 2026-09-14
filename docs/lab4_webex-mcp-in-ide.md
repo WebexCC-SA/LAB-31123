@@ -143,7 +143,12 @@ The Webex MCP server is only the tool layer (list spaces, search messages, etc.)
 
 ## Exercises
 
-1. Add new MCP server
-2. Do XYZ
+### Add Meetings MCP server
 
-choice: WCIT vs OAuth Integration for Webex MCP
+??? Solution
+    TBA
+
+### Organize a meeting using your Assistant
+
+??? Solution
+    TBA
