@@ -72,40 +72,6 @@ Visual Studio Code will be used for Python-based bot development, service app co
     cp .env.example .env
     ```
 
-### Chat
-
-Each participant will have also an **OpenAI API key** for this session. Use it only for lab exercises on your assigned workstation.
-
-1. Copy the key from the handout or pod instructions (do not share it in Webex spaces or email).
-2. Add it to your local `.env` file (see below).
-
-1. Open the chat, open the Command Palette `Ctrl+Shift+P` and type "Chat: Open Chat (Agent)"
-
-    ![Create_token](./assets/vscode_6.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-    Chat should open on the side:
-
-    ![Create_token](./assets/vscode_16.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-   
-3. Open the Command Palette `Ctrl+Shift+P` and type "Chat: Manage Language Models"
-
-    ![Create_token](./assets/vscode_7.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-4. Select Add Models..." > OpenAI":
-
-    ![Create_token](./assets/vscode_8.png){ width="1000" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-5. Keep "OpenAI" as Group Name and press Enter
-
-    ![Create_token](./assets/vscode_9.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-6. And introduce the API Key that was provided to you. You should see it now:
-
-    ![Create_token](./assets/vscode_10.png){ width="1000" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-   !!! Note
-       GPT-5 Nano is the only model available.
-
 ### Bruno / Postman
 
 
