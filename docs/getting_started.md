@@ -104,7 +104,7 @@ Each participant will have also an **OpenAI API key** for this session. Use it o
 
 6. And introduce the API Key that was provided to you. You should see it now:
 
-    ![Create_token](./assets/vscode_10.png){ width="100" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_10.png){ width="1000" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
    !!! Note
        GPT-5 Nano is the only model available.
