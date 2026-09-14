@@ -2,18 +2,6 @@
 
 In this section, you will connect a Webex Bot to your AI assistant so users can manage and troubleshoot the organization from a Webex space.
 
-Reference: [Webex Bots Guide](https://developer.webex.com/messaging/docs/bots){:target="_blank"}
-
-## Learning Objectives
-
-Upon completion of this section, you will be able to:
-
-1. Create a **Bot** in Webex.
-2. Receive user messages via WebSocket (Mercury).
-3. Forward bot messages to an LLM.
-4. Integrate MCP servers with teh LLM.
-5. Post assistant responses back to Webex.
-
 ## Architecture
 
 ```mermaid
@@ -51,6 +39,7 @@ sequenceDiagram
 
 The bot handles **transport**. The agent handles **reasoning and tool selection**.
 
+<!--
 ## Visual Studio Code
 
 We will continue using Visual Studio Code from now on for the development using Python
@@ -76,6 +65,8 @@ We will continue using Visual Studio Code from now on for the development using 
 7. Install the requirements:
 
     - pip install -r requirements.txt
+  
+-->
 
 ## Step 5.1: Create a Bot
 
@@ -101,9 +92,12 @@ First you need to create your bot:
     BOT_TOKEN=your_bot_access_token
     ```
 
+    !!! Warning
+        Make sure you are in the folder for this section.
+
 ## Step 5.2: WebSocket Client
 
-1. Navigate to 05-bots/websocket_client.py and review the code:
+1. Navigate to 03_bots/websocket_client.py and review the code:
 
     ```python
     import asyncio
@@ -187,7 +181,7 @@ First you need to create your bot:
 
 ## Step 5.3: Echo
 
-1. Navigate to 05-bots/01_echo.py and review the code:
+1. Navigate to 03_bots/01_echo.py and review the code:
 
     ```python
     import logging
@@ -235,7 +229,7 @@ First you need to create your bot:
 
 2. Make sure that in your terminal you are in the right folder:
 
-   * cd 03-bots
+   * cd ../03_bots
 
 3. Run your code with the following command:
 
@@ -260,11 +254,10 @@ Now, we will integrate the bot with an LLM. In this scenario we will be using Op
 1. Make sure you have your key in `.env`:
 
     ```env
-    BOT_TOKEN=your_bot_access_token
     OPENAI_API_KEY=your_openai_api_key
     ```
     
-2. Navigate to 05-bots/02_llm.py and review the code:
+2. Navigate to 03_bots/02_llm.py and review the code:
 
     ```python
     import logging
