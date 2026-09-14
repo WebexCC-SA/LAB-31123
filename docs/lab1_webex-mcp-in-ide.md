@@ -64,7 +64,7 @@ MCP server are **NOT** enabled by default in your organization, and you need to 
 
     After this change, users will be able to use it.
 
-## Get your Webex Agentic MCP App token
+## Adding an MCP server to VS Code
 
 Now that you have allowed your users to use MCP, now every user will be able to generate a token for each of them.
 
@@ -152,7 +152,7 @@ As an user, the first thing that you will need to do is to get the token to acce
     
     ![Tools](./assets/tools_2.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-## LLM
+## Adding the LLM to VS Code
 
 The MCP server itself it is just a bunch of tools that an agent can call, but you need to add the brain, that will be the LLM. In this lab we will be using OpenAI models,
 The Webex MCP server is only the tool layer (list spaces, search messages, etc.). The LLM is the brain that reads your question, chooses tools, and turns results into an answer.
