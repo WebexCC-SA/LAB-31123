@@ -8,9 +8,6 @@ In this section, you will connect a Webex Bot to your AI assistant so users can 
 flowchart LR
     User[Webex User] --> Bot[Webex Bot]
     Bot --> Agent[LLM]
-    Agent --> MCP[MCP Client]
-    MCP --> Tools[Webex MCP Tools]
-    Tools --> API[Webex APIs]
     Agent --> Bot
     Bot --> User
 ```
