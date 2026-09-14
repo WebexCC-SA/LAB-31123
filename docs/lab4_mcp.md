@@ -17,7 +17,7 @@ flowchart LR
 
 ## Step 4.1: Build the MCP Client
 
-MCP components
+These are the MCP components neccesary:
 
 | Component | Role | Analogy |
 | --- | --- | --- |
@@ -43,8 +43,173 @@ flowchart TB
 
 To be able to integrate the Webex MCP Clients into your Assistant, you need to have a MCP Client.
 
+1. Navigate to 04_mcp/mcp_client.py and review the code:
 
-## Step 4.2: Servie App
+   ```python
+   from contextlib import asynccontextmanager
+
+    from mcp import ClientSession
+    from mcp.client.streamable_http import streamable_http_client
+    from mcp.shared._httpx_utils import create_mcp_http_client
+    from mcp.shared.exceptions import MCPError
+    
+    def _first_mcp_error(exc):
+        # The SDK wraps MCPError in anyio TaskGroup ExceptionGroups.
+        if isinstance(exc, MCPError):
+            return exc
+        if isinstance(exc, BaseExceptionGroup):
+            for inner in exc.exceptions:
+                found = _first_mcp_error(inner)
+                if found:
+                    return found
+        return None
+    
+    
+    class McpClient:
+        """One MCP session = one server URL + that server's token."""
+    
+        def __init__(self, access_token, url):
+            self.access_token = access_token
+            self.url = url
+    
+        @asynccontextmanager
+        async def session(self):
+            http = create_mcp_http_client(headers={"Authorization": f"Bearer {self.access_token}"})
+            async with http:
+                async with streamable_http_client(self.url, http_client=http) as (read, write):
+                    async with ClientSession(read, write) as session:
+                        await session.initialize()
+                        yield session
+    
+        async def list_tools(self):
+            try:
+                async with self.session() as session:
+                    return (await session.list_tools()).tools
+            except BaseExceptionGroup as eg:
+                if err := _first_mcp_error(eg):
+                    raise err from None
+                raise
+    
+        async def call_tool(self, name, arguments=None):
+            try:
+                async with self.session() as session:
+                    result = await session.call_tool(name, arguments or {})
+                    texts = [c.text for c in result.content if getattr(c, "type", None) == "text"]
+                    return "\n".join(texts) if texts else str(result.content)
+            except BaseExceptionGroup as eg:
+                if err := _first_mcp_error(eg):
+                    raise err from None
+                raise
+    ```
+
+   This MCP client allows you to connect to any MCP server.
+    ```
+
+## Step 4.2: List tools
+
+Now, we will 
+
+1. Navigate to 04_mcp/01_list_tools.py and review the code:
+
+   ```python
+
+   MESSAGING_MCP_URL = "https://mcp.webexapis.com/mcp/webex-messaging"
+    MEETING_MCP_URL = "https://mcp.webexapis.com/mcp/webex-meeting"
+    
+    import asyncio
+    import logging
+    import os
+    
+    from dotenv import load_dotenv
+    from mcp.shared.exceptions import MCPError
+    
+    from mcp_client import MEETING_MCP_URL, MESSAGING_MCP_URL, McpClient
+    
+    try:
+        import truststore
+    
+        truststore.inject_into_ssl()
+    except ImportError:
+        pass
+    
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    log = logging.getLogger("mcp-list-tools")
+    
+    load_dotenv()
+    
+    MESSAGING_TOKEN = os.getenv("WEBEX_MESSAGING_MCP_TOKEN")
+    MEETING_TOKEN = os.getenv("WEBEX_MEETING_MCP_TOKEN")
+    
+    
+    async def list_server(name, url, token):
+        if not token:
+            log.warning(f"Skipping {name}: set the token in your .env file")
+            return
+        try:
+            tools = await McpClient(token, url).list_tools()
+        except MCPError as exc:
+            log.error(f"{name} handshake failed: {exc}")
+            return
+        log.info(f"{name}: {len(tools)} tool(s) from {url}")
+        for tool in tools:
+            log.info(f"  - {tool.name}: {tool.description}")
+    
+    
+    async def main():
+        if not MESSAGING_TOKEN and not MEETING_TOKEN:
+            raise SystemExit(
+                "Set WEBEX_MESSAGING_MCP_TOKEN and/or WEBEX_MEETING_MCP_TOKEN in your .env file"
+            )
+        await list_server("Messaging MCP", MESSAGING_MCP_URL, MESSAGING_TOKEN)
+        await list_server("Meetings MCP", MEETING_MCP_URL, MEETING_TOKEN)
+    
+    
+    if __name__ == "__main__":
+        asyncio.run(main())
+   ```
+
+2. In VS Code, change the terminal right folder:
+
+    * cd ../04_mcp
+
+3. Copy the example .venv file:
+
+    * cp .env.example .env
+
+4. Copy the Webex MCP Tokens into `.env`:
+
+    ```env
+    WEBEX_MESSAGING_MCP_TOKEN=your_messaging_mcp_token
+    WEBEX_MEETING_MCP_TOKEN=your_meetings_mcp_token
+
+5. Run your code with the following command:
+
+    * python 01_list_tools.py
+
+
+## Step 4.3: Webex MCP Integration
+
+1. Start the bot handler:
+
+    ```bash
+    cd bot
+    python handler.py
+    ```
+
+2. Wait for **WebSocket connected** in the console.
+3. In Webex, message your bot:
+
+    ```text
+    List my Webex spaces and tell me which one is the lab space.
+    ```
+
+4. Verify the assistant response appears in the conversation.
+
+
+
+
+<!--
+## Service apps 
 
 Till now, you have been using your own token from developer.webex.com. This token is associated with you, and it lives only 12 hours, so it is not a long term solution for building the assistant. 
 
@@ -123,22 +288,4 @@ A text box to enter your **Client Secret** will appear. This way, you can genera
 
 !!! Note
     The expiration time for the access token is 14 days, while the refresh token expires in 90 days.
-
-
-## Step 4.3: Webex MCP Integration
-
-1. Start the bot handler:
-
-    ```bash
-    cd bot
-    python handler.py
-    ```
-
-2. Wait for **WebSocket connected** in the console.
-3. In Webex, message your bot:
-
-    ```text
-    List my Webex spaces and tell me which one is the lab space.
-    ```
-
-4. Verify the assistant response appears in the conversation.
+-->
