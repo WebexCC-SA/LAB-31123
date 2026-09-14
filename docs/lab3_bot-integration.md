@@ -430,7 +430,7 @@ You may want to introduce some security, to not only do not allow users outside 
 
 3. Run your code with the following command:
 
-   * python 03_security.py
+    * python 03_security.py
 
 4. You will get an answer, but it will be the pre-determined message:
 
