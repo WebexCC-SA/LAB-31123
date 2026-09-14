@@ -82,7 +82,7 @@ nav:
   - Lab:
       - Welcome: welcome.md
       - Overview: overview.md
-      - Getting Started: lab1_getting_started.md
+      - Getting Started: getting_started.md
       #- Lab 1 - AI Assistants and Architecture: lab2_ai-assistant-and-architecture.md
       #- Lab 2 - MCP Fundamentals: lab3_mcp-fundamentals.md
       - Lab 1 - Webex MCP Servers in Your IDE: lab1_webex-mcp-in-ide.md
