@@ -1,17 +1,21 @@
-# Lab 4 - Webex APIs for Troubleshooting
+# Lab 2 - Webex APIs
 
-In this section, you will explore Webex REST APIs commonly used to manage and troubleshoot an organization — status, audit, compliance, reports, calling, and meetings.
+In this section, you will start exploring Webex REST APIs. You will do a quick review on how to use Bruno and how to call them using Python. Later, we will talk about the APIs that can used to manage and troubleshoot an organization — status, audit, compliance, reports, calling, and meetings.
 
-## Learning Objectives
+## 2.1 General Webex APIs
 
-Upon completion of this section, you will be able to:
+### 2.1.1 Documentation
 
-- Query the Webex Status API for service health
-- Review admin audit and compliance events
-- Generate and retrieve operational reports
-- Identify APIs useful for call history and meeting statistics
 
-## Step 4.1: Webex Status API
+### 2.1.2 Calling APIs using Bruno
+
+### 2.1.3 Calling APIs using Python
+
+
+
+## 2.2 Webex APIs for Troubleshooting
+
+### 2.2.1: Webex Status API
 
 Check platform health before deep-diving into org-specific issues.
 
@@ -30,7 +34,7 @@ Typical checks:
 !!! Note "Screenshot needed"
     Add screenshot of status summary JSON or Control Hub status page alongside API output.
 
-## Step 4.2: Audit and compliance
+### 2.2.2: Audit and compliance
 
 | API area | Use case |
 | --- | --- |
@@ -45,7 +49,7 @@ curl -s -H "Authorization: Bearer $WEBEX_ACCESS_TOKEN" \
   "https://webexapis.com/v1/adminAudit/events?max=10" | python -m json.tool
 ```
 
-## Step 4.3: Reports
+### 2.2.3: Reports
 
 Generate usage and activity reports for analysis:
 
@@ -59,7 +63,7 @@ curl -s -X POST -H "Authorization: Bearer $WEBEX_ACCESS_TOKEN" \
 !!! Note
     Report templates and scopes vary by license. Your lab instructor will provide the template IDs available in the lab org.
 
-## Step 4.4: Calling and meetings troubleshooting
+### 2.2.4: Calling and meetings troubleshooting
 
 | Scenario | API starting point |
 | --- | --- |
@@ -84,7 +88,7 @@ response.raise_for_status()
 print(response.json())
 ```
 
-## Step 4.5: Troubleshooting guide
+### Step 2.2.5: Troubleshooting guide
 
 Review the official guide for diagnostic workflows:
 
@@ -98,12 +102,6 @@ Suggested lab activities (from session deck):
 4. Review compliance events
 5. Retrieve call history and meeting statistics
 
-## Exercise
+## Exercises
 
-Pick one operational scenario (e.g., "agents offline" or "address book sync failure") and list which APIs you would call first and why.
-
-## Content still to define
-
-- Lab-specific report template IDs
-- Service App or integration token with admin scopes
-- Sample audit event payloads for the exercise
+TBC
