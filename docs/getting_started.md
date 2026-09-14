@@ -6,7 +6,7 @@ Welcome to **LAB-31123: Troubleshoot and Manage Your Organization with an AI Ass
 
 Scan the QR code to be added to the Webex space for Q&A and more
 
-![Webex](./assets/webex_space.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![Webex](./assets/webex_space.png){ width="300" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ## Tools used in this lab
 
@@ -85,7 +85,7 @@ Each participant will have also an **OpenAI API key** for this session. Use it o
 
     Chat should open on the side:
 
-    ![Create_token](./assets/vscode_12.png){ width="300" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_16.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
    
     !!! Note
         Note that you can see the MCP server attached.
