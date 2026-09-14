@@ -40,11 +40,11 @@ First you need to create your bot:
 
 5. In VS Code, make sure that in your terminal you are in the right folder:
 
-   * cd ../03_bots
+    * cd ../03_bots
   
 6. Copy the example .venv file:
 
-   * cp .env.example .env
+    * cp .env.example .env
 
 7. Copy the bot access token into `.env`:
 
@@ -185,11 +185,11 @@ In this exercise, we will create a bot that will answer back the same message us
 
 2. Run your code with the following command:
 
-   * python 01_echo.py
+    * python 01_echo.py
 
 3. Now your bot is active listening. Look for your bot and send it a message:
 
-    ![Bot](assets/bot_6.png){ width="350" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Bot](assets/bot_6.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 4. You should instantly get an answer:
 
