@@ -24,6 +24,48 @@ As of today, these are the official Webex MCP servers available.
 
 Use the [Webex MCP Server Overview](https://developer.webex.com/mcp/docs/webex-mcp-server-overview){:target="_blank"} for the latest catalog.
 
+### Prerequisites
+
+Every official Webex MCP server includes this requirement:
+
+!!! Note
+    **This MCP server must be enabled by your organization's admin in Webex Control Hub before it can be used.** See [Provisioning on Control Hub](https://developer.webex.com/mcp/docs/provisioning-on-control-hub){:target="_blank"} for details.
+
+These steps have been done previously to this lab, as you all are sharing the same organization, but this is relevant to your organizations.
+
+1. If you try to enable MCP for the first time, you will see a message **No allowed MCP servers found**.
+
+   ![Create_token](./assets/token_4.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+2. To enable them, you need to go in **Collaboration Control Hub** -> **Apps** -> **Agentic Apps** and go to **Webex** tab:
+
+   ![Create_token](./assets/controlhub_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+3. To enable any of them, click "Allowed for all users" and save:
+
+   ![Create_token](./assets/controlhub_2.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+4. You still didn't finish, if you try to use an MCP server now, you will see a similar error to:
+
+    ```bash
+    2026-09-14 12:21:38.230 [warning] [server stderr] [63062] Fatal error: SdkHttpError: Error POSTing to endpoint: {"id":0,"jsonrpc":"2.0","error":{"code":-32003,"message":"You don't have access to this MCP server yet. Ask your administrator to enable it for your account or organization.","data":{"reason":"ACCESS_DENIED"}}}
+    2026-09-14 12:21:38.230 [warning] [server stderr]     at StreamableHTTPClientTransport._send (XXXX/.npm/_npx/705d23756ff7dacc/node_modules/mcp-remote/dist/chunk-EFMRUNOV.js:31464:15)
+    2026-09-14 12:21:38.230 [warning] [server stderr]     at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+    2026-09-14 12:21:38.231 [warning] [server stderr]   code: 'CLIENT_HTTP_NOT_IMPLEMENTED',
+    2026-09-14 12:21:38.231 [warning] [server stderr]   data: {
+    2026-09-14 12:21:38.231 [warning] [server stderr]     status: 403,
+    2026-09-14 12:21:38.231 [warning] [server stderr]     statusText: 'Forbidden',
+    2026-09-14 12:21:38.231 [warning] [server stderr]     text: `{"id":0,"jsonrpc":"2.0","error":{"code":-32003,"message":"You don't have access to this MCP server yet. Ask your administrator to enable it for your account or organization.","data":{"reason":"ACCESS_DENIED"}}}`
+    ```
+
+    You need to set up authentication per MCP server.
+
+5. Go to the MCP server and select the **Tools** tab, and enable the ones you will allow user to use, in this case, all of them will be enabled:
+
+   ![Create_token](./assets/controlhub_3.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+   After this change, users will be able to use it.
+
 ## Get your Webex Agentic MCP App token
 
 First thing that you will need to do is to get the token to access the MCP servers as your user.
@@ -38,7 +80,7 @@ First thing that you will need to do is to get the token to access the MCP serve
 
    ![Create_token](./assets/token_2.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-5. You will now see the token:
+6. You will now see the token:
 
    ![Create_token](./assets/token_3.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
@@ -47,23 +89,23 @@ First thing that you will need to do is to get the token to access the MCP serve
 
        Paste your token instead of WEBEX_MCP_TOKEN in .vscode/mcp.json and save the file.
 
-6. You need to reload VS Code node for MCP to take effect. Open the Command Palette `Ctrl+Shift+P` and select "Developer: Reload Window"
+7. You need to reload VS Code node for MCP to take effect. Open the Command Palette `Ctrl+Shift+P` and select "Developer: Reload Window"
 
    ![Create_token](./assets/vscode_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-7. Open the Command Palette `Ctrl+Shift+P` again and type "MCP: List Servers"
+8. Open the Command Palette `Ctrl+Shift+P` again and type "MCP: List Servers"
 
    ![Create_token](./assets/vscode_2.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-8. You should see now the newly added MCP server, click on it:
+9. You should see now the newly added MCP server, click on it:
 
    ![Create_token](./assets/vscode_3.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-9. And click "Start Server"
+10. And click "Start Server"
 
    ![Create_token](./assets/vscode_4.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-10. After that, the Output view should open automatically, if not, choose View -> Output.
+11. After that, the Output view should open automatically, if not, choose View -> Output.
 
   ![Create_token](./assets/vscode_5.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
@@ -98,24 +140,6 @@ The Webex MCP server is only the tool layer (list spaces, search messages, etc.)
     And you can see it in the Webex App!
 
     ![Webex](./assets/webex_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-
-<!--
-## Prerequisites — Control Hub provisioning
-
-Every official Webex MCP server includes this requirement:
-
-!!! Note
-    **This MCP server must be enabled by your organization's admin in Webex Control Hub before it can be used.** See [Provisioning on Control Hub](https://developer.webex.com/mcp/docs/provisioning-on-control-hub){:target="_blank"} for details.
-
-Before you start the hands-on steps:
-
-1. Confirm with your lab instructor that the required MCP servers are **allowed** for your org in **Control Hub → Apps → Agentic Apps**.
-2. Verify the **Tools**, **Resources**, and **Prompts** you need are **enabled** for users (admins can disable individual tools).
-3. If connection fails with authorization errors, ask an admin to review the app's **Authentication** and **Capabilities** tabs.
-
-Administrators configure governance per app (allow/block, tool enablement, schema re-authorization). End users cannot bypass these controls from VS Code.
--->
 
 ## Exercises
 
