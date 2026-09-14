@@ -211,7 +211,7 @@ You have seem now how a bot works, but now we will make it "smarter". To be able
 In this scenario we will be using OpenAI models, specificically **gpt-5-nano**.
 
 !!! Warning
-    If you try to change the model you will get a 403 error.
+    If you try to change the model you will get a **403** error.
 
 1. Add your OpenAI key in `.env` and save it:
 
