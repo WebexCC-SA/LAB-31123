@@ -62,6 +62,7 @@ As discussed, we will be using WebSockets in this lab. Websockets will keep open
     import asyncio
     import base64
     import json
+    import logging
     import ssl
     import uuid
     
@@ -69,8 +70,10 @@ As discussed, we will be using WebSockets in this lab. Websockets will keep open
     import requests
     import websockets
     
+    log = logging.getLogger(__name__)
+    
     API_URL = "https://webexapis.com/v1"
-    # Host map for the org: used to find the WDM URL that issues WebSocket devices.
+    # Host map for the org: used to find the WDM URL that issues Webex WebSocket devices.
     CATALOG_URL = "https://u2c.wbx2.com/u2c/api/v1/catalog?format=hostmap"
     # Payload Webex expects when creating a desktop "device" that can open Mercury.
     DEVICE_DATA = {
@@ -83,7 +86,6 @@ As discussed, we will be using WebSockets in this lab. Websockets will keep open
         "systemVersion": "0.1",
     }
     
-    
     class WebSocketClient:
         """Opens a Webex Mercury WebSocket and calls on_message(message) for each new post."""
     
@@ -93,13 +95,52 @@ As discussed, we will be using WebSockets in this lab. Websockets will keep open
             self.session = requests.Session()
             self.session.headers.update({"Authorization": f"Bearer {access_token}"})
             self.me = self.session.get(f"{API_URL}/people/me").json()
-            # REST ids are base64 of "ciscospark://<cluster>/<type>/<uuid>"; the socket uses bare uuids.
             self.cluster, _, self.person_uuid = base64.b64decode(self.me["id"] + "==").decode().split("/")[2:]
+            self.clusters = None
     
-        def get_message(self, activity_uuid):
-            # The socket only carries encrypted text, so read the plaintext back from the REST API.
-            message_id = base64.b64encode(f"ciscospark://{self.cluster}/MESSAGE/{activity_uuid}".encode()).decode()
-            return self.session.get(f"{API_URL}/messages/{message_id}").json()
+        def _cluster_of(self, hydra_id):
+            return base64.b64decode(hydra_id + "==").decode().split("/")[2]
+    
+        def _room_clusters(self):
+            clusters, url, params = [], f"{API_URL}/rooms", {"max": 100}
+            for _ in range(5):
+                response = self.session.get(url, params=params)
+                if not response.ok:
+                    break
+                for room in response.json().get("items", []):
+                    cluster = self._cluster_of(room["id"])
+                    if cluster not in clusters:
+                        clusters.append(cluster)
+                url = response.links.get("next", {}).get("url")
+                if not url:
+                    break
+                params = None
+            return clusters
+    
+        def _candidate_clusters(self, activity):
+            # The event's own cluster first, then the bot's, then the clusters its spaces live in.
+            candidates = []
+            for node in (activity, activity.get("target"), activity.get("object")):
+                global_id = node.get("globalId") if isinstance(node, dict) else None
+                if isinstance(global_id, str) and "/" in global_id:
+                    candidates.append(global_id.split("/")[0])
+            candidates.append(self.cluster)
+            if self.clusters is None:
+                self.clusters = self._room_clusters()
+            candidates.extend(self.clusters)
+            return list(dict.fromkeys(candidates))
+    
+        def get_message(self, activity):
+            # A space shared with another org keeps that org's cluster, not the bot's.
+            for _ in range(2):
+                for cluster in self._candidate_clusters(activity):
+                    hydra_id = base64.b64encode(f"ciscospark://{cluster}/MESSAGE/{activity['id']}".encode()).decode()
+                    response = self.session.get(f"{API_URL}/messages/{hydra_id}")
+                    if response.ok:
+                        return response.json()
+                self.clusters = None
+            log.warning(f"Could not read message {activity['id']} in any known cluster")
+            return None
     
         def send_message(self, room_id, text):
             # POST a text message back into the same space.
@@ -129,7 +170,9 @@ As discussed, we will be using WebSockets in this lab. Websockets will keep open
                     # Only new posts, and never the bot's own replies (avoids an echo loop).
                     if activity["verb"] != "post" or activity["actor"]["id"] == self.person_uuid:
                         continue
-                    self.on_message(self.get_message(activity["id"]))
+                    message = self.get_message(activity)
+                    if message:
+                        self.on_message(message)
     
         def run(self):
             asyncio.run(self.listen())
