@@ -10,24 +10,14 @@ In this session you learned how to:
 - Build a custom MCP server to expose organization-specific tools
 - Run an end-to-end troubleshooting scenario from Webex chat to MCP tool execution
 
-## Continue learning
+## Share your experience! 
 
-- [Webex MCP Server Overview](https://developer.webex.com/mcp/docs/webex-mcp-server-overview){:target="_blank"}
-- [Model Context Protocol](https://modelcontextprotocol.io){:target="_blank"}
-- [Webex Bots Guide](https://developer.webex.com/messaging/docs/bots){:target="_blank"}
-- [Webex API Troubleshooting Guide](https://developer.webex.com/explore/docs/api/guides/troubleshooting){:target="_blank"}
-- [Agent Skills](https://agentskills.io){:target="_blank"}
+Scan the QR code for the post-session survey
 
-## Related sessions
-
-- LAB-21122 — Exploring the Webex Developer Ecosystem
-- [Webex for Developers](https://developer.webex.com){:target="_blank"}
+![Feedback](./assets/feedback.png){ width="150" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ## Sandbox
 
 To continue experimenting after the event, create your own developer sandbox:
 
 - [Developer Sandbox Guide](https://developer.webex.com/create/docs/developer-sandbox-guide/){:target="_blank"}
-
-!!! Note "Feedback"
-    To receive this lab guide in PDF format after the event, please submit your session feedback through the event app.
