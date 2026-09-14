@@ -14,35 +14,6 @@ flowchart LR
 
 The bot handles **transport**. The agent handles **reasoning and tool selection**.
 
-<!--
-## Visual Studio Code
-
-We will continue using Visual Studio Code from now on for the development using Python
-
-1. Go to the **Source Control** tab and click **Clone Repository**:
-
-    ![vsc_clone](./assets/docx-image-005.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-2. Type the following:
-
-    - https://github.com/diegomjimenez/WebexOne2026.git
-
-    ![vsc_repo](./assets/docx-image-006.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-3. Select a directory to save the project.
-4. Click on **Yes, I trust the authors** if a pop-up appears.
-5. From the top bar, click on **Terminal** > **New terminal**.
-6. Create a virtual environment:
-
-    - python -m venv webexone2026
-    - .\webexone2026\Scripts\activate.ps1
-
-7. Install the requirements:
-
-    - pip install -r requirements.txt
-  
--->
-
 ## Step 5.1: Create a Bot
 
 First you need to create your bot:
@@ -51,26 +22,39 @@ First you need to create your bot:
 2. Up on the top right corner of the page, click your avatar and then select [My Webex Apps](https://developer.webex.com/my-apps){:target="_blank"}.
 3. On the ‘Create a New App’ page, find the Bot card and click the ‘Create a Bot’ button.
 
-![Bot](assets/bot_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Bot](assets/bot_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-4. Fill out the webform to register a new service app.  
-   1. **Bot Name:** WebexOne-*USERNAME*
-   2. **Bot Username:** WebexOne-*USERNAME*
-   3. **Icon:** *Select any color icon*.
-   4. **Description**: “Bot for WebexOne”
+4. Fill out the webform to register a new bot
+   
+    1. **Bot Name:** WebexOne-*USERNAME*
+    2. **Bot Username:** WebexOne-*USERNAME*
+    3. **Icon:** *Select any color icon*.
+    4. **Description**: “Bot for WebexOne”
+  
+    Click **Add Bot** now.
 
-![Bot](assets/bot_2.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Bot](assets/bot_2.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    
+    !!! Warning
+        Do not close this windows without copying the **Bot access token**.
 
-5. Copy the bot access token into `.env`:
+5. In VS Code, make sure that in your terminal you are in the right folder:
+
+   * cd ../03_bots
+  
+6. Copy the example .venv file:
+
+   * cp .env.example .env
+
+7. Copy the bot access token into `.env`:
 
     ```env
     BOT_TOKEN=your_bot_access_token
     ```
 
-    !!! Warning
-        Make sure you are in the folder for this section.
-
 ## Step 5.2: WebSocket Client
+
+As discussed, we will be using WebSockets in this lab. Websockets will keep open a communication channel with Cisco to receivie and send messages. We will be using the following Class during this lab to run the bot.
 
 1. Navigate to 03_bots/websocket_client.py and review the code:
 
@@ -156,9 +140,11 @@ First you need to create your bot:
 
 ## Step 5.3: Echo
 
+In this exercise, we will create a bot that will answer back the same message using the WebSocket class showed before.
+
 1. Navigate to 03_bots/01_echo.py and review the code:
 
-    ```python
+    ```python    
     import logging
     import os
     
@@ -175,23 +161,18 @@ First you need to create your bot:
     if not BOT_TOKEN:
         raise SystemExit("Set BOT_TOKEN in your .env file")
     
-    
-    def handle_message(activity):
-        # Ignore non-posts and the bot's own replies (avoids an echo loop).
-        if activity["verb"] != "post" or activity["actor"]["id"] == bot.person_uuid:
-            return
-    
-        text = activity["object"].get("displayName", "").strip()
+    def handle_message(message):
+        # message is the decrypted Webex message: text, roomId, personEmail, ...
+        text = (message.get("text") or "").strip()
         if not text:
             return
     
-        sender = activity["actor"]["emailAddress"]
+        sender = message["personEmail"]
         log.info(f"Received from {sender}: {text}")
     
         reply = f"Echo: {text}"
-        bot.send_message(activity["target"]["id"], reply)  # target.id is the room UUID
+        bot.send_message(message["roomId"], reply)
         log.info(f"Sent to {sender}: {reply}")
-    
     
     if __name__ == "__main__":
         bot = WebSocketClient(access_token=BOT_TOKEN, on_message=handle_message)
@@ -202,21 +183,17 @@ First you need to create your bot:
             log.info("Stopped.")
     ```
 
-2. Make sure that in your terminal you are in the right folder:
-
-   * cd ../03_bots
-  
-3. Copy the example .venv file:
-
-   * cp .env.example .env
-
-3. Run your code with the following command:
+2. Run your code with the following command:
 
    * python 01_echo.py
 
+3. Now your bot is active listening. Look for your bot and send it a message:
+
+    ![Bot](assets/bot_6.png){ width="350" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
 4. You should instantly get an answer:
 
-    ![Bot](assets/bot_3.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Bot](assets/bot_3.png){ width="350" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 5. You can see something similar in the terminal:
 
@@ -225,12 +202,18 @@ First you need to create your bot:
     2026-09-09 14:07:29,407 INFO Received from diejimen@cisco.com: Hello
     2026-09-09 14:07:29,925 INFO Sent to diejimen@cisco.com: Echo: Hello
     ```
+6. You can press now Ctrl+C to stop the bot.
 
 ## Step 5.4: LLM
 
-Now, we will integrate the bot with an LLM. In this scenario we will be using OpenAI models.
+You have seem now how a bot works, but now we will make it "smarter". To be able to help us do some actions, we will integrate the bot with an LLM, that will be the brain of our assistant. 
 
-1. Make sure you have your key in `.env`:
+In this scenario we will be using OpenAI models, specificically **gpt-5-nano**.
+
+!!! Warning
+    If you try to change the model you will get a 403 error.
+
+1. Add your OpenAI key in `.env` and save it:
 
     ```env
     OPENAI_API_KEY=your_openai_api_key
@@ -238,7 +221,7 @@ Now, we will integrate the bot with an LLM. In this scenario we will be using Op
     
 2. Navigate to 03_bots/02_llm.py and review the code:
 
-    ```python
+    ```python    
     import logging
     import os
     
@@ -298,7 +281,6 @@ Now, we will integrate the bot with an LLM. In this scenario we will be using Op
         sender = message["personEmail"]
         log.info(f"Received from {sender}: {text}")
     
-        # Details stay in the terminal; the user only ever sees ERROR_REPLY.
         try:
             reply = ask_llm(text)
         except requests.exceptions.SSLError:
@@ -325,17 +307,13 @@ Now, we will integrate the bot with an LLM. In this scenario we will be using Op
             log.info("Stopped.")
     ```
 
-    !!! Warning "Model"
-        Note that for this lab "gpt-5-nano" model is forced. If you try to change it you will get 403.
-
-
 3. Run your code with the following command:
 
-   * python 02_llm.py
+    * python 02_llm.py
 
-4. You should instantly get an answer:
+4. In the same coversation you opened before, text your bot, and you should instantly get an answer:
 
-    ![Bot](assets/bot_4.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Bot](assets/bot_4.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 5. You can see something similar in the terminal:
 
@@ -354,6 +332,8 @@ Now, we will integrate the bot with an LLM. In this scenario we will be using Op
     Tell me what you’re working on or ask me to do something, and we’ll start from there.
     ```
 
+6. You can press now Ctrl+C to stop the bot.
+
 ## Extra: Security
 
 So far, we have not introduce any security, therefore any user in or outsite your organization is able right now to run queries against your assistant.
@@ -363,6 +343,22 @@ You may want to introduce some security, to not only do not allow users outside 
 1. Navigate to 03_bots/03_security.py and review the code:
     
     ```python
+    import logging
+    import os
+    
+    from dotenv import load_dotenv
+    
+    from websocket_client import WebSocketClient
+    
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    log = logging.getLogger("security-bot")
+    
+    load_dotenv()
+    
+    BOT_TOKEN = os.getenv("BOT_TOKEN")
+    if not BOT_TOKEN:
+        raise SystemExit("Set BOT_TOKEN in your .env file")
+    
     DENIED_DOMAIN_REPLY = "This bot only accepts messages from allowed organization domains."
     DENIED_ADMIN_REPLY = "This bot only accepts messages from allowed users."
     
@@ -412,15 +408,30 @@ You may want to introduce some security, to not only do not allow users outside 
         reply = f"Authorized ({sender_domain(sender)}): {text}"
         bot.send_message(message["roomId"], reply)
         log.info(f"Sent to {sender}: {reply}")
+    
+    
+    if __name__ == "__main__":
+        bot = WebSocketClient(access_token=BOT_TOKEN, on_message=handle_message)
+        log.info(f"Listening as {bot.me['emails'][0]} via WebSocket... (Ctrl+C to stop)")
+        log.info(f"Allowed domains: {', '.join(sorted(ALLOWED_DOMAINS)) or '(all)'}")
+        log.info(f"Admins: {', '.join(sorted(ALLOWED_ADMINS)) or '(all)'}")
+        try:
+            bot.run()
+        except KeyboardInterrupt:
+            log.info("Stopped.")
     ```
 
 2. Add different domains and admins to test the access.
 
-    ```
+    ```env
     ALLOWED_DOMAINS=example.com
     ALLOWED_ADMINS=admin@example.com
     ```
-   
-4. Run your code with the following command:
+
+3. Run your code with the following command:
 
    * python 03_security.py
+
+4. You will get an answer, but it will be the pre-determined message:
+
+    ![Bot](assets/bot_7.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
