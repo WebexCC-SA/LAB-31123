@@ -2,6 +2,12 @@
 
 Welcome to **LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant**. This section prepares your lab workstation, credentials, and development environment.
 
+## Join the conversation!
+
+Scan the QR code to be added to the Webex space for Q&A and more
+
+![Webex](./assets/webex_space.png){ width="150" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
 ## Tools used in this lab
 
 - **Webex Client** — interact with your bot and verify assistant responses
