@@ -17,28 +17,24 @@ flowchart LR
 
 ## Step 4.1: Build the MCP Client
 
-These are the MCP components neccesary:
+These are the MCP components used in this section:
 
-| Component | Role | Analogy |
+| Component | Role | In this section |
 | --- | --- | --- |
-| **Host** | Runs the LLM, UI, and one or more MCP clients | The office building |
-| **Client** | Maintains a 1:1 session with one MCP server | The receptionist |
-| **Server** | Exposes tools, resources, prompts; holds credentials | The department |
+| **Host** | App that creates MCP clients (later also LLM / bot) | `01_list_tools.py` |
+| **Client** | One session, one server, one token | `McpClient` |
+| **Server** | Exposes tools (and resources/prompts) | Hosted Webex Messaging MCP and Meetings MCP |
 
 ```mermaid
 flowchart TB
-    subgraph Host[MCP Host]
-        UI[User Interface]
-        LLM[LLM]
-        C1[MCP Client 1]
-        C2[MCP Client 2]
+    subgraph Host["Host: 01_list_tools.py"]
+        C1[MCP Client - Messaging]
+        C2[MCP Client - Meetings]
     end
-    S1[MCP Server - Webex Suite]
-    S2[MCP Server - Custom]
-    C1 <-->|stdio or HTTP| S1
-    C2 <-->|stdio or HTTP| S2
-    LLM --> C1
-    LLM --> C2
+    S1["MCP Server\nwebex-messaging"]
+    S2["MCP Server\nwebex-meeting"]
+    C1 <-->|Streamable HTTP + Bearer token| S1
+    C2 <-->|Streamable HTTP + Bearer token| S2
 ```
 
 To be able to integrate the Webex MCP Clients into your Assistant, you need to have a MCP Client.
@@ -103,7 +99,7 @@ To be able to integrate the Webex MCP Clients into your Assistant, you need to h
     ```
 
    This MCP client allows you to connect to any MCP server.
-    ```
+
 
 ## Step 4.2: List tools
 
@@ -113,7 +109,7 @@ Now, we will
 
    ```python
 
-   MESSAGING_MCP_URL = "https://mcp.webexapis.com/mcp/webex-messaging"
+    MESSAGING_MCP_URL = "https://mcp.webexapis.com/mcp/webex-messaging"
     MEETING_MCP_URL = "https://mcp.webexapis.com/mcp/webex-meeting"
     
     import asyncio
@@ -123,7 +119,7 @@ Now, we will
     from dotenv import load_dotenv
     from mcp.shared.exceptions import MCPError
     
-    from mcp_client import MEETING_MCP_URL, MESSAGING_MCP_URL, McpClient
+    from mcp_client import McpClient
     
     try:
         import truststore
