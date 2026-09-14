@@ -19,6 +19,12 @@ Use the credentials provided by your lab instructor:
 | Username | `userX@webexone-ai-assistant.wbx.ai` (replace X with your pod number) |
 | Password | Provided in the lab handout |
 
+## Webex Client
+
+To begin, you'll log into your dedicated Webex lab account. This will allow you to see the results of your exercises and interact with your assistant.
+
+1. **Open the Webex Client:** Launch the Webex Desktop App on your lab workstation.
+2. **Enter Lab Credentials:** When prompted, enter the **Webex email address and password** provided to you.
 
 ## Visual Studio
 
