@@ -2,6 +2,19 @@
 
 Now that we have already build our AI assistant, we need to give it MCP capabilities to access our organization.
 
+## Architecture
+
+```mermaid
+flowchart LR
+    User[Webex User] --> Bot[Webex Bot]
+    Bot --> Agent[LLM]
+    Agent --> MCP[MCP Client]
+    MCP --> Tools[Webex MCP Tools]
+    Tools --> API[Webex APIs]
+    Agent --> Bot
+    Bot --> User
+```
+
 ## Step 4.1: Build the MCP Client
 
 MCP components
