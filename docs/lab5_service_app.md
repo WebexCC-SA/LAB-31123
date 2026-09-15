@@ -1,6 +1,4 @@
-
-
-# Extra: Service apps 
+# Lab 5: Service apps (Extra)
 
 Till now, you have been using your own token from developer.webex.com. This token is associated with you, and it lives only 12 hours, so it is not a long term solution for building the assistant. 
 
