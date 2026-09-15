@@ -1,8 +1,10 @@
-# Lab 7 - Build a Custom MCP Server
+# Lab 6 - Build a Custom MCP Server
 
 In this section, you will build a custom MCP server that exposes Webex API operations your organization needs — beyond what the official Webex MCP servers provide out of the box.
 
-## Step 7.1: Define your first tool
+In this case, we will build an MCP Server that will help us to do --- actions in our organization.
+
+## Step 6.1: Define your first tool
 
 Example tool definition for listing unresolved Webex status incidents:
 
@@ -31,7 +33,7 @@ TOOLS = [
 }
 ```
 
-## Step 7.2: Implement tool execution
+## Step 6.2: Implement tool execution
 
 ```python
 import os
@@ -66,7 +68,7 @@ def list_admin_audit_events(max_results: int = 10) -> dict:
     return response.json()
 ```
 
-## Step 7.3: Register in your IDE
+## Step 6.3: Register in your IDE
 
 ```json
 {
@@ -92,6 +94,12 @@ Use the webex-custom-lab server to list unresolved platform incidents.
 Use list_admin_audit_events to show the last 5 admin changes in our org.
 ```
 
-## Step 7.4: Integrate with your AI Assistant
+## Step 6.4: Integrate with your AI Assistant
+
+
+
+
+---
+
 
 
