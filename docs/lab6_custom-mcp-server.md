@@ -2,29 +2,7 @@
 
 In this section, you will build a custom MCP server that exposes Webex API operations your organization needs — beyond what the official Webex MCP servers provide out of the box.
 
-## Learning Objectives
-
-Upon completion of this section, you will be able to:
-
-- Scaffold an MCP server with tool catalog and execution handlers
-- Map a Webex REST API operation to an MCP tool with JSON Schema
-- Handle credentials inside the server (never expose tokens to the LLM)
-- Register the custom server in your IDE MCP configuration
-
-## Step 7.1: Project structure
-
-```text
-custom-mcp-server/
-  server.py
-  tools/
-    status.py
-    audit.py
-  schemas/
-    list_audit_events.json
-  requirements.txt
-```
-
-## Step 7.2: Define your first tool
+## Step 7.1: Define your first tool
 
 Example tool definition for listing unresolved Webex status incidents:
 
@@ -40,9 +18,20 @@ TOOLS = [
         },
     }
 ]
+
+{
+    "name": "list_admin_audit_events",
+    "description": "List recent admin audit events for troubleshooting.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "max": {"type": "integer", "default": 10}
+        },
+    },
+}
 ```
 
-## Step 7.3: Implement tool execution
+## Step 7.2: Implement tool execution
 
 ```python
 import os
@@ -65,23 +54,6 @@ def call_tool(name: str, arguments: dict) -> dict:
 !!! Note
     Production MCP servers should validate arguments against JSON Schema, apply rate limits, redact sensitive fields, and use elicitation for destructive operations.
 
-## Step 7.4: Add a Webex API tool
-
-Add a tool that calls an org-specific endpoint (placeholder — update for lab tenant):
-
-```python
-{
-    "name": "list_admin_audit_events",
-    "description": "List recent admin audit events for troubleshooting.",
-    "inputSchema": {
-        "type": "object",
-        "properties": {
-            "max": {"type": "integer", "default": 10}
-        },
-    },
-}
-```
-
 ```python
 def list_admin_audit_events(max_results: int = 10) -> dict:
     response = requests.get(
@@ -94,7 +66,7 @@ def list_admin_audit_events(max_results: int = 10) -> dict:
     return response.json()
 ```
 
-## Step 7.5: Register in your IDE
+## Step 7.3: Register in your IDE
 
 ```json
 {
@@ -110,8 +82,6 @@ def list_admin_audit_events(max_results: int = 10) -> dict:
 }
 ```
 
-## Step 7.6: Test discovery and execution
-
 In your IDE:
 
 ```text
@@ -122,18 +92,6 @@ Use the webex-custom-lab server to list unresolved platform incidents.
 Use list_admin_audit_events to show the last 5 admin changes in our org.
 ```
 
-## Exercise
+## Step 7.4: Integrate with your AI Assistant
 
-Add one additional tool relevant to your organization, such as:
 
-- Queue health summary
-- Address book validation
-- Device provisioning status
-
-Document the tool name, input schema, and sample prompt in your lab notes.
-
-## Content still to define
-
-- Official MCP Python/TypeScript SDK version for the lab
-- Starter repository with `server.py` boilerplate
-- CI check that tool schemas validate
