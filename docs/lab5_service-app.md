@@ -78,7 +78,7 @@ Because a Service App operates at a machine level and can access organization-wi
 
         * cd ../05_serviceapps
   
-        - Copy the example .venv file:
+        - Copy the example .env file:
 
             * cp .env.example .env
 
@@ -248,7 +248,7 @@ You can refresh your **access_token** using your **refresh_token**, **client_id*
 
 2.	Run your code with the following command:
 
-    - python 02_refresh.py
+    * python 02_refresh.py
 
 3. After running the code, you will see the following results:
 
