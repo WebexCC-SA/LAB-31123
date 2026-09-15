@@ -131,7 +131,7 @@ A text box to enter your **Client Secret** will appear. This way, you can genera
 1. Navigate to `05_serviceapps/01_mcp.py` and review the code:
 
     ??? Tip "Python Code"
-        ```
+        ```python
         import asyncio
         import logging
         import os
