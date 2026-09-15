@@ -682,7 +682,7 @@ Now, as we did in the previous section, we will now combine what we have done to
 
 4. Ask your bot for the meetings that you have schedule for tomorrow:
 
-    ![Meeting](assets/meeting_6.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Meeting](assets/meeting_6.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 5. In the console you will see the following:
 
@@ -719,12 +719,7 @@ In this exercise, we will do two things:
 - Create the `send_meetings_card` function, that generates an Adaptive Card for the meetings.
 - Give the LLM a local tool, so it can call this new function when it decides.
 
-You can use the **Buttons and Cards Designer** to build your own:
-
-- [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer){:target="_blank"}
-
-
-In this case, we have built a card that will be sent as a summary if we get meetings:
+In this case, we have built a card that will be sent as a summary if we have meetings:
 
 ```json
 {
@@ -749,22 +744,29 @@ In this case, we have built a card that will be sent as a summary if we get meet
 }
 ```
 
-1. Navigate to 04_mcp/06_card.py and review the code:
+!!! Note "Buttons and Cards Designer"
+
+    You can use the **Buttons and Cards Designer** to build your own:
+    
+    - [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer){:target="_blank"}
+
+
+1. Navigate to 04_mcp/06_card.py and review the code. Take a look at how we have defined our local Tool and the message that it is attached to the LLM:
 
     ??? Tip "Python Code"
         ```python
         import asyncio
-        import json
         import logging
         import os
         import sys
-        from datetime import datetime, timedelta, timezone
+        from datetime import datetime, timezone
         from pathlib import Path
         
         import requests
         from dotenv import load_dotenv
         
-        from mcp_client import McpClient
+        from llm import as_openai_tools, run_turn
+        from mcp_hub import McpHub
         
         sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "03_bot"))
         from websocket_client import WebSocketClient
@@ -776,10 +778,32 @@ In this case, we have built a card that will be sent as a summary if we get meet
         except ImportError:
             pass
         
+        MESSAGING_MCP_URL = "https://mcp.webexapis.com/mcp/webex-messaging"
         MEETING_MCP_URL = "https://mcp.webexapis.com/mcp/webex-meeting"
         MESSAGES_URL = "https://webexapis.com/v1/messages"
         CARD_CONTENT_TYPE = "application/vnd.microsoft.card.adaptive"
-        ERROR_REPLY = "Sorry, I could not list meetings right now. Please try again in a moment."
+        ERROR_REPLY = "Sorry, I could not answer that right now. Please try again in a moment."
+        SEND_MEETINGS_CARD = {
+            "type": "function",
+            "function": {
+                "name": "send_meetings_card",
+                "description": (
+                    "Post an Adaptive Card in the Webex space with title, time, host, and a Join "
+                    "button for each meeting. Call this after webex-list-meetings when "
+                    "data.meetings is not empty. Pass that meetings array. Do not invent meetings."
+                ),
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "meetings": {
+                            "type": "array",
+                            "description": "The meetings array from webex-list-meetings (data.meetings).",
+                        }
+                    },
+                    "required": ["meetings"],
+                },
+            },
+        }
         
         logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
         log = logging.getLogger("mcp-card-bot")
@@ -787,27 +811,25 @@ In this case, we have built a card that will be sent as a summary if we get meet
         load_dotenv()
         
         BOT_TOKEN = os.getenv("BOT_TOKEN")
+        MESSAGING_TOKEN = os.getenv("WEBEX_MESSAGING_MCP_TOKEN")
         MEETING_TOKEN = os.getenv("WEBEX_MEETING_MCP_TOKEN")
+        OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+        OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-5-nano")
         if not BOT_TOKEN:
             raise SystemExit("Set BOT_TOKEN in your .env file")
-        if not MEETING_TOKEN:
-            raise SystemExit("Set WEBEX_MEETING_MCP_TOKEN in your .env file")
-        
-        
-        async def list_meetings():
-            now = datetime.now(timezone.utc)
-            arguments = {
-                "from": now.strftime("%Y-%m-%dT00:00:00Z"),
-                "to": (now + timedelta(days=7)).strftime("%Y-%m-%dT23:59:59Z"),
-                "meetingType": "scheduledMeeting",
-            }
-            result = await McpClient(MEETING_TOKEN, MEETING_MCP_URL).call_tool(
-                "webex-list-meetings",
-                arguments,
+        if not OPENAI_API_KEY:
+            raise SystemExit("Set OPENAI_API_KEY in your .env file")
+        if not MESSAGING_TOKEN and not MEETING_TOKEN:
+            raise SystemExit(
+                "Set WEBEX_MESSAGING_MCP_TOKEN and/or WEBEX_MEETING_MCP_TOKEN in your .env file"
             )
-            if not result:
-                return None
-            return json.loads(result).get("data", {}).get("meetings", [])
+        
+        hub = McpHub(
+            [
+                (MESSAGING_MCP_URL, MESSAGING_TOKEN),
+                (MEETING_MCP_URL, MEETING_TOKEN),
+            ]
+        )
         
         
         def when(meeting):
@@ -871,6 +893,38 @@ In this case, we have built a card that will be sent as a summary if we get meet
             ).raise_for_status()
         
         
+        async def answer(question, sender, room_id):
+            tools = as_openai_tools(await hub.list_tools()) + [SEND_MEETINGS_CARD]
+            log.info(f"Offering {len(tools)} tool(s) to {OPENAI_MODEL} (MCP + send_meetings_card)")
+            posted = {"card": False}
+        
+            def send_meetings_card(arguments):
+                meetings = arguments.get("meetings") or []
+                if not meetings:
+                    return "No meetings to put on a card. Reply in a short chat message instead."
+                send_card(room_id, f"You have {len(meetings)} meeting(s)", build_card(meetings))
+                posted["card"] = True
+                log.info(f"Sent a card with {len(meetings)} meeting(s)")
+                return "Adaptive Card posted in the space. Give a short confirmation; do not re-list the meetings."
+        
+            today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+            messages = [
+                {
+                    "role": "system",
+                    "content": (
+                        f"You are a Webex assistant helping {sender}. Today is {today} (UTC). "
+                        "Answer only from tool results, never from memory. "
+                        "When webex-list-meetings returns meetings, call send_meetings_card with "
+                        "that meetings array so the user gets Join buttons. "
+                        "If there are no meetings, or the question is not about meetings, reply in chat."
+                    ),
+                },
+                {"role": "user", "content": question},
+            ]
+            reply = await run_turn(hub, messages, tools, extra={"send_meetings_card": send_meetings_card})
+            return reply, posted["card"]
+        
+        
         def handle_message(message):
             text = (message.get("text") or "").strip()
             if not text:
@@ -878,21 +932,21 @@ In this case, we have built a card that will be sent as a summary if we get meet
         
             sender = message["personEmail"]
             log.info(f"Received from {sender}: {text}")
-            asyncio.create_task(reply_with_card(message, sender))
+            asyncio.create_task(reply_with_assistant(message, sender, text))
         
         
-        async def reply_with_card(message, sender):
-            meetings = await list_meetings()
-            if meetings is None:
+        async def reply_with_assistant(message, sender, question):
+            try:
+                reply, posted_card = await answer(question, sender, message["roomId"])
+            except Exception:
+                log.exception("Assistant turn failed")
                 bot.send_message(message["roomId"], ERROR_REPLY)
                 return
-        
-            if not meetings:
-                bot.send_message(message["roomId"], "You have no meetings scheduled in the next 7 days.")
+            if posted_card:
+                log.info(f"Card already sent to {sender}; LLM said: {reply}")
                 return
-        
-            send_card(message["roomId"], f"You have {len(meetings)} meeting(s)", build_card(meetings))
-            log.info(f"Sent a card with {len(meetings)} meeting(s) to {sender}")
+            bot.send_message(message["roomId"], reply)
+            log.info(f"Sent to {sender}: {reply}")
         
         
         if __name__ == "__main__":
@@ -904,6 +958,28 @@ In this case, we have built a card that will be sent as a summary if we get meet
                 log.info("Stopped.")
         ```
 
+2. Run your code with the following command:
+
+    * python 06_card.py
+
+3. Ask your bot about your meetings. You should see in the terminal that all tools were presented to the agent, and it choosed first to list the meetings, and the to send the card.
+
+    ```terminal
+    2026-09-15 13:34:47,265 INFO Received from admin@webexone-ai-assistant.wbx.ai: What meetings do I have?
+    ...
+    2026-09-15 13:34:54,828 INFO Offering 33 tool(s) to gpt-5-nano (MCP + send_meetings_card)
+    2026-09-15 13:35:01,261 INFO LLM asked for webex-list-meetings {}
+    ...
+    2026-09-15 13:35:16,198 INFO LLM asked for send_meetings_card {'meetings': [{'id': 'cd9966d90d5a43bfa8e002f6e8b6aa4e', 'meetingNumber': '26604791633', 'title': 'Meeting with user1@webexone-ai-assistant.wbx.ai', 'start': '2026-09-15T16:00:00Z', 'end': '2026-09-15T17:00:00Z', 'state': 'active', 'meetingType': 'meetingSeries', 'timezone': 'UTC', 'hostDisplayName': 'admin@webexone-ai-assistant.wbx.ai', 'hostEmail': 'admin@webexone-ai-assistant.wbx.ai', 'webLink': 'https://webexone-ai-assistant-sbx.webex.com/webexone-ai-assistant-sbx/j.php?MTID=m4bc7e596e836eadff3446f07b1379e7e', 'sipAddress': '26604791633@webexone-ai-assistant-sbx.webex.com', 'invitees': [{'id': 'cd9966d90d5a43bfa8e002f6e8b6aa4e_4266817701', 'email': 'user1@webexone-ai-assistant.wbx.ai', 'displayName': 'user1@webexone-ai-assistant.wbx.ai', 'coHost': False, 'panelist': False}]}], 'count': 1, 'totalMeetings': 1}
+    ...
+    2026-09-15 13:35:22,029 INFO Card already sent to admin@webexone-ai-assistant.wbx.ai; LLM said: A joinable meeting card has been posted in this space for your upcoming meeting. Open the card and click Join to attend.
+    ```
+
+4. You will receive the following card in your conversation:
+
+    ![Meeting](assets/meeting_7.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+    If you press join, it will try to open the Webex App to join the meeting.
 
 ---
 
