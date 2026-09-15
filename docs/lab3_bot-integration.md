@@ -25,15 +25,15 @@ The bot handles **transport**. The agent handles **reasoning and tool selection*
 
 ## Step 3.1: Create a Bot
 
-First you need to create your bot:
+First, you need to create your bot:
 
-1. Log into [developer.webex.com](https://developer.webex.com/){:target="_blank"} with credentials that were provided.
-2. Up on the top right corner of the page, click your avatar and then select [My Webex Apps](https://developer.webex.com/my-apps){:target="_blank"}.
+1. Log into [developer.webex.com](https://developer.webex.com/){:target="_blank"} with the credentials that were provided.
+2. In the top right corner of the page, click your avatar and then select [My Webex Apps](https://developer.webex.com/my-apps){:target="_blank"}.
 3. On the ‘Create a New App’ page, find the Bot card and click the ‘Create a Bot’ button.
 
     ![Bot](assets/bot_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-4. Fill out the webform to register a new bot
+4. Fill out the web form to register a new bot:
    
     1. **Bot Name:** WebexOne-*USERNAME*
     2. **Bot Username:** WebexOne-*USERNAME*
@@ -45,9 +45,9 @@ First you need to create your bot:
     ![Bot](assets/bot_2.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     
     !!! Warning
-        Do not close this windows without copying the **Bot access token**.
+        Do not close this window without copying the **Bot access token**.
 
-5. In VS Code, make sure that in your terminal you are in the right folder:
+5. In VS Code, make sure your terminal is in the correct folder:
 
     * cd ../03_bots
   
@@ -63,9 +63,9 @@ First you need to create your bot:
 
 ## Step 3.2: WebSocket Client
 
-As discussed, we will be using WebSockets in this lab. Websockets will keep open a communication channel with Cisco to receivie and send messages. We will be using the following Class during this lab to run the bot.
+As discussed, we will be using WebSockets in this lab. WebSockets will keep a communication channel open with Cisco to receive and send messages. We will be using the following class during this lab to run the bot.
 
-1. Navigate to 03_bots/websocket_client.py and review the code:
+1. Navigate to `03_bots/websocket_client.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -193,9 +193,9 @@ As discussed, we will be using WebSockets in this lab. Websockets will keep open
 
 ## Step 3.3: Echo
 
-In this exercise, we will create a bot that will answer back the same message using the WebSocket class showed before.
+In this exercise, we will create a bot that will echo back the same message using the WebSocket class shown above.
 
-1. Navigate to 03_bots/01_echo.py and review the code:
+1. Navigate to `03_bots/01_echo.py` and review the code:
 
     ??? Tip "Python Code"
         ```python    
@@ -241,7 +241,7 @@ In this exercise, we will create a bot that will answer back the same message us
 
     * python 01_echo.py
 
-3. Now your bot is active listening. Look for your bot and send it a message:
+3. Now your bot is actively listening. Look for your bot and send it a message:
 
     ![Bot](assets/bot_6.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
@@ -256,16 +256,16 @@ In this exercise, we will create a bot that will answer back the same message us
     2026-09-09 14:07:29,407 INFO Received from diejimen@cisco.com: Hello
     2026-09-09 14:07:29,925 INFO Sent to diejimen@cisco.com: Echo: Hello
     ```
-6. You can press now Ctrl+C to stop the bot.
+6. You can press `Ctrl+C` to stop the bot.
 
 ## Step 3.4: LLM
 
-You have seem now how a bot works, but now we will make it "smarter". To be able to help us do some actions, we will integrate the bot with an LLM, that will be the brain of our assistant. 
+You have seen how a bot works, but now we will make it "smarter". To enable it to perform actions, we will integrate the bot with an LLM, which will act as the brain of our assistant. 
 
-In this scenario we will be using OpenAI models, specificically **gpt-5-nano**.
+In this scenario, we will be using OpenAI models, specifically **gpt-5-nano**.
 
 !!! Warning
-    If you try to change the model you will get a **403** error.
+    If you try to change the model, you will get a **403** error.
 
 1. Add your OpenAI key in `.env` and save it:
 
@@ -273,7 +273,7 @@ In this scenario we will be using OpenAI models, specificically **gpt-5-nano**.
     OPENAI_API_KEY=your_openai_api_key
     ```
     
-2. Navigate to 03_bots/02_llm.py and review the code:
+2. Navigate to `03_bots/02_llm.py` and review the code:
 
     ??? Tip "Python Code"
         ```python    
@@ -366,7 +366,7 @@ In this scenario we will be using OpenAI models, specificically **gpt-5-nano**.
 
     * python 02_llm.py
 
-4. In the same coversation you opened before, text your bot, and you should instantly get an answer:
+4. In the same conversation you opened earlier, text your bot, and you should instantly get an answer:
 
     ![Bot](assets/bot_4.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
@@ -387,15 +387,15 @@ In this scenario we will be using OpenAI models, specificically **gpt-5-nano**.
     Tell me what you’re working on or ask me to do something, and we’ll start from there.
     ```
 
-6. You can press now Ctrl+C to stop the bot.
+6. You can press `Ctrl+C` to stop the bot.
 
 ## Extra: Security
 
-So far, we have not introduce any security, therefore any user in or outsite your organization is able right now to run queries against your assistant.
+So far, we have not introduced any security; therefore, any user inside or outside your organization is currently able to run queries against your assistant.
 
-You may want to introduce some security, to not only do not allow users outside your organization to access it, but also to only allow admin to run specific calls.
+You may want to introduce some security, not only to prevent users outside your organization from accessing it, but also to restrict specific calls to admins only.
 
-1. Navigate to 03_bots/03_security.py and review the code:
+1. Navigate to `03_bots/03_security.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -477,21 +477,21 @@ You may want to introduce some security, to not only do not allow users outside 
                 log.info("Stopped.")
         ```
 
-1. Add different domains and admins to your .env file to test the access:
+2. Add different domains and admins to your `.env` file to test the access:
 
     ```env
     ALLOWED_DOMAINS=example.com
     ALLOWED_ADMINS=admin@example.com
     ```
 
-2. Run your code with the following command:
+3. Run your code with the following command:
 
     * python 03_security.py
 
-3. You will get an answer, but it will be the pre-determined message:
+4. You will get an answer, but it will be the pre-determined rejection message:
 
     ![Bot](assets/bot_7.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 ---
 
-In the next section, we will give our bot the capabilities from the Webex MCP servers
+In the next section, we will give our bot capabilities from the Webex MCP servers.
