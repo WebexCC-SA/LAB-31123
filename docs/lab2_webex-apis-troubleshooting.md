@@ -1,32 +1,28 @@
 # Lab 2 - Webex APIs
 
-In this section, you will start exploring Webex REST APIs. You will do a quick review on how to use Bruno and how to call them using Python. Later, we will talk about the APIs that can used to manage and troubleshoot an organization — status, audit, compliance, reports, calling, and meetings.
+In this section, you will start exploring Webex REST APIs. You will do a quick review on how to use Bruno and how to call them using Python. Later, we will discuss the APIs that can be used to manage and troubleshoot an organization — status, audit, compliance, reports, calling, and meetings.
 
-## Step 1 - General Webex APIs
+## Step 2.1 - General Webex APIs
 
-In the previous section, we enabled our Agent to use MCP Servers to do actions in our name.
+In the previous section, we enabled our Agent to use MCP Servers to perform actions on our behalf.
 
-At the end and MCP server is just a list of tools, that our agent can use. Those tools are doing API calls. Now, we will be doing those API calls ourselves.
+At the end of the day, an MCP server is just a list of tools that our agent can use. Those tools are executing API calls. Now, we will be making those API calls ourselves.
 
 ### Webex For Developers
 
-Navigate to:
+Navigate to:<br />
 
 - [Webex for Developers](https://developer.webex.com/){:target="_blank"}
 
 Use the same Webex credentials provided for the lab. 
 
-
 https://developer.webex.com/messaging/docs/messaging
-
 
 ### Calling APIs using Bruno
 
 ### Calling APIs using Python
 
-
-
-## Step 2 - Webex APIs for Troubleshooting
+## Step 2.2 - Webex APIs for Troubleshooting
 
 ### Webex Status API
 
@@ -121,17 +117,16 @@ TBC
 
 ---
 
-## Step 1.3: The N × M problem MCP solves
+## Step 2.3: The N × M problem MCP solves
 
 Without a standard protocol, every AI application needs custom glue code for every backend system — creating fragile, exponential integration work.
 
 MCP reduces this to **N + M** connections by providing a universal interface between AI hosts and platform capabilities.
 
-## Step 1.4: When to use Webex APIs vs Webex MCP
+## Step 2.4: When to use Webex APIs vs Webex MCP
 
 | Choose Webex REST APIs when… | Choose Webex MCP when… |
 | --- | --- |
 | You need full control over every request | You want natural-language access from an AI client |
 | Performance and custom business logic matter | You need rapid prototyping across MCP-compatible tools |
 | You build enterprise apps with webhooks | You connect IDE or agent frameworks to Webex quickly |
-
