@@ -70,10 +70,10 @@ Because a Service App operates at a machine level and can access organization-wi
     ![Service App](./assets/serviceapp_1.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     !!! Warning
-        From this page, copy and save the **Client ID** and **Client Secret**:
+        From this page, you need to save the **Client ID** and **Client Secret**:
 
         ![Service App](./assets/serviceapp_2.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-    
+
         In VS Code, make sure that in your terminal you are in the right folder:
 
         * cd ../05_serviceapps
@@ -122,17 +122,64 @@ A text box to enter your **Client Secret** will appear. This way, you can genera
     ACCESS_TOKEN=
     REFRESH_TOKEN=
     ```
+
 !!! Note
     The expiration time for the access token is 14 days, while the refresh token expires in 90 days.
 
-
-
-
-
 ## Step 5.2: Using the token to call an MCP
 
+1. Navigate to 05-serviceapps/01_mcp.py and review the code:
 
-
+    ??? Tip "Python Code"
+        ```
+        import asyncio
+        import logging
+        import os
+        
+        from dotenv import load_dotenv
+        
+        import sys
+        sys.path.append(os.path.join(os.path.dirname(__file__), '..', '04_mcp'))
+        from mcp_client import McpClient
+        
+        try:
+            import truststore
+            truststore.inject_into_ssl()
+        except ImportError:
+            pass
+        
+        MESSAGING_MCP_URL = "https://mcp.webexapis.com/mcp/webex-messaging"
+        
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+        log = logging.getLogger("mcp-service-app")
+        
+        load_dotenv()
+        
+        # We use the token generated from the UI or the refresh script
+        SERVICE_APP_TOKEN = os.getenv("ACCESS_TOKEN")
+        
+        if not SERVICE_APP_TOKEN:
+            raise SystemExit("Set ACCESS_TOKEN in your .env file")
+        
+        async def main():
+            log.info("Connecting to Messaging MCP with Service App token...")
+        
+            client = McpClient(SERVICE_APP_TOKEN, MESSAGING_MCP_URL)
+        
+            # List tools to prove the token is authorized for spark:mcp
+            tools = await client.list_tools()
+        
+            if not tools:
+                log.warning("No tools found or connection failed.")
+                return
+        
+            log.info(f"Success! Found {len(tools)} tool(s) available for the Service App:")
+            for tool in tools:
+                log.info(f"  - {tool.name}: {tool.description}")
+        
+        if __name__ == "__main__":
+            asyncio.run(main())
+        ```
 
 ## Extra: Refresh your access_token
 
@@ -146,7 +193,7 @@ As mentioned earlier, the **access_token** will expire after 14 days, and the **
 
 You can refresh your **access_token** using your **refresh_token**, **client_id** and **secret_id** with the following code snippet:
 
-1. Navigate to 03-optional/07_refresh.py and review the code:
+1. Navigate to 05-serviceapps/02_refresh.py and review the code:
 
     ??? Tip "Python Code"
         ```
@@ -157,9 +204,12 @@ You can refresh your **access_token** using your **refresh_token**, **client_id*
         # Load environment variables from the .env file.
         load_dotenv()
         
-        clientid = os.getenv("CLIENTID")
-        secretid = os.getenv("SECRETID")
-        refreshtoken = os.getenv("REFRESH_TOKEN")
+        client_id = os.getenv("CLIENT_ID")
+        client_secret = os.getenv("CLIENT_SECRET")
+        refresh_token_val = os.getenv("REFRESH_TOKEN")
+        
+        if not all([client_id, client_secret, refresh_token_val]):
+            raise SystemExit("Please set CLIENT_ID, CLIENT_SECRET, and REFRESH_TOKEN in your .env file")
         
         def refresh_token(client_id, client_secret, refresh_token):
             url = "https://webexapis.com/v1/access_token"
@@ -182,18 +232,23 @@ You can refresh your **access_token** using your **refresh_token**, **client_id*
             else:
                 raise Exception(f"Failed to refresh token: {response.status_code} - {response.text}")
         
-        token = refresh_token(clientid, secretid, refreshtoken)
+        if __name__ == "__main__":
+            print("Refreshing Service App token...")
+            token = refresh_token(client_id, client_secret, refresh_token_val)
         
-        print(f"Access Token: {token['access_token']}")
-        print(f"Expires in: {token['expires_in']}")
-        print(f"Refresh Token: {token['refresh_token']}")
-        print(f"Refresh Token Expires in: {token['refresh_token_expires_in']}")
-        print(f"Token Type: {token['token_type']}")
+            print("\n--- New Token Details ---")
+            print(f"Access Token: {token['access_token']}")
+            print(f"Expires in: {token['expires_in']} seconds")
+            print(f"Refresh Token: {token['refresh_token']}")
+            print(f"Refresh Token Expires in: {token['refresh_token_expires_in']} seconds")
+            print(f"Token Type: {token['token_type']}")
+        
+            print("\nUpdate your .env file with the new ACCESS_TOKEN!")
         ```
 
 2.	Run your code with the following command:
 
-    - python 0X_refresh.py
+    - python 02_refresh.py
 
 3. After running the code, you will see the following results:
 
