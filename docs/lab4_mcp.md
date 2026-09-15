@@ -27,9 +27,14 @@ These are the MCP components used in this section:
 
 ```mermaid
 flowchart TB
-    subgraph Host["Host: 01_list_tools.py"]
+    subgraph Host["MCP Host"]
+        UI[Terminal or Webex bot]
+        LLM[LLM]
         C1[MCP Client - Messaging]
         C2[MCP Client - Meetings]
+        UI --> LLM
+        LLM --> C1
+        LLM --> C2
     end
     S1["MCP Server\nwebex-messaging"]
     S2["MCP Server\nwebex-meeting"]
