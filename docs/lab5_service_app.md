@@ -1,4 +1,4 @@
-# Lab 5 - # Lab 5: Service apps (Extra)
+# Lab 5 - Service apps (Extra)
 
 So far in this lab, we have been using a Personal Access Token to authenticate our bot and MCP clients. While this is great for rapid prototyping and local development, **Personal Access Tokens expire after 12 hours**. 
 
@@ -14,7 +14,11 @@ Unlike a Personal Access Token (which acts on behalf of *you*, the user), a Serv
 
 You have already seen how scopes work. When we looked at the [Meetings MCP Server documentation](https://developer.webex.com/mcp/docs/meetings-mcp-server), we saw that the MCP token acts as a wrapper around specific permissions (like `meeting:schedules_read` or `meeting:schedules_write`). 
 
+![Scope](./assets/scope_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
 Service Apps use this exact same concept. When you create a Service App, you must define its **scopes** to strictly limit what the machine is allowed to do. To allow the Service App to connect to an MCP Server, it must include the `spark:mcp` scope, alongside any other API scopes the tools require.
+
+![Scope](./assets/scope_3.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ### The Catch: User Context vs. Machine Context
 
@@ -39,37 +43,50 @@ Because a Service App operates at a machine level and can access organization-wi
 
 ## Step 5.1: Create the Service App
 
-Go to **Webex for Developers**, select **My Webex Apps** and click **Create a New app**:
+1. Log into [developer.webex.com](https://developer.webex.com/){:target="_blank"} with credentials that were provided.
+2. Up on the top right corner of the page, click your avatar and then select [My Webex Apps](https://developer.webex.com/my-apps){:target="_blank"}.
+3. As you already have a Bot created, select ‘Create a New App’.
+4. In `Create a New App’ page, find the Service App card and click the ‘Create a Service App’ button.
 
-![developer2_1](./assets/developer2_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Service Ap](assets/bot_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-Then, select **Service App**:
+5. Enter the following information:
 
-![developer2](./assets/developer2.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-Enter the following information:
-
-|        	|                                     	      |
-|-----------------------	|-------------------------------------------------|
-| **App name**       	| WebexOne-***USERNAME***                  |
-| **Icon**       	| Choose one of the available options                     |
-| **Description**       	| Service App for WebexOne                   |
-| **Contact Email**       	| userX@webexone-ai-assistant.wbx.ai |
-| **Scopes** | |
-
-!!! Note
-    Scopes are going to be dependant on which MCP server do you want to use.
-
-Once you have entered the information, your screen should look similar to this:
-![developer3](./assets/developer3.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    |        	|                                     	      |
+    |-----------------------	|-------------------------------------------------|
+    | **App name**       	| WebexOne-***USERNAME***                  |
+    | **Icon**       	| Choose one of the available options                     |
+    | **Description**       	| Service App for WebexOne                   |
+    | **Contact Email**       	| userX@webexone-ai-assistant.wbx.ai |
+    | **Scopes** | XXX |
 
 !!! Warning
-    From this page, copy and save the **Client ID**, **Client Secret** and **Service App ID**, as you may need them later:
-    ![developer5](./assets/developer5.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    For simplicity, in this lab you are going to select all the scopes, but scopes are going to be dependant on which MCP server do you want to use.
+    In real enviroment you should be very careful with the scopes assigned and you must select the less possible.
 
-    You can already save them in your .env file:
+6. Once you have entered the information, your screen should look similar to this:
 
-    ![createbot6](./assets/createbot6.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Service App](./assets/serviceapp_1.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+    !!! Warning
+        From this page, copy and save the **Client ID** and **Client Secret**:
+
+        ![Service App](./assets/serviceapp_2.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    
+        In VS Code, make sure that in your terminal you are in the right folder:
+
+            * cd ../05_serviceapps
+  
+        - Copy the example .venv file:
+
+            * cp .env.example .env
+
+        - Copy the them into `.env`:
+
+            ```env
+            CLIENT_ID=
+            CLIENT_SECRET=
+            ```
 
 ### Authorize your Service App in your organization
 
