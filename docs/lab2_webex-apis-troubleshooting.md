@@ -118,3 +118,20 @@ Suggested lab activities (from session deck):
 ## Exercises
 
 TBC
+
+---
+
+## Step 1.3: The N × M problem MCP solves
+
+Without a standard protocol, every AI application needs custom glue code for every backend system — creating fragile, exponential integration work.
+
+MCP reduces this to **N + M** connections by providing a universal interface between AI hosts and platform capabilities.
+
+## Step 1.4: When to use Webex APIs vs Webex MCP
+
+| Choose Webex REST APIs when… | Choose Webex MCP when… |
+| --- | --- |
+| You need full control over every request | You want natural-language access from an AI client |
+| Performance and custom business logic matter | You need rapid prototyping across MCP-compatible tools |
+| You build enterprise apps with webhooks | You connect IDE or agent frameworks to Webex quickly |
+
