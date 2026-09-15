@@ -89,7 +89,7 @@ nav:
       - Lab 2 - Webex APIs: lab2_webex-apis-troubleshooting.md
       - Lab 3 - Integrate an AI Assistant with a Webex Bot: lab3_bot-integration.md
       - Lab 4 - MCP Servers in AI Assistant: lab4_mcp.md
-      - Extra: Service Apps: service_app.md
+      - Extra\: Service Apps: service_app.md
       - Lab 5 - Agent Skills: lab7_agent-skills.md
       - Lab 6 - Build a Custom MCP Server: lab8_custom-mcp-server.md
       - Lab 7 - RAG: lab7_rag.md
