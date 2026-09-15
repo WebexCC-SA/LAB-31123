@@ -6,17 +6,8 @@ Up to this point, you have built and tested your AI assistant directly in the te
 
 ```mermaid
 flowchart LR
-    User[Webex User] --> Bot[Webex Bot]
-    Bot --> Agent[LLM]
-    Agent --> Bot
-    Bot --> User
-```
-
-```mermaid
-flowchart LR
     User[Webex User] <-->|Messages| Bot[Webex Bot]
-    Bot <-->|Prompts & Tools| Agent[AI Agent / LLM]
-    Agent <-->|MCP| Tools[Webex APIs]
+    Bot <-->|Prompts & Responses| Agent[AI Agent / LLM]
 ```
 
 ### Choosing the Right Interface
