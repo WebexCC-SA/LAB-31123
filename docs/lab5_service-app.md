@@ -1,4 +1,4 @@
-# Lab 5 - Service apps (Extra)
+# Lab 5 - Service apps
 
 So far in this lab, we have been using a Personal Access Token to authenticate our bot and MCP clients. While this is great for rapid prototyping and local development, **Personal Access Tokens expire after 12 hours**. 
 
@@ -20,6 +20,9 @@ Service Apps use this exact same concept. When you create a Service App, you mus
 
 ![Scope](./assets/scope_3.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
+!!! Note
+    This applies to pre-defined Webex MCP Servers.
+
 ### The Catch: User Context vs. Machine Context
 
 Because a Service App token is just a standard Webex OAuth 2.0 Bearer token, you can pass it to an MCP Server exactly like you did with your Personal Access Token. However, there is an important difference in how the APIs behave:
@@ -38,8 +41,6 @@ Because a Service App operates at a machine level and can access organization-wi
 
 * **MCP Servers:** As you saw earlier, MCP servers (like the Webex Meetings MCP) are **global** services provided by Cisco or partners. An admin simply toggles them "on" for the organization in Control Hub.
 * **Service Apps:** Service Apps are **local** to your organization's development. Because you are building a custom application, a Webex Administrator must explicitly review the requested scopes and authorize your specific Service App before it can generate any tokens.
-
----
 
 ## Step 5.1: Create the Service App
 
@@ -60,22 +61,22 @@ Because a Service App operates at a machine level and can access organization-wi
     | **Contact Email**       	| userX@webexone-ai-assistant.wbx.ai |
     | **Scopes** | XXX |
 
-!!! Warning
-    For simplicity, in this lab you are going to select all the scopes, but scopes are going to be dependant on which MCP server do you want to use.
-    In real enviroment you should be very careful with the scopes assigned and you must select the less possible.
+   !!! Warning
+       For simplicity, in this lab you are going to select all the scopes, but scopes are going to be dependant on which MCP server do you want to use.
+       In real enviroment you should be very careful with the scopes assigned and you must select the less possible.
 
 6. Once you have entered the information, your screen should look similar to this:
 
-    ![Service App](./assets/serviceapp_1.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Service App](./assets/serviceapp_1.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     !!! Warning
         From this page, copy and save the **Client ID** and **Client Secret**:
 
-        ![Service App](./assets/serviceapp_2.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        ![Service App](./assets/serviceapp_2.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
     
         In VS Code, make sure that in your terminal you are in the right folder:
 
-            * cd ../05_serviceapps
+        * cd ../05_serviceapps
   
         - Copy the example .venv file:
 
@@ -93,9 +94,9 @@ Because a Service App operates at a machine level and can access organization-wi
 Once the Service App is created, we will need to authorize it. 
 
 !!! Warning
-    This is a task that can only be performed by an admin.
+    This is a task that can only be performed by an admin. Presenters will demo it, next steps are just for reference.
 
-Navigate to **Management > Apps > Service Apps** select the Service App you created, and click **Authorize** and **Save**:<br/>
+To authorize a **Service App**, you need to go in **Collaboration Control Hub** -> **Apps** -> **Service Apps** and go to **Other service apps**. Select the Service App you want to authorize, and click **Authorize** and **Save**:
 
 ![developer4](./assets/developer4.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
@@ -115,16 +116,89 @@ A text box to enter your **Client Secret** will appear. This way, you can genera
 
 ![developer6](./assets/developer6.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-!!! Warning
-    Now you can save those values in your .env file. You must have already all the needed variables:
+- Copy the them into `.env`:
 
-    ![env](./assets/env.png){ width="500" style="display: block; border: 1px solid lightgray; border-radius: 8px;"}
-
+    ```env
+    ACCESS_TOKEN=
+    REFRESH_TOKEN=
+    ```
 !!! Note
     The expiration time for the access token is 14 days, while the refresh token expires in 90 days.
 
 
 
+
+
 ## Step 5.2: Using the token to call an MCP
 
+
+
+
+## Extra: Refresh your access_token
+
+!!! Note
+    This is not required for this lab, but it is important to keep in mind for production environments.
+
+As mentioned earlier, the **access_token** will expire after 14 days, and the **refresh_token** will expire in 90 days.  It is crucial to avoid these expiration scenarios if you have an app running in production.
+
+!!! Note
+    When a refresh token is used to generate a new access token, the refresh token's expiration time is reset.
+
+You can refresh your **access_token** using your **refresh_token**, **client_id** and **secret_id** with the following code snippet:
+
+1. Navigate to 03-optional/07_refresh.py and review the code:
+
+    ??? Tip "Python Code"
+        ```
+        import os
+        from dotenv import load_dotenv
+        import requests
+        
+        # Load environment variables from the .env file.
+        load_dotenv()
+        
+        clientid = os.getenv("CLIENTID")
+        secretid = os.getenv("SECRETID")
+        refreshtoken = os.getenv("REFRESH_TOKEN")
+        
+        def refresh_token(client_id, client_secret, refresh_token):
+            url = "https://webexapis.com/v1/access_token"
+        
+            payload = {
+                'grant_type': 'refresh_token',
+                'refresh_token': refresh_token,
+                'client_id': client_id,
+                'client_secret': client_secret,
+            }
+        
+            headers = {
+                'Content-type': 'application/x-www-form-urlencoded'
+            }
+        
+            response = requests.post(url, headers=headers, data=payload)
+        
+            if response.status_code == 200:
+                return response.json()
+            else:
+                raise Exception(f"Failed to refresh token: {response.status_code} - {response.text}")
+        
+        token = refresh_token(clientid, secretid, refreshtoken)
+        
+        print(f"Access Token: {token['access_token']}")
+        print(f"Expires in: {token['expires_in']}")
+        print(f"Refresh Token: {token['refresh_token']}")
+        print(f"Refresh Token Expires in: {token['refresh_token_expires_in']}")
+        print(f"Token Type: {token['token_type']}")
+        ```
+
+2.	Run your code with the following command:
+
+    - python 0X_refresh.py
+
+3. After running the code, you will see the following results:
+
+    ![pycharm9](./assets/pycharm9.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+    !!! Tip 
+        Note that the refresh_token will remain the same.
 
