@@ -58,125 +58,126 @@ As discussed, we will be using WebSockets in this lab. Websockets will keep open
 
 1. Navigate to 03_bots/websocket_client.py and review the code:
 
-    ```python
-    import asyncio
-    import base64
-    import json
-    import logging
-    import ssl
-    import uuid
-    
-    import certifi
-    import requests
-    import websockets
-    
-    log = logging.getLogger(__name__)
-    
-    API_URL = "https://webexapis.com/v1"
-    # Host map for the org: used to find the WDM URL that issues Webex WebSocket devices.
-    CATALOG_URL = "https://u2c.wbx2.com/u2c/api/v1/catalog?format=hostmap"
-    # Payload Webex expects when creating a desktop "device" that can open Mercury.
-    DEVICE_DATA = {
-        "deviceName": "pywebsocket-client",
-        "deviceType": "DESKTOP",
-        "localizedModel": "python",
-        "model": "python",
-        "name": "python-spark-client",
-        "systemName": "python-spark-client",
-        "systemVersion": "0.1",
-    }
-    
-    class WebSocketClient:
-        """Opens a Webex Mercury WebSocket and calls on_message(message) for each new post."""
-    
-        def __init__(self, access_token, on_message):
-            self.access_token = access_token
-            self.on_message = on_message  # callback(message) for each incoming post
-            self.session = requests.Session()
-            self.session.headers.update({"Authorization": f"Bearer {access_token}"})
-            self.me = self.session.get(f"{API_URL}/people/me").json()
-            self.cluster, _, self.person_uuid = base64.b64decode(self.me["id"] + "==").decode().split("/")[2:]
-            self.clusters = None
-    
-        def _cluster_of(self, hydra_id):
-            return base64.b64decode(hydra_id + "==").decode().split("/")[2]
-    
-        def _room_clusters(self):
-            clusters, url, params = [], f"{API_URL}/rooms", {"max": 100}
-            for _ in range(5):
-                response = self.session.get(url, params=params)
-                if not response.ok:
-                    break
-                for room in response.json().get("items", []):
-                    cluster = self._cluster_of(room["id"])
-                    if cluster not in clusters:
-                        clusters.append(cluster)
-                url = response.links.get("next", {}).get("url")
-                if not url:
-                    break
-                params = None
-            return clusters
-    
-        def _candidate_clusters(self, activity):
-            # The event's own cluster first, then the bot's, then the clusters its spaces live in.
-            candidates = []
-            for node in (activity, activity.get("target"), activity.get("object")):
-                global_id = node.get("globalId") if isinstance(node, dict) else None
-                if isinstance(global_id, str) and "/" in global_id:
-                    candidates.append(global_id.split("/")[0])
-            candidates.append(self.cluster)
-            if self.clusters is None:
-                self.clusters = self._room_clusters()
-            candidates.extend(self.clusters)
-            return list(dict.fromkeys(candidates))
-    
-        def get_message(self, activity):
-            # A space shared with another org keeps that org's cluster, not the bot's.
-            for _ in range(2):
-                for cluster in self._candidate_clusters(activity):
-                    hydra_id = base64.b64encode(f"ciscospark://{cluster}/MESSAGE/{activity['id']}".encode()).decode()
-                    response = self.session.get(f"{API_URL}/messages/{hydra_id}")
-                    if response.ok:
-                        return response.json()
+    ??? Tip "Python Code"
+        ```python
+        import asyncio
+        import base64
+        import json
+        import logging
+        import ssl
+        import uuid
+        
+        import certifi
+        import requests
+        import websockets
+        
+        log = logging.getLogger(__name__)
+        
+        API_URL = "https://webexapis.com/v1"
+        # Host map for the org: used to find the WDM URL that issues Webex WebSocket devices.
+        CATALOG_URL = "https://u2c.wbx2.com/u2c/api/v1/catalog?format=hostmap"
+        # Payload Webex expects when creating a desktop "device" that can open Mercury.
+        DEVICE_DATA = {
+            "deviceName": "pywebsocket-client",
+            "deviceType": "DESKTOP",
+            "localizedModel": "python",
+            "model": "python",
+            "name": "python-spark-client",
+            "systemName": "python-spark-client",
+            "systemVersion": "0.1",
+        }
+        
+        class WebSocketClient:
+            """Opens a Webex Mercury WebSocket and calls on_message(message) for each new post."""
+        
+            def __init__(self, access_token, on_message):
+                self.access_token = access_token
+                self.on_message = on_message  # callback(message) for each incoming post
+                self.session = requests.Session()
+                self.session.headers.update({"Authorization": f"Bearer {access_token}"})
+                self.me = self.session.get(f"{API_URL}/people/me").json()
+                self.cluster, _, self.person_uuid = base64.b64decode(self.me["id"] + "==").decode().split("/")[2:]
                 self.clusters = None
-            log.warning(f"Could not read message {activity['id']} in any known cluster")
-            return None
-    
-        def send_message(self, room_id, text):
-            # POST a text message back into the same space.
-            self.session.post(f"{API_URL}/messages", json={"roomId": room_id, "text": text})
-    
-        async def listen(self):
-            # 1) Ask the catalog where device registration lives for this org.
-            wdm_url = self.session.get(CATALOG_URL).json()["serviceLinks"]["wdm"]
-            # 2) Register a device; the response includes the Mercury WebSocket URL.
-            device = self.session.post(f"{wdm_url}/devices", json=DEVICE_DATA).json()
-            # 3) Verify TLS with certifi (Python's default store often misses these CAs).
-            ssl_context = ssl.create_default_context(cafile=certifi.where())
-    
-            async with websockets.connect(device["webSocketUrl"], ssl=ssl_context) as ws:
-                # 4) Authorize the socket with the bot token before events start flowing.
-                await ws.send(json.dumps({
-                    "id": str(uuid.uuid4()),
-                    "type": "authorization",
-                    "data": {"token": f"Bearer {self.access_token}"},
-                }))
-                # 5) Fetch each new post in plaintext and hand it to the bot.
-                async for raw in ws:
-                    data = json.loads(raw).get("data", {})
-                    if data.get("eventType") != "conversation.activity":
-                        continue
-                    activity = data["activity"]
-                    # Only new posts, and never the bot's own replies (avoids an echo loop).
-                    if activity["verb"] != "post" or activity["actor"]["id"] == self.person_uuid:
-                        continue
-                    message = self.get_message(activity)
-                    if message:
-                        self.on_message(message)
-    
-        def run(self):
-            asyncio.run(self.listen())
-    ```
+        
+            def _cluster_of(self, hydra_id):
+                return base64.b64decode(hydra_id + "==").decode().split("/")[2]
+        
+            def _room_clusters(self):
+                clusters, url, params = [], f"{API_URL}/rooms", {"max": 100}
+                for _ in range(5):
+                    response = self.session.get(url, params=params)
+                    if not response.ok:
+                        break
+                    for room in response.json().get("items", []):
+                        cluster = self._cluster_of(room["id"])
+                        if cluster not in clusters:
+                            clusters.append(cluster)
+                    url = response.links.get("next", {}).get("url")
+                    if not url:
+                        break
+                    params = None
+                return clusters
+        
+            def _candidate_clusters(self, activity):
+                # The event's own cluster first, then the bot's, then the clusters its spaces live in.
+                candidates = []
+                for node in (activity, activity.get("target"), activity.get("object")):
+                    global_id = node.get("globalId") if isinstance(node, dict) else None
+                    if isinstance(global_id, str) and "/" in global_id:
+                        candidates.append(global_id.split("/")[0])
+                candidates.append(self.cluster)
+                if self.clusters is None:
+                    self.clusters = self._room_clusters()
+                candidates.extend(self.clusters)
+                return list(dict.fromkeys(candidates))
+        
+            def get_message(self, activity):
+                # A space shared with another org keeps that org's cluster, not the bot's.
+                for _ in range(2):
+                    for cluster in self._candidate_clusters(activity):
+                        hydra_id = base64.b64encode(f"ciscospark://{cluster}/MESSAGE/{activity['id']}".encode()).decode()
+                        response = self.session.get(f"{API_URL}/messages/{hydra_id}")
+                        if response.ok:
+                            return response.json()
+                    self.clusters = None
+                log.warning(f"Could not read message {activity['id']} in any known cluster")
+                return None
+        
+            def send_message(self, room_id, text):
+                # POST a text message back into the same space.
+                self.session.post(f"{API_URL}/messages", json={"roomId": room_id, "text": text})
+        
+            async def listen(self):
+                # 1) Ask the catalog where device registration lives for this org.
+                wdm_url = self.session.get(CATALOG_URL).json()["serviceLinks"]["wdm"]
+                # 2) Register a device; the response includes the Mercury WebSocket URL.
+                device = self.session.post(f"{wdm_url}/devices", json=DEVICE_DATA).json()
+                # 3) Verify TLS with certifi (Python's default store often misses these CAs).
+                ssl_context = ssl.create_default_context(cafile=certifi.where())
+        
+                async with websockets.connect(device["webSocketUrl"], ssl=ssl_context) as ws:
+                    # 4) Authorize the socket with the bot token before events start flowing.
+                    await ws.send(json.dumps({
+                        "id": str(uuid.uuid4()),
+                        "type": "authorization",
+                        "data": {"token": f"Bearer {self.access_token}"},
+                    }))
+                    # 5) Fetch each new post in plaintext and hand it to the bot.
+                    async for raw in ws:
+                        data = json.loads(raw).get("data", {})
+                        if data.get("eventType") != "conversation.activity":
+                            continue
+                        activity = data["activity"]
+                        # Only new posts, and never the bot's own replies (avoids an echo loop).
+                        if activity["verb"] != "post" or activity["actor"]["id"] == self.person_uuid:
+                            continue
+                        message = self.get_message(activity)
+                        if message:
+                            self.on_message(message)
+        
+            def run(self):
+                asyncio.run(self.listen())
+        ```
 
 !!! Note
     This lab uses **WebSockets (Mercury)** so no public URL or ngrok tunnel is required. For production, you may use [webhooks](https://developer.webex.com/messaging/docs/api/guides/webhooks){:target="_blank"} instead.
@@ -187,44 +188,45 @@ In this exercise, we will create a bot that will answer back the same message us
 
 1. Navigate to 03_bots/01_echo.py and review the code:
 
-    ```python    
-    import logging
-    import os
-    
-    from dotenv import load_dotenv
-    
-    from websocket_client import WebSocketClient
-    
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    log = logging.getLogger("echo-bot")
-    
-    load_dotenv()
-    
-    BOT_TOKEN = os.getenv("BOT_TOKEN")
-    if not BOT_TOKEN:
-        raise SystemExit("Set BOT_TOKEN in your .env file")
-    
-    def handle_message(message):
-        # message is the decrypted Webex message: text, roomId, personEmail, ...
-        text = (message.get("text") or "").strip()
-        if not text:
-            return
-    
-        sender = message["personEmail"]
-        log.info(f"Received from {sender}: {text}")
-    
-        reply = f"Echo: {text}"
-        bot.send_message(message["roomId"], reply)
-        log.info(f"Sent to {sender}: {reply}")
-    
-    if __name__ == "__main__":
-        bot = WebSocketClient(access_token=BOT_TOKEN, on_message=handle_message)
-        log.info(f"Listening as {bot.me['emails'][0]} via WebSocket... (Ctrl+C to stop)")
-        try:
-            bot.run()
-        except KeyboardInterrupt:
-            log.info("Stopped.")
-    ```
+    ??? Tip "Python Code"
+        ```python    
+        import logging
+        import os
+        
+        from dotenv import load_dotenv
+        
+        from websocket_client import WebSocketClient
+        
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+        log = logging.getLogger("echo-bot")
+        
+        load_dotenv()
+        
+        BOT_TOKEN = os.getenv("BOT_TOKEN")
+        if not BOT_TOKEN:
+            raise SystemExit("Set BOT_TOKEN in your .env file")
+        
+        def handle_message(message):
+            # message is the decrypted Webex message: text, roomId, personEmail, ...
+            text = (message.get("text") or "").strip()
+            if not text:
+                return
+        
+            sender = message["personEmail"]
+            log.info(f"Received from {sender}: {text}")
+        
+            reply = f"Echo: {text}"
+            bot.send_message(message["roomId"], reply)
+            log.info(f"Sent to {sender}: {reply}")
+        
+        if __name__ == "__main__":
+            bot = WebSocketClient(access_token=BOT_TOKEN, on_message=handle_message)
+            log.info(f"Listening as {bot.me['emails'][0]} via WebSocket... (Ctrl+C to stop)")
+            try:
+                bot.run()
+            except KeyboardInterrupt:
+                log.info("Stopped.")
+        ```
 
 2. Run your code with the following command:
 
@@ -264,91 +266,92 @@ In this scenario we will be using OpenAI models, specificically **gpt-5-nano**.
     
 2. Navigate to 03_bots/02_llm.py and review the code:
 
-    ```python    
-    import logging
-    import os
-    
-    import requests
-    from dotenv import load_dotenv
-    
-    from websocket_client import WebSocketClient
-    
-    # Prefer the OS trust store (Windows/macOS/Linux) so company HTTPS inspection, whose CA
-    # lives there but not in certifi, still verifies. Falls back to certifi if unavailable.
-    try:
-        import truststore
-    
-        truststore.inject_into_ssl()
-    except ImportError:
-        pass
-    
-    load_dotenv()
-    
-    OPENAI_URL = "https://api.openai.com/v1/chat/completions"
-    OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-5-nano")
-    ERROR_REPLY = "Sorry, I could not reach the AI service right now. Please try again in a moment."
-    
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    log = logging.getLogger("llm-bot")
-    
-    BOT_TOKEN = os.getenv("BOT_TOKEN")
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-    if not BOT_TOKEN:
-        raise SystemExit("Set BOT_TOKEN in your .env file")
-    if not OPENAI_API_KEY:
-        raise SystemExit("Set OPENAI_API_KEY in your .env file")
-    
-    
-    def ask_llm(user_text: str) -> str:
-        response = requests.post(
-            OPENAI_URL,
-            headers={
-                "Authorization": f"Bearer {OPENAI_API_KEY}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "model": OPENAI_MODEL,
-                "messages": [{"role": "user", "content": user_text}],
-            },
-            timeout=60,
-        )
-        response.raise_for_status()
-        return response.json()["choices"][0]["message"]["content"]
-    
-    
-    def handle_message(message):
-        text = (message.get("text") or "").strip()
-        if not text:
-            return
-    
-        sender = message["personEmail"]
-        log.info(f"Received from {sender}: {text}")
-    
+    ??? Tip "Python Code"
+        ```python    
+        import logging
+        import os
+        
+        import requests
+        from dotenv import load_dotenv
+        
+        from websocket_client import WebSocketClient
+        
+        # Prefer the OS trust store (Windows/macOS/Linux) so company HTTPS inspection, whose CA
+        # lives there but not in certifi, still verifies. Falls back to certifi if unavailable.
         try:
-            reply = ask_llm(text)
-        except requests.exceptions.SSLError:
-            log.error(
-                "TLS verification failed. If your company inspects HTTPS traffic, install the "
-                "requirements (truststore) or point SSL_CERT_FILE at your corporate CA bundle."
+            import truststore
+        
+            truststore.inject_into_ssl()
+        except ImportError:
+            pass
+        
+        load_dotenv()
+        
+        OPENAI_URL = "https://api.openai.com/v1/chat/completions"
+        OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-5-nano")
+        ERROR_REPLY = "Sorry, I could not reach the AI service right now. Please try again in a moment."
+        
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+        log = logging.getLogger("llm-bot")
+        
+        BOT_TOKEN = os.getenv("BOT_TOKEN")
+        OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+        if not BOT_TOKEN:
+            raise SystemExit("Set BOT_TOKEN in your .env file")
+        if not OPENAI_API_KEY:
+            raise SystemExit("Set OPENAI_API_KEY in your .env file")
+        
+        
+        def ask_llm(user_text: str) -> str:
+            response = requests.post(
+                OPENAI_URL,
+                headers={
+                    "Authorization": f"Bearer {OPENAI_API_KEY}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "model": OPENAI_MODEL,
+                    "messages": [{"role": "user", "content": user_text}],
+                },
+                timeout=60,
             )
-            reply = ERROR_REPLY
-        except Exception:
-            log.exception("LLM call failed")
-            reply = ERROR_REPLY
-    
-        bot.send_message(message["roomId"], reply)
-        log.info(f"Sent to {sender}: {reply}")
-    
-    
-    if __name__ == "__main__":
-        bot = WebSocketClient(access_token=BOT_TOKEN, on_message=handle_message)
-        log.info(f"Listening as {bot.me['emails'][0]} via WebSocket... (Ctrl+C to stop)")
-        log.info(f"OpenAI model: {OPENAI_MODEL}")
-        try:
-            bot.run()
-        except KeyboardInterrupt:
-            log.info("Stopped.")
-    ```
+            response.raise_for_status()
+            return response.json()["choices"][0]["message"]["content"]
+        
+        
+        def handle_message(message):
+            text = (message.get("text") or "").strip()
+            if not text:
+                return
+        
+            sender = message["personEmail"]
+            log.info(f"Received from {sender}: {text}")
+        
+            try:
+                reply = ask_llm(text)
+            except requests.exceptions.SSLError:
+                log.error(
+                    "TLS verification failed. If your company inspects HTTPS traffic, install the "
+                    "requirements (truststore) or point SSL_CERT_FILE at your corporate CA bundle."
+                )
+                reply = ERROR_REPLY
+            except Exception:
+                log.exception("LLM call failed")
+                reply = ERROR_REPLY
+        
+            bot.send_message(message["roomId"], reply)
+            log.info(f"Sent to {sender}: {reply}")
+        
+        
+        if __name__ == "__main__":
+            bot = WebSocketClient(access_token=BOT_TOKEN, on_message=handle_message)
+            log.info(f"Listening as {bot.me['emails'][0]} via WebSocket... (Ctrl+C to stop)")
+            log.info(f"OpenAI model: {OPENAI_MODEL}")
+            try:
+                bot.run()
+            except KeyboardInterrupt:
+                log.info("Stopped.")
+        ```
 
 3. Run your code with the following command:
 
@@ -384,98 +387,99 @@ So far, we have not introduce any security, therefore any user in or outsite you
 You may want to introduce some security, to not only do not allow users outside your organization to access it, but also to only allow admin to run specific calls.
 
 1. Navigate to 03_bots/03_security.py and review the code:
-    
-    ```python
-    import logging
-    import os
-    
-    from dotenv import load_dotenv
-    
-    from websocket_client import WebSocketClient
-    
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    log = logging.getLogger("security-bot")
-    
-    load_dotenv()
-    
-    BOT_TOKEN = os.getenv("BOT_TOKEN")
-    if not BOT_TOKEN:
-        raise SystemExit("Set BOT_TOKEN in your .env file")
-    
-    DENIED_DOMAIN_REPLY = "This bot only accepts messages from allowed organization domains."
-    DENIED_ADMIN_REPLY = "This bot only accepts messages from allowed users."
-    
-    def parse_csv(value: str) -> set[str]:
-        return {item.strip().lower() for item in (value or "").split(",") if item.strip()}
-    
-    ALLOWED_DOMAINS = parse_csv(os.getenv("ALLOWED_DOMAINS", ""))
-    ALLOWED_ADMINS = parse_csv(os.getenv("ALLOWED_ADMINS", ""))
-    
-    def sender_domain(email: str) -> str:
-        if not email or "@" not in email:
-            return ""
-        return email.rsplit("@", 1)[-1].strip().lower()
-    
-    
-    def is_allowed_sender(email: str) -> bool:
-        """True when no domain list is set, or the sender's domain is in ALLOWED_DOMAINS."""
-        if not ALLOWED_DOMAINS:
-            return True
-        return sender_domain(email) in ALLOWED_DOMAINS
-    
-    
-    def is_admin(email: str) -> bool:
-        """True when no admin list is set, or the sender is listed in ALLOWED_ADMINS."""
-        if not ALLOWED_ADMINS:
-            return True
-        return (email or "").strip().lower() in ALLOWED_ADMINS
-    
-    def handle_message(message):
-        text = (message.get("text") or "").strip()
-        if not text:
-            return
-    
-        sender = message.get("personEmail") or ""
-        log.info(f"Received from {sender}: {text}")
-    
-        if not is_allowed_sender(sender):
-            log.warning(f"Rejected (domain): {sender}")
-            bot.send_message(message["roomId"], DENIED_DOMAIN_REPLY)
-            return
-    
-        if not is_admin(sender):
-            log.warning(f"Rejected (user): {sender}")
-            bot.send_message(message["roomId"], DENIED_ADMIN_REPLY)
-            return
-    
-        reply = f"Authorized ({sender_domain(sender)}): {text}"
-        bot.send_message(message["roomId"], reply)
-        log.info(f"Sent to {sender}: {reply}")
-    
-    
-    if __name__ == "__main__":
-        bot = WebSocketClient(access_token=BOT_TOKEN, on_message=handle_message)
-        log.info(f"Listening as {bot.me['emails'][0]} via WebSocket... (Ctrl+C to stop)")
-        log.info(f"Allowed domains: {', '.join(sorted(ALLOWED_DOMAINS)) or '(all)'}")
-        log.info(f"Admins: {', '.join(sorted(ALLOWED_ADMINS)) or '(all)'}")
-        try:
-            bot.run()
-        except KeyboardInterrupt:
-            log.info("Stopped.")
-    ```
 
-2. Add different domains and admins to test the access.
+    ??? Tip "Python Code"
+        ```python
+        import logging
+        import os
+        
+        from dotenv import load_dotenv
+        
+        from websocket_client import WebSocketClient
+        
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+        log = logging.getLogger("security-bot")
+        
+        load_dotenv()
+        
+        BOT_TOKEN = os.getenv("BOT_TOKEN")
+        if not BOT_TOKEN:
+            raise SystemExit("Set BOT_TOKEN in your .env file")
+        
+        DENIED_DOMAIN_REPLY = "This bot only accepts messages from allowed organization domains."
+        DENIED_ADMIN_REPLY = "This bot only accepts messages from allowed users."
+        
+        def parse_csv(value: str) -> set[str]:
+            return {item.strip().lower() for item in (value or "").split(",") if item.strip()}
+        
+        ALLOWED_DOMAINS = parse_csv(os.getenv("ALLOWED_DOMAINS", ""))
+        ALLOWED_ADMINS = parse_csv(os.getenv("ALLOWED_ADMINS", ""))
+        
+        def sender_domain(email: str) -> str:
+            if not email or "@" not in email:
+                return ""
+            return email.rsplit("@", 1)[-1].strip().lower()
+        
+        
+        def is_allowed_sender(email: str) -> bool:
+            """True when no domain list is set, or the sender's domain is in ALLOWED_DOMAINS."""
+            if not ALLOWED_DOMAINS:
+                return True
+            return sender_domain(email) in ALLOWED_DOMAINS
+        
+        
+        def is_admin(email: str) -> bool:
+            """True when no admin list is set, or the sender is listed in ALLOWED_ADMINS."""
+            if not ALLOWED_ADMINS:
+                return True
+            return (email or "").strip().lower() in ALLOWED_ADMINS
+        
+        def handle_message(message):
+            text = (message.get("text") or "").strip()
+            if not text:
+                return
+        
+            sender = message.get("personEmail") or ""
+            log.info(f"Received from {sender}: {text}")
+        
+            if not is_allowed_sender(sender):
+                log.warning(f"Rejected (domain): {sender}")
+                bot.send_message(message["roomId"], DENIED_DOMAIN_REPLY)
+                return
+        
+            if not is_admin(sender):
+                log.warning(f"Rejected (user): {sender}")
+                bot.send_message(message["roomId"], DENIED_ADMIN_REPLY)
+                return
+        
+            reply = f"Authorized ({sender_domain(sender)}): {text}"
+            bot.send_message(message["roomId"], reply)
+            log.info(f"Sent to {sender}: {reply}")
+        
+        
+        if __name__ == "__main__":
+            bot = WebSocketClient(access_token=BOT_TOKEN, on_message=handle_message)
+            log.info(f"Listening as {bot.me['emails'][0]} via WebSocket... (Ctrl+C to stop)")
+            log.info(f"Allowed domains: {', '.join(sorted(ALLOWED_DOMAINS)) or '(all)'}")
+            log.info(f"Admins: {', '.join(sorted(ALLOWED_ADMINS)) or '(all)'}")
+            try:
+                bot.run()
+            except KeyboardInterrupt:
+                log.info("Stopped.")
+        ```
+
+1. Add different domains and admins to test the access.
 
     ```env
     ALLOWED_DOMAINS=example.com
     ALLOWED_ADMINS=admin@example.com
     ```
 
-3. Run your code with the following command:
+2. Run your code with the following command:
 
     * python 03_security.py
 
-4. You will get an answer, but it will be the pre-determined message:
+3. You will get an answer, but it will be the pre-determined message:
 
     ![Bot](assets/bot_7.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
