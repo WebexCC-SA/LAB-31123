@@ -977,7 +977,7 @@ In this case, we have built a card that will be sent as a summary if we have mee
 
 4. You will receive the following card in your conversation:
 
-    ![Meeting](assets/meeting_7.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Meeting](assets/meeting_7.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     If you press join, it will try to open the Webex App to join the meeting.
 
