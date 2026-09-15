@@ -1,10 +1,43 @@
-# Lab 5: Service apps (Extra)
+# Lab 5 - # Lab 5: Service apps (Extra)
 
-Till now, you have been using your own token from developer.webex.com. This token is associated with you, and it lives only 12 hours, so it is not a long term solution for building the assistant. 
+So far in this lab, we have been using a Personal Access Token to authenticate our bot and MCP clients. While this is great for rapid prototyping and local development, **Personal Access Tokens expire after 12 hours**. 
 
-**Service Apps** are machine accounts that operate on behalf of an organization, independent of specific Webex user accounts.
-
-You will now create a **Service App** with access to **read people from your organization** and **create devices**.
+If we want our AI assistant to run 24/7 and perform organizational troubleshooting, we need a production-ready authentication method. This is where **Service Apps** come in.
+
+## What is a Service App?
+
+A Service App is a type of Webex integration designed for **machine-to-machine** communication. 
+
+Unlike a Personal Access Token (which acts on behalf of *you*, the user), a Service App has no user context. It acts as a system or background service. This makes it the perfect choice for administrative tasks, compliance, and **organizational troubleshooting**.
+
+### Scopes: MCP vs. Service Apps
+
+You have already seen how scopes work. When we looked at the [Meetings MCP Server documentation](https://developer.webex.com/mcp/docs/meetings-mcp-server), we saw that the MCP token acts as a wrapper around specific permissions (like `meeting:schedules_read` or `meeting:schedules_write`). 
+
+Service Apps use this exact same concept. When you create a Service App, you must define its **scopes** to strictly limit what the machine is allowed to do. To allow the Service App to connect to an MCP Server, it must include the `spark:mcp` scope, alongside any other API scopes the tools require.
+
+### The Catch: User Context vs. Machine Context
+
+Because a Service App token is just a standard Webex OAuth 2.0 Bearer token, you can pass it to an MCP Server exactly like you did with your Personal Access Token. However, there is an important difference in how the APIs behave:
+
+1. **Personal Access Token (User Context):** 
+   When you used your personal token with the `webex-list-meetings` MCP tool, the Webex API knew exactly *who* was asking. It automatically fetched *your* meetings.
+
+2. **Service App Token (Machine Context):**
+   A Service App is a faceless machine. If it calls `webex-list-meetings` without specifying a user, the API will likely return an empty list because the machine itself doesn't have a calendar. 
+
+Since our final goal is **organizational troubleshooting**, we *want* machine-level access. Troubleshooting tools—like looking up organization-wide call diagnostics, checking user provisioning status, or pulling admin logs—are designed for admins. They don't rely on a "me" context; they look at the organization as a whole. 
+
+### The Approval Process: Global vs. Local
+
+Because a Service App operates at a machine level and can access organization-wide data, it requires strict security oversight. 
+
+* **MCP Servers:** As you saw earlier, MCP servers (like the Webex Meetings MCP) are **global** services provided by Cisco or partners. An admin simply toggles them "on" for the organization in Control Hub.
+* **Service Apps:** Service Apps are **local** to your organization's development. Because you are building a custom application, a Webex Administrator must explicitly review the requested scopes and authorize your specific Service App before it can generate any tokens.
+
+---
+
+## Step 5.1: Create the Service App
 
 Go to **Webex for Developers**, select **My Webex Apps** and click **Create a New app**:
 
@@ -18,10 +51,10 @@ Enter the following information:
 
 |        	|                                     	      |
 |-----------------------	|-------------------------------------------------|
-| **App name**       	| CiscoLive***XXXX***                  |
+| **App name**       	| WebexOne-***USERNAME***                  |
 | **Icon**       	| Choose one of the available options                     |
-| **Description**       	| Service App for Cisco Live                      |
-| **Contact Email**       	| cholland@***domain*** |
+| **Description**       	| Service App for WebexOne                   |
+| **Contact Email**       	| userX@webexone-ai-assistant.wbx.ai |
 | **Scopes** | |
 
 !!! Note
@@ -40,15 +73,10 @@ Once you have entered the information, your screen should look similar to this:
 
 ### Authorize your Service App in your organization
 
-Once the Service App is created, you will need to authorize it. Navigate to:
+Once the Service App is created, we will need to authorize it. 
 
-- [Webex Control Hub](https://admin.webex.com){:target="_blank"}
-
-Log in using the same credentials as before:
-   
-| Email       	| Password                                    	      |
-|-----------------------	|-------------------------------------------------|
-| cholland@***domain***         	| dCloud***XXXX***!                     |
+!!! Warning
+    This is a task that can only be performed by an admin.
 
 Navigate to **Management > Apps > Service Apps** select the Service App you created, and click **Authorize** and **Save**:<br/>
 
@@ -77,3 +105,9 @@ A text box to enter your **Client Secret** will appear. This way, you can genera
 
 !!! Note
     The expiration time for the access token is 14 days, while the refresh token expires in 90 days.
+
+
+
+## Step 5.2: Using the token to call an MCP
+
+
