@@ -257,3 +257,6 @@ You can refresh your **access_token** using your **refresh_token**, **client_id*
     !!! Tip 
         Note that the refresh_token will remain the same.
 
+---
+
+From now on, you will be using the **access token** instead of your personal **Webex MCP token**.
