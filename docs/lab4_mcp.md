@@ -38,7 +38,7 @@ flowchart LR
     Server <-->|REST| API[Webex APIs]
 ```
 
-## Step 4.1: Build the MCP Client
+## Step 4.0: Build the MCP Client
 
 These are the MCP components used in this section:
 
@@ -122,7 +122,7 @@ To integrate the Webex MCP Servers into your Assistant, you need an MCP Client.
 
    This MCP client allows you to connect to any MCP server.
 
-## Step 4.2: List tools
+## Step 4.1: List tools
 
 Now, we will connect to the MCP server using the client. In this first exercise, we will list the Tools available in the Webex Meetings MCP server.
 
@@ -204,7 +204,7 @@ Now, we will connect to the MCP server using the client. In this first exercise,
 
     The 8 tools available are printed there.
    
-## Step 4.3: Call a specific tool
+## Step 4.2: Call a specific tool
 
 Now that we have listed the tools, we will write the code that actually calls a tool. In this example, we will call "webex-list-meetings".
 
@@ -273,7 +273,7 @@ Now that we have listed the tools, we will write the code that actually calls a 
 
    In this case, we have printed the raw information that the tool returned.
 
-## Step 4.4: Use an LLM to call
+## Step 4.3: Use an LLM to call
 
 In this scenario, the LLM will choose which tool to use from the catalog. We will make a query in natural language, and the LLM will decide which tool from the list is needed to get that information. The LLM will then process the result and reply to us in natural language.
 
@@ -442,7 +442,7 @@ In this scenario, the LLM will choose which tool to use from the catalog. We wil
     Want me to add this to your calendar or share the invite?
     ```
 
-## Step 4.5: Hub
+## Step 4.4: Hub
 
 So far we have only added one Webex Meeting MCP Server. Now, we will also add the Webex Messaging MCP server. The LLM won't pick a server; it only picks a tool name, as all tools are going to be presented together. We will introduce the class `McpHub`, which lists tools from every server as one combined list and, when the model calls a name, routes that call to the right client.
 
@@ -583,7 +583,7 @@ So far we have only added one Webex Meeting MCP Server. Now, we will also add th
     Want me to pull more details or set reminders?
     ```
 
-## Step 4.6: Integration with the Bot
+## Step 4.5: Integration with the Bot
 
 Now, as we did in the previous section, we will combine what we have done to provide direct access from a Webex Bot.
 
@@ -1082,7 +1082,7 @@ That is why this lab builds the host: so the **bot** is the integration, not the
 
 ### Frameworks
 
-If you keep a custom bot but do not want to maintain the tool loop, agent frameworks wrap **exactly** what `03` and `04` do:
+If you keep a custom bot but do not want to maintain the tool loop, agent frameworks wrap **exactly** what `03_llm` and `04_hub` do:
 
 | Framework | Role |
 | --- | --- |
