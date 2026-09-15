@@ -51,7 +51,7 @@ First, you need to create your bot:
 
     * cd ../03_bots
   
-6. Copy the example .venv file:
+6. Copy the example `.env` file:
 
     * cp .env.example .env
 
