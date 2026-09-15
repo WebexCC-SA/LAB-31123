@@ -1,6 +1,6 @@
 # Lab 3 - Integrate an AI Assistant with a Webex Bot
 
-In this section, you will connect a Webex Bot to your AI assistant so users can manage and troubleshoot the organization from a Webex space.
+Up to this point, you have built and tested your AI assistant directly in the terminal. In this section, you will connect that intelligence to a Webex Bot, allowing users to interact with your assistant naturally from any Webex space.
 
 ## Architecture
 
@@ -11,6 +11,24 @@ flowchart LR
     Agent --> Bot
     Bot --> User
 ```
+
+```mermaid
+flowchart LR
+    User[Webex User] <-->|Messages| Bot[Webex Bot]
+    Bot <-->|Prompts & Tools| Agent[AI Agent / LLM]
+    Agent <-->|MCP| Tools[Webex APIs]
+```
+
+### Choosing the Right Interface
+
+| Interface | Context | Best for |
+| --- | --- | --- |
+| **Web Chat** (e.g., claude.ai) | Manual prompts and pasted content | General questions, brainstorming, one-off code |
+| **IDE / Terminal** (Previous exercises) | Python scripts, local execution | Development, debugging, and building the agent logic |
+| **Webex Bot** (This lab) | Webex spaces, Adaptive Cards, always-on | End-user interaction, operational tasks, collaborative workflows |
+
+!!! Note "Bot vs. Agent"
+    A **bot** is the interaction channel in Webex. An **agent** is the system that reasons, plans, calls tools, and validates results behind the bot.
 
 The bot handles **transport**. The agent handles **reasoning and tool selection**.
 
