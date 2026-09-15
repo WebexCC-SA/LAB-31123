@@ -33,13 +33,11 @@ When our bot connects to a server, this is what happens:
 
 ```mermaid
 flowchart LR
-    User[Webex User] --> Bot[Webex Bot]
-    Bot --> Agent[LLM]
-    Agent --> MCP[MCP Client]
-    MCP --> Tools[Webex MCP Tools]
-    Tools --> API[Webex APIs]
-    Agent --> Bot
-    Bot --> User
+    User[Webex User] <-->|Messages| Bot[Webex Bot]
+    Bot <-->|Prompts & Responses| Agent[LLM]
+    Agent <-->|Tool Calls| MCP[MCP Client]
+    MCP <-->|MCP Protocol| Server[MCP Server]
+    Server <-->|REST| API[Webex APIs]
 ```
 
 ## Step 4.1: Build the MCP Client
