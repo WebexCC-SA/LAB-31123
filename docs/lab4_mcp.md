@@ -200,7 +200,7 @@ Now, we will connect to the MCP server using the client. In this first exercise,
 
     * cd ../04_mcp
 
-3. Copy the example .venv file:
+3. Copy the example `.env` file:
 
     * cp .env.example .env
 
