@@ -46,24 +46,18 @@ To be able to integrate the Webex MCP Clients into your Assistant, you need to h
 
 1. Navigate to 04_mcp/mcp_client.py and review the code:
 
-   ```python
-   from contextlib import asynccontextmanager
-
+    ```python
+    import logging
+    import traceback
+    from contextlib import asynccontextmanager
+    
     from mcp import ClientSession
     from mcp.client.streamable_http import streamable_http_client
     from mcp.shared._httpx_utils import create_mcp_http_client
-    from mcp.shared.exceptions import MCPError
     
-    def _first_mcp_error(exc):
-        # The SDK wraps MCPError in anyio TaskGroup ExceptionGroups.
-        if isinstance(exc, MCPError):
-            return exc
-        if isinstance(exc, BaseExceptionGroup):
-            for inner in exc.exceptions:
-                found = _first_mcp_error(inner)
-                if found:
-                    return found
-        return None
+    logging.getLogger("mcp.client.streamable_http").addFilter(
+        lambda record: "Error parsing SSE message" not in record.getMessage()
+    )
     
     
     class McpClient:
@@ -86,10 +80,10 @@ To be able to integrate the Webex MCP Clients into your Assistant, you need to h
             try:
                 async with self.session() as session:
                     return (await session.list_tools()).tools
-            except BaseExceptionGroup as eg:
-                if err := _first_mcp_error(eg):
-                    raise err from None
-                raise
+            except Exception as e:
+                # The SDK runs the transport in a task group, so the real error is nested.
+                traceback.print_exception(e, limit=0)
+                return []
     
         async def call_tool(self, name, arguments=None):
             try:
@@ -97,10 +91,9 @@ To be able to integrate the Webex MCP Clients into your Assistant, you need to h
                     result = await session.call_tool(name, arguments or {})
                     texts = [c.text for c in result.content if getattr(c, "type", None) == "text"]
                     return "\n".join(texts) if texts else str(result.content)
-            except BaseExceptionGroup as eg:
-                if err := _first_mcp_error(eg):
-                    raise err from None
-                raise
+            except Exception as e:
+                traceback.print_exception(e, limit=0)
+                return None
     ```
 
    This MCP client allows you to connect to any MCP server.
@@ -108,21 +101,16 @@ To be able to integrate the Webex MCP Clients into your Assistant, you need to h
 
 ## Step 4.2: List tools
 
-Now, we will 
+Now, we will connect to the MCP server using the client. In this first exercise we will list the Tools available in the Webex Meetings MCP server.
 
 1. Navigate to 04_mcp/01_list_tools.py and review the code:
 
-   ```python
-
-    MESSAGING_MCP_URL = "https://mcp.webexapis.com/mcp/webex-messaging"
-    MEETING_MCP_URL = "https://mcp.webexapis.com/mcp/webex-meeting"
-    
+    ```python
     import asyncio
     import logging
     import os
     
     from dotenv import load_dotenv
-    from mcp.shared.exceptions import MCPError
     
     from mcp_client import McpClient
     
@@ -133,41 +121,30 @@ Now, we will
     except ImportError:
         pass
     
+    MEETING_MCP_URL = "https://mcp.webexapis.com/mcp/webex-meeting"
+    
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     log = logging.getLogger("mcp-list-tools")
     
     load_dotenv()
     
-    MESSAGING_TOKEN = os.getenv("WEBEX_MESSAGING_MCP_TOKEN")
     MEETING_TOKEN = os.getenv("WEBEX_MEETING_MCP_TOKEN")
+    if not MEETING_TOKEN:
+        raise SystemExit("Set WEBEX_MEETING_MCP_TOKEN in your .env file")
     
     
-    async def list_server(name, url, token):
-        if not token:
-            log.warning(f"Skipping {name}: set the token in your .env file")
+    async def main():
+        tools = await McpClient(MEETING_TOKEN, MEETING_MCP_URL).list_tools()
+        if not tools:
             return
-        try:
-            tools = await McpClient(token, url).list_tools()
-        except MCPError as exc:
-            log.error(f"{name} handshake failed: {exc}")
-            return
-        log.info(f"{name}: {len(tools)} tool(s) from {url}")
+        log.info(f"{len(tools)} tool(s) from {MEETING_MCP_URL}")
         for tool in tools:
             log.info(f"  - {tool.name}: {tool.description}")
     
     
-    async def main():
-        if not MESSAGING_TOKEN and not MEETING_TOKEN:
-            raise SystemExit(
-                "Set WEBEX_MESSAGING_MCP_TOKEN and/or WEBEX_MEETING_MCP_TOKEN in your .env file"
-            )
-        await list_server("Messaging MCP", MESSAGING_MCP_URL, MESSAGING_TOKEN)
-        await list_server("Meetings MCP", MEETING_MCP_URL, MEETING_TOKEN)
-    
-    
     if __name__ == "__main__":
         asyncio.run(main())
-   ```
+    ```
 
 2. In VS Code, change the terminal right folder:
 
@@ -180,7 +157,6 @@ Now, we will
 4. Copy the Webex MCP Tokens into `.env`:
 
     ```env
-    WEBEX_MESSAGING_MCP_TOKEN=your_messaging_mcp_token
     WEBEX_MEETING_MCP_TOKEN=your_meetings_mcp_token
     ```
 
@@ -190,73 +166,33 @@ Now, we will
 
 6. You will see in the terminal the following:
 
-   ```terminal
-    python 01_list_tools.py 
-    2026-09-14 19:20:31,894 INFO HTTP Request: POST https://mcp.webexapis.com/mcp/webex-messaging "HTTP/1.1 200 OK"
-    2026-09-14 19:20:31,895 INFO Received session ID: 648358b0-9721-4c96-b883-0ba9ce055756
-    2026-09-14 19:20:32,156 INFO HTTP Request: POST https://mcp.webexapis.com/mcp/webex-messaging "HTTP/1.1 202 Accepted"
-    2026-09-14 19:20:33,086 INFO HTTP Request: POST https://mcp.webexapis.com/mcp/webex-messaging "HTTP/1.1 200 OK"
-    2026-09-14 19:20:34,097 INFO HTTP Request: GET https://mcp.webexapis.com/mcp/webex-messaging "HTTP/1.1 200 OK"
-    2026-09-14 19:20:34,099 INFO GET stream disconnected, reconnecting in 1000ms...
-    2026-09-14 19:20:34,101 INFO HTTP Request: DELETE https://mcp.webexapis.com/mcp/webex-messaging "HTTP/1.1 200 OK"
-    2026-09-14 19:20:34,103 INFO Messaging MCP: 24 tool(s) from https://mcp.webexapis.com/mcp/webex-messaging
-    2026-09-14 19:20:34,103 INFO   - webex-create-message: Creates a new message in a Webex space or as a direct message. Provide exactly one destination (roomId, toPersonEmail, or toPersonId) and at least one content payload (text, markdown, file URLs in files, or adaptive card attachments). Optional html and parentId for threaded replies.
-    2026-09-14 19:20:34,103 INFO   - webex-edit-message: Edits an existing message in a Webex space. Requires authentication via bearer token. You must specify the messageId and roomId, along with the new text or markdown content. The Webex API does not accept html in edit requests; use text or markdown only. Edits of messages with files/attachments are not supported. Maximum 10 edits per message.
-    2026-09-14 19:20:34,103 INFO   - webex-delete-message: Deletes a message from a Webex space. Requires authentication via bearer token. You must specify the messageId of the message to delete. This is a destructive operation and cannot be undone. Works for both 1:1 and group spaces.
-    2026-09-14 19:20:34,103 INFO   - webex-get-message: Retrieves messages from Webex spaces with full pagination, rate limit retry, and streaming. Single-message mode: provide messageId. List mode: provide roomId to fetch all messages (or up to max). Messages are streamed as result chunks per page and included in the final response. All API calls include automatic HTTP 429 retry. Provide either messageId or roomId. Works for 1:1 and group spaces; for bot tokens in group spaces when listing, include mentionedPeople (typically &#39;me&#39;).
-    2026-09-14 19:20:34,104 INFO   - webex-create-space: Creates a new Webex space (room). Requires authentication via bearer token. You must specify the title. Optionally specify teamId, isLocked, isAnnouncementOnly, or classificationId.
-    2026-09-14 19:20:34,104 INFO   - webex-get-space: Gets a single space when roomId is provided, or lists spaces when roomId is omitted. List mode uses full Link: rel&#61;&#34;next&#34; pagination with automatic HTTP 429 retry and result chunk streaming. Supports optional filters (type, teamId, sortBy). If max is not provided, all spaces are fetched via pagination. If max is provided, exactly that many spaces are returned.
-    2026-09-14 19:20:34,104 INFO   - webex-update-space: Updates a Webex space. Requires roomId and title (title is required by the Webex API). Optionally specify isLocked, isAnnouncementOnly, isReadOnly, isPublic, description, classificationId, or teamId. Note: announcement mode requires the space to be locked first.
-    2026-09-14 19:20:34,104 INFO   - webex-delete-space: Removes a Webex space. Requires authentication via bearer token. You must specify the roomId. Behavior depends on caller role: the space creator can permanently delete the space; non-creators are removed from the space instead. For 1:1 spaces, this hides the space (conversation history is preserved).
-    2026-09-14 19:20:34,104 INFO   - webex-add-membership: Adds a member to a Webex space. Requires authentication via bearer token. You must specify roomId and either personId or personEmail. Optionally set isModerator to true for moderator privileges.
-    2026-09-14 19:20:34,104 INFO   - webex-get-membership: Gets a single membership when membershipId is provided, or lists memberships for a room when roomId is provided. List mode supports optional personId, personEmail, and max.
-    2026-09-14 19:20:34,105 INFO   - webex-update-membership: Updates a membership in a Webex space. Requires membershipId and isModerator (promote or demote moderator). Optional isRoomHidden to show or hide the space for the member.
-    2026-09-14 19:20:34,105 INFO   - webex-remove-membership: Removes a member from a Webex space. Requires authentication via bearer token. You must specify the membershipId of the membership to remove. This is a destructive operation and cannot be undone.
-    2026-09-14 19:20:34,105 INFO   - webex-search-messages: Searches messages in a Webex space with full pagination, rate limit retry, and streaming. Requires roomId. Optionally filter by query (keyword in text/markdown, case-insensitive client-side). If max is not provided, all messages are fetched. Messages are streamed as result chunks per page (after filtering) and included in the final response. All API calls include automatic HTTP 429 retry.
-    2026-09-14 19:20:34,105 INFO   - webex-search-spaces: Lists Webex spaces (rooms) via GET /v1/rooms with full Link: rel&#61;&#34;next&#34; pagination, automatic HTTP 429 retry, and result chunk streaming. The title parameter triggers client-side case-insensitive substring matching against returned space titles. Other server-side filters: type (direct/group), teamId, sortBy (id/lastactivity/created), orgPublicSpaces, from, to. If max is not provided, all matching spaces are fetched via pagination. If max is provided, exactly that many filtered spaces are returned.
-    2026-09-14 19:20:34,105 INFO   - webex-create-webhook: Creates a new webhook to receive real-time notifications for Webex events. Requires authentication via bearer token. You must specify the webhook name, target URL, resource type, and event type. Optionally set a filter expression and HMAC secret for payload verification.
-    2026-09-14 19:20:34,105 INFO   - webex-get-webhook: Retrieves a single webhook when webhookId is provided, or lists webhooks via paginated API calls when webhookId is omitted. Supports streaming of intermediate result chunks per page. If max is not provided in list mode, all webhooks are fetched via pagination. Automatic retry on HTTP 429 rate limits.
-    2026-09-14 19:20:34,105 INFO   - webex-update-webhook: Updates a Webex webhook. Requires webhookId, name, and targetUrl. Optionally specify secret and status (active/inactive).
-    2026-09-14 19:20:34,105 INFO   - webex-delete-webhook: Deletes a Webex webhook by webhookId (DELETE /v1/webhooks/{webhookId}). Destructive and cannot be undone.
-    2026-09-14 19:20:34,105 INFO   - webex-share-file: Shares one or more public file URLs via the Webex Messages API (POST /v1/messages). Provide exactly one destination (roomId, toPersonEmail, or toPersonId) and at least one file source (fileUrl or non-empty files array). Optional text or markdown.
-    2026-09-14 19:20:34,105 INFO   - webex-upload-file: Uploads a base64-encoded file via multipart/form-data POST to /v1/messages. Requires fileContent, fileName, and contentType, plus exactly one destination (roomId, toPersonEmail, or toPersonId). Optional text or markdown.
-    2026-09-14 19:20:34,105 INFO   - webex-get-file-details: Makes a HEAD request to the file content URL from a Webex message. Extracts Content-Type, Content-Length, Content-Disposition headers. Requires bearer token.
-    2026-09-14 19:20:34,105 INFO   - webex-download-file: Downloads file content from a Webex message file URL via authenticated GET request. Returns base64-encoded content.
-    2026-09-14 19:20:34,105 INFO   - webex-create-thread-reply: Creates a threaded reply in a Webex space via POST /v1/messages. Requires roomId, parentId, and at least one of text or markdown.
-    2026-09-14 19:20:34,105 INFO   - webex-get-thread: Retrieves threaded replies for a parent message via paginated API calls. Supports streaming of intermediate result chunks per page. If max is not provided, all replies are fetched via pagination. Automatic retry on HTTP 429 rate limits.
-    2026-09-14 19:20:35,431 INFO HTTP Request: POST https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 200 OK"
-    2026-09-14 19:20:35,432 INFO Received session ID: 1ccdeefd-85cf-4efd-be4b-a121bf90075c
-    2026-09-14 19:20:35,675 INFO HTTP Request: POST https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 202 Accepted"
-    2026-09-14 19:20:36,598 INFO HTTP Request: POST https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 200 OK"
-    2026-09-14 19:20:37,565 INFO HTTP Request: GET https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 200 OK"
-    2026-09-14 19:20:37,567 INFO GET stream disconnected, reconnecting in 1000ms...
-    2026-09-14 19:20:37,568 INFO HTTP Request: DELETE https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 200 OK"
-    2026-09-14 19:20:37,569 INFO Meetings MCP: 8 tool(s) from https://mcp.webexapis.com/mcp/webex-meeting
-    2026-09-14 19:20:37,569 INFO   - webex-list-meetings: List Webex meetings for the authenticated user. Returns meeting details including meeting number, topic, start/end time, host info, and optionally the full invitee list with pagination. Meetings are streamed progressively as result chunks during fetch and returned as a complete array in the final response. Filter by date range, meeting number, topic keyword, meetingType, or state. The returned &#39;id&#39; field is the meetingId used to identify a specific meeting. Use meetingType&#61;&#39;meeting&#39; and state&#61;&#39;ended&#39; to find ended meeting instances. Default meetingType is &#39;meetingSeries&#39; which returns upcoming recurring meetings. Invitees are fully paginated (no truncation). Rate-limited API calls are retried automatically.
-    2026-09-14 19:20:37,569 INFO   - webex-create-meeting: Create a new Webex meeting. Requires a title and start time. Optionally specify end time or duration, invitees, recurrence pattern, timezone, and meeting password. Returns the created meeting details including meeting number, join link, and SIP address.
-    2026-09-14 19:20:37,570 INFO   - webex-update-meeting: Update properties of an existing Webex meeting and/or manage invitees in one call. Requires meetingId (available from webex-list-meetings). Meeting property updates are partial: only provided fields are changed. Invitee operations support add, update role/displayName, and remove by email. Best-effort behavior: if multiple operations are requested, successful operations are returned along with per-operation errors.
-    2026-09-14 19:20:37,570 INFO   - webex-delete-meeting: Delete a scheduled Webex meeting by meeting ID (available from webex-list-meetings). Optionally send cancellation email to attendees (sendEmail, default true). Admin users can delete on behalf of a host using hostEmail.
-    2026-09-14 19:20:37,570 INFO   - webex-get-meeting-status: Retrieve meeting details and optionally fetch all participants. Supported meetingId types are meeting series ID, scheduled meeting ID, and meeting instance ID (in-progress or ended). When participants are included, all participants are fetched across all pages and streamed as result chunks. Participant data is available when the caller is the meeting host; attendees may not have access to participant details even when meeting details are visible. Use includeParticipants&#61;false to fetch meeting status only when participant access is restricted.
-    2026-09-14 19:20:37,570 INFO   - webex-get-meeting-summary: Retrieve the AI-generated summary and action items for an ended Webex meeting. Requires a meetingId from an ended meeting instance (available from webex-list-meetings with meetingType&#61;&#39;meeting&#39; and state&#61;&#39;ended&#39;). Returns HTML summary notes and a list of action items in plaintext. Only works for meetings where Webex AI Assistant was enabled. Not supported for Webex for Government (FedRAMP). Only summaries for meetings hosted by or shared with the authenticated user can be retrieved. Summaries for meetings the user merely attended (but did not host) are not accessible unless the host has explicitly shared the meeting content.
-    2026-09-14 19:20:37,570 INFO   - webex-list-recordings: List meeting recording metadata and access URLs (playback link, download link). Returns metadata only — not video content. Automatically paginates through all results using Link:rel&#61;next until the total reaches the &#39;max&#39; limit. Each recording is streamed as a chunk for real-time progress, and the full array is included in the final response. Retries automatically on rate limits (HTTP 429). Filter by meetingId to find recordings for a specific meeting (accepts any ID type: series, scheduled, or instance; available from webex-list-meetings). Only recordings of meetings hosted by or shared with the authenticated user are returned. Recordings for meetings the user merely attended (but did not host) will not appear unless the host has explicitly shared the recording.
-    2026-09-14 19:20:37,570 INFO   - webex-list-transcripts: List all accessible transcripts, including Meeting Transcripts generated by Webex/Cisco AI Assistant or Closed Captions and transcripts attached to meeting recordings. For Meeting Transcript content, the tool downloads and locally parses the complete VTT from the exact vttDownloadLink returned by Webex; only if that fails does it paginate the snippets API. It then lists recordings and retrieves recording details only for meetings without a usable Meeting Transcript. Meeting Transcripts take precedence so the same meeting is not returned again from the recording source. If both VTT and snippets content retrieval fail, an available recording transcript replaces it as fallback. Multiple recording parts for one meeting are combined chronologically into one result. If recording discovery is unavailable after Meeting Transcripts were retrieved, those results are preserved and data.warnings reports that recording-backed results may be incomplete. Automatically paginates list APIs up to &#39;max&#39;, retries HTTP 429 responses, and optionally includes transcript content. Only meetings hosted by or shared with the authenticated user are returned.
+    ```terminal
+    2026-09-15 11:09:39,412 INFO 8 tool(s) from https://mcp.webexapis.com/mcp/webex-meeting
+    2026-09-15 11:09:39,412 INFO   - webex-list-meetings: List Webex meetings for the authenticated user. Returns meeting details including meeting number, topic, start/end time, host info, and optionally the full invitee list with pagination. Meetings are streamed progressively as result chunks during fetch and returned as a complete array in the final response. Filter by date range, meeting number, topic keyword, meetingType, or state. The returned &#39;id&#39; field is the meetingId used to identify a specific meeting. Use meetingType&#61;&#39;meeting&#39; and state&#61;&#39;ended&#39; to find ended meeting instances. Default meetingType is &#39;meetingSeries&#39; which returns upcoming recurring meetings. Invitees are fully paginated (no truncation). Rate-limited API calls are retried automatically.
+    2026-09-15 11:09:39,412 INFO   - webex-create-meeting: Create a new Webex meeting. Requires a title and start time. Optionally specify end time or duration, invitees, recurrence pattern, timezone, and meeting password. Returns the created meeting details including meeting number, join link, and SIP address.
+    2026-09-15 11:09:39,412 INFO   - webex-update-meeting: Update properties of an existing Webex meeting and/or manage invitees in one call. Requires meetingId (available from webex-list-meetings). Meeting property updates are partial: only provided fields are changed. Invitee operations support add, update role/displayName, and remove by email. Best-effort behavior: if multiple operations are requested, successful operations are returned along with per-operation errors.
+    2026-09-15 11:09:39,412 INFO   - webex-delete-meeting: Delete a scheduled Webex meeting by meeting ID (available from webex-list-meetings). Optionally send cancellation email to attendees (sendEmail, default true). Admin users can delete on behalf of a host using hostEmail.
+    2026-09-15 11:09:39,412 INFO   - webex-get-meeting-status: Retrieve meeting details and optionally fetch all participants. Supported meetingId types are meeting series ID, scheduled meeting ID, and meeting instance ID (in-progress or ended). When participants are included, all participants are fetched across all pages and streamed as result chunks. Participant data is available when the caller is the meeting host; attendees may not have access to participant details even when meeting details are visible. Use includeParticipants&#61;false to fetch meeting status only when participant access is restricted.
+    2026-09-15 11:09:39,413 INFO   - webex-get-meeting-summary: Retrieve the AI-generated summary and action items for an ended Webex meeting. Requires a meetingId from an ended meeting instance (available from webex-list-meetings with meetingType&#61;&#39;meeting&#39; and state&#61;&#39;ended&#39;). Returns HTML summary notes and a list of action items in plaintext. Only works for meetings where Webex AI Assistant was enabled. Not supported for Webex for Government (FedRAMP). Only summaries for meetings hosted by or shared with the authenticated user can be retrieved. Summaries for meetings the user merely attended (but did not host) are not accessible unless the host has explicitly shared the meeting content.
+    2026-09-15 11:09:39,413 INFO   - webex-list-recordings: List meeting recording metadata and access URLs (playback link, download link). Returns metadata only — not video content. Automatically paginates through all results using Link:rel&#61;next until the total reaches the &#39;max&#39; limit. Each recording is streamed as a chunk for real-time progress, and the full array is included in the final response. Retries automatically on rate limits (HTTP 429). Filter by meetingId to find recordings for a specific meeting (accepts any ID type: series, scheduled, or instance; available from webex-list-meetings). Only recordings of meetings hosted by or shared with the authenticated user are returned. Recordings for meetings the user merely attended (but did not host) will not appear unless the host has explicitly shared the recording.
+    2026-09-15 11:09:39,413 INFO   - webex-list-transcripts: List all accessible transcripts, including Meeting Transcripts generated by Webex/Cisco AI Assistant or Closed Captions and transcripts attached to meeting recordings. For Meeting Transcript content, the tool downloads and locally parses the complete VTT from the exact vttDownloadLink returned by Webex; only if that fails does it paginate the snippets API. It then lists recordings and retrieves recording details only for meetings without a usable Meeting Transcript. Meeting Transcripts take precedence so the same meeting is not returned again from the recording source. If both VTT and snippets content retrieval fail, an available recording transcript replaces it as fallback. Multiple recording parts for one meeting are combined chronologically into one result. If recording discovery is unavailable after Meeting Transcripts were retrieved, those results are preserved and data.warnings reports that recording-backed results may be incomplete. Automatically paginates list APIs up to &#39;max&#39;, retries HTTP 429 responses, and optionally includes transcript content. Only meetings hosted by or shared with the authenticated user are returned.
     ```
 
+    The 8 tools available are printed there.
    
-## Step 4.2: Call a tool - List meetings
+## Step 4.2: Call a specific tool
 
+Now that we have the tools, we will write the code that actually calls a tool. In this example, we will call "List meetings".
 
 1. Navigate to 04_mcp/02_list_meetings.py and review the code:
 
-   ```python
+    ```python
     import asyncio
-    import json
     import logging
     import os
     from datetime import datetime, timedelta, timezone
     
     from dotenv import load_dotenv
-    from mcp.shared.exceptions import MCPError
     
     from mcp_client import McpClient
     
@@ -287,19 +223,13 @@ Now, we will
             "meetingType": "scheduledMeeting",
         }
         log.info(f"Calling webex-list-meetings {arguments}")
-        try:
-            result = await McpClient(MEETING_TOKEN, MEETING_MCP_URL).call_tool(
-                "webex-list-meetings",
-                arguments,
-            )
-        except MCPError as exc:
-            log.error(f"Meetings MCP call failed: {exc}")
+        result = await McpClient(MEETING_TOKEN, MEETING_MCP_URL).call_tool(
+            "webex-list-meetings",
+            arguments,
+        )
+        if not result:
             return
-    
-        meetings = json.loads(result).get("data", {}).get("meetings", [])
-        log.info(f"{len(meetings)} scheduled meeting(s):")
-        for meeting in meetings:
-            log.info(f"  {meeting['start']} - {meeting['end']}  {meeting['title']}")
+        log.info(result)
     
     
     if __name__ == "__main__":
@@ -316,12 +246,146 @@ Now, we will
    2026-09-14 19:28:03,729 INFO {"data":{"meetings":[{"id":"cd9966d90d5a43bfa8e002f6e8b6aa4e","meetingNumber":"26604791633","title":"Meeting with user1@webexone-ai-assistant.wbx.ai","start":"2026-09-15T16:00:00Z","end":"2026-09-15T17:00:00Z","state":"ready","meetingType":"scheduledMeeting","timezone":"UTC","hostDisplayName":"admin@webexone-ai-assistant.wbx.ai","hostEmail":"admin@webexone-ai-assistant.wbx.ai","webLink":"https://webexone-ai-assistant-sbx.webex.com/webexone-ai-assistant-sbx/j.php?MTID=mea0739a573d6ff87dbab949d46715c08","sipAddress":"26604791633@webexone-ai-assistant-sbx.webex.com","invitees":[{"id":"cd9966d90d5a43bfa8e002f6e8b6aa4e_4266817701","email":"user1@webexone-ai-assistant.wbx.ai","displayName":"user1@webexone-ai-assistant.wbx.ai","coHost":false,"panelist":false}]}],"count":1,"totalMeetings":1},"success":true}
    ```
 
+   In this case we have printed the raw information that the tool returned.
+
 ## Step 4.3: Use an LLM to call
 
-1. Navigate to 04_mcp/03_llm.py and review the code:
+In this scenario, the LLM will choose which tool will use from the catalog. We will make a query in natural language, and the LLM will decide what tool from the list is needed to get that information.
+The LLM will process the answer and reply to us in natural language.
+
+!!! Note
+    Our query will be a constant inside the code.
+
+1. Navigate to 04_mcp/llm.py and review the code, we will use this class from now on as a wrapper to call OpenAI:
 
     ```python
+    import asyncio
+    import json
+    import logging
+    import os
+    
+    import requests
+    
+    OPENAI_URL = "https://api.openai.com/v1/chat/completions"
+    MAX_STEPS = 5
+    
+    log = logging.getLogger("mcp-llm")
+    
+    
+    def ask_llm(messages, tools):
+        """One Chat Completions round. Returns the assistant message (text or tool calls)."""
+        response = requests.post(
+            OPENAI_URL,
+            headers={
+                "Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": os.getenv("OPENAI_MODEL", "gpt-5-nano"),
+                "messages": messages,
+                "tools": tools,
+            },
+            timeout=60,
+        )
+        response.raise_for_status()
+        return response.json()["choices"][0]["message"]
+    
+    
+    def as_openai_tools(mcp_tools):
+        # An MCP tool already describes itself with a JSON schema, which is what OpenAI wants.
+        return [
+            {
+                "type": "function",
+                "function": {
+                    "name": tool.name,
+                    "description": tool.description,
+                    "parameters": tool.input_schema,
+                },
+            }
+            for tool in mcp_tools
+        ]
+    
+    
+    async def run_turn(mcp, messages, tools, max_steps=MAX_STEPS):
+        for _ in range(max_steps):
+            message = await asyncio.to_thread(ask_llm, messages, tools)
+            messages.append(message)
+    
+            tool_calls = message.get("tool_calls")
+            if not tool_calls:
+                return message.get("content") or "(no answer)"
+    
+            for call in tool_calls:
+                name = call["function"]["name"]
+                arguments = json.loads(call["function"]["arguments"] or "{}")
+                log.info(f"LLM asked for {name} {arguments}")
+                result = await mcp.call_tool(name, arguments)
+                messages.append(
+                    {"role": "tool", "tool_call_id": call["id"], "content": result or "Tool error"}
+                )
+    
+        return f"Stopped after {max_steps} tool steps without a final answer."
+    ```
 
+2. Navigate to 04_mcp/03_llm.py and review the code:
+
+    ```python
+    import asyncio
+    import logging
+    import os
+    from datetime import datetime, timezone
+    
+    from dotenv import load_dotenv
+    
+    from llm import as_openai_tools, run_turn
+    from mcp_client import McpClient
+    
+    try:
+        import truststore
+    
+        truststore.inject_into_ssl()
+    except ImportError:
+        pass
+    
+    MEETING_MCP_URL = "https://mcp.webexapis.com/mcp/webex-meeting"
+    QUESTION = "What meetings do I have scheduled this week?"
+    
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    log = logging.getLogger("mcp-llm")
+    
+    load_dotenv()
+    
+    MEETING_TOKEN = os.getenv("WEBEX_MEETING_MCP_TOKEN")
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+    OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-5-nano")
+    if not MEETING_TOKEN:
+        raise SystemExit("Set WEBEX_MEETING_MCP_TOKEN in your .env file")
+    if not OPENAI_API_KEY:
+        raise SystemExit("Set OPENAI_API_KEY in your .env file")
+    
+    
+    async def main():
+        client = McpClient(MEETING_TOKEN, MEETING_MCP_URL)
+        tools = as_openai_tools(await client.list_tools())
+        log.info(f"Offering {len(tools)} Meetings MCP tool(s) to {OPENAI_MODEL}")
+    
+        today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    f"You help a Webex user with their meetings. Today is {today} (UTC). "
+                    "Answer only from tool results, never from memory, and keep replies short."
+                ),
+            },
+            {"role": "user", "content": QUESTION},
+        ]
+        return await run_turn(client, messages, tools)
+    
+    
+    if __name__ == "__main__":
+        log.info(f"Question: {QUESTION}")
+        log.info(asyncio.run(main()))
     ```
 
 2. Set the OPENAI_API_KEY in `.env`:
@@ -334,9 +398,150 @@ Now, we will
 
     * python 03_llm.py
 
-## Step 4.4: Integration with the Bot
+4. You should see in the console how tools were offered to the model, which one it picked, and its answer:
 
-1. Navigate to 04_mcp/04_bot.py and review the code:
+    ``` terminal
+    2026-09-15 11:14:54,415 INFO Offering 8 Meetings MCP tool(s) to gpt-5-nano
+    2026-09-15 11:15:02,662 INFO LLM asked for webex-list-meetings {'from': '2026-09-14T00:00:00Z', 'to': '2026-09-21T00:00:00Z', 'max': 100, 'includeParticipants': False}
+    ...
+    2026-09-15 11:15:33,840 INFO Here’s what you have this week:
+
+    - Meeting: Meeting with user1@webexone-ai-assistant.wbx.ai
+      - When: 2026-09-15 16:00–17:00 UTC
+      - Meeting number: 26604791633
+      - Host: admin@webexone-ai-assistant.wbx.ai
+      - Join: https://webexone-ai-assistant-sbx.webex.com/webexone-ai-assistant-sbx/j.php?MTID=m4bc7e596e836eadff3446f07b1379e7e
+      - SIP: 26604791633@webexone-ai-assistant-sbx.webex.com
+    
+    Want me to add this to your calendar or share the invite?
+    ```
+
+## Step 4.4: Hub
+
+So far we have only added one Webex Meeting MCP Server. Now, we will also add the Webex Messaging MCP server. Now, the LLM won't pick server, it only picks a tool name, as all of them are going to be presented together. We will introduce now the class McpHub, that lists tools from every server as one combined list and, when the model calls a name, routes that call to the right client.
+
+1. Navigate to 04_mcp/hub.py and review the code:
+
+    ```python
+    from mcp_client import McpClient
+    
+    
+    class McpHub:
+        def __init__(self, servers):
+            self.clients = [McpClient(token, url) for url, token in servers if token]
+            self._by_name = {}
+    
+        async def list_tools(self):
+            tools = []
+            self._by_name = {}
+            for client in self.clients:
+                for tool in await client.list_tools():
+                    self._by_name[tool.name] = client
+                    tools.append(tool)
+            return tools
+    
+        async def call_tool(self, name, arguments=None):
+            if name not in self._by_name:
+                await self.list_tools()
+            client = self._by_name.get(name)
+            if client is None:
+                raise KeyError(f"Unknown MCP tool: {name}")
+            return await client.call_tool(name, arguments)
+    ```
+
+2. Navigate to 04_mcp/04_hub.py and review the code. In this exercise, we will do two questions to the LLM, that includes one related to My Meetings and another one to My Spaces.
+
+    ```python
+    import asyncio
+    import logging
+    import os
+    from datetime import datetime, timezone
+    
+    from dotenv import load_dotenv
+    
+    from llm import as_openai_tools, run_turn
+    from mcp_hub import McpHub
+    
+    try:
+        import truststore
+    
+        truststore.inject_into_ssl()
+    except ImportError:
+        pass
+    
+    MESSAGING_MCP_URL = "https://mcp.webexapis.com/mcp/webex-messaging"
+    MEETING_MCP_URL = "https://mcp.webexapis.com/mcp/webex-meeting"
+    QUESTION = "What meetings do I have this week, and how many spaces do I have?"
+    
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    log = logging.getLogger("mcp-hub")
+    
+    load_dotenv()
+    
+    MESSAGING_TOKEN = os.getenv("WEBEX_MESSAGING_MCP_TOKEN")
+    MEETING_TOKEN = os.getenv("WEBEX_MEETING_MCP_TOKEN")
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+    OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-5-nano")
+    if not OPENAI_API_KEY:
+        raise SystemExit("Set OPENAI_API_KEY in your .env file")
+    if not MESSAGING_TOKEN and not MEETING_TOKEN:
+        raise SystemExit(
+            "Set WEBEX_MESSAGING_MCP_TOKEN and/or WEBEX_MEETING_MCP_TOKEN in your .env file"
+        )
+    
+    
+    async def main():
+        hub = McpHub(
+            [
+                (MESSAGING_MCP_URL, MESSAGING_TOKEN),
+                (MEETING_MCP_URL, MEETING_TOKEN),
+            ]
+        )
+        tools = as_openai_tools(await hub.list_tools())
+        log.info(f"Offering {len(tools)} tool(s) from {len(hub.clients)} MCP server(s) to {OPENAI_MODEL}")
+    
+        today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    f"You help a Webex user with messaging and meetings. Today is {today} (UTC). "
+                    "Answer only from tool results, never from memory, and keep replies short."
+                ),
+            },
+            {"role": "user", "content": QUESTION},
+        ]
+        return await run_turn(hub, messages, tools)
+    
+    
+    if __name__ == "__main__":
+        log.info(f"Question: {QUESTION}")
+        log.info(asyncio.run(main()))
+    ```
+
+3. Set the WEBEX_MESSAGING_MCP_TOKEN in `.env` if you didn't do it befroe:
+
+    ```env
+    WEBEX_MESSAGING_MCP_TOKEN=your_messaging_mcp_token
+    ```
+
+4. Run your code with the following command:
+
+    * python 04_hub.py
+
+5. You should see now that tools were combined together, LLM decided to make two different calls, one for each question, and then it combined the answer in natural language.
+
+    ```terminal
+    2026-09-15 11:43:47,642 INFO Question: What meetings do I have this week, and how many spaces do I have?
+    ...
+    2026-09-15 11:44:16,109 INFO Offering 32 tool(s) from 2 MCP server(s) to gpt-5-nano
+    ...
+    
+    ```
+
+## Step 4.5: Integration with the Bot
+
+1. Navigate to 04_mcp/05_bot.py and review the code:
 
     ```python
     import asyncio
@@ -470,10 +675,101 @@ Now, we will
 ## Extra: Adaptive Card
 
 
-
 ---
 
 Now you have a bot that can access the Webex MCP servers. This still give us some limitations, we need to adapt to the tools available, but also, token will expire after 12 hours. In the next sections we will explore how to work with those.
+
+## Extra: From the IDE to a bot
+
+In the first part of this lab you already used MCP **without writing a client**. You configured Webex Messaging and Meetings MCP in **VS Code** and asked an agent in the editor. That worked because the IDE **is** an MCP host.
+
+```mermaid
+flowchart TB
+    subgraph IDE["Part 1 - VS Code"]
+        UI[Chat in the editor]
+        LOOP[Tool loop built into the IDE]
+        C1[MCP Client - Messaging]
+        C2[MCP Client - Meetings]
+        UI --> LOOP
+        LOOP --> C1
+        LOOP --> C2
+    end
+    subgraph BOT["This section - Webex bot"]
+        WX[User in a Webex space]
+        HOST[Your Python host]
+        H1[MCP Client - Messaging]
+        H2[MCP Client - Meetings]
+        WX --> HOST
+        HOST --> H1
+        HOST --> H2
+    end
+    S1["MCP Server\nwebex-messaging"]
+    S2["MCP Server\nwebex-meeting"]
+    C1 <--> S1
+    C2 <--> S2
+    H1 <--> S1
+    H2 <--> S2
+```
+
+The three MCP roles do not change. Only **who is the host** changes.
+
+### How the IDE does it in the background
+
+When you chat with the agent in VS Code:
+
+1. The editor is the **host**. It owns the LLM and the UI.
+2. For each MCP URL in your config, it opens a **client** (one session per server).
+3. It calls `list_tools`, converts those tools into something the model understands, and runs the same loop we wrote by hand: model asks for a tool → host calls the server → result goes back to the model → the model answers in the chat panel.
+
+You never saw `streamable_http_client` or `tool_calls` because the IDE hides them. The HTTP calls, the Bearer token, and the tool names are the same ones you used in `01`–`04`.
+
+### Why that is not enough for a bot
+
+The IDE assistant is **personal**. It runs on your laptop, for you. A colleague cannot open your VS Code window and ask it to list *their* spaces.
+
+A **Webex bot** is a host that other people can reach: they message a bot in a 1:1 or a space, and your process answers. No IDE will do that for them. That is the reason this section exists.
+
+| | VS Code agent | This section (custom bot) |
+| --- | --- | --- |
+| Host | The IDE | Your Python process |
+| Who can use it | The person at that machine | Anyone who can message the bot |
+| You write | Config (URL + token) | Client, hub, loop, WebSocket |
+| Good for | Trying MCP, personal productivity | An assistant inside Webex |
+
+### Is there another way to put MCP in Webex?
+
+Yes, without a custom Python bot:
+
+- **Webex AI / agentic apps.** An admin can enable Cisco-hosted MCP servers in [Collaboration Control Hub](https://developer.webex.com/mcp/docs/webex-mcp-server-overview){:target="_blank"} so the **Webex AI Assistant** (in the Webex app) can call those tools. Users stay in Webex; Cisco’s product is the host.
+- **Other Microsoft / Cisco product hosts** (for example Copilot Studio) can also sit in front of MCP. Again you configure, you do not write the loop.
+
+Those paths are the right choice when you want the **stock Webex assistant** to use Messaging or Meetings tools. They are **not** the right choice when you need:
+
+- your own LLM and prompts
+- allowlists (who may talk to the bot)
+- Adaptive Cards or other custom replies
+- tools mixed from Webex MCP **and** your own servers
+- a bot identity you control (`WebexOne-*USERNAME*`)
+
+That is why this lab builds the host: so the **bot** is the integration, not the IDE and not only Cisco’s built-in assistant.
+
+### Frameworks
+
+If you keep a custom bot but do not want to maintain the tool loop, agent frameworks wrap **exactly** what `03` and `04` do:
+
+| Framework | Role |
+| --- | --- |
+| **LangGraph** (via `langchain-mcp-adapters`) | Graph agents; `MultiServerMCPClient` ≈ our hub |
+| **Semantic Kernel** | Native MCP client/server, multi-language |
+| **OpenAI Agents SDK** | Small agents; MCP over stdio or HTTP |
+| **Pydantic AI** | Typed Python agents with MCP toolsets |
+
+The official MCP Python SDK also has a higher-level `Client` and a `ClientSessionGroup` that aggregates several servers — the same job as `mcp_hub.py`.
+
+We still wrote the loop so you can see every call. In production you can keep the Webex bot and the tokens, and swap the loop for a framework when you need memory, approvals, retries, or tracing.
+
+!!! Note
+    MCP support in IDEs and frameworks changes often. Check current docs before you standardise on one host.
 
 <!--
 ## Service apps 
