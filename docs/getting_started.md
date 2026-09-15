@@ -4,7 +4,7 @@ Welcome to **LAB-31123: Troubleshoot and Manage Your Organization with an AI Ass
 
 ## Join the conversation!
 
-Scan the QR code to be added to the Webex space for Q&A and more
+Scan the QR code to be added to the Webex space for Q&A and more.
 
 ![Webex](./assets/webex_space.png){ width="300" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
@@ -33,7 +33,7 @@ To begin, you'll log into your dedicated Webex lab account. This will allow you 
 2. **Enter Lab Credentials:** When prompted, enter the **Webex email address and password** provided to you.
 
 !!! Note
-    You can also login at [Webex](https://web.webex.com/){:target="_blank"} 
+    You can also log in at [Webex](https://web.webex.com/){:target="_blank"} 
 
 ## Visual Studio
 
@@ -43,25 +43,24 @@ Visual Studio Code will be used for Python-based bot development, service app co
 
    ![vsc_logo](./assets/docx-image-004.png){ width="150" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-
 ### Clone the lab repository
 
-3. Go to the **Source Control** tab and click **Clone Repository**:
+2. Go to the **Source Control** tab and click **Clone Repository**:
 
     ![vsc_clone](./assets/docx-image-005.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-4. Type the following:
+3. Type the following URL:
 
     - https://github.com/diegomjimenez/WebexOne2026.git
 
     ![vsc_repo](./assets/github_1.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-5. Select a directory to save the project.
-6. Click on **Yes, I trust the authors** if a pop-up appears.
+4. Select a directory to save the project.
+5. Click on **Yes, I trust the authors** if a pop-up appears.
 
-### Virtual Enviroment
+### Virtual Environment
 
-3. Create a virtual environment and install dependencies:
+6. Create a virtual environment and install dependencies:
 
     ```bash
     python -m venv .venv
@@ -69,7 +68,7 @@ Visual Studio Code will be used for Python-based bot development, service app co
     pip install -r requirements.txt
     ```
 
-4. Copy the environment template and fill in your values:
+7. Copy the environment template and fill in your values:
 
     ```bash
     cp .env.example .env
@@ -77,14 +76,12 @@ Visual Studio Code will be used for Python-based bot development, service app co
 
 ### Chat
 
-1. Open the chat, open the Command Palette `Ctrl+Shift+P` and type "Chat: Open Chat (Agent)"
+8. Open the Command Palette (`Ctrl+Shift+P`) and type "Chat: Open Chat (Agent)".
 
     ![Create_token](./assets/vscode_6.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-    Chat should open on the side:
+    The Chat should open on the side:
 
     ![Create_token](./assets/vscode_16.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ### Bruno / Postman
-
-
