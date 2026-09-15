@@ -712,8 +712,12 @@ Now, as we did in the previous section, we will now combine what we have done to
 
 ## Extra: Local Tool + Adaptive Card
 
-In Webex, we also have the capability to use Adaptive Cards. Adaptive Cards allow us to format the message and add actions, such as a Join button on each meeting, instead of a long block of chat text. 
-This card is predifined, and only used In this exercise the LLM does not write the card: Python calls webex-list-meetings (same as exercise 2) and builds the card JSON; the bot posts it as a message attachment.
+In Webex, we also have the capability to use **Adaptive Cards**. Adaptive Cards allow us to format the message and add actions, such as a Join button on each meeting, instead of a long block of chat text.
+
+In this exercise, we will do two things:
+
+- Create the `send_meetings_card` function, that generates an Adaptive Card for the meetings.
+- Give the LLM a local tool, so it can call this new function when it decides.
 
 You can use the **Buttons and Cards Designer** to build your own:
 
