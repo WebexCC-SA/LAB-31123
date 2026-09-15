@@ -49,7 +49,7 @@ Because a Service App operates at a machine level and can access organization-wi
 3. As you already have a Bot created, select ‘Create a New App’.
 4. On the ‘Create a New App’ page, find the Service App card and click the ‘Create a Service App’ button.
 
-    ![Service Ap](assets/bot_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Service App](./assets/bot_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 5. Enter the following information:
 
@@ -59,11 +59,20 @@ Because a Service App operates at a machine level and can access organization-wi
     | **Icon**       	| Choose one of the available options                     |
     | **Description**       	| Service App for WebexOne                   |
     | **Contact Email**       	| userX@webexone-ai-assistant.wbx.ai |
-    | **Scopes** | XXX |
+    | **Scopes** | spark:mcp spark:messages_read spark:messages_write spark:rooms_read spark:rooms_write spark:memberships_read spark:memberships_write spark:webhooks_read spark:webhooks_write |
 
    !!! Warning
-       For simplicity, in this lab you are going to select all the scopes, but scopes are going to be dependent on which MCP server you want to use.
-       In a real environment, you should be very careful with the assigned scopes and select the minimum required.
+       These are the scopes for **Webex Messaging MCP**. Scopes depend on which MCP server you want to use.
+       
+       Later in this lab, you would need to update the scopes to:
+
+       `spark:mcp spark:messages_read spark:messages_write spark:rooms_read spark:rooms_write spark:memberships_read spark:memberships_write`
+
+       `spark:webhooks_read spark:webhooks_write ...`
+       
+       For simplicity, in this lab, you can already select all of them.
+       
+       IMPORTANT: In a real environment, you should be very careful with the assigned scopes and select the minimum required.
 
 6. Once you have entered the information, your screen should look similar to this:
 
@@ -89,6 +98,13 @@ Because a Service App operates at a machine level and can access organization-wi
             CLIENT_SECRET=
             ```
 
+7. In the same page, at the top, in the `Admin Authorization` section, click on **Request admin authorization** and you should see it like:
+
+    ![Service App](./assets/serviceapp_3.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+    !!! Note
+        If you do not do this step, the app won't be visible for admins to authorize.
+
 ### Authorize your Service App in your organization
 
 Once the Service App is created, we will need to authorize it. 
@@ -98,25 +114,24 @@ Once the Service App is created, we will need to authorize it.
 
 To authorize a **Service App**, go to **Collaboration Control Hub** -> **Apps** -> **Service Apps** and select **Other service apps**. Select the Service App you want to authorize, and click **Authorize** and **Save**:
 
-![developer4](./assets/developer4.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![Service App](./assets/serviceapp_4.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 To use the newly created **Service App**, you will need to get an **Access token**. 
 
 ### Access Token
 
-Return to **Webex for Developers**, go to **My Webex Apps** and select the newly created **Service App**:
+After the **Service App** has been authorized, you will be able to generate an **Access token**.
 
-![developer6_!](./assets/developer6_1.png){ width="800" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+1. Return to **Webex for Developers**, go to **My Webex Apps** and select your **Service App**.
+2. In the section **Org Authorizations**, select your Organization from the dropdown. 
 
-In the section **Org Authorizations**, select your Organization from the dropdown. 
+    ![Service App](./assets/serviceapp_5.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-!!! Warning "If this section does not appear, refresh the page."
+3. Enter your **Client Secret** and click **Generate tokens**:
 
-A text box to enter your **Client Secret** will appear. This way, you can generate an **access_token** for this organization:
+    ![Service App](./assets/serviceapp_6.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-![developer6](./assets/developer6.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-- Copy them into `.env`:
+4. Copy your **access token** and your **refresh token** into `.env`:
 
     ```env
     ACCESS_TOKEN=
@@ -127,6 +142,15 @@ A text box to enter your **Client Secret** will appear. This way, you can genera
     The expiration time for the access token is 14 days, while the refresh token expires in 90 days.
 
 ## Step 5.2: Using the token to call an MCP
+
+Now, we will test that the Service App is allowed to use the Webex MCP servers. We will do two things here: list the tools, to prove the token is authorized for `spark:mcp`, and then call one of them, to prove the Service App can really use the MCP server.
+
+We are using the **Messaging MCP** and the tool `webex-search-spaces`.
+
+!!! Warning
+    Do not expect data back. The tools in the Messaging and Meetings MCP servers work in **user context**: they answer questions like "my spaces" or "my meetings". A Service App is a machine, so there is no "me" to resolve, and the list comes back empty.
+
+    That empty result is exactly the point: the call succeeds, so the Service App token works with MCP, but these particular MCP servers are not the right fit for a machine account.
 
 1. Navigate to `05_serviceapps/01_mcp.py` and review the code:
 
@@ -173,13 +197,36 @@ A text box to enter your **Client Secret** will appear. This way, you can genera
                 log.warning("No tools found or connection failed.")
                 return
         
-            log.info(f"Success! Found {len(tools)} tool(s) available for the Service App:")
-            for tool in tools:
-                log.info(f"  - {tool.name}: {tool.description}")
+            log.info(f"Success! Found {len(tools)} tool(s) available for the Service App")
+        
+            # Call a tool: a machine has no spaces of its own, so expect an empty list
+            arguments = {"max": 10}
+            log.info(f"Calling webex-search-spaces {arguments}")
+            result = await client.call_tool("webex-search-spaces", arguments)
+            if not result:
+                return
+            log.info(result)
         
         if __name__ == "__main__":
             asyncio.run(main())
         ```
+
+2. Run your code with the following command:
+
+    * `python 01_mcp.py`
+
+3. You will see the following in the terminal:
+
+    ```terminal
+    2026-09-15 22:58:45,910 INFO Connecting to Messaging MCP with Service App token...
+    ...
+    2026-09-15 22:58:49,929 INFO Success! Found 24 tool(s) available for the Service App
+    2026-09-15 22:58:49,930 INFO Calling webex-search-spaces {'max': 10}
+    ...
+    2026-09-15 22:58:53,691 INFO {"success":true,"query":"","count":0,"spaces":[],"totalSpaces":0}
+    ```
+
+    Note that, as expected, the result is empty.
 
 ## Extra: Refresh your access_token
 
@@ -193,7 +240,7 @@ As mentioned earlier, the **access_token** will expire after 14 days, and the **
 
 You can refresh your **access_token** using your **refresh_token**, **client_id**, and **client_secret** by making a POST request to the Webex API. 
 
-To manage the token expiration and refresh, we have provided a `TokenManager` class. This class is checking if the token is expired and automatically updating your `.env` file so the new token persists across restarts.
+To manage the token expiration and refresh, we have provided a `TokenManager` class. This class checks if the token is expired and automatically updates your `.env` file so the new token persists across restarts.
 
 1. Navigate to `05_serviceapps/token_manager.py` and review the code:
 
