@@ -38,6 +38,32 @@ flowchart LR
     Server <-->|REST| API[Webex APIs]
 ```
 
+### The Request Flow
+
+Here is how a single question travels through that architecture:
+
+```mermaid
+sequenceDiagram
+    participant U as Webex User
+    participant B as Webex Bot
+    participant A as AI Assistant
+    participant C as MCP Client
+    participant S as MCP Server
+    participant W as Webex API
+
+    U->>B: "What meetings do I have this week?"
+    B->>A: Forward message + context
+    A->>A: LLM plans next action
+    A->>C: Call tool webex-list-meetings
+    C->>S: tools/call
+    S->>W: GET /v1/meetings
+    W-->>S: Meetings data
+    S-->>C: Filtered JSON
+    C-->>A: Tool result
+    A->>B: Summary of upcoming meetings
+    B->>U: Response in Webex space
+```
+
 ## Step 4.0: Build the MCP Client
 
 These are the MCP components used in this section:
