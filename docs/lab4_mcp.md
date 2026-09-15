@@ -2,6 +2,33 @@
 
 Now that we have already build our AI assistant, we need to give it MCP capabilities to access our organization.
 
+## What is MCP?
+
+The Model Context Protocol (MCP) is an open standard that connects AI models to data sources and tools. Instead of writing custom API integrations for every LLM, you write one MCP server. Any MCP-compatible host (like VS Code, Claude Desktop, or your own bot) can connect to it.
+MCP defines three core primitives:
+
+| Primitive | Controlled by | Purpose | Side effects |
+| --- | --- | --- | --- |
+| **Tools** | Model (on demand) | Take action — call APIs, run scripts | Yes |
+| **Resources** | Client (automatic) | Read-only context — schemas, policies | No |
+| **Prompts** | User (explicit) | Reusable multi-step workflow templates | No |
+
+### Tools
+
+In this lab, we are building a Webex bot that acts as an assistant. When a user asks a question, the LLM needs to decide what to do (like looking up meetings or searching spaces) and then do it. 
+That makes **Tools** the perfect fit. The model chooses which tool to call and supplies the arguments. We will not use Resources (which are usually injected automatically by IDEs) or Prompts (which are usually picked by a user from a menu).
+
+### Tool lifecycle
+
+When our bot connects to a server, this is what happens:
+
+1. `tools/list` → The bot receives the name, description, and JSON schema for every tool.
+2. The bot passes those schemas to the LLM.
+3. The LLM selects a tool and supplies arguments based on the user's chat message.
+4. `tools/call` → The bot sends the call to the server.
+5. The server validates the request, calls the backend Webex API, and returns JSON.
+6. The bot gives that JSON back to the LLM to write the final reply.
+
 ## Architecture
 
 ```mermaid
@@ -21,7 +48,7 @@ These are the MCP components used in this section:
 
 | Component | Role | In this section |
 | --- | --- | --- |
-| **Host** | App that creates MCP clients (later also LLM / bot) | `01_list_tools.py` |
+| **Host** | App that creates MCP clients (later also LLM / bot) | Python scripts and Webex bot |
 | **Client** | One session, one server, one token | `McpClient` |
 | **Server** | Exposes tools (and resources/prompts) | Hosted Webex Messaging MCP and Meetings MCP |
 
