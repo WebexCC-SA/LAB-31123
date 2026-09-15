@@ -1,0 +1,1287 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="LAB-31123: Building an AI Assistant to Manage and Troubleshoot Your Organization">
+      
+      
+        <meta name="author" content="Diego Manuel Jimenez Moreno">
+      
+      
+      
+        <link rel="prev" href="../getting_started/">
+      
+      
+        <link rel="next" href="../lab2_webex-apis-troubleshooting/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../template_assets/webex75.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Lab 1 - Webex MCP Servers in Your IDE - LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-1-webex-mcp-servers-in-your-ide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" class="md-header__button md-logo" aria-label="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" data-md-component="logo">
+      
+  <img src="../template_assets/webexLogo91.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 1 - Webex MCP Servers in Your IDE
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../index.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../overview/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Lab
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" class="md-nav__button md-logo" aria-label="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" data-md-component="logo">
+      
+  <img src="../template_assets/webexLogo91.png" alt="logo">
+
+    </a>
+    LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 1 - Webex MCP Servers in Your IDE
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 1 - Webex MCP Servers in Your IDE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-11-adding-an-mcp-server-to-vs-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1.1: Adding an MCP server to VS Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-12-adding-the-llm-to-vs-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1.2: Adding the LLM to VS Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercises">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-meetings-mcp-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add Meetings MCP server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#organize-a-meeting-using-your-ai-assistant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Organize a meeting using your AI Assistant
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab2_webex-apis-troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2 - Webex APIs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab3_bot-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 3 - Integrate an AI Assistant with a Webex Bot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab4_mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 4 - MCP Servers in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab5_service-app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 5 - Service Apps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab6_custom-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 6 - Custom MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab7_agent-skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 7 - Agent Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab8_use-cases.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 8 - Use Cases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exercises.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conclusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-1-webex-mcp-servers-in-your-ide">Lab 1 - Webex MCP Servers in Your IDE</h1>
+<p>In this section, you will connect <strong>official Webex MCP servers</strong> to your IDE to execute organizational tasks through natural language.</p>
+<p>In this lab, our IDE will be <strong>Visual Studio Code</strong>.</p>
+<p>As of today, these are the official Webex MCP servers available:</p>
+<table>
+<thead>
+<tr>
+<th>MCP server</th>
+<th>Documentation</th>
+<th>Server URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Meetings MCP Server</strong></td>
+<td><a href="https://developer.webex.com/mcp/docs/meetings-mcp-server" target="_blank">Meetings MCP</a></td>
+<td><code>https://mcp.webexapis.com/mcp/webex-meeting</code></td>
+</tr>
+<tr>
+<td><strong>Messaging MCP Server</strong></td>
+<td><a href="https://developer.webex.com/mcp/docs/messaging-mcp-server" target="_blank">Messaging MCP</a></td>
+<td><code>https://mcp.webexapis.com/mcp/webex-messaging</code></td>
+</tr>
+<tr>
+<td><strong>Vidcast MCP Server</strong></td>
+<td><a href="https://developer.webex.com/mcp/docs/vidcast-mcp-server" target="_blank">Vidcast MCP</a></td>
+<td><code>https://mcp.webexapis.com/mcp/vidcast</code></td>
+</tr>
+<tr>
+<td><strong>Webex Suite MCP Server</strong></td>
+<td><a href="https://developer.webex.com/mcp/docs/webex-suite-mcp-server" target="_blank">Webex Suite MCP</a></td>
+<td><code>https://mcp.webexapis.com/mcp/webex-suite</code></td>
+</tr>
+<tr>
+<td><strong>Workspaces MCP Server (New)</strong></td>
+<td><a href="https://developer.webex.com/mcp/docs/workspaces-mcp-server" target="_blank">Workspaces MCP</a></td>
+<td><code>https://mcp.webexapis.com/mcp/workspaces</code></td>
+</tr>
+<tr>
+<td><strong>Connect CPaaS MCP Server (New)</strong></td>
+<td><a href="https://developer.webex.com/mcp/docs/connect-mcp-server" target="_blank">Connect CPaaS MCP</a></td>
+<td><strong>Regional</strong> — use the URL that matches your Webex Connect tenant (see table below)</td>
+</tr>
+<tr>
+<td><strong>Contact Center MCP Server (New)</strong></td>
+<td><a href="https://developer.webex.com/mcp/docs/contact-center-mcp-server" target="_blank">Contact Center MCP</a></td>
+<td><strong>Tenant-specific</strong> — sign in on the product page to copy your regional URL</td>
+</tr>
+<tr>
+<td><strong>Contact Center Operation MCP Server (New)</strong></td>
+<td><a href="https://developer.webex.com/mcp/docs/contact-center-operation-mcp-server" target="_blank">Contact Center Operation MCP</a></td>
+<td><strong>Tenant-specific</strong> — sign in on the product page to copy your server URL</td>
+</tr>
+</tbody>
+</table>
+<p>This list is frequently updated; you can use the <a href="https://developer.webex.com/mcp/docs/webex-mcp-server-overview" target="_blank">Webex MCP Server Overview</a> for the latest catalog.</p>
+<h3 id="prerequisites">Prerequisites</h3>
+<p>You will quickly notice in the documentation that every official Webex MCP server includes this requirement:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This MCP server must be enabled by your organization's admin in Webex Control Hub before it can be used. See <a href="https://developer.webex.com/mcp/docs/provisioning-on-control-hub" target="_blank">Provisioning on Control Hub</a> for details.</p>
+</div>
+<p>MCP servers are <strong>NOT</strong> enabled by default in your organization; you need to enable them to allow your users to use them.</p>
+<div class="admonition warning">
+<p class="admonition-title">Important</p>
+<p>These steps have been completed prior to this lab since you are all sharing the same organization, but this information is relevant for your own organizations. The presenters will demonstrate this process.</p>
+</div>
+<ol>
+<li>
+<p>If you try to access MCP for the first time, you will see a message: <strong>No allowed MCP servers found</strong>.</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/token_4.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/token_4.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+</li>
+<li>
+<p>To enable them, go to <strong>Collaboration Control Hub</strong> -&gt; <strong>Apps</strong> -&gt; <strong>Agentic Apps</strong> and select the <strong>Webex</strong> tab:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/controlhub_1.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/controlhub_1.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="1000"></a></p>
+</li>
+<li>
+<p>To enable any of them, click "Allowed for all users" and save:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/controlhub_2.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/controlhub_2.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="1000"></a></p>
+</li>
+<li>
+<p>You are not done yet. If you try to use an MCP server now, you will see an error similar to this:</p>
+<div class="highlight"><pre><span></span><code><span class="m">2026</span>-09-14<span class="w"> </span><span class="m">12</span>:21:38.230<span class="w"> </span><span class="o">[</span>warning<span class="o">]</span><span class="w"> </span><span class="o">[</span>server<span class="w"> </span>stderr<span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="m">63062</span><span class="o">]</span><span class="w"> </span>Fatal<span class="w"> </span>error:<span class="w"> </span>SdkHttpError:<span class="w"> </span>Error<span class="w"> </span>POSTing<span class="w"> </span>to<span class="w"> </span>endpoint:<span class="w"> </span><span class="o">{</span><span class="s2">"id"</span>:0,<span class="s2">"jsonrpc"</span>:<span class="s2">"2.0"</span>,<span class="s2">"error"</span>:<span class="o">{</span><span class="s2">"code"</span>:-32003,<span class="s2">"message"</span>:<span class="s2">"You don't have access to this MCP server yet. Ask your administrator to enable it for your account or organization."</span>,<span class="s2">"data"</span>:<span class="o">{</span><span class="s2">"reason"</span>:<span class="s2">"ACCESS_DENIED"</span><span class="o">}}}</span>
+<span class="m">2026</span>-09-14<span class="w"> </span><span class="m">12</span>:21:38.230<span class="w"> </span><span class="o">[</span>warning<span class="o">]</span><span class="w"> </span><span class="o">[</span>server<span class="w"> </span>stderr<span class="o">]</span><span class="w">     </span>at<span class="w"> </span>StreamableHTTPClientTransport._send<span class="w"> </span><span class="o">(</span>XXXX/.npm/_npx/705d23756ff7dacc/node_modules/mcp-remote/dist/chunk-EFMRUNOV.js:31464:15<span class="o">)</span>
+<span class="m">2026</span>-09-14<span class="w"> </span><span class="m">12</span>:21:38.230<span class="w"> </span><span class="o">[</span>warning<span class="o">]</span><span class="w"> </span><span class="o">[</span>server<span class="w"> </span>stderr<span class="o">]</span><span class="w">     </span>at<span class="w"> </span>process.processTicksAndRejections<span class="w"> </span><span class="o">(</span>node:internal/process/task_queues:105:5<span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="m">2026</span>-09-14<span class="w"> </span><span class="m">12</span>:21:38.231<span class="w"> </span><span class="o">[</span>warning<span class="o">]</span><span class="w"> </span><span class="o">[</span>server<span class="w"> </span>stderr<span class="o">]</span><span class="w">   </span>code:<span class="w"> </span><span class="s1">'CLIENT_HTTP_NOT_IMPLEMENTED'</span>,
+<span class="m">2026</span>-09-14<span class="w"> </span><span class="m">12</span>:21:38.231<span class="w"> </span><span class="o">[</span>warning<span class="o">]</span><span class="w"> </span><span class="o">[</span>server<span class="w"> </span>stderr<span class="o">]</span><span class="w">   </span>data:<span class="w"> </span><span class="o">{</span>
+<span class="m">2026</span>-09-14<span class="w"> </span><span class="m">12</span>:21:38.231<span class="w"> </span><span class="o">[</span>warning<span class="o">]</span><span class="w"> </span><span class="o">[</span>server<span class="w"> </span>stderr<span class="o">]</span><span class="w">     </span>status:<span class="w"> </span><span class="m">403</span>,
+<span class="m">2026</span>-09-14<span class="w"> </span><span class="m">12</span>:21:38.231<span class="w"> </span><span class="o">[</span>warning<span class="o">]</span><span class="w"> </span><span class="o">[</span>server<span class="w"> </span>stderr<span class="o">]</span><span class="w">     </span>statusText:<span class="w"> </span><span class="s1">'Forbidden'</span>,
+<span class="m">2026</span>-09-14<span class="w"> </span><span class="m">12</span>:21:38.231<span class="w"> </span><span class="o">[</span>warning<span class="o">]</span><span class="w"> </span><span class="o">[</span>server<span class="w"> </span>stderr<span class="o">]</span><span class="w">     </span>text:<span class="w"> </span><span class="sb">`</span><span class="o">{</span><span class="s2">"id"</span>:0,<span class="s2">"jsonrpc"</span>:<span class="s2">"2.0"</span>,<span class="s2">"error"</span>:<span class="o">{</span><span class="s2">"code"</span>:-32003,<span class="s2">"message"</span>:<span class="s2">"You don't have access to this MCP server yet. Ask your administrator to enable it for your account or organization."</span>,<span class="s2">"data"</span>:<span class="o">{</span><span class="s2">"reason"</span>:<span class="s2">"ACCESS_DENIED"</span><span class="o">}}}</span><span class="sb">`</span>
+</code></pre></div>
+<p>You need to allow specific Tools per MCP server.</p>
+</li>
+<li>
+<p>Go to the MCP server, select the <strong>Tools</strong> tab, and enable the ones you want to allow users to use. In this case, all of them will be enabled:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/controlhub_3.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/controlhub_3.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="1000"></a></p>
+<p>After this change, users will be able to use the server.</p>
+</li>
+</ol>
+<h2 id="step-11-adding-an-mcp-server-to-vs-code">Step 1.1: Adding an MCP server to VS Code</h2>
+<p>Now that you have allowed your users to use MCP, every user will be able to generate a token for each server.</p>
+<p>As a user, the first thing you will need to do is get the token to access the MCP servers.</p>
+<ol>
+<li>Log into <a href="https://developer.webex.com/" target="_blank">developer.webex.com</a> with the credentials that were provided.</li>
+<li>In the top right corner of the page, click your avatar and then select <a href="https://developer.webex.com/agentic-token" target="_blank">Manage Webex Agentic MCP App token</a>.</li>
+<li>
+<p>Under "Generate token", click on "Generate now":</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/token_1.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/token_1.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="950"></a></p>
+</li>
+<li>
+<p>You need a separate token per MCP server. In this case, we will start by using <strong>Webex Messaging</strong>:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/token_2.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/token_2.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="500"></a></p>
+</li>
+<li>
+<p>You will now see the token:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/token_3.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/token_3.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="600"></a></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>You need to copy the token now, as you won't be able to see it again later.</p>
+<p>Paste your token instead of <strong>WEBEX_MCP_TOKEN</strong> in <strong>.vscode/mcp.json</strong> and save the file.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The file <strong>.vscode/mcp.json</strong> is where you will define all the MCP servers that your agent will have access to. Open it in VS Code:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w"> </span><span class="nt">"servers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"webex-messaging"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stdio"</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">"-y"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"mcp-remote"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"https://mcp.webexapis.com/mcp/webex-messaging"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"--header"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"Authorization: Bearer WEBEX_MCP_TOKEN"</span>
+<span class="w">   </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Currently, you will see that we have already introduced the Webex Messaging MCP. It includes the command that needs to be run, the URL, and the token.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that this token is only valid for 12 hours.</p>
+</div>
+</li>
+<li>
+<p>You need to reload the VS Code window for the MCP changes to take effect. Open the Command Palette (<code>Ctrl+Shift+P</code>) and select "Developer: Reload Window".</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/vscode_1.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/vscode_1.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="750"></a></p>
+</li>
+<li>
+<p>Open the Command Palette (<code>Ctrl+Shift+P</code>) again and type "MCP: List Servers".</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/vscode_2.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/vscode_2.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="750"></a></p>
+</li>
+<li>
+<p>You should now see the newly added MCP server. Click on it:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/vscode_3.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/vscode_3.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="750"></a></p>
+</li>
+<li>
+<p>Click "Start Server".</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/vscode_4.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/vscode_4.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="750"></a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that you can also see the MCP server attached in the Chat.</p>
+</div>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/vscode_16.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/vscode_16.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="400"></a></p>
+</li>
+<li>
+<p>After that, the Output view should open automatically. If not, choose View -&gt; Output.</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/vscode_5.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/vscode_5.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="950"></a></p>
+<p>You should see that tools were discovered. If you see a message like the following, you have connected to the MCP successfully:</p>
+<div class="highlight"><pre><span></span><code><span class="m">2026</span>-09-13<span class="w"> </span><span class="m">20</span>:35:36.277<span class="w"> </span><span class="o">[</span>info<span class="o">]</span><span class="w"> </span>Discovered<span class="w"> </span><span class="m">20</span><span class="w"> </span>tools
+</code></pre></div>
+<p>You have now configured VS Code to connect to the MCP Server.</p>
+<p>These are the 20 tools available in this MCP server:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/tools_2.png" data-title="Tools" data-desc-position="top"><img alt="Tools" src="../assets/tools_2.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="400"></a></p>
+</li>
+</ol>
+<h2 id="step-12-adding-the-llm-to-vs-code">Step 1.2: Adding the LLM to VS Code</h2>
+<p>The MCP server itself is just a set of tools that an agent can call, but you need to add the brain, which will be the LLM. In this lab, we will be using OpenAI models.
+The Webex MCP server is only the tool layer (list spaces, search messages, etc.). The LLM is the brain that reads your question, chooses tools, and turns results into an answer.</p>
+<p>Earlier we opened the Chat, but now we will set up the agent.</p>
+<ol>
+<li>
+<p>Open the Command Palette (<code>Ctrl+Shift+P</code>) and type "Chat: Manage Language Models".</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/vscode_7.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/vscode_7.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="650"></a></p>
+</li>
+<li>
+<p>Select "Add Models..." &gt; "OpenAI":</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/vscode_8.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/vscode_8.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="1000"></a></p>
+</li>
+<li>
+<p>Keep "OpenAI" as the Group Name and press Enter.</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/vscode_9.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/vscode_9.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="550"></a></p>
+</li>
+<li>
+<p>Enter the API Key that was provided to you. You should see it now:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/vscode_10.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/vscode_10.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="1000"></a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>GPT-5 Nano is the only model available.</p>
+</div>
+</li>
+<li>
+<p>To test it, make sure you select the model in the chat, and say "Hello":</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/vscode_11.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/vscode_11.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The LLM generates responses dynamically, so your answer may vary from what you see in the screenshot.</p>
+</div>
+</li>
+<li>
+<p>You can ask the agent to list the tools available:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/vscode_13.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/vscode_13.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="700"></a></p>
+</li>
+<li>
+<p>Now, ask it to create a space for you. In this case, I will ask the following: <code>Create a Webex Space, with title "WebexOne - Diejimen"</code>:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/vscode_14.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/vscode_14.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="700"></a></p>
+</li>
+<li>
+<p>You will get a confirmation prompt; click on "Allow in this Session". After a few seconds, you will get the success confirmation:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/vscode_15.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/vscode_15.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="700"></a></p>
+<p>And you can see it in the Webex App!</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/webex_1.png" data-title="Webex" data-desc-position="top"><img alt="Webex" src="../assets/webex_1.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="800"></a></p>
+</li>
+</ol>
+<p>Congrats! You have set up your agent in VS Code and connected it to the MCP server. Next, you will integrate the Meetings MCP to schedule a meeting.</p>
+<h2 id="exercises">Exercises</h2>
+<p>In this section, you can test your knowledge of what we have covered so far. If you need help, you can check the solution.</p>
+<h3 id="add-meetings-mcp-server">Add Meetings MCP server</h3>
+<p>In this exercise, you need to add the <a href="https://developer.webex.com/mcp/docs/meetings-mcp-server">Meetings MCP</a> to VS Code.</p>
+<details class="solution">
+<summary>Solution</summary>
+<ol>
+<li>
+<p>To add the new MCP server, you will first need to create a new token.</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/token_5.png" data-title="Create_token" data-desc-position="top"><img alt="Create_token" src="../assets/token_5.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+</li>
+<li>
+<p>Once you have the token, add the server to the <code>mcp.json</code> file:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"servers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"webex-messaging"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stdio"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">"-y"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"mcp-remote"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"https://mcp.webexapis.com/mcp/webex-messaging"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"--header"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"Authorization: Bearer YTkwNzFiZGItMzFjYi00MjRiLTk0MzctNTE5MmQ5MjM4NTkyZjMxMTQwMTUtYTNh_P0A1_74983fd5-5c18-45cb-bfcd-507005e05b0f"</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"webex-meeting"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stdio"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">"-y"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"mcp-remote"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"https://mcp.webexapis.com/mcp/webex-meeting"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"--header"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"Authorization: Bearer NzM2MDk2MWItZTg1YS00MmM5LTg4NTQtYTY1YzZhNWY2YzRiZDgwZTg5ZGYtYTA3_P0A1_74983fd5-5c18-45cb-bfcd-507005e05b0f"</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</li>
+<li>
+<p>Save the file and start the server. To do that, open the Command Palette (<code>Ctrl+Shift+P</code>), type "MCP: List Servers", select the newly added server, and click "Start Server". If it works, you will see that 8 tools have been found in the Output tab:</p>
+<div class="highlight"><pre><span></span><code>2026-09-14 18:07:02.824 [info] Discovered 8 tools
+</code></pre></div>
+<p>These are the tools available in this MCP server:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/tools_1.png" data-title="Tools" data-desc-position="top"><img alt="Tools" src="../assets/tools_1.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+</li>
+</ol>
+</details>
+<h3 id="organize-a-meeting-using-your-ai-assistant">Organize a meeting using your AI Assistant</h3>
+<p>Once the MCP is added, schedule a meeting with the organization admin (<code>admin@webexone-ai-assistant.wbx.ai</code>) for tomorrow at a time of your choice.</p>
+<details class="solution">
+<summary>Solution</summary>
+<p>Using the chat, ask your Assistant to schedule a meeting. In my case, I used the following message:</p>
+<ul>
+<li>I need to schedule a meeting with user1@webexone-ai-assistant.wbx.ai tomorrow at 6PM CET time.</li>
+</ul>
+<p>It may ask you for confirmation:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/meeting_1.png" data-title="Meeting" data-desc-position="top"><img alt="Meeting" src="../assets/meeting_1.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="500"></a></p>
+<p>Once done, it will provide you with the meeting details:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/meeting_2.png" data-title="Meeting" data-desc-position="top"><img alt="Meeting" src="../assets/meeting_2.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="500"></a></p>
+<p>You can check your Webex App to verify that the meeting was scheduled:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/meeting_3.png" data-title="Meeting" data-desc-position="top"><img alt="Meeting" src="../assets/meeting_3.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="950"></a></p>
+<p>And confirm the participants:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/meeting_4.png" data-title="Meeting" data-desc-position="top"><img alt="Meeting" src="../assets/meeting_4.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="400"></a></p>
+<p>You can also test the other functionalities now.</p>
+</details>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../getting_started/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Getting Started">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Getting Started
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../lab2_webex-apis-troubleshooting/" class="md-footer__link md-footer__link--next" aria-label="Next: Lab 2 - Webex APIs">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Lab 2 - Webex APIs
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2026 Cisco
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.instant", "navigation.top", "navigation.footer", "search.suggest", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../template_assets/js/newLoad.js"></script>
+      
+        <script src="../template_assets/js/setInfo.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": false, "openEffect": "fade", "closeEffect": "fade", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
