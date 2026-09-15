@@ -477,7 +477,7 @@ You may want to introduce some security, to not only do not allow users outside 
                 log.info("Stopped.")
         ```
 
-1. Add different domains and admins to test the access.
+1. Add different domains and admins to your .env file to test the access:
 
     ```env
     ALLOWED_DOMAINS=example.com
