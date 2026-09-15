@@ -10,7 +10,7 @@ At the end and MCP server is just a list of tools, that our agent can use. Those
 
 ### Webex For Developers
 
-Navigate to:<br />
+Navigate to:
 
 - [Webex for Developers](https://developer.webex.com/){:target="_blank"}
 
