@@ -10,7 +10,7 @@ flowchart LR
     Bot <-->|Prompts & Responses| Agent[AI Agent / LLM]
 ```
 
-### Choosing the Right Interface
+#### Choosing the Right Interface
 
 | Interface | Context | Best for |
 | --- | --- | --- |
