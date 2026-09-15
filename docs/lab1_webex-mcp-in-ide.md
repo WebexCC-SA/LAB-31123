@@ -2,9 +2,9 @@
 
 In this section, you will connect **official Webex MCP servers** to your IDE to execute organizational tasks through natural language.
 
-In this lab our IDE will be **Visual Studio Code**.
+In this lab, our IDE will be **Visual Studio Code**.
 
-As of today, these are the official Webex MCP servers available.
+As of today, these are the official Webex MCP servers available:
 
 | MCP server | Documentation | Server URL |
 | --- | --- | --- |
@@ -17,25 +17,25 @@ As of today, these are the official Webex MCP servers available.
 | **Contact Center MCP Server (New)** | [Contact Center MCP](https://developer.webex.com/mcp/docs/contact-center-mcp-server){:target="_blank"} | **Tenant-specific** — sign in on the product page to copy your regional URL |
 | **Contact Center Operation MCP Server (New)** | [Contact Center Operation MCP](https://developer.webex.com/mcp/docs/contact-center-operation-mcp-server){:target="_blank"} | **Tenant-specific** — sign in on the product page to copy your server URL |
 
-This list is getting updated, you can use the [Webex MCP Server Overview](https://developer.webex.com/mcp/docs/webex-mcp-server-overview){:target="_blank"} for the latest catalog.
+This list is frequently updated; you can use the [Webex MCP Server Overview](https://developer.webex.com/mcp/docs/webex-mcp-server-overview){:target="_blank"} for the latest catalog.
 
 ### Prerequisites
 
-You can notice very quickly in the documentation that every official Webex MCP server includes this requirement:
+You will quickly notice in the documentation that every official Webex MCP server includes this requirement:
 
 !!! Note
     This MCP server must be enabled by your organization's admin in Webex Control Hub before it can be used. See [Provisioning on Control Hub](https://developer.webex.com/mcp/docs/provisioning-on-control-hub){:target="_blank"} for details.
 
-MCP server are **NOT** enabled by default in your organization, and you need to enable them to allow your users to use them.
+MCP servers are **NOT** enabled by default in your organization; you need to enable them to allow your users to use them.
 
 !!! Warning "Important"
-    These steps have been done previously to this lab, as you all are sharing the same organization, but this is relevant to your organizations. This will be shown by presenters as a demo.
+    These steps have been completed prior to this lab since you are all sharing the same organization, but this information is relevant for your own organizations. The presenters will demonstrate this process.
 
-1. If you try to enable MCP for the first time, you will see a message **No allowed MCP servers found**.
+1. If you try to access MCP for the first time, you will see a message: **No allowed MCP servers found**.
 
     ![Create_token](./assets/token_4.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-2. To enable them, you need to go in **Collaboration Control Hub** -> **Apps** -> **Agentic Apps** and go to **Webex** tab:
+2. To enable them, go to **Collaboration Control Hub** -> **Apps** -> **Agentic Apps** and select the **Webex** tab:
 
     ![Create_token](./assets/controlhub_1.png){ width="1000" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
@@ -43,7 +43,7 @@ MCP server are **NOT** enabled by default in your organization, and you need to 
 
     ![Create_token](./assets/controlhub_2.png){ width="1000" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-4. You are not done yet, if you try to use an MCP server now, you will see a similar error to:
+4. You are not done yet. If you try to use an MCP server now, you will see an error similar to this:
 
     ```bash
     2026-09-14 12:21:38.230 [warning] [server stderr] [63062] Fatal error: SdkHttpError: Error POSTing to endpoint: {"id":0,"jsonrpc":"2.0","error":{"code":-32003,"message":"You don't have access to this MCP server yet. Ask your administrator to enable it for your account or organization.","data":{"reason":"ACCESS_DENIED"}}}
@@ -56,27 +56,27 @@ MCP server are **NOT** enabled by default in your organization, and you need to 
     2026-09-14 12:21:38.231 [warning] [server stderr]     text: `{"id":0,"jsonrpc":"2.0","error":{"code":-32003,"message":"You don't have access to this MCP server yet. Ask your administrator to enable it for your account or organization.","data":{"reason":"ACCESS_DENIED"}}}`
     ```
 
-    You need to allow Tools per MCP server.
+    You need to allow specific Tools per MCP server.
 
-6. Go to the MCP server and select the **Tools** tab, and enable the ones you will allow user to use, in this case, all of them will be enabled:
+5. Go to the MCP server, select the **Tools** tab, and enable the ones you want to allow users to use. In this case, all of them will be enabled:
 
     ![Create_token](./assets/controlhub_3.png){ width="1000" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-    After this change, users will be able to use it.
+    After this change, users will be able to use the server.
 
 ## Step 1.1: Adding an MCP server to VS Code
 
-Now that you have allowed your users to use MCP, now every user will be able to generate a token for each of them.
+Now that you have allowed your users to use MCP, every user will be able to generate a token for each server.
 
-As an user, the first thing that you will need to do is to get the token to access the MCP servers.
+As a user, the first thing you will need to do is get the token to access the MCP servers.
 
-1. Log into [developer.webex.com](https://developer.webex.com/){:target="_blank"} with credentials that were provided.
-2. Up on the top right corner of the page, click your avatar and then select [Manage Webex Agentic MCP App token](https://developer.webex.com/agentic-token){:target="_blank"}.
-3. Inside "Generate token" click on "Generate now":
+1. Log into [developer.webex.com](https://developer.webex.com/){:target="_blank"} with the credentials that were provided.
+2. In the top right corner of the page, click your avatar and then select [Manage Webex Agentic MCP App token](https://developer.webex.com/agentic-token){:target="_blank"}.
+3. Under "Generate token", click on "Generate now":
    
     ![Create_token](./assets/token_1.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-4. You need a token per MCP server, in this case we will start using **Webex Messaging**:
+4. You need a separate token per MCP server. In this case, we will start by using **Webex Messaging**:
 
     ![Create_token](./assets/token_2.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
@@ -90,7 +90,7 @@ As an user, the first thing that you will need to do is to get the token to acce
         Paste your token instead of **WEBEX_MCP_TOKEN** in **.vscode/mcp.json** and save the file.
 
     !!! Note
-        The file **.vscode/mcp.json** is the file where you are going to define all the MCP servers that your agent will have access to. Open it in your VS Code:
+        The file **.vscode/mcp.json** is where you will define all the MCP servers that your agent will have access to. Open it in VS Code:
 
         ```json
         {
@@ -110,33 +110,33 @@ As an user, the first thing that you will need to do is to get the token to acce
         }
         ```
 
-        Currently you will see that we have already introduce the Webex Messaging MCP. It includes the commands that needs to be run, the URL and the token.
+        Currently, you will see that we have already introduced the Webex Messaging MCP. It includes the command that needs to be run, the URL, and the token.
 
     !!! Note
         Note that this token is only valid for 12 hours.
 
-6. You need to reload VS Code node for MCP to take effect. Open the Command Palette `Ctrl+Shift+P` and select "Developer: Reload Window"
+6. You need to reload the VS Code window for the MCP changes to take effect. Open the Command Palette (`Ctrl+Shift+P`) and select "Developer: Reload Window".
 
     ![Create_token](./assets/vscode_1.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-7. Open the Command Palette `Ctrl+Shift+P` again and type "MCP: List Servers"
+7. Open the Command Palette (`Ctrl+Shift+P`) again and type "MCP: List Servers".
 
     ![Create_token](./assets/vscode_2.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-8. You should see now the newly added MCP server, click on it:
+8. You should now see the newly added MCP server. Click on it:
 
     ![Create_token](./assets/vscode_3.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-9. And click "Start Server".
+9. Click "Start Server".
 
     ![Create_token](./assets/vscode_4.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     !!! Note
-    Note that you can see also see now the MCP server attached in the Chat.
+        Note that you can also see the MCP server attached in the Chat.
 
     ![Create_token](./assets/vscode_16.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-10. After that, the Output view should open automatically, if not, choose View -> Output.
+10. After that, the Output view should open automatically. If not, choose View -> Output.
 
     ![Create_token](./assets/vscode_5.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
@@ -146,7 +146,7 @@ As an user, the first thing that you will need to do is to get the token to acce
     2026-09-13 20:35:36.277 [info] Discovered 20 tools
     ```
     
-    Now, you have configured VS Code to connect to the MCP Server.
+    You have now configured VS Code to connect to the MCP Server.
 
     These are the 20 tools available in this MCP server:
     
@@ -154,24 +154,24 @@ As an user, the first thing that you will need to do is to get the token to acce
 
 ## Step 1.2: Adding the LLM to VS Code
 
-The MCP server itself it is just a bunch of tools that an agent can call, but you need to add the brain, that will be the LLM. In this lab we will be using OpenAI models,
+The MCP server itself is just a set of tools that an agent can call, but you need to add the brain, which will be the LLM. In this lab, we will be using OpenAI models.
 The Webex MCP server is only the tool layer (list spaces, search messages, etc.). The LLM is the brain that reads your question, chooses tools, and turns results into an answer.
 
-Before we have opened the Chat, but now we will set up the agent.
+Earlier we opened the Chat, but now we will set up the agent.
    
-1. Open the Command Palette `Ctrl+Shift+P` and type "Chat: Manage Language Models"
+1. Open the Command Palette (`Ctrl+Shift+P`) and type "Chat: Manage Language Models".
 
     ![Create_token](./assets/vscode_7.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-2. Select Add Models..." > OpenAI":
+2. Select "Add Models..." > "OpenAI":
 
     ![Create_token](./assets/vscode_8.png){ width="1000" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-3. Keep "OpenAI" as Group Name and press Enter
+3. Keep "OpenAI" as the Group Name and press Enter.
 
     ![Create_token](./assets/vscode_9.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-4. And introduce the API Key that was provided to you. You should see it now:
+4. Enter the API Key that was provided to you. You should see it now:
 
     ![Create_token](./assets/vscode_10.png){ width="1000" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
@@ -183,17 +183,17 @@ Before we have opened the Chat, but now we will set up the agent.
     ![Create_token](./assets/vscode_11.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     !!! Note
-        Now, the LLM is answering so the answer can vary from what you see in the screenshot as it is not predictable.
+        The LLM generates responses dynamically, so your answer may vary from what you see in the screenshot.
 
-7. You can ask the agent to list the tools available:
+6. You can ask the agent to list the tools available:
 
     ![Create_token](./assets/vscode_13.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-8. Now, ask to create a space for you. In this case, I will ask the following `Create a Webex Space, with title "WebexOne - Diejimen"`:
+7. Now, ask it to create a space for you. In this case, I will ask the following: `Create a Webex Space, with title "WebexOne - Diejimen"`:
 
     ![Create_token](./assets/vscode_14.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-9. You will get a confirmation, click on "Allow in this Session", after few seconds, you will get the confirmation:
+8. You will get a confirmation prompt; click on "Allow in this Session". After a few seconds, you will get the success confirmation:
 
     ![Create_token](./assets/vscode_15.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
@@ -201,11 +201,11 @@ Before we have opened the Chat, but now we will set up the agent.
 
     ![Webex](./assets/webex_1.png){ width="800" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-Congrats! Now you have your agent set up in your VS Code and it is connected to the MCP server. Now you will have to integrate the Meetings MCP and be able to schedule a meeting.
+Congrats! You have set up your agent in VS Code and connected it to the MCP server. Next, you will integrate the Meetings MCP to schedule a meeting.
 
 ## Exercises
 
-In this section you can test your knowledge on what we have seen before. If you need some help, you can check the solution.
+In this section, you can test your knowledge of what we have covered so far. If you need help, you can check the solution.
 
 ### Add Meetings MCP server
 
@@ -248,7 +248,7 @@ In this exercise, you need to add the [Meetings MCP](https://developer.webex.com
         }
         ```
 
-    3. Save the file, and start the server. For that open the Command Palette `Ctrl+Shift+P`, and type "MCP: List Servers", select the newly added server and click "Start Server". If it work, you will see that 8 tools have been found in the Output tab:
+    3. Save the file and start the server. To do that, open the Command Palette (`Ctrl+Shift+P`), type "MCP: List Servers", select the newly added server, and click "Start Server". If it works, you will see that 8 tools have been found in the Output tab:
 
         ```
         2026-09-14 18:07:02.824 [info] Discovered 8 tools
@@ -260,7 +260,7 @@ In this exercise, you need to add the [Meetings MCP](https://developer.webex.com
 
 ### Organize a meeting using your AI Assistant
 
-Once the MCP is added, schedule a meeting together with the admin of the organization "admin@webexone-ai-assistant.wbx.ai" for tomorrow at a time of your choice.
+Once the MCP is added, schedule a meeting with the organization admin (`admin@webexone-ai-assistant.wbx.ai`) for tomorrow at a time of your choice.
 
 ??? Solution
 
@@ -268,7 +268,7 @@ Once the MCP is added, schedule a meeting together with the admin of the organiz
 
     * I need to schedule a meeting with user1@webexone-ai-assistant.wbx.ai tomorrow at 6PM CET time.
 
-    It may ask your for confirmation:
+    It may ask you for confirmation:
 
     ![Meeting](./assets/meeting_1.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
@@ -276,7 +276,7 @@ Once the MCP is added, schedule a meeting together with the admin of the organiz
 
     ![Meeting](./assets/meeting_2.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-    You can check from your Webex App that the meeting was scheduled:
+    You can check your Webex App to verify that the meeting was scheduled:
 
     ![Meeting](./assets/meeting_3.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
@@ -284,4 +284,4 @@ Once the MCP is added, schedule a meeting together with the admin of the organiz
 
     ![Meeting](./assets/meeting_4.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-    You can also test now the other functionalities.
+    You can also test the other functionalities now.
