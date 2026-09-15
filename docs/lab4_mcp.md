@@ -1,6 +1,6 @@
 # Lab 4 - MCP Servers in AI Assistant
 
-Now that we have already build our AI assistant, we need to give it MCP capabilities to access our organization.
+Now that we have already built our AI assistant, we need to give it MCP capabilities to access our organization.
 
 ## What is MCP?
 
@@ -65,9 +65,9 @@ flowchart TB
     C2 <-->|Streamable HTTP + Bearer token| S2
 ```
 
-To be able to integrate the Webex MCP Clients into your Assistant, you need to have a MCP Client.
+To integrate the Webex MCP Servers into your Assistant, you need an MCP Client.
 
-1. Navigate to 04_mcp/mcp_client.py and review the code:
+1. Navigate to `04_mcp/mcp_client.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -122,12 +122,11 @@ To be able to integrate the Webex MCP Clients into your Assistant, you need to h
 
    This MCP client allows you to connect to any MCP server.
 
-
 ## Step 4.2: List tools
 
-Now, we will connect to the MCP server using the client. In this first exercise we will list the Tools available in the Webex Meetings MCP server.
+Now, we will connect to the MCP server using the client. In this first exercise, we will list the Tools available in the Webex Meetings MCP server.
 
-1. Navigate to 04_mcp/01_list_tools.py and review the code:
+1. Navigate to `04_mcp/01_list_tools.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -171,7 +170,7 @@ Now, we will connect to the MCP server using the client. In this first exercise 
             asyncio.run(main())
         ```
 
-2. In VS Code, change the terminal right folder:
+2. In VS Code, change your terminal to the correct folder:
 
     * cd ../04_mcp
 
@@ -189,7 +188,7 @@ Now, we will connect to the MCP server using the client. In this first exercise 
 
     * python 01_list_tools.py
 
-6. You will see in the terminal the following:
+6. You will see the following in the terminal:
 
     ```terminal
     2026-09-15 11:09:39,412 INFO 8 tool(s) from https://mcp.webexapis.com/mcp/webex-meeting
@@ -205,11 +204,11 @@ Now, we will connect to the MCP server using the client. In this first exercise 
 
     The 8 tools available are printed there.
    
-## Step 4.2: Call a specific tool
+## Step 4.3: Call a specific tool
 
-Now that we have the tools, we will write the code that actually calls a tool. In this example, we will call "List meetings".
+Now that we have listed the tools, we will write the code that actually calls a tool. In this example, we will call "webex-list-meetings".
 
-1. Navigate to 04_mcp/02_list_meetings.py and review the code:
+1. Navigate to `04_mcp/02_list_meetings.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -266,23 +265,22 @@ Now that we have the tools, we will write the code that actually calls a tool. I
 
     * python 02_list_meetings.py
 
-3. You should the meeting scheduled in Lab 1:
+3. You should see the meeting scheduled in Lab 1:
 
    ```terminal
    2026-09-14 19:28:03,729 INFO {"data":{"meetings":[{"id":"cd9966d90d5a43bfa8e002f6e8b6aa4e","meetingNumber":"26604791633","title":"Meeting with user1@webexone-ai-assistant.wbx.ai","start":"2026-09-15T16:00:00Z","end":"2026-09-15T17:00:00Z","state":"ready","meetingType":"scheduledMeeting","timezone":"UTC","hostDisplayName":"admin@webexone-ai-assistant.wbx.ai","hostEmail":"admin@webexone-ai-assistant.wbx.ai","webLink":"https://webexone-ai-assistant-sbx.webex.com/webexone-ai-assistant-sbx/j.php?MTID=mea0739a573d6ff87dbab949d46715c08","sipAddress":"26604791633@webexone-ai-assistant-sbx.webex.com","invitees":[{"id":"cd9966d90d5a43bfa8e002f6e8b6aa4e_4266817701","email":"user1@webexone-ai-assistant.wbx.ai","displayName":"user1@webexone-ai-assistant.wbx.ai","coHost":false,"panelist":false}]}],"count":1,"totalMeetings":1},"success":true}
    ```
 
-   In this case we have printed the raw information that the tool returned.
+   In this case, we have printed the raw information that the tool returned.
 
-## Step 4.3: Use an LLM to call
+## Step 4.4: Use an LLM to call
 
-In this scenario, the LLM will choose which tool will use from the catalog. We will make a query in natural language, and the LLM will decide what tool from the list is needed to get that information.
-The LLM will process the answer and reply to us in natural language.
+In this scenario, the LLM will choose which tool to use from the catalog. We will make a query in natural language, and the LLM will decide which tool from the list is needed to get that information. The LLM will then process the result and reply to us in natural language.
 
 !!! Note
     Our query will be a constant inside the code.
 
-1. Navigate to 04_mcp/llm.py and review the code, we will use this class from now on as a wrapper to call OpenAI:
+1. Navigate to `04_mcp/llm.py` and review the code. We will use this module from now on as a wrapper to call OpenAI:
 
     ??? Tip "Python Code"
         ```python
@@ -354,7 +352,7 @@ The LLM will process the answer and reply to us in natural language.
             return f"Stopped after {max_steps} tool steps without a final answer."
         ```
 
-2. Navigate to 04_mcp/03_llm.py and review the code:
+2. Navigate to `04_mcp/03_llm.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -416,17 +414,17 @@ The LLM will process the answer and reply to us in natural language.
             log.info(asyncio.run(main()))
         ```
 
-2. Set the OPENAI_API_KEY in `.env`:
+3. Set the `OPENAI_API_KEY` in `.env`:
 
     ```env
     OPENAI_API_KEY=
     ```
 
-3. Run your code with the following command:
+4. Run your code with the following command:
 
     * python 03_llm.py
 
-4. You should see in the console how tools were offered to the model, which one it picked, and its answer:
+5. You should see in the console how tools were offered to the model, which one it picked, and its answer:
 
     ``` terminal
     2026-09-15 11:14:54,415 INFO Offering 8 Meetings MCP tool(s) to gpt-5-nano
@@ -444,11 +442,11 @@ The LLM will process the answer and reply to us in natural language.
     Want me to add this to your calendar or share the invite?
     ```
 
-## Step 4.4: Hub
+## Step 4.5: Hub
 
-So far we have only added one Webex Meeting MCP Server. Now, we will also add the Webex Messaging MCP server. Now, the LLM won't pick server, it only picks a tool name, as all of them are going to be presented together. We will introduce now the class McpHub, that lists tools from every server as one combined list and, when the model calls a name, routes that call to the right client.
+So far we have only added one Webex Meeting MCP Server. Now, we will also add the Webex Messaging MCP server. The LLM won't pick a server; it only picks a tool name, as all tools are going to be presented together. We will introduce the class `McpHub`, which lists tools from every server as one combined list and, when the model calls a name, routes that call to the right client.
 
-1. Navigate to 04_mcp/hub.py and review the code:
+1. Navigate to `04_mcp/mcp_hub.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -478,7 +476,7 @@ So far we have only added one Webex Meeting MCP Server. Now, we will also add th
                 return await client.call_tool(name, arguments)
         ```
 
-2. Navigate to 04_mcp/04_hub.py and review the code. In this exercise, we will do two questions to the LLM, that includes one related to My Meetings and another one to My Spaces.
+2. Navigate to `04_mcp/04_hub.py` and review the code. In this exercise, we will ask two questions to the LLM: one related to My Meetings and another related to My Spaces.
 
     ??? Tip "Python Code"
         ```python
@@ -549,7 +547,7 @@ So far we have only added one Webex Meeting MCP Server. Now, we will also add th
             log.info(asyncio.run(main()))
         ```
 
-3. Set the WEBEX_MESSAGING_MCP_TOKEN in `.env` if you didn't do it befroe:
+3. Set the `WEBEX_MESSAGING_MCP_TOKEN` in `.env` if you didn't do it before:
 
     ```env
     WEBEX_MESSAGING_MCP_TOKEN=your_messaging_mcp_token
@@ -559,7 +557,7 @@ So far we have only added one Webex Meeting MCP Server. Now, we will also add th
 
     * python 04_hub.py
 
-5. You should see now that tools were combined together, LLM decided to make two different calls, one for each question, and then it combined the answer in natural language.
+5. You should see now that the tools were combined together. The LLM decided to make two different calls (one for each part of the question), and then it combined the answers in natural language.
 
     ```terminal
     2026-09-15 11:43:47,642 INFO Question: What meetings do I have this week, and how many spaces do I have?
@@ -585,11 +583,11 @@ So far we have only added one Webex Meeting MCP Server. Now, we will also add th
     Want me to pull more details or set reminders?
     ```
 
-## Step 4.5: Integration with the Bot
+## Step 4.6: Integration with the Bot
 
-Now, as we did in the previous section, we will now combine what we have done to have direct access from a Webex Bot. We will use again
+Now, as we did in the previous section, we will combine what we have done to provide direct access from a Webex Bot.
 
-1. Navigate to 04_mcp/05_bot.py and review the code:
+1. Navigate to `04_mcp/05_bot.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -693,7 +691,7 @@ Now, as we did in the previous section, we will now combine what we have done to
                 log.info("Stopped.")
         ```
 
-2. Make sure you have set the BOT_TOKEN in `.env`:
+2. Make sure you have set the `BOT_TOKEN` in `.env`:
 
     ```env
     BOT_TOKEN=
@@ -703,7 +701,7 @@ Now, as we did in the previous section, we will now combine what we have done to
 
     * python 05_bot.py
 
-4. Ask your bot for the meetings that you have schedule for tomorrow:
+4. Ask your bot for the meetings that you have scheduled for tomorrow:
 
     ![Meeting](assets/meeting_6.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
@@ -742,7 +740,7 @@ In this exercise, we will do two things:
 - Create the `send_meetings_card` function, that generates an Adaptive Card for the meetings.
 - Give the LLM a local tool, so it can call this new function when it decides.
 
-In this case, we have built a card that will be sent as a summary if we have meetings:
+In this case, we have built a card that will be sent as a summary when we have meetings:
 
 ```json
 {
@@ -774,7 +772,7 @@ In this case, we have built a card that will be sent as a summary if we have mee
     - [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer){:target="_blank"}
 
 
-1. Navigate to 04_mcp/06_card.py and review the code. Take a look at how we have defined our local Tool and the message that it is attached to the LLM:
+1. Navigate to `04_mcp/06_card.py` and review the code. Take a look at how we have defined our local Tool and the system prompt attached to the LLM:
 
     ??? Tip "Python Code"
         ```python
@@ -985,7 +983,7 @@ In this case, we have built a card that will be sent as a summary if we have mee
 
     * python 06_card.py
 
-3. Ask your bot about your meetings. You should see in the terminal that all tools were presented to the agent, and it choosed first to list the meetings, and the to send the card.
+3. Ask your bot about your meetings. You should see in the terminal that all tools were presented to the agent, and it chose first to list the meetings, and then to send the card.
 
     ```terminal
     2026-09-15 13:34:47,265 INFO Received from admin@webexone-ai-assistant.wbx.ai: What meetings do I have?
@@ -1006,11 +1004,11 @@ In this case, we have built a card that will be sent as a summary if we have mee
 
 ---
 
-Now you have a bot that can access the Webex MCP servers. This still give us some limitations, we need to adapt to the tools available, but also, token will expire after 12 hours. In the next sections we will explore how to work with those.
+Now you have a bot that can access the Webex MCP servers. This still gives us some limitations: we need to adapt to the tools available, and the token will expire after 12 hours. In the next sections, we will explore how to work with those challenges.
 
 ## Extra: From the IDE to a bot
 
-In the first part of this lab you already used MCP **without writing a client**. You configured Webex Messaging and Meetings MCP in **VS Code** and asked an agent in the editor. That worked because the IDE **is** an MCP host.
+In the first part of this lab, you already used MCP **without writing a client**. You configured Webex Messaging and Meetings MCP in **VS Code** and asked an agent in the editor. That worked because the IDE **is** an MCP host.
 
 ```mermaid
 flowchart TB
@@ -1095,7 +1093,7 @@ If you keep a custom bot but do not want to maintain the tool loop, agent framew
 
 The official MCP Python SDK also has a higher-level `Client` and a `ClientSessionGroup` that aggregates several servers — the same job as `mcp_hub.py`.
 
-We still wrote the loop so you can see every call. In production you can keep the Webex bot and the tokens, and swap the loop for a framework when you need memory, approvals, retries, or tracing.
+We still wrote the loop so you can see every call. In production, you can keep the Webex bot and the tokens, and swap the loop for a framework when you need memory, approvals, retries, or tracing.
 
 !!! Note
     MCP support in IDEs and frameworks changes often. Check current docs before you standardise on one host.
