@@ -18,8 +18,6 @@ MCP defines three core primitives:
 In this lab, we are building a Webex bot that acts as an assistant. When a user asks a question, the LLM needs to decide what to do (like looking up meetings or searching spaces) and then do it. 
 That makes **Tools** the perfect fit. The model chooses which tool to call and supplies the arguments. We will not use Resources (which are usually injected automatically by IDEs) or Prompts (which are usually picked by a user from a menu).
 
-### Tool lifecycle
-
 When our bot connects to a server, this is what happens:
 
 1. `tools/list` → The bot receives the name, description, and JSON schema for every tool.
