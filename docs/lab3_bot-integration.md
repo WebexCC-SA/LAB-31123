@@ -49,13 +49,9 @@ First, you need to create your bot:
 
 5. In VS Code, make sure your terminal is in the correct folder:
 
-    * cd ../03_bots
-  
-6. Copy the example `.env` file:
+    * cd ../03_bot
 
-    * cp .env.example .env
-
-7. Copy the bot access token into `.env`:
+6. Open the `.env` file at the root of your project and copy the bot access token into it:
 
     ```env
     BOT_TOKEN=your_bot_access_token
@@ -65,7 +61,7 @@ First, you need to create your bot:
 
 As discussed, we will be using WebSockets in this lab. WebSockets will keep a communication channel open with Cisco to receive and send messages. We will be using the following class during this lab to run the bot.
 
-1. Navigate to `03_bots/websocket_client.py` and review the code:
+1. Navigate to `03_bot/websocket_client.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -195,7 +191,7 @@ As discussed, we will be using WebSockets in this lab. WebSockets will keep a co
 
 In this exercise, we will create a bot that will echo back the same message using the WebSocket class shown above.
 
-1. Navigate to `03_bots/01_echo.py` and review the code:
+1. Navigate to `03_bot/01_echo.py` and review the code:
 
     ??? Tip "Python Code"
         ```python    
@@ -267,13 +263,13 @@ In this scenario, we will be using OpenAI models, specifically **gpt-5-nano**.
 !!! Warning
     If you try to change the model, you will get a **403** error.
 
-1. Add your OpenAI key in `.env` and save it:
+2. Open the `.env` file at the root of your project and set the `OPENAI_API_KEY`:
 
     ```env
     OPENAI_API_KEY=your_openai_api_key
     ```
     
-2. Navigate to `03_bots/02_llm.py` and review the code:
+3. Navigate to `03_bot/02_llm.py` and review the code:
 
     ??? Tip "Python Code"
         ```python    
@@ -362,15 +358,15 @@ In this scenario, we will be using OpenAI models, specifically **gpt-5-nano**.
                 log.info("Stopped.")
         ```
 
-3. Run your code with the following command:
+4. Run your code with the following command:
 
     * python 02_llm.py
 
-4. In the same conversation you opened earlier, text your bot, and you should instantly get an answer:
-
+5. In the same conversation you opened earlier, text your bot, and you should instantly get an answer:
+   
     ![Bot](assets/bot_4.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-5. You can see something similar in the terminal:
+6. You can see something similar in the terminal:
 
     ```bash
     2026-09-13 14:44:01,915 INFO Received from diejimen@cisco.com: Hello
@@ -387,7 +383,7 @@ In this scenario, we will be using OpenAI models, specifically **gpt-5-nano**.
     Tell me what you’re working on or ask me to do something, and we’ll start from there.
     ```
 
-6. You can press `Ctrl+C` to stop the bot.
+7. You can press `Ctrl+C` to stop the bot.
 
 ## Extra: Security
 
@@ -395,7 +391,7 @@ So far, we have not introduced any security; therefore, any user inside or outsi
 
 You may want to introduce some security, not only to prevent users outside your organization from accessing it, but also to restrict specific calls to admins only.
 
-1. Navigate to `03_bots/03_security.py` and review the code:
+1. Navigate to `03_bot/03_security.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -477,18 +473,18 @@ You may want to introduce some security, not only to prevent users outside your 
                 log.info("Stopped.")
         ```
 
-2. Add different domains and admins to your `.env` file to test the access:
+3. Add different domains and admins to your `.env` file at the root of your project to test the access:
 
     ```env
     ALLOWED_DOMAINS=example.com
     ALLOWED_ADMINS=admin@example.com
     ```
 
-3. Run your code with the following command:
+4. Run your code with the following command:
 
     * python 03_security.py
-
-4. You will get an answer, but it will be the pre-determined rejection message:
+   
+5. You will get an answer, but it will be the pre-determined rejection message:
 
     ![Bot](assets/bot_7.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
