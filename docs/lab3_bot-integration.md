@@ -476,8 +476,8 @@ You may want to introduce some security, not only to prevent users outside your 
 2. Add different domains and admins to your `.env` file at the root of your project to test the access:
 
     ```env
-    ALLOWED_DOMAINS=example.com
-    ALLOWED_ADMINS=admin@example.com
+    ALLOWED_DOMAINS=webexone-ai-assistant.wbx.ai
+    ALLOWED_ADMINS=admin@webexone-ai-assistant.wbx.ai
     ```
 
 3. Run your code with the following command:
