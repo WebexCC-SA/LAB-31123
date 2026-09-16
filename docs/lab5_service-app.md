@@ -61,18 +61,18 @@ Because a Service App operates at a machine level and can access organization-wi
     | **Contact Email**       	| userX@webexone-ai-assistant.wbx.ai |
     | **Scopes** | spark:mcp spark:messages_read spark:messages_write spark:rooms_read spark:rooms_write spark:memberships_read spark:memberships_write spark:webhooks_read spark:webhooks_write |
 
-   !!! Warning
-       These are the scopes for **Webex Messaging MCP**. Scopes depend on which MCP server you want to use.
-       
-       Later in this lab, you would need to update the scopes to:
+    !!! Warning
+        These are the scopes for **Webex Messaging MCP**. Scopes depend on which MCP server you want to use.
+        
+        Later in this lab, you would need to update the scopes to:
 
-       `spark:mcp spark:messages_read spark:messages_write spark:rooms_read spark:rooms_write spark:memberships_read spark:memberships_write`
+        `spark:mcp spark:messages_read spark:messages_write spark:rooms_read spark:rooms_write spark:memberships_read spark:memberships_write`
 
-       `spark:webhooks_read spark:webhooks_write ...`
+        `spark:webhooks_read spark:webhooks_write ...`
        
-       For simplicity, in this lab, you can already select all of them.
+        For simplicity, in this lab, you can already select all of them.
        
-       IMPORTANT: In a real environment, you should be very careful with the assigned scopes and select the minimum required.
+        IMPORTANT: In a real environment, you should be very careful with the assigned scopes and select the minimum required.
 
 6. Once you have entered the information, your screen should look similar to this:
 
