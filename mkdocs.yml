@@ -83,8 +83,6 @@ nav:
       #- Welcome: welcome.md
       - Overview: overview.md
       - Getting Started: getting_started.md
-      #- Lab 1 - AI Assistants and Architecture: lab2_ai-assistant-and-architecture.md
-      #- Lab 2 - MCP Fundamentals: lab3_mcp-fundamentals.md
       - Lab 1 - Webex MCP Servers in Your IDE: lab1_webex-mcp-in-ide.md
       - Lab 2 - Webex APIs: lab2_webex-apis-troubleshooting.md
       - Lab 3 - Integrate an AI Assistant with a Webex Bot: lab3_bot-integration.md
