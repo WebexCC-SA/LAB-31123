@@ -172,5 +172,10 @@ Unlike the official Webex MCP servers which run remotely and connect via HTTP (S
 
     > What were the last 3 admin audit events in our organization?
 
+
+## Elicitation
+
+Explain it here
+
 ---
 
