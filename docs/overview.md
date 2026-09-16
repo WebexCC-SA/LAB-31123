@@ -17,14 +17,15 @@ This session covers:
 ```mermaid
 flowchart LR
     User[Webex User] --> Bot[Webex Bot]
-    Bot --> Agent[AI Assistant / Agent]
+    Bot --> Agent[AI Assistant]
     Agent --> Client[MCP Client]
     Client --> MCP[Webex MCP Servers]
     Client --> Custom[Custom MCP Server]
     MCP --> API[Webex REST APIs]
     Custom --> API
     API --> Org[Organization Data]
-    Agent --> LLM[LLM Reasoning]
+    Agent <--> LLM[LLM Reasoning]
+    LLM --> Skills[Skills]
 ```
 
 **User → Webex Bot → AI Assistant → MCP Tool → Webex API → Response**
@@ -36,7 +37,7 @@ The bot is the interaction channel. The agent is the system that reasons, select
 Upon completion of this lab, you will be able to:
 
 - Explain the difference between a web chat interface, an IDE-embedded assistant, and an operational AI agent
-- Configure official Webex MCP servers in Visual Studio Code and drive the assistant with **OpenAI** models (API key provided for the lab)
+- Configure official Webex MCP servers in Visual Studio Code and drive the assistant with OpenAI models
 - Use MCP tools, resources, and prompts to manage and troubleshoot Webex organization data
 - Connect a Webex Bot to an AI assistant for interactive troubleshooting workflows
 - Apply Agent Skills to encode operational runbooks and best practices
