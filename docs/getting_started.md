@@ -67,12 +67,13 @@ Visual Studio Code will be used for Python-based bot development, service app co
     .\webexone2026\Scripts\activate.ps1
     pip install -r requirements.txt
     ```
-
+<!--
 7. Copy the environment template and fill in your values:
 
     ```bash
     cp .env.example .env
     ```
+-->
 
 ### Chat
 
