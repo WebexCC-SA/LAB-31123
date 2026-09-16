@@ -263,13 +263,13 @@ In this scenario, we will be using OpenAI models, specifically **gpt-5-nano**.
 !!! Warning
     If you try to change the model, you will get a **403** error.
 
-2. Open the `.env` file at the root of your project and set the `OPENAI_API_KEY`:
+1. Open the `.env` file at the root of your project and set the `OPENAI_API_KEY`:
 
     ```env
     OPENAI_API_KEY=your_openai_api_key
     ```
     
-3. Navigate to `03_bot/02_llm.py` and review the code:
+2. Navigate to `03_bot/02_llm.py` and review the code:
 
     ??? Tip "Python Code"
         ```python    
@@ -358,15 +358,15 @@ In this scenario, we will be using OpenAI models, specifically **gpt-5-nano**.
                 log.info("Stopped.")
         ```
 
-4. Run your code with the following command:
+3. Run your code with the following command:
 
     * python 02_llm.py
 
-5. In the same conversation you opened earlier, text your bot, and you should instantly get an answer:
+4. In the same conversation you opened earlier, text your bot, and you should instantly get an answer:
    
     ![Bot](assets/bot_4.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-6. You can see something similar in the terminal:
+5. You can see something similar in the terminal:
 
     ```bash
     2026-09-13 14:44:01,915 INFO Received from diejimen@cisco.com: Hello
@@ -383,7 +383,7 @@ In this scenario, we will be using OpenAI models, specifically **gpt-5-nano**.
     Tell me what you’re working on or ask me to do something, and we’ll start from there.
     ```
 
-7. You can press `Ctrl+C` to stop the bot.
+6. You can press `Ctrl+C` to stop the bot.
 
 ## Extra: Security
 
@@ -473,18 +473,18 @@ You may want to introduce some security, not only to prevent users outside your 
                 log.info("Stopped.")
         ```
 
-3. Add different domains and admins to your `.env` file at the root of your project to test the access:
+2. Add different domains and admins to your `.env` file at the root of your project to test the access:
 
     ```env
     ALLOWED_DOMAINS=example.com
     ALLOWED_ADMINS=admin@example.com
     ```
 
-4. Run your code with the following command:
+3. Run your code with the following command:
 
     * python 03_security.py
    
-5. You will get an answer, but it will be the pre-determined rejection message:
+4. You will get an answer, but it will be the pre-determined rejection message:
 
     ![Bot](assets/bot_7.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
