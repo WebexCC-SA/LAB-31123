@@ -63,7 +63,7 @@ Because a Service App operates at a machine level and can access organization-wi
 
     !!! Warning
         These are the scopes for **Webex Messaging MCP**. Scopes depend on which MCP server you want to use.
-        
+       
         Later in this lab, you would need to update the scopes to:
 
         `spark:mcp spark:messages_read spark:messages_write spark:rooms_read spark:rooms_write spark:memberships_read spark:memberships_write`
@@ -87,11 +87,7 @@ Because a Service App operates at a machine level and can access organization-wi
 
         * cd ../05_service_apps
   
-        - Copy the example .env file:
-
-            * cp .env.example .env
-
-        - Copy them into `.env`:
+        - Open the `.env` file at the root of your project and copy them into it:
 
             ```env
             CLIENT_ID=
