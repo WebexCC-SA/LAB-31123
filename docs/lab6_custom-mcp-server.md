@@ -119,7 +119,7 @@ The smallest MCP server that does real work: one tool, no network, no token. It 
     
     VS Code starts the server, discovers `format_phone`, and asks for your approval before calling it. The server strips the punctuation and returns `+14155550101`.
     
-    ![Chat Result](assets/lab6_img12.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Chat Result](assets/lab6_img12.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     
     From the MCP logs you will see the tool called using `tools/call` with the entered number as an argument.
     
@@ -137,8 +137,8 @@ Three MCP primitives:
 - **A tool** is an action the model calls. `count_words` counts — that is all it knows. It has no idea what the limits should be, or which words are banned.
 - **A resource** is context the client attaches, like handing the model a rulebook. The tool cannot know these rules. `count_words` returns 7 for any 7-word text; only the resource says the limit is 12 and "ASAP" is banned. That is why a resource matters: it carries rules the tool itself does not encode.
 - **A prompt** is the one primitive a human triggers directly — from a slash command or menu. It returns the opening message the model sees, wiring the resource and the tool into a single review workflow.
-
-1. Update `.vscode/mcp.json` to point at `06_custom_mcp/02_hello_resource_prompt.py`.
+</br>
+1. Update `.vscode/mcp.json` to point at `06_custom_mcp/02_hello_resource_prompt.py`:
 
     ??? Tip "Python Code"
         ```python
@@ -193,7 +193,7 @@ Three MCP primitives:
 
         ```
 
-    ![Update MCP JSON](assets/lab6_img14.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Update MCP JSON](assets/lab6_img14.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 2. Restart/start the MCP server as we have done in the previous example.
 
@@ -249,39 +249,40 @@ One address book is assigned to an agent profile:
 
 The server checks at startup for three values (`ACCESS_TOKEN`, `WEBEX_ORG_ID`, `WXCC_CONFIG_API_BASE`) and names any variable that is missing. Checking at startup rather than inside the tool is deliberate. A server that refuses to start and names the missing variable is diagnosed by reading one line. A server that starts fine and then fails on every call requires HTTP status codes.
 
-- **`ACCESS_TOKEN`**: This is going to be the access token. We will actually use the Service App token for this task.
-- **`WEBEX_ORG_ID`** and **`WXCC_CONFIG_API_BASE`**: These are related to the sandbox and will be set up in advance for you, but here is how you can find them:
-
-    For `WEBEX_ORG_ID`, you need to go in Collaboration Control Hub to Account:
-
-    ![Org ID](assets/orgid_1.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-
-    For `WXCC_CONFIG_API_BASE`, you can find it using this information (in this case it will be `us1`):
-
-    ![API Base](assets/orgid_2.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-
-    While general Webex APIs use a global endpoint (`https://webexapis.com/v1`), Webex Contact Center (WxCC) specific data and agent APIs route through regional endpoints. [1](https://www.cisco.com/c/en/us/support/docs/contact-center/webex-contact-center/218418-configure-webex-contact-center-apis-with.html)
+!!! Note
+    - **`ACCESS_TOKEN`**: This is going to be the access token. We will actually use the Service App token for this task.
+    - **`WEBEX_ORG_ID`** and **`WXCC_CONFIG_API_BASE`**: These are related to the sandbox and will be set up in advance for you, but here is how you can find them:
     
-    The region can be identified through the following methods:
+        For `WEBEX_ORG_ID`, you need to go in Collaboration Control Hub to Account:
     
-    1. **Check in Webex Control Hub**
-        You can find your data residency/region directly inside the dashboard: [1](https://community.cisco.com/t5/webex-for-developers/programmatically-retrieve-the-data-center-instance-for-contact/m-p/5252255)
-        - Log into Webex Control Hub.
-        - Navigate to Services > Contact Center > Tenant Settings.
-        - Go to General > Service Details.
-        - Look for the Country of Operation or data center zone field. [1](https://cloud.cloverhound.com/docs/campaigns/integration), [2](https://community.cisco.com/t5/webex-for-developers/programmatically-retrieve-the-data-center-instance-for-contact/m-p/5252255)
-       
-    2. **Map Region to the Correct API Base URL**
-        Once you know the country or code of operation, match it to the standard Webex Contact Center datacenter variables (`us1`, `eu1`, `eu2`, `anz1`, `jp1`, `sg1`): [1](https://help.webex.com/en-us/article/n1lsqvu/Integrate-Webex-Contact-Center-CRM-Connector-for-Microsoft-Dynamics-365-(Version2-New)), [2](https://www.cisco.com/c/en/us/support/docs/contact-center/webex-contact-center/218418-configure-webex-contact-center-apis-with.html)
-       
-        | Region / Operation Location | Datacenter Variable | API Base URL Example |
-        | --- | --- | --- |
-        | North America | `us1` | `https://api.wxcc-us1.cisco.com` |
-        | United Kingdom | `eu1` | `https://api.wxcc-eu1.cisco.com` |
-        | Europe | `eu2` | `https://api.wxcc-eu2.cisco.com` |
-        | APJC (Australia / NZ) | `anz1` | `https://api.wxcc-anz1.cisco.com` |
-        | Japan | `jp1` | `https://api.wxcc-jp1.cisco.com` |
-        | Singapore | `sg1` | `https://api.wxcc-sg1.cisco.com` |
+        ![Org ID](assets/orgid_1.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    
+        For `WXCC_CONFIG_API_BASE`, you can find it using this information (in this case it will be `us1`):
+    
+        ![API Base](assets/orgid_2.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    
+        While general Webex APIs use a global endpoint (`https://webexapis.com/v1`), Webex Contact Center (WxCC) specific data and agent APIs route through regional endpoints. [1](https://www.cisco.com/c/en/us/support/docs/contact-center/webex-contact-center/218418-configure-webex-contact-center-apis-with.html)
+        
+        The region can be identified through the following methods:
+        
+        1. **Check in Webex Control Hub**
+            You can find your data residency/region directly inside the dashboard: [1](https://community.cisco.com/t5/webex-for-developers/programmatically-retrieve-the-data-center-instance-for-contact/m-p/5252255)
+            - Log into Webex Control Hub.
+            - Navigate to Services > Contact Center > Tenant Settings.
+            - Go to General > Service Details.
+            - Look for the Country of Operation or data center zone field. [1](https://cloud.cloverhound.com/docs/campaigns/integration), [2](https://community.cisco.com/t5/webex-for-developers/programmatically-retrieve-the-data-center-instance-for-contact/m-p/5252255)
+           
+        2. **Map Region to the Correct API Base URL**
+            Once you know the country or code of operation, match it to the standard Webex Contact Center datacenter variables (`us1`, `eu1`, `eu2`, `anz1`, `jp1`, `sg1`): [1](https://help.webex.com/en-us/article/n1lsqvu/Integrate-Webex-Contact-Center-CRM-Connector-for-Microsoft-Dynamics-365-(Version2-New)), [2](https://www.cisco.com/c/en/us/support/docs/contact-center/webex-contact-center/218418-configure-webex-contact-center-apis-with.html)
+           
+            | Region / Operation Location | Datacenter Variable | API Base URL Example |
+            | --- | --- | --- |
+            | North America | `us1` | `https://api.wxcc-us1.cisco.com` |
+            | United Kingdom | `eu1` | `https://api.wxcc-eu1.cisco.com` |
+            | Europe | `eu2` | `https://api.wxcc-eu2.cisco.com` |
+            | APJC (Australia / NZ) | `anz1` | `https://api.wxcc-anz1.cisco.com` |
+            | Japan | `jp1` | `https://api.wxcc-jp1.cisco.com` |
+            | Singapore | `sg1` | `https://api.wxcc-sg1.cisco.com` |
 
 1. Point the MCP server to `06_custom_mcp/03_read_books.py` in `mcp.json`.
 
@@ -403,7 +404,7 @@ The server checks at startup for three values (`ACCESS_TOKEN`, `WEBEX_ORG_ID`, `
 2. Sign in with the username assigned to you (e.g., `ciscolabuser002+1@gmail.com`).
 3. Under customer experience, select Webex Contact Center.
 
-    ![Select WxCC](assets/lab6_img32.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Select WxCC](assets/lab6_img32.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     
     You can see different sections on the left-hand side, for example:
     
@@ -412,7 +413,7 @@ The server checks at startup for three values (`ACCESS_TOKEN`, `WEBEX_ORG_ID`, `
     - **Introduction to APIs:** In this section you can find an overview to the WxCC open architecture APIs.
     - **API Reference:** You will see in this section all the APIs categories that WxCC offers.
     
-    ![API Sections](assets/lab6_img33.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![API Sections](assets/lab6_img33.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 4. Navigate to the API reference and select Address Book.
 
