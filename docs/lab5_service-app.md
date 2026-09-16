@@ -85,7 +85,7 @@ Because a Service App operates at a machine level and can access organization-wi
 
         In VS Code, make sure your terminal is in the correct folder:
 
-        * cd ../05_serviceapps
+        * cd ../05_service_apps
   
         - Copy the example .env file:
 
@@ -152,7 +152,7 @@ We are using the **Messaging MCP** and the tool `webex-search-spaces`.
 
     That empty result is exactly the point: the call succeeds, so the Service App token works with MCP, but these particular MCP servers are not the right fit for a machine account.
 
-1. Navigate to `05_serviceapps/01_mcp.py` and review the code:
+1. Navigate to `05_service_apps/01_mcp.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -242,7 +242,7 @@ You can refresh your **access_token** using your **refresh_token**, **client_id*
 
 To manage the token expiration and refresh, we have provided a `TokenManager` class. This class checks if the token is expired and automatically updates your `.env` file so the new token persists across restarts.
 
-1. Navigate to `05_serviceapps/token_manager.py` and review the code:
+1. Navigate to `05_service_apps/token_manager.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -315,7 +315,7 @@ To manage the token expiration and refresh, we have provided a `TokenManager` cl
                     raise Exception(f"Failed to refresh token: {response.status_code} - {response.text}")
         ```
 
-2. Navigate to `05_serviceapps/02_refresh.py` and review the code. This script imports the `TokenManager` to perform the refresh:
+2. Navigate to `05_service_apps/02_refresh.py` and review the code. This script imports the `TokenManager` to perform the refresh:
 
     ??? Tip "Python Code"
         ```python
