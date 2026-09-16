@@ -1032,7 +1032,7 @@ In this case, we have built a card that will be sent as a summary when we have m
 
 Now you have a bot that can access the Webex MCP servers. This still gives us some limitations: we need to adapt to the tools available, and the token will expire after 12 hours. In the next sections, we will explore how to work with those challenges.
 
-## Extra: From the IDE to a bot
+## From the IDE to a bot
 
 In the first part of this lab, you already used MCP **without writing a client**. You configured Webex Messaging and Meetings MCP in **VS Code** and asked an agent in the editor. That worked because the IDE **is** an MCP host.
 
