@@ -1,4 +1,4 @@
-# Lab 6 - Agent Skills for Operational Runbooks
+# Lab 7 - Agent Skills
 
 In this section, you will use **Agent Skills** to encode operational expertise — how to diagnose, audit, and fix Webex org issues — separately from MCP tool connectivity.
 
