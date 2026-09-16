@@ -64,7 +64,7 @@ sequenceDiagram
     B->>U: Response in Webex space
 ```
 
-## Step 4.0: Build the MCP Client
+## Step 4.1: Build the MCP Client
 
 These are the MCP components used in this section:
 
@@ -148,7 +148,7 @@ To integrate the Webex MCP Servers into your Assistant, you need an MCP Client.
 
    This MCP client allows you to connect to any MCP server.
 
-## Step 4.1: List tools
+## Step 4.2: List tools
 
 Now, we will connect to the MCP server using the client. In this first exercise, we will list the Tools available in the Webex Meetings MCP server.
 
@@ -200,21 +200,17 @@ Now, we will connect to the MCP server using the client. In this first exercise,
 
     * cd ../04_mcp
 
-3. Copy the example `.env` file:
-
-    * cp .env.example .env
-
-4. Copy the Webex MCP Tokens into `.env`:
+3. Open the `.env` file at the root of your project and copy the Webex MCP Tokens into it:
 
     ```env
     WEBEX_MEETING_MCP_TOKEN=your_meetings_mcp_token
     ```
 
-5. Run your code with the following command:
+4. Run your code with the following command:
 
     * python 01_list_tools.py
 
-6. You will see the following in the terminal:
+5. You will see the following in the terminal:
 
     ```terminal
     2026-09-15 11:09:39,412 INFO 8 tool(s) from https://mcp.webexapis.com/mcp/webex-meeting
@@ -230,7 +226,7 @@ Now, we will connect to the MCP server using the client. In this first exercise,
 
     The 8 tools available are printed there.
    
-## Step 4.2: Call a specific tool
+## Step 4.3: Call a specific tool
 
 Now that we have listed the tools, we will write the code that actually calls a tool. In this example, we will call "webex-list-meetings".
 
@@ -299,7 +295,7 @@ Now that we have listed the tools, we will write the code that actually calls a 
 
    In this case, we have printed the raw information that the tool returned.
 
-## Step 4.3: Use an LLM to call
+## Step 4.4: Use an LLM to call
 
 In this scenario, the LLM will choose which tool to use from the catalog. We will make a query in natural language, and the LLM will decide which tool from the list is needed to get that information. The LLM will then process the result and reply to us in natural language.
 
@@ -440,7 +436,7 @@ In this scenario, the LLM will choose which tool to use from the catalog. We wil
             log.info(asyncio.run(main()))
         ```
 
-3. Set the `OPENAI_API_KEY` in `.env`:
+3. Open the `.env` file at the root of your project and set the `OPENAI_API_KEY`:
 
     ```env
     OPENAI_API_KEY=
@@ -468,7 +464,7 @@ In this scenario, the LLM will choose which tool to use from the catalog. We wil
     Want me to add this to your calendar or share the invite?
     ```
 
-## Step 4.4: Hub
+## Step 4.5: Hub
 
 So far we have only added one Webex Meeting MCP Server. Now, we will also add the Webex Messaging MCP server. The LLM won't pick a server; it only picks a tool name, as all tools are going to be presented together. We will introduce the class `McpHub`, which lists tools from every server as one combined list and, when the model calls a name, routes that call to the right client.
 
@@ -501,6 +497,11 @@ So far we have only added one Webex Meeting MCP Server. Now, we will also add th
                     raise KeyError(f"Unknown MCP tool: {name}")
                 return await client.call_tool(name, arguments)
         ```
+
+    !!! Note "Configuration-Driven Architecture"
+        In this lab, we are hardcoding the MCP Server URLs (e.g., `https://mcp.webexapis.com/mcp/webex-messaging`) directly in our Python scripts so you can clearly see the flow of data. 
+
+        In a production environment, a hub like this should be **configuration-driven**. Instead of hardcoding URLs, your bot would read a configuration file (like the `mcp.json` used by VS Code) or load a list of active servers from a database or `.env` file. This allows administrators to add, remove, or update MCP servers without modifying the bot's source code.
 
 2. Navigate to `04_mcp/04_hub.py` and review the code. In this exercise, we will ask two questions to the LLM: one related to My Meetings and another related to My Spaces.
 
@@ -573,7 +574,7 @@ So far we have only added one Webex Meeting MCP Server. Now, we will also add th
             log.info(asyncio.run(main()))
         ```
 
-3. Set the `WEBEX_MESSAGING_MCP_TOKEN` in `.env` if you didn't do it before:
+3. Open the `.env` file at the root of your project and set the `WEBEX_MESSAGING_MCP_TOKEN` if you didn't do it before:
 
     ```env
     WEBEX_MESSAGING_MCP_TOKEN=your_messaging_mcp_token
@@ -609,7 +610,7 @@ So far we have only added one Webex Meeting MCP Server. Now, we will also add th
     Want me to pull more details or set reminders?
     ```
 
-## Step 4.5: Integration with the Bot
+## Step 4.6: Integration with the Bot
 
 Now, as we did in the previous section, we will combine what we have done to provide direct access from a Webex Bot.
 
@@ -717,7 +718,7 @@ Now, as we did in the previous section, we will combine what we have done to pro
                 log.info("Stopped.")
         ```
 
-2. Make sure you have set the `BOT_TOKEN` in `.env`:
+2. Make sure you have set the `BOT_TOKEN` in the `.env` file at the root of your project:
 
     ```env
     BOT_TOKEN=
@@ -1032,7 +1033,7 @@ In this case, we have built a card that will be sent as a summary when we have m
 
 Now you have a bot that can access the Webex MCP servers. This still gives us some limitations: we need to adapt to the tools available, and the token will expire after 12 hours. In the next sections, we will explore how to work with those challenges.
 
-## From the IDE to a bot
+## Extra: From the IDE to a bot
 
 In the first part of this lab, you already used MCP **without writing a client**. You configured Webex Messaging and Meetings MCP in **VS Code** and asked an agent in the editor. That worked because the IDE **is** an MCP host.
 
