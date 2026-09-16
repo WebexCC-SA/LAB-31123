@@ -11,6 +11,7 @@ We will use the official `mcp` Python SDK to create our server. The SDK makes it
 1. Navigate to `06_custom_mcp/server.py` and review the code.
 
     This script defines two tools:
+
     - `webex_status_unresolved`: Lists unresolved Webex platform incidents.
     - `list_admin_audit_events`: Lists recent admin audit events for troubleshooting.
 
