@@ -107,14 +107,9 @@ Expected behavior:
 
 ## Exercise
 
-Create a second skill for one of:
+Find topic
 
-- Auditing address books for empty or stale entries
-- Investigating queue wait time above threshold
-- Validating desktop profile assignments after a bulk change
+### Create a Skill.md
+### Add a skill
+### Test a skill
 
-## Content still to define
-
-- How skills are loaded in the lab Python OpenAI agent
-- Sample skill folders in the lab code repository
-- Evaluation rubric for skill quality (under 500 lines, gotchas, output templates)
