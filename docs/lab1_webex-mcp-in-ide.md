@@ -43,7 +43,7 @@ MCP servers are **NOT** enabled by default in your organization; you need to ena
 
     ![Create_token](./assets/controlhub_2.png){ width="1000" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-4. You are not done yet. If you try to use an MCP server now, you will see an error similar to this:
+4. You are not done yet. If you try to use an MCP server now, you will see an error similar to this in the terminal:
 
     ```bash
     2026-09-14 12:21:38.230 [warning] [server stderr] [63062] Fatal error: SdkHttpError: Error POSTing to endpoint: {"id":0,"jsonrpc":"2.0","error":{"code":-32003,"message":"You don't have access to this MCP server yet. Ask your administrator to enable it for your account or organization.","data":{"reason":"ACCESS_DENIED"}}}
@@ -140,7 +140,7 @@ As a user, the first thing you will need to do is get the token to access the MC
 
     ![Create_token](./assets/vscode_5.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-    You should see that tools were discovered. If you see a message like the following, you have connected to the MCP successfully:
+    You should see that tools were discovered. If you see a message like the following in the terminal, you have connected to the MCP successfully:
    
     ```bash
     2026-09-13 20:35:36.277 [info] Discovered 20 tools
@@ -256,7 +256,8 @@ In this exercise, you need to add the [Meetings MCP](https://developer.webex.com
 
         These are the tools available in this MCP server:
 
-        ![Tools](./assets/tools_1.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        ??? Note "Tools"
+            ![Tools](./assets/tools_1.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ### Organize a meeting using your AI Assistant
 
