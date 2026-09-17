@@ -85,12 +85,13 @@ nav:
       - Getting Started: getting_started.md
       - Lab 1 - Webex MCP Servers in Your IDE: lab1_webex-mcp-in-ide.md
       - Lab 2 - Webex APIs: lab2_webex-apis-troubleshooting.md
-      - Lab 3 - Integrate an AI Assistant with a Webex Bot: lab3_bot-integration.md
-      - Lab 4 - MCP Servers in AI Assistant: lab4_mcp.md
-      - Lab 5 - Service Apps: lab5_service-app.md
-      - Lab 6 - Custom MCP Server: lab6_custom-mcp-server.md
-      - Lab 7 - Agent Skills: lab7_agent-skills.md
+      - Lab 3 - Build MCP Server: lab6_custom-mcp-server.md
+      - Lab 4 - Agent Skills: lab7_agent-skills.md
+      - Lab 5 - Integrate an AI Assistant with a Webex Bot: lab3_bot-integration.md
+      - Lab 6 - MCP Servers in AI Assistant: lab4_mcp.md
+      - Lab 7 - Skills in AI Assistant: lab7_skills.md
       - Lab 8 - Use Cases: lab8_use-cases.md
+      #- Lab 5 - Service Apps: lab5_service-app.md
       #- Lab 8 - RAG (Extra): lab8_rag.md
       #- Lab 6 - Capstone Troubleshooting Workflow: lab9_capstone-workflow.md
       - Conclusion: conclusion.md
