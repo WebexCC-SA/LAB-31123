@@ -121,22 +121,22 @@ Before connecting to the real API, let's understand how Address Books work in We
 
 Below is a screenshot showing how address books are seen in the agent desktop:
 
-![Agent Desktop](assets/lab3_img23.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Agent Desktop](assets/lab6_img23.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 **Where are they configured?**
 Use the same user credential to log in to Collaboration Control Hub: `https://admin.webex.com` and navigate to Contact Center. Scroll down and select Address Book.
 
-![Control Hub](assets/lab3_img24.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Control Hub](assets/lab6_img24.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 One address book is assigned to an agent profile:
 
-![Agent Profile](assets/lab3_img25.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Agent Profile](assets/lab6_img25.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 You can explore the APIs in the [Webex Developer Portal](https://developer.webex.com/).
 
-![Select WxCC](assets/lab3_img32.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-![API Sections](assets/lab3_img33.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-![Address Book API](assets/lab3_img34.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Select WxCC](assets/lab6_img32.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![API Sections](assets/lab6_img33.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Address Book API](assets/lab6_img34.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 ### 4. Reading from Webex Contact Center API
 
@@ -411,36 +411,36 @@ In this section, you will add and test your custom MCP servers directly in VS Co
 
 3. Start the MCP server. Click the "Start" button in the `mcp.json` file, or use the Command Palette (`Ctrl+Shift+P` -> `MCP: List Servers`).
 
-    ![Start MCP](assets/lab3_img01.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-    ![List Servers](assets/lab3_img02.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Start MCP](assets/lab6_img01.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![List Servers](assets/lab6_img02.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     You will see MCP server logs in the output section automatically. 
     
-    ![Output Logs](assets/lab3_img05.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Output Logs](assets/lab6_img05.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 4. Open the VS Code Chat view and test your tools!
 
     **Testing 01_hello_mcp.py:**
     Ask: *"clean the number (415) 555-0101"*. 
     
-    ![Chat Format](assets/lab3_img11.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Chat Format](assets/lab6_img11.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     **Testing 02_hello_resource_prompt.py:**
     Add Context -> MCP Resources -> `lab://greeting-rules`, and ask: *"What are the greeting rules?"*
     
-    ![Add Context](assets/lab3_img16.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-    ![Ask Rules](assets/lab3_img18.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Add Context](assets/lab6_img16.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Ask Rules](assets/lab6_img18.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     **Testing 03_read_books.py:**
     Ask: *"list my address books, then show me the entries in the first one"*
     
-    ![List Books](assets/lab3_img28.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![List Books](assets/lab6_img28.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     **Testing 04_write_books.py:**
     Ask the AI assistant to create an address book and entries there.
     
-    ![Create Book](assets/lab3_img41.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-    ![Created Book](assets/lab3_img45.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Create Book](assets/lab6_img41.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Created Book](assets/lab6_img45.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 ## Extra: Elicitation
 
@@ -579,34 +579,34 @@ The server exposes exactly two tools: `delete_address_book` and `delete_entry`.
 
 2. Ask to delete a certain address book, it asks for the ID of that book, just click "Enter".
 
-![Delete Book](assets/lab3_img50.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Delete Book](assets/lab6_img50.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 This is the request from VS Code for tool execution approval:
 
-![Approval Request](assets/lab3_img51.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Approval Request](assets/lab6_img51.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 You will see another approval requested here which is what elicitation means:
 
-![Elicitation Approval](assets/lab3_img52.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Elicitation Approval](assets/lab6_img52.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 !!! Tip "Watch for"
     Two approval moments. First the host asks "call delete_address_book?", then the server's elicitation form asks "delete this specific book?". They are different layers.
 
 Since we are not sure what the ID of that address book is, it returns 404.
 
-![404 Error](assets/lab3_img53.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![404 Error](assets/lab6_img53.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 Now we can delete the speed dial with a specific ID.
 
-![Delete Speed Dial](assets/lab3_img56.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Delete Speed Dial](assets/lab6_img56.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 The confirmation requested by the MCP server which requested for elicitation:
 
-![Elicitation Confirmation 1](assets/lab3_img59.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Elicitation Confirmation 1](assets/lab6_img59.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 Successfully deleted.
 
-![Successfully Deleted](assets/lab3_img62.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Successfully Deleted](assets/lab6_img62.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 ## Exercises
 
