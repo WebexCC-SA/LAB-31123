@@ -60,24 +60,24 @@ Visual Studio Code will be used for Python-based bot development, service app co
 
 ### Virtual Environment
 
-6. Create a virtual environment and install dependencies:
+1. From the top bar, click on Terminal > New terminal.
+2. Create a virtual environment and install dependencies:
 
     ```bash
     python -m venv .venv
     .\webexone2026\Scripts\activate.ps1
     pip install -r requirements.txt
     ```
-<!--
-7. Copy the environment template and fill in your values:
+    
+3. Copy the environment template and fill in your values:
 
     ```bash
     cp .env.example .env
     ```
--->
 
 ### Chat
 
-8. Open the Command Palette (`Ctrl+Shift+P`) and type "Chat: Open Chat (Agent)".
+1. Open the Command Palette (`Ctrl+Shift+P`) and type "Chat: Open Chat (Agent)".
 
     ![Create_token](./assets/vscode_6.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
