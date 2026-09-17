@@ -2,17 +2,6 @@
 
 In this section, you will use **Agent Skills** to encode operational expertise — how to diagnose, audit, and fix Webex org issues — separately from MCP tool connectivity.
 
-Reference: [Agent Skills](https://agentskills.io){:target="_blank"}
-
-## Learning Objectives
-
-Upon completion of this section, you will be able to:
-
-- Explain how Agent Skills complement MCP servers
-- Create a `SKILL.md` file for a troubleshooting workflow
-- Apply progressive disclosure (discovery → activation → execution)
-- Combine skills with MCP tools in a multi-step scenario
-
 ## Skills vs MCP
 
 | Layer | Responsibility | Example |
@@ -69,6 +58,12 @@ Use when an admin reports agents offline, not receiving calls, or stuck in unava
 - Always preview write operations before committing.
 ```
 
+### Building a Skill for X
+
+```json
+skill
+```
+
 ## Step 6.2: Progressive disclosure
 
 1. **Discovery** — At startup, the agent loads only skill names and descriptions.
@@ -90,7 +85,7 @@ Configure your MCP host or agent framework to load skills from the lab repositor
 !!! Note
     Exact configuration varies by client. Update this section with the lab OpenAI agent settings before the event.
 
-## Step 6.4: Run a skill-guided scenario
+## Step 6.3: Run a skill-guided scenario
 
 User prompt in Webex (via your bot):
 
