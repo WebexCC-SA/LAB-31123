@@ -190,23 +190,23 @@ Before connecting to the real API, let's understand how Address Books work in We
 
 Below is a screenshot showing how address books are seen in the agent desktop:
 
-![Agent Desktop](assets/lab6_img23.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Agent Desktop](assets/lab6_img29.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-**Where are they configured?**
+#### Where are they configured?
 
-Use the same user credential to log in to Collaboration Control Hub: `https://admin.webex.com` and navigate to Contact Center. Scroll down and select Address Book.
+- In **Collaboration Control Hub** and navigate to **Contact Center**. Scroll down and select Address Book.
 
-![Control Hub](assets/lab6_img24.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Control Hub](assets/lab6_img30.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-One address book is assigned to an agent profile:
-
-![Agent Profile](assets/lab6_img25.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-
+- One address book is assigned to an agent profile.
+XXXXX
 You can explore the APIs in the [Webex Developer Portal](https://developer.webex.com/).
 
-![Select WxCC](assets/lab6_img32.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Select WxCC](assets/lab6_img39.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 ![API Sections](assets/lab6_img33.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-![Address Book API](assets/lab6_img34.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Address Book](assets/lab6_img40.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Address Book API](assets/lab6_img41.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
 
 ### Reading from Webex Contact Center API
 
