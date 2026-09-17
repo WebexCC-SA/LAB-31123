@@ -1,8 +1,8 @@
-# Lab 6 - Build a Custom MCP Server
+# Lab 3 - Build a Custom MCP Server
 
 In this chapter you will build an MCP server step by step, one file at a time that lets an AI assistant manage Webex Contact Center address books.
 
-## Step 6.1: Defining and Implementing Tools
+## Step 3.1: Defining and Implementing Tools
 
 We will use the official `mcp` Python SDK to create our server. The SDK makes it incredibly easy to define tools and their execution logic using decorators. We will build our server in iterations.
 
@@ -10,7 +10,7 @@ We will use the official `mcp` Python SDK to create our server. The SDK makes it
 
 In this section we are going to start wit the simpliest MCP server that does real work: one tool, no network, no token. It takes a messy phone number and returns it in E.164 format.
 
-1. Navigate to `06_custom_mcp/01_hello_mcp.py` and review the code.
+1. Navigate to `03_custom_mcp/01_hello_mcp.py` and review the code.
 
     ??? Tip "Python Code"
         ```python
@@ -60,7 +60,7 @@ Next, we are going to build a single script that demonstrates the entire MCP arc
 - **A resource** is context the client attaches, like handing the model a rulebook. 
 - **A prompt** is the one primitive a human triggers directly — from a slash command or menu.
 
-- Navigate to `06_custom_mcp/02_hello_resource_prompt.py` and review the code:
+- Navigate to `03_custom_mcp/02_hello_resource_prompt.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -121,22 +121,22 @@ Before connecting to the real API, let's understand how Address Books work in We
 
 Below is a screenshot showing how address books are seen in the agent desktop:
 
-![Agent Desktop](assets/lab6_img23.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Agent Desktop](assets/lab3_img23.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 **Where are they configured?**
 Use the same user credential to log in to Collaboration Control Hub: `https://admin.webex.com` and navigate to Contact Center. Scroll down and select Address Book.
 
-![Control Hub](assets/lab6_img24.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Control Hub](assets/lab3_img24.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 One address book is assigned to an agent profile:
 
-![Agent Profile](assets/lab6_img25.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Agent Profile](assets/lab3_img25.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 You can explore the APIs in the [Webex Developer Portal](https://developer.webex.com/).
 
-![Select WxCC](assets/lab6_img32.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-![API Sections](assets/lab6_img33.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-![Address Book API](assets/lab6_img34.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Select WxCC](assets/lab3_img32.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![API Sections](assets/lab3_img33.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Address Book API](assets/lab3_img34.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 ### 4. Reading from Webex Contact Center API
 
@@ -145,7 +145,7 @@ The first server that talks to the Webex Contact Center exposes two read-only to
 The server checks at startup for three values (`ACCESS_TOKEN`, `WEBEX_ORG_ID`, `WXCC_CONFIG_API_BASE`).
 
 !!! Note
-    - **`ACCESS_TOKEN`**: This is going to be the access token. We will actually use the Service App token for this task.
+    - **`ACCESS_TOKEN`**: This is going to be the access token. We will actually use the Personal Access Token for this task.
     - **`WEBEX_ORG_ID`** and **`WXCC_CONFIG_API_BASE`**: These are related to the sandbox and will be set up in advance for you, but here is how you can find them:
     
         For `WEBEX_ORG_ID`, you need to go in Collaboration Control Hub to Account:
@@ -179,7 +179,7 @@ The server checks at startup for three values (`ACCESS_TOKEN`, `WEBEX_ORG_ID`, `
            | Japan | `jp1` | `https://api.wxcc-jp1.cisco.com` |
            | Singapore | `sg1` | `https://api.wxcc-sg1.cisco.com` |
 
-Navigate to `06_custom_mcp/03_read_books.py` and review the code:
+Navigate to `03_custom_mcp/03_read_books.py` and review the code:
 
 ??? Tip "Python Code"
     ```python
@@ -280,7 +280,7 @@ Navigate to `06_custom_mcp/03_read_books.py` and review the code:
 
 This step writes to the API. It exposes exactly two tools: `create_address_book` and `add_entry`. 
 
-Navigate to `06_custom_mcp/04_write_books.py` and review the code:
+Navigate to `03_custom_mcp/04_write_books.py` and review the code:
 
 ??? Tip "Python Code"
     ```python
@@ -387,7 +387,7 @@ Navigate to `06_custom_mcp/04_write_books.py` and review the code:
 
     ```
 
-## Step 6.2: Register in your IDE
+## Step 3.2: Register in your IDE
 
 In this section, you will add and test your custom MCP servers directly in VS Code.
 
@@ -399,7 +399,7 @@ In this section, you will add and test your custom MCP servers directly in VS Co
       "servers": {
         "webex-mcp-lab": {
           "command": "/absolute/path/to/webex-mcp-lab/.venv/Scripts/python.exe",
-          "args": ["06_custom_mcp/01_hello_mcp.py"],
+          "args": ["03_custom_mcp/01_hello_mcp.py"],
           "cwd": "/absolute/path/to/05-bots"
         }
       }
@@ -411,45 +411,36 @@ In this section, you will add and test your custom MCP servers directly in VS Co
 
 3. Start the MCP server. Click the "Start" button in the `mcp.json` file, or use the Command Palette (`Ctrl+Shift+P` -> `MCP: List Servers`).
 
-    ![Start MCP](assets/lab6_img01.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-    ![List Servers](assets/lab6_img02.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Start MCP](assets/lab3_img01.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![List Servers](assets/lab3_img02.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     You will see MCP server logs in the output section automatically. 
     
-    ![Output Logs](assets/lab6_img05.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Output Logs](assets/lab3_img05.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 4. Open the VS Code Chat view and test your tools!
 
     **Testing 01_hello_mcp.py:**
     Ask: *"clean the number (415) 555-0101"*. 
     
-    ![Chat Format](assets/lab6_img11.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Chat Format](assets/lab3_img11.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     **Testing 02_hello_resource_prompt.py:**
     Add Context -> MCP Resources -> `lab://greeting-rules`, and ask: *"What are the greeting rules?"*
     
-    ![Add Context](assets/lab6_img16.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-    ![Ask Rules](assets/lab6_img18.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Add Context](assets/lab3_img16.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Ask Rules](assets/lab3_img18.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     **Testing 03_read_books.py:**
     Ask: *"list my address books, then show me the entries in the first one"*
     
-    ![List Books](assets/lab6_img28.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![List Books](assets/lab3_img28.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     **Testing 04_write_books.py:**
     Ask the AI assistant to create an address book and entries there.
     
-    ![Create Book](assets/lab6_img41.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-    ![Created Book](assets/lab6_img45.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-
-## Step 6.3: Integrate with your AI Assistant
-
-Now, you will add your custom MCP server to your AI assistant. 
-
-Unlike the official Webex MCP servers which run remotely and connect via HTTP (Server-Sent Events), our custom server runs locally over standard input/output (`stdio`). 
-
-!!! Warning "Placeholder: Bot Integration"
-    [PLACEHOLDER: In the final lab, we will provide the code to integrate this local `stdio` custom MCP server with the Webex Bot using the `McpHub` and `McpClient` classes, similar to what was done in Lab 4. This will allow users to interact with the Contact Center Address Books directly from their Webex App.]
+    ![Create Book](assets/lab3_img41.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Created Book](assets/lab3_img45.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 ## Extra: Elicitation
 
@@ -457,7 +448,7 @@ We trusted the host to ask permission. This step explores what happens when the 
 
 The server exposes exactly two tools: `delete_address_book` and `delete_entry`. 
 
-1. Update `.vscode/mcp.json` to point at `06_custom_mcp/05_delete_books.py` and restart.
+1. Update `.vscode/mcp.json` to point at `03_custom_mcp/05_delete_books.py` and restart.
 
 ??? Tip "Python Code"
     ```python
@@ -588,31 +579,206 @@ The server exposes exactly two tools: `delete_address_book` and `delete_entry`.
 
 2. Ask to delete a certain address book, it asks for the ID of that book, just click "Enter".
 
-![Delete Book](assets/lab6_img50.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Delete Book](assets/lab3_img50.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 This is the request from VS Code for tool execution approval:
 
-![Approval Request](assets/lab6_img51.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Approval Request](assets/lab3_img51.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 You will see another approval requested here which is what elicitation means:
 
-![Elicitation Approval](assets/lab6_img52.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Elicitation Approval](assets/lab3_img52.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 !!! Tip "Watch for"
     Two approval moments. First the host asks "call delete_address_book?", then the server's elicitation form asks "delete this specific book?". They are different layers.
 
 Since we are not sure what the ID of that address book is, it returns 404.
 
-![404 Error](assets/lab6_img53.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![404 Error](assets/lab3_img53.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 Now we can delete the speed dial with a specific ID.
 
-![Delete Speed Dial](assets/lab6_img56.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Delete Speed Dial](assets/lab3_img56.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 The confirmation requested by the MCP server which requested for elicitation:
 
-![Elicitation Confirmation 1](assets/lab6_img59.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Elicitation Confirmation 1](assets/lab3_img59.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 Successfully deleted.
 
-![Successfully Deleted](assets/lab6_img62.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Successfully Deleted](assets/lab3_img62.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+## Exercises
+
+In this section, you can test your knowledge of what we have covered so far. If you need help, you can check the solution.
+
+There is no official **Webex Calling** or **Control Hub troubleshooting** MCP server today. That is the gap a custom MCP server fills: you wrap the REST APIs you already used in Lab 2, register the server in VS Code (same as Lab 1), and ask the assistant in Chat.
+
+Use the Service App token (`ACCESS_TOKEN`) from Lab 2. Follow the same pattern as `03_custom_mcp/03_read_books.py`: one tool per API, a short description, and a small JSON result the model can read.
+
+### Relevant APIs
+
+Use these as the starting catalog. You do not need to wrap all of them; pick a small set that answers a troubleshooting question.
+
+#### Webex Calling
+
+| API | What it is useful for | Documentation |
+| --- | --- | --- |
+| **Numbers** | List phone numbers in the org, see if they are assigned | [Numbers](https://developer.webex.com/calling/docs/api/v1/numbers){:target="_blank"} |
+| **Locations** | Calling locations, which numbers and users belong where | [Locations](https://developer.webex.com/calling/docs/api/v1/locations){:target="_blank"} |
+| **People (Calling settings)** | User calling features (DND, forwarding, numbers on the user) | [People](https://developer.webex.com/admin/docs/api/v1/people){:target="_blank"} · [Webex Calling provisioning](https://developer.webex.com/calling/docs/api/guides/webex-calling-provisioning-apis){:target="_blank"} |
+| **Devices** | Phones and room devices registered in the org | [Devices](https://developer.webex.com/docs/api/v1/devices){:target="_blank"} |
+| **Call queues / hunt groups** | Queue membership and routing (when investigating “calls not landing”) | [Webex Calling provisioning](https://developer.webex.com/calling/docs/api/guides/webex-calling-provisioning-apis){:target="_blank"} |
+| **Detailed Call History** | Recent CDRs for a call-quality or “who called whom” investigation | [Detailed Call History](https://developer.webex.com/calling/docs/api/v1/reports-detailed-call-history){:target="_blank"} |
+
+#### Control Hub management
+
+| API | What it is useful for | Documentation |
+| --- | --- | --- |
+| **People** | List users, licenses on a user, status | [People](https://developer.webex.com/admin/docs/api/v1/people){:target="_blank"} |
+| **Licenses** | What the org is entitled to, and remaining counts | [Licenses](https://developer.webex.com/admin/docs/api/v1/licenses){:target="_blank"} |
+| **Roles** | Admin roles available in the org | [Roles](https://developer.webex.com/admin/docs/api/v1/roles){:target="_blank"} |
+| **Workspaces** | Meeting rooms and desk areas | [Workspaces](https://developer.webex.com/calling/docs/api/v1/workspaces){:target="_blank"} |
+| **Admin Audit Events** | Who changed what in Control Hub | [Admin Audit Events](https://developer.webex.com/admin/docs/api/v1/admin-audit-events){:target="_blank"} |
+
+#### Troubleshooting / platform
+
+| API | What it is useful for | Documentation |
+| --- | --- | --- |
+| **Webex Status** | Platform incidents before you blame the org | [Webex Status API](https://developer.webex.com/calling/docs/webex-status-api){:target="_blank"} |
+| **Reports** | Usage and activity reports | [Reports](https://developer.webex.com/admin/docs/api/v1/reports){:target="_blank"} |
+| **Troubleshooting guide** | Suggested diagnostic workflows | [API Troubleshooting Guide](https://developer.webex.com/explore/docs/api/guides/troubleshooting){:target="_blank"} |
+
+!!! Note
+    Exact paths and scopes can vary by license. Confirm each API on developer.webex.com and add the matching scopes to your Service App if a call returns `403`.
+
+### Build the MCP server
+
+Create a new file, for example `03_custom_mcp/06_calling_hub.py`, with at least **two tools**:
+
+1. One Calling tool (for example list numbers, or numbers that are unassigned).
+2. One Control Hub tool (for example list people, or recent admin audit events).
+
+Keep each tool small: call one endpoint, return a short JSON list (id, name, status), not the full raw payload.
+
+??? Solution
+
+    Create a new file `03_custom_mcp/06_calling_hub.py` and paste this code:
+
+    ```python
+    import os
+    import sys
+    import httpx
+    from dotenv import load_dotenv
+    from mcp.server import MCPServer
+
+    load_dotenv()
+    TOKEN = os.environ.get("ACCESS_TOKEN")
+
+    if not TOKEN:
+        sys.exit("ACCESS_TOKEN is not set. Please set it in your .env file.")
+
+    HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
+
+    mcp = MCPServer("webex-calling-hub")
+
+    @mcp.tool()
+    async def list_numbers(max_results: int = 25) -> dict:
+        """List phone numbers configured in the organization."""
+        async with httpx.AsyncClient(timeout=15) as http:
+            r = await http.get(
+                "https://webexapis.com/v1/telephony/config/numbers",
+                headers=HEADERS,
+                params={"max": max_results}
+            )
+        if r.status_code != 200:
+            return {"error": f"HTTP {r.status_code}: {r.text}"}
+        
+        numbers = r.json().get("phoneNumbers", [])
+        return {
+            "count": len(numbers),
+            "numbers": [
+                {"number": n.get("phoneNumber"), "state": n.get("state"), "location": n.get("location", {}).get("name")}
+                for n in numbers
+            ]
+        }
+
+    @mcp.tool()
+    async def list_people(max_results: int = 10) -> dict:
+        """List users (people) in the organization."""
+        async with httpx.AsyncClient(timeout=15) as http:
+            r = await http.get(
+                "https://webexapis.com/v1/people",
+                headers=HEADERS,
+                params={"max": max_results}
+            )
+        if r.status_code != 200:
+            return {"error": f"HTTP {r.status_code}: {r.text}"}
+        
+        people = r.json().get("items", [])
+        return {
+            "count": len(people),
+            "people": [
+                {"id": p.get("id"), "emails": p.get("emails"), "displayName": p.get("displayName")}
+                for p in people
+            ]
+        }
+
+    @mcp.tool()
+    async def unresolved_incidents() -> dict:
+        """Check Webex for any unresolved platform incidents."""
+        async with httpx.AsyncClient(timeout=15) as http:
+            r = await http.get("https://status.webex.com/api/v2/incidents/unresolved.json")
+        if r.status_code != 200:
+            return {"error": f"HTTP {r.status_code}: {r.text}"}
+        
+        incidents = r.json().get("incidents", [])
+        return {"count": len(incidents), "incidents": incidents}
+
+    if __name__ == "__main__":
+        print("webex-calling-hub running on stdio.", file=sys.stderr)
+        mcp.run()
+    ```
+
+### Register the server in your IDE
+
+Add your new server to `.vscode/mcp.json` the same way you did in Step 3.2, start it, and confirm tools are discovered in the Output view.
+
+??? Solution
+
+    1. Open `.vscode/mcp.json` and add the new server configuration:
+
+        ```json
+        {
+          "servers": {
+            "webex-calling-hub": {
+              "command": "/absolute/path/to/webex-mcp-lab/.venv/Scripts/python.exe",
+              "args": ["03_custom_mcp/06_calling_hub.py"],
+              "cwd": "/absolute/path/to/05-bots"
+            }
+          }
+        }
+        ```
+
+    2. Reload the window if needed (`Developer: Reload Window`).
+    3. Open the Command Palette (`Ctrl+Shift+P`), type **MCP: List Servers**, select `webex-calling-hub`, and click **Start Server**.
+    4. In Output you should see tools discovered.
+
+    ![List Servers](assets/placeholder_list_servers.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+### Ask the assistant
+
+In Chat, ask a question that needs **both** tools, so the assistant has to chain them. For example:
+
+- *List the phone numbers in this organization. Then tell me how many users we have, and whether Webex has any unresolved incidents.*
+
+??? Solution
+
+    1. Open **Chat: Open Chat (Agent)** and make sure your custom server is attached.
+    2. Ask the question in natural language. You should see tool calls (numbers, then people or status).
+    3. Allow the tools when VS Code prompts.
+    4. The final answer should be written by the LLM from the tool results, not a hardcoded string.
+
+    ![Chat Tools](assets/placeholder_chat_tools.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+    If a tool returns `403`, the Service App is missing a scope. Add it in the developer portal, generate a new token, update `.env`, and restart the server.
