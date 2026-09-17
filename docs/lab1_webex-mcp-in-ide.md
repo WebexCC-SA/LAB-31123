@@ -188,7 +188,8 @@ Earlier we opened the Chat, but now we will set up the agent.
 
 6. You can ask the agent to list the tools available:
 
-    ![Create_token](./assets/vscode_13.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ??? Note "Tools"
+        ![Create_token](./assets/vscode_13.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 7. Now, ask it to create a space for you. In this case, I will ask the following: `Create a Webex Space, with title "WebexOne - Diejimen"`:
 
