@@ -1,12 +1,12 @@
 # Lab 3 - Build a Custom MCP Server
 
-In this chapter you will build an MCP server step by step, one file at a time that lets an AI assistant manage Webex Contact Center address books.
+In this chapter you will build an MCP server that lets an AI assistant manage Webex Contact Center address books.
 
 ## Step 3.1: Defining and Implementing Tools
 
-We will use the official `mcp` Python SDK to create our server. The SDK makes it incredibly easy to define tools and their execution logic using decorators. We will build our server in iterations.
+We will use the official `mcp` Python SDK to create our server. The SDK makes it incredibly easy to define tools and their execution logic using decorators.
 
-### 1. Your First MCP Server
+### Your First MCP Server
 
 In this section we are going to start wit the simpliest MCP server that does real work: one tool, no network, no token. It takes a messy phone number and returns it in E.164 format.
 
@@ -14,34 +14,34 @@ In this section we are going to start wit the simpliest MCP server that does rea
 
     ??? Tip "Python Code"
         ```python
-            # Step 01 - the smallest MCP server: one tool, no network, no token.
-    
-            import re
-            import sys
-            from mcp.server import MCPServer
-    
-            # Create an MCP server instance.
-            mcp = MCPServer("webex-mcp-lab-01")
-    
-    
-            # Register a tool that cleans a phone number to E.164 format.
-            @mcp.tool()
-            async def format_phone(number: str) -> str:
-                """Clean a phone number to E.164 form, e.g. +14155550101."""
-                digits = re.sub(r"\D", "", number)
-                if not number.startswith("+") and len(digits) == 10:
-                    digits = "1" + digits
-                return "+" + digits
-    
-    
-            # Start the server on stdio and wait for a client to connect.
-            if __name__ == "__main__":
-                print(
-                    "webex-mcp-lab-01 running on stdio - waiting for a client (Ctrl+C to stop).",
-                    file=sys.stderr,
-                )
+        # Step 01 - the smallest MCP server: one tool, no network, no token.
+        
+        import logging
+        import re
+        from mcp.server import MCPServer
+        
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+        log = logging.getLogger("hello-mcp")
+        
+        # Create an MCP server instance.
+        mcp = MCPServer("hello-mcp")
+        
+        # Register a tool that cleans a phone number to E.164 format.
+        @mcp.tool()
+        async def format_phone(number: str) -> str:
+            """Clean a phone number to E.164 form, e.g. +14155550101."""
+            digits = re.sub(r"\D", "", number)
+            if not number.startswith("+") and len(digits) == 10:
+                digits = "1" + digits
+            return "+" + digits
+        
+        # Start the server on stdio and wait for a client to connect.
+        if __name__ == "__main__":
+            log.info("hello-mcp running on stdio - waiting for a client (Ctrl+C to stop).")
+            try:
                 mcp.run()
-    
+            except KeyboardInterrupt:
+                log.info("Stopped.")
         ```
 
     Everything a `@mcp.tool()` decorator does is on display here:
@@ -50,9 +50,60 @@ In this section we are going to start wit the simpliest MCP server that does rea
     2. **Description.** The docstring becomes the tool's description. This is not documentation for you — it is how the model decides whether this is the right tool to call. A vague or misleading docstring produces a tool the model misuses.
     3. **Schema.** The `number: str` annotation becomes the input schema, so the client knows to send one string argument.
 
-2. To test our MCP server we will be using a tool called MCP Inspector.
+2. In VS Code, make sure your terminal is in the correct folder:
 
-### 2. MCP Primitives: Tool, Resource, and Prompt
+    * cd ../03_custom_mcp
+
+3. To test our MCP server we will be using a tool called **MCP Inspector**. It is the official, interactive debugging tool for MCP servers. It runs a local web interface where you can list tools, resources, and prompts, and execute them directly without needing an LLM in the loop.
+
+    ```bash
+    npx @modelcontextprotocol/inspector python 01_hello_mcp.py
+    ```
+   
+    !!! Note
+        If it asks to install the `@modelcontextprotocol/inspector` package, press `y`.*
+
+        ```terminal
+        Need to install the following packages:
+        @modelcontextprotocol/inspector@1.0.2
+        Ok to proceed? (y) 
+        ```
+
+6. Once it starts, it should open a new tab for you, if not, it will provide a local URL (usually `http://localhost:6274`). Open that URL in your browser.
+
+    ![MCP Inspector Start](assets/inspector_start.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+7. Select the following and click `Connect`:
+
+    |        	|                                     	      |
+    |-----------------------	|--------------|
+    | **Transport Type**       	| STDIO |
+    | **Command**       	| Python |
+    | **Arguments**       	| 01_hello_mcp.py |
+
+    ![MCP Inspector Start](assets/inspector_2.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+8. In the MCP Inspector web interface, click on the **Tools** tab, then **List Tools** and you will see the `format_phone` tool listed.
+
+    ![MCP Inspector Start](assets/inspector_3.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+9. Click on **format_phone**. In the arguments JSON editor, provide a messy phone number:
+    ```json
+    {
+      "number": "(415) 555-0101"
+    }
+    ```
+
+10. Click **Run Tool**. You should see the result `+14155550101` returned immediately.
+
+    !!! Note
+        You may need to scroll down
+
+    ![MCP Inspector Tool Run](assets/inspector_run.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+    This confirms your server works perfectly in isolation! You can stop the MCP in your terminal with `Ctrl+C`, we will still use the MCP inspector in the next exercise.
+
+### MCP Primitives: Tool, Resource, and Prompt
 
 Next, we are going to build a single script that demonstrates the entire MCP architecture, which consists of three distinct primitives:
 
@@ -64,58 +115,76 @@ Next, we are going to build a single script that demonstrates the entire MCP arc
 
     ??? Tip "Python Code"
         ```python
-            # Step 02 - all three MCP primitives (tool, resource, prompt) without credentials.
-    
-            import sys
-            from mcp.server import MCPServer
-    
-            # Create an MCP server instance.
-            mcp = MCPServer("webex-mcp-lab-02")
-    
-    
-            # Register a tool that counts words and characters in a piece of text.
-            @mcp.tool()
-            async def count_words(text: str) -> dict:
-                """Count the words and characters in a piece of text."""
-                words = text.split()
-                return {"words": len(words), "characters": len(text)}
-    
-    
-            # Register a resource with greeting rules the tool cannot know on its own.
-            @mcp.resource("lab://greeting-rules")
-            def greeting_rules() -> str:
-                return (
-                    "Webex Contact Center greeting rules for this organization:\n"
-                    "1. 12 words maximum.\n"
-                    "2. Must include the agent's first name.\n"
-                    "3. Never use 'ASAP' or 'obviously'.\n"
-                )
-    
-    
-            # Register a prompt that chains the resource and the tool into a review workflow.
-            @mcp.prompt()
-            def review_greeting(greeting: str = "") -> str:
-                """Review an agent greeting against the organization rules."""
-                return (
-                    f"Review this agent greeting:\n\n"
-                    f"{greeting or '<paste a greeting here>'}\n\n"
-                    "1. Read the lab://greeting-rules resource for the org rules.\n"
-                    "2. Call count_words to measure the greeting.\n"
-                    "3. Tell me pass or fail, and why."
-                )
-    
-    
-            # Start the server on stdio and wait for a client to connect.
-            if __name__ == "__main__":
-                print(
-                    "webex-mcp-lab-02 running on stdio - waiting for a client (Ctrl+C to stop).",
-                    file=sys.stderr,
-                )
+        # Step 02 - all three MCP primitives (tool, resource, prompt) without credentials.
+        
+        import logging
+        from mcp.server import MCPServer
+        
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+        log = logging.getLogger("hello-resource-prompt")
+        
+        # Create an MCP server instance.
+        mcp = MCPServer("hello-resource-prompt")
+        
+        
+        # Register a tool that counts words and characters in a piece of text.
+        @mcp.tool()
+        async def count_words(text: str) -> dict:
+            """Count the words and characters in a piece of text."""
+            words = text.split()
+            return {"words": len(words), "characters": len(text)}
+        
+        
+        # Register a resource with greeting rules the tool cannot know on its own.
+        @mcp.resource("lab://greeting-rules")
+        def greeting_rules() -> str:
+            return (
+                "Webex Contact Center greeting rules for this organization:\n"
+                "1. 12 words maximum.\n"
+                "2. Must include the agent's first name.\n"
+                "3. Never use 'ASAP' or 'obviously'.\n"
+            )
+        
+        
+        # Register a prompt that chains the resource and the tool into a review workflow.
+        @mcp.prompt()
+        def review_greeting(greeting: str = "") -> str:
+            """Review an agent greeting against the organization rules."""
+            return (
+                f"Review this agent greeting:\n\n"
+                f"{greeting or '<paste a greeting here>'}\n\n"
+                "1. Read the lab://greeting-rules resource for the org rules.\n"
+                "2. Call count_words to measure the greeting.\n"
+                "3. Tell me pass or fail, and why."
+            )
+        
+        
+        # Start the server on stdio and wait for a client to connect.
+        if __name__ == "__main__":
+            log.info("hello-resource-prompt running on stdio - waiting for a client (Ctrl+C to stop).")
+            try:
                 mcp.run()
-    
+            except KeyboardInterrupt:
+                log.info("Stopped.")
         ```
 
-### 3. Understand Webex Contact Center Address Book APIs
+2. Run your code with the following command:
+
+    * python 02_hello_resource_prompt.py
+
+3. Go to the MCP Inspector. Click on **Disconnect**.
+4. Change **Arguments** to `02_hello_resource_prompt.py` and click **Connect**.
+5. Click on **Resources** and then **List Resources**. You will see `lab://greeting-rules`. You can click it to read the greeting rules.
+   ??? Note "Resources"
+       ![MCP Inspector Tool Run](assets/resources.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+6. Click on **Prompts** and then **List Prompts**. You will see `review_greeting`.
+   ??? Note "Prompts"
+       ![MCP Inspector Tool Run](assets/prompts.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+7. Click on **Tools** and then **List Tools**. You will see `count_words`. You can test it by providing a `"text"` argument.
+   ??? Note "Tools"
+       ![MCP Inspector Tool Run](assets/tools.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+### Understand Webex Contact Center Address Book APIs
 
 Before connecting to the real API, let's understand how Address Books work in Webex Contact Center. An address book is a named list of contacts that agents see in their desktop. 
 
@@ -124,6 +193,7 @@ Below is a screenshot showing how address books are seen in the agent desktop:
 ![Agent Desktop](assets/lab6_img23.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 **Where are they configured?**
+
 Use the same user credential to log in to Collaboration Control Hub: `https://admin.webex.com` and navigate to Contact Center. Scroll down and select Address Book.
 
 ![Control Hub](assets/lab6_img24.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
@@ -138,15 +208,15 @@ You can explore the APIs in the [Webex Developer Portal](https://developer.webex
 ![API Sections](assets/lab6_img33.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 ![Address Book API](assets/lab6_img34.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-### 4. Reading from Webex Contact Center API
+### Reading from Webex Contact Center API
 
 The first server that talks to the Webex Contact Center exposes two read-only tools — `list_address_books` and `list_entries`.
 
-The server checks at startup for three values (`ACCESS_TOKEN`, `WEBEX_ORG_ID`, `WXCC_CONFIG_API_BASE`).
+The server checks at startup for three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC_CONFIG_API_BASE`.
 
-!!! Note
-    - **`ACCESS_TOKEN`**: This is going to be the access token. We will actually use the Personal Access Token for this task.
-    - **`WEBEX_ORG_ID`** and **`WXCC_CONFIG_API_BASE`**: These are related to the sandbox and will be set up in advance for you, but here is how you can find them:
+??? Tip "ACCESS_TOKEN, WEBEX_ORG_ID & WXCC_CONFIG_API_BASE"
+    - **`ACCESS_TOKEN`**: This is going to be the Service App token created in the previous task.
+    - **`WEBEX_ORG_ID`** and **`WXCC_CONFIG_API_BASE`**: These are related to the sandbox and will be set up in advance for you, but here is how you could find them:
     
         For `WEBEX_ORG_ID`, you need to go in Collaboration Control Hub to Account:
     
@@ -179,31 +249,29 @@ The server checks at startup for three values (`ACCESS_TOKEN`, `WEBEX_ORG_ID`, `
            | Japan | `jp1` | `https://api.wxcc-jp1.cisco.com` |
            | Singapore | `sg1` | `https://api.wxcc-sg1.cisco.com` |
 
-Navigate to `03_custom_mcp/03_read_books.py` and review the code:
+1. Navigate to `03_custom_mcp/03_read_books.py` and review the code:
 
-??? Tip "Python Code"
-    ```python
-        """
-        Webex One 2026 - Troubleshoot and Manage Your Organization with an AI Assistant
-
-        - Diego Manuel Jimenez Moreno
-        - Mo Eyad Musallam
-        """
+    ??? Tip "Python Code"
+        ```python
         # Step 03 - reading: list address books, then list entries inside one book.
-
+        
+        import logging
         import os
         import sys
         import httpx
         from dotenv import load_dotenv
         from mcp.server import MCPServer
-
+        
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+        log = logging.getLogger("read-books")
+        
         # Load credentials from .env.
         load_dotenv()
-
+        
         TOKEN = os.environ.get("ACCESS_TOKEN")
         ORG_ID = os.environ.get("WEBEX_ORG_ID")
         CONFIG_API_BASE = os.environ.get("WXCC_CONFIG_API_BASE", "")
-
+        
         # Stop early if any credential is missing.
         for _name, _value in (
             ("ACCESS_TOKEN", TOKEN),
@@ -212,15 +280,15 @@ Navigate to `03_custom_mcp/03_read_books.py` and review the code:
         ):
             if not _value:
                 sys.exit(f"{_name} is not set. This lab needs Webex Contact Center - see .env.example.")
-
+        
         # Build the API base URL and common headers.
         ORG = f"{CONFIG_API_BASE.rstrip('/')}/organization/{ORG_ID}"
         HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
-
+        
         # Create an MCP server instance.
-        mcp = MCPServer("webex-mcp-lab-03")
-
-
+        mcp = MCPServer("read-books")
+        
+        
         # List all address books in the Contact Center organization.
         @mcp.tool()
         async def list_address_books(limit: int = 50) -> dict:
@@ -229,52 +297,51 @@ Navigate to `03_custom_mcp/03_read_books.py` and review the code:
                 response = await http.get(
                     f"{ORG}/v3/address-book", headers=HEADERS, params={"pageSize": limit}
                 )
-
+        
             if response.status_code != 200:
                 return {"error": f"Webex Contact Center returned HTTP {response.status_code}."}
-
+        
             books = [
                 {"id": book.get("id"), "name": book.get("name"), "description": book.get("description")}
                 for book in response.json().get("data", [])
             ]
             return {"count": len(books), "address_books": books}
-
-
+        
+        
         # List contacts inside one address book, using its id from list_address_books.
         @mcp.tool()
         async def list_entries(address_book_id: str, search: str = "") -> dict:
             """List the contacts inside one address book, optionally filtered by `search`.
-
+        
             Pass the `address_book_id` returned by list_address_books.
             """
             params: dict = {"page": 0, "pageSize": 100}
             if search:
                 params["search"] = search
-
+        
             async with httpx.AsyncClient(timeout=15) as http:
                 response = await http.get(
                     f"{ORG}/v2/address-book/{address_book_id}/entry", headers=HEADERS, params=params
                 )
-
+        
             if response.status_code != 200:
                 return {"error": f"Webex Contact Center returned HTTP {response.status_code}."}
-
+        
             entries = [
                 {"id": entry.get("id"), "name": entry.get("name"), "number": entry.get("number")}
                 for entry in response.json().get("data", [])
             ]
             return {"count": len(entries), "entries": entries}
-
-
+        
+        
         # Start the server on stdio and wait for a client to connect.
         if __name__ == "__main__":
-            print(
-                "webex-mcp-lab-03 running on stdio - waiting for a client (Ctrl+C to stop).",
-                file=sys.stderr,
-            )
-            mcp.run()
-
-    ```
+            log.info("read-books running on stdio - waiting for a client (Ctrl+C to stop).")
+            try:
+                mcp.run()
+            except KeyboardInterrupt:
+                log.info("Stopped.")
+        ```
 
 ### 5. Writing: Create and Fill an Address Book
 
