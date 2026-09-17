@@ -11,10 +11,9 @@ Scan the QR code to be added to the Webex space for Q&A and more.
 ## Tools used in this lab
 
 - **Webex Client** — interact with your bot and verify assistant responses
-- **Visual Studio Code** — edit code, configure MCP servers, and run the lab assistant from the terminal
-- **OpenAI API** — LLM for the bot and agent (key provided by your instructor; **not** GitHub Copilot)
-- **Webex for Developers** — create bots, WCIT tokens, and review API documentation
-- **Python 3.10+** — run bot, OpenAI, and MCP client samples
+- **Visual Studio Code** — edit code, configure MCP servers, and run the lab assistant
+- **Webex for Developers** — create bots, Webex MCP tokens, service app, and review API documentation
+- **Bruno** - TBC
 
 ## Webex lab credentials
 
