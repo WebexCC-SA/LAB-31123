@@ -1,6 +1,6 @@
-# Lab 3 - Integrate an AI Assistant with a Webex Bot
+# Lab 5 - Integrate an AI Assistant with a Webex Bot
 
-Up to this point, you have built and tested your AI assistant directly in the terminal. In this section, you will connect that intelligence to a Webex Bot, allowing users to interact with your assistant naturally from any Webex space.
+Up to this point, you have built and tested your AI assistant in Visual Studio Code: official MCP servers, Webex APIs, and a custom MCP server. In this section, you will start writing Python to connect that intelligence to a Webex Bot, so users can interact with your assistant from any Webex space.
 
 ## Architecture
 
@@ -15,7 +15,7 @@ flowchart LR
 | Interface | Context | Best for |
 | --- | --- | --- |
 | **Web Chat** (e.g., claude.ai) | Manual prompts and pasted content | General questions, brainstorming, one-off code |
-| **IDE / Terminal** (Previous exercises) | Python scripts, local execution | Development, debugging, and building the agent logic |
+| **IDE** (Labs 1–3) | VS Code Chat, MCP servers, API testing | Development, tool design, and testing the assistant |
 | **Webex Bot** (This lab) | Webex spaces, Adaptive Cards, always-on | End-user interaction, operational tasks, collaborative workflows |
 
 !!! Note "Bot vs. Agent"
@@ -23,7 +23,7 @@ flowchart LR
 
 The bot handles **transport**. The agent handles **reasoning and tool selection**.
 
-## Step 3.1: Create a Bot
+## Step 5.1: Create a Bot
 
 First, you need to create your bot:
 
@@ -49,7 +49,7 @@ First, you need to create your bot:
 
 5. In VS Code, make sure your terminal is in the correct folder:
 
-    * cd ../03_bot
+    * cd ../05_bot
 
 6. Open the `.env` file at the root of your project and copy the bot access token into it:
 
@@ -57,11 +57,11 @@ First, you need to create your bot:
     BOT_TOKEN=your_bot_access_token
     ```
 
-## Step 3.2: WebSocket Client
+## Step 5.2: WebSocket Client
 
 As discussed, we will be using WebSockets in this lab. WebSockets will keep a communication channel open with Cisco to receive and send messages. We will be using the following class during this lab to run the bot.
 
-1. Navigate to `03_bot/websocket_client.py` and review the code:
+1. Navigate to `05_bot/websocket_client.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -187,11 +187,11 @@ As discussed, we will be using WebSockets in this lab. WebSockets will keep a co
 !!! Note
     This lab uses **WebSockets (Mercury)** so no public URL or ngrok tunnel is required. For production, you may use [webhooks](https://developer.webex.com/messaging/docs/api/guides/webhooks){:target="_blank"} instead.
 
-## Step 3.3: Echo
+## Step 5.3: Echo
 
 In this exercise, we will create a bot that will echo back the same message using the WebSocket class shown above.
 
-1. Navigate to `03_bot/01_echo.py` and review the code:
+1. Navigate to `05_bot/01_echo.py` and review the code:
 
     ??? Tip "Python Code"
         ```python    
@@ -254,7 +254,7 @@ In this exercise, we will create a bot that will echo back the same message usin
     ```
 6. You can press `Ctrl+C` to stop the bot.
 
-## Step 3.4: LLM
+## Step 5.4: LLM
 
 You have seen how a bot works, but now we will make it "smarter". To enable it to perform actions, we will integrate the bot with an LLM, which will act as the brain of our assistant. 
 
@@ -269,7 +269,7 @@ In this scenario, we will be using OpenAI models, specifically **gpt-5-nano**.
     OPENAI_API_KEY=your_openai_api_key
     ```
     
-2. Navigate to `03_bot/02_llm.py` and review the code:
+2. Navigate to `05_bot/02_llm.py` and review the code:
 
     ??? Tip "Python Code"
         ```python    
@@ -391,7 +391,7 @@ So far, we have not introduced any security; therefore, any user inside or outsi
 
 You may want to introduce some security, not only to prevent users outside your organization from accessing it, but also to restrict specific calls to admins only.
 
-1. Navigate to `03_bot/03_security.py` and review the code:
+1. Navigate to `05_bot/03_security.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
