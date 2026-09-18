@@ -4,8 +4,8 @@ In this section, you will use an **Agent Skill** to encode operational expertise
 *how* to review Webex meetings thoroughly — separately from MCP tool connectivity,
 and run it directly inside **VS Code Chat (Agent mode)** with no code.
 
-You cloned `WebexOne2026` in Getting Started. All files referenced here live in
-that repository under `04_skills/`.
+You cloned `WebexOne2026` in Getting Started. The skill lives in the standard
+auto-discovery location: `.agents/skills/`.
 
 ## Skills vs MCP
 
@@ -32,16 +32,17 @@ has, more thoroughly**.
 A skill is a folder containing a `SKILL.md` file — an open standard defined by
 [agentskills.io](https://agentskills.io/home).
 
-In the cloned repo:
+In the cloned repo, the skill is at the **standard auto-discovery location**:
 
 ```text
-04_skills/
-  skills/
-    meeting-review/
-      SKILL.md
+.agents/skills/meeting-review/SKILL.md
 ```
 
-Open `04_skills/skills/meeting-review/SKILL.md` and look at the front matter:
+VS Code automatically scans `.agents/skills/` for skills — no settings needed.
+This is the [agentskills.io](https://agentskills.io/specification) cross-host
+standard directory, also recognized by Cursor, Claude Code, and 30+ other agents.
+
+Open `.agents/skills/meeting-review/SKILL.md` and look at the front matter:
 
 ```yaml
 ---
@@ -74,18 +75,19 @@ Agent Skills load in three stages so many skills can be available cheaply:
 
 Full instructions load only when needed.
 
-## Step 4.3: Point VS Code Chat at the skill
+## Step 4.3: How VS Code discovers the skill
 
-VS Code Chat (Agent mode) supports Agent Skills via the `chat.agentSkillsLocations`
-setting. The cloned repo already contains `.vscode/settings.json`:
+VS Code Chat (Agent mode) automatically scans these project directories for
+skills ([VS Code docs](https://code.visualstudio.com/docs/agent-customization/agent-skills)):
 
-```json
-{
-  "chat.agentSkillsLocations": {
-    "04_skills/skills": true
-  }
-}
-```
+| Location | Convention |
+| --- | --- |
+| `.agents/skills/` | agentskills.io cross-host standard |
+| `.github/skills/` | GitHub convention |
+| `.claude/skills/` | Anthropic convention |
+
+The cloned repo places the skill in `.agents/skills/` — the most portable
+option. **No settings file is needed** for auto-discovery.
 
 Prerequisites:
 
@@ -126,8 +128,8 @@ You can also invoke it explicitly by typing `/meeting-review` in the chat.
 
 To feel the value, compare:
 
-- **Without the skill** (temporarily remove the `chat.agentSkillsLocations` entry
-  and reload): the agent lists meetings and stops — one tool call, one scope.
+- **Without the skill** (temporarily rename the `.agents/skills/meeting-review/`
+  folder and reload): the agent lists meetings and stops — one tool call, one scope.
 - **With the skill**: the agent investigates five scopes per meeting and produces
   actions.
 
@@ -144,7 +146,7 @@ Same tools, same data — the skill supplies the judgment.
 
 ## Exercise
 
-1. **Read the skill** — open `04_skills/skills/meeting-review/SKILL.md` and find
+1. **Read the skill** — open `.agents/skills/meeting-review/SKILL.md` and find
    the rule that tells the agent to check *all* dimensions.
 2. **Edit the skill** — add one rule (for example: "flag any meeting longer than
    60 minutes with more than 8 attendees as a *review candidate*"). Save.
