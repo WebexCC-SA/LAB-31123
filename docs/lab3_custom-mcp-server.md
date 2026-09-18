@@ -2,11 +2,11 @@
 
 In this chapter you will build an MCP server that lets an AI assistant manage Webex Contact Center address books.
 
-## Step 3.1: Defining and Implementing Tools
+## Step 3.1: Building an MCP Server
 
 We will use the official `mcp` Python SDK to create our server. The SDK makes it incredibly easy to define tools and their execution logic using decorators.
 
-### Your First MCP Server
+### Step 3.1.1: Simple MCP Server
 
 In this section we are going to start wit the simpliest MCP server that does real work: one tool, no network, no token. It takes a messy phone number and returns it in E.164 format.
 
@@ -59,13 +59,13 @@ In this section we are going to start wit the simpliest MCP server that does rea
     * npx @modelcontextprotocol/inspector python 01_hello_mcp.py
    
     !!! Note
-        If it asks to install the `@modelcontextprotocol/inspector` package, press `y`.*
+        If it asks to install the `@modelcontextprotocol/inspector` package, press `y`:
 
-            ```terminal
-            Need to install the following packages:
-            @modelcontextprotocol/inspector@1.0.2
-            Ok to proceed? (y) 
-            ```
+        ```terminal
+        Need to install the following packages:
+        @modelcontextprotocol/inspector@1.0.2
+        Ok to proceed? (y) 
+        ```
 
 4. Once it starts, it should open a new tab for you, if not, it will provide a local URL (usually `http://localhost:6274`). Open that URL in your browser.
 
@@ -79,11 +79,11 @@ In this section we are going to start wit the simpliest MCP server that does rea
     | **Command**       	| Python |
     | **Arguments**       	| 01_hello_mcp.py |
 
-    ![MCP Inspector Start](assets/inspector_2.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![MCP Inspector Start](assets/inspector_2.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 6. In the MCP Inspector web interface, click on the **Tools** tab, then **List Tools** and you will see the `format_phone` tool listed.
 
-    ![MCP Inspector Start](assets/inspector_3.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![MCP Inspector Start](assets/inspector_3.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 7. Click on **format_phone**. In the arguments JSON editor, provide a messy phone number:
     ```json
@@ -101,7 +101,7 @@ In this section we are going to start wit the simpliest MCP server that does rea
 
     This confirms your server works perfectly in isolation! You can stop the MCP in your terminal with `Ctrl+C`, we will still use the MCP inspector in the next exercise.
 
-### MCP Primitives: Tool, Resource, and Prompt
+### Step 3.1.2: Tools, Resources and Prompts
 
 Next, we are going to build a single script that demonstrates the entire MCP architecture, which consists of three distinct primitives:
 
@@ -166,23 +166,21 @@ Next, we are going to build a single script that demonstrates the entire MCP arc
                 log.info("Stopped.")
         ```
 
-2. Run your code with the following command:
-
-    * python 02_hello_resource_prompt.py
-
-3. Go to the MCP Inspector. Click on **Disconnect**.
-4. Change **Arguments** to `02_hello_resource_prompt.py` and click **Connect**.
-5. Click on **Resources** and then **List Resources**. You will see `lab://greeting-rules`. You can click it to read the greeting rules.
+2. Go to the MCP Inspector. Click on **Disconnect**.
+3. Change **Arguments** to `02_hello_resource_prompt.py` and click **Connect**.
+4. Click on **Resources** and then **List Resources**. You will see `lab://greeting-rules`. You can click it to read the greeting rules.
    ??? Note "Resources"
        ![MCP Inspector Tool Run](assets/resources.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-6. Click on **Prompts** and then **List Prompts**. You will see `review_greeting`.
+5. Click on **Prompts** and then **List Prompts**. You will see `review_greeting`.
    ??? Note "Prompts"
        ![MCP Inspector Tool Run](assets/prompts.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-7. Click on **Tools** and then **List Tools**. You will see `count_words`. You can test it by providing a `"text"` argument.
+6. Click on **Tools** and then **List Tools**. You will see `count_words`. You can test it by providing a `"text"` argument.
    ??? Note "Tools"
        ![MCP Inspector Tool Run](assets/tools.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-### Understand Webex Contact Center Address Book APIs
+### Step 3.1.3: Reading from Webex Contact Center API
+
+####  Understand Webex Contact Center Address Book APIs
 
 Before connecting to the real API, let's understand how Address Books work in Webex Contact Center. An address book is a named list of contacts that agents see in their desktop. 
 
@@ -194,26 +192,104 @@ Below is a screenshot showing how address books are seen in the agent desktop:
 
 They can only be configured by Administrators. In **Collaboration Control Hub** -> **Contact Center**, under **Desktop Experience** section, you have **Address Book**.
 
-![Control Hub](assets/lab6_img30.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Control Hub](assets/addressbooks_1.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 One address book is assigned to an agent profile.
 
-You can also configure it using an API, using the Service App we created before. 
-
+#### List Address Books MCP
 
 You can explore Webex Contact Center APIs in the [Webex Developer Portal - WxCC APIs](https://developer.webex.com/webex-contact-center/docs/webex-contact-center).
+We will be using the [List Address Book(s) API](https://developer.webex.com/webex-contact-center/docs/api/v1/address-book/list-address-books) 
 
-![Select WxCC](assets/lab6_img39.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-![API Sections](assets/lab6_img33.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-![Address Book](assets/lab6_img40.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-![Address Book API](assets/lab6_img41.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Control Hub](assets/addressbooks_2.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
+You can test directly in the UI, using the **Service App** token:
 
-### Reading from Webex Contact Center API
+![Control Hub](assets/addressbooks_3.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-The first server that talks to the Webex Contact Center exposes two read-only tools — `list_address_books` and `list_entries`.
+Response should look like:
 
-The server checks at startup for three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC_CONFIG_API_BASE`.
+```json
+{
+    "meta": {
+        "orgid": "74983fd5-5c18-45cb-bfcd-507005e05b0f",
+        "page": 0,
+        "pageSize": 100,
+        "totalPages": 1,
+        "totalRecords": 4,
+        "links": {
+            "self": "/organization/74983fd5-5c18-45cb-bfcd-507005e05b0f/v3/address-book?page=0&pageSize=100"
+        }
+    },
+    "data": [
+        {
+            "id": "3eaea255-f4d8-4b75-94e3-fe67ef23fb42",
+            "name": "HR Team",
+            "description": "Human Resources team contacts",
+            "parentType": "ORGANIZATION",
+            "links": [
+                {
+                    "rel": "self",
+                    "href": "/organization/74983fd5-5c18-45cb-bfcd-507005e05b0f/v3/address-book/3eaea255-f4d8-4b75-94e3-fe67ef23fb42"
+                }
+            ],
+            "createdTime": 1789726765000,
+            "lastUpdatedTime": 1789726765000
+        },
+        {
+            "id": "568f627a-802e-4c99-a74a-1b59207449c7",
+            "name": "Global Directory",
+            "description": "",
+            "parentType": "SITE",
+            "siteId": "b0e6657f-aefe-4309-a32e-30abe14a3d98",
+            "links": [
+                {
+                    "rel": "self",
+                    "href": "/organization/74983fd5-5c18-45cb-bfcd-507005e05b0f/v3/address-book/568f627a-802e-4c99-a74a-1b59207449c7"
+                },
+                {
+                    "rel": "site",
+                    "href": "/organization/74983fd5-5c18-45cb-bfcd-507005e05b0f/site/b0e6657f-aefe-4309-a32e-30abe14a3d98"
+                }
+            ],
+            "createdTime": 1789726749000,
+            "lastUpdatedTime": 1789726749000
+        },
+        {
+            "id": "b7d7a924-1615-494e-9d1e-81623b991fbf",
+            "name": "Technical Support Partners",
+            "description": "",
+            "parentType": "ORGANIZATION",
+            "links": [
+                {
+                    "rel": "self",
+                    "href": "/organization/74983fd5-5c18-45cb-bfcd-507005e05b0f/v3/address-book/b7d7a924-1615-494e-9d1e-81623b991fbf"
+                }
+            ],
+            "createdTime": 1789726854000,
+            "lastUpdatedTime": 1789726854000
+        },
+        {
+            "id": "be30e08a-0ae1-4f83-8438-dfbf630155eb",
+            "name": "Internal Directory",
+            "description": "Organization-wide internal contact directory",
+            "parentType": "ORGANIZATION",
+            "links": [
+                {
+                    "rel": "self",
+                    "href": "/organization/74983fd5-5c18-45cb-bfcd-507005e05b0f/v3/address-book/be30e08a-0ae1-4f83-8438-dfbf630155eb"
+                }
+            ],
+            "createdTime": 1789726828000,
+            "lastUpdatedTime": 1789726828000
+        }
+    ]
+}
+```
+
+We are going to build now an MCP server that talks to the Webex Contact Center APIs and exposes two read-only tools — `list_address_books` and `list_entries`.
+
+We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC_CONFIG_API_BASE`.
 
 ??? Tip "ACCESS_TOKEN, WEBEX_ORG_ID & WXCC_CONFIG_API_BASE"
     - **`ACCESS_TOKEN`**: This is going to be the Service App token created in the previous task.
@@ -249,6 +325,10 @@ The server checks at startup for three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and
            | APJC (Australia / NZ) | `anz1` | `https://api.wxcc-anz1.cisco.com` |
            | Japan | `jp1` | `https://api.wxcc-jp1.cisco.com` |
            | Singapore | `sg1` | `https://api.wxcc-sg1.cisco.com` |
+
+
+        If you have login to the Webex for Developers portal with an account from that organization, you should also be able to find this information in the the Code Snippets examples:
+        ![Org ID](assets/api_1.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 1. Navigate to `03_custom_mcp/03_read_books.py` and review the code:
 
@@ -344,116 +424,23 @@ The server checks at startup for three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and
                 log.info("Stopped.")
         ```
 
-### 5. Writing: Create and Fill an Address Book
-
-This step writes to the API. It exposes exactly two tools: `create_address_book` and `add_entry`. 
-
-Navigate to `03_custom_mcp/04_write_books.py` and review the code:
-
-??? Tip "Python Code"
-    ```python
-        """
-        Webex One 2026 - Troubleshoot and Manage Your Organization with an AI Assistant
-
-        - Diego Manuel Jimenez Moreno
-        - Mo Eyad Musallam
-        """
-        # Step 04 - writing: create an address book, then fill it with contacts.
-
-        import os
-        import sys
-        import httpx
-        from dotenv import load_dotenv
-        from mcp.server import MCPServer
-
-        # Load credentials from .env.
-        load_dotenv()
-
-        TOKEN = os.environ.get("ACCESS_TOKEN")
-        ORG_ID = os.environ.get("WEBEX_ORG_ID")
-        CONFIG_API_BASE = os.environ.get("WXCC_CONFIG_API_BASE", "")
-
-        # Stop early if any credential is missing.
-        for _name, _value in (
-            ("ACCESS_TOKEN", TOKEN),
-            ("WEBEX_ORG_ID", ORG_ID),
-            ("WXCC_CONFIG_API_BASE", CONFIG_API_BASE),
-        ):
-            if not _value:
-                sys.exit(f"{_name} is not set. This lab needs Webex Contact Center - see .env.example.")
-
-        # Build the API base URL and common headers.
-        ORG = f"{CONFIG_API_BASE.rstrip('/')}/organization/{ORG_ID}"
-        HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
-
-        # Create an MCP server instance.
-        mcp = MCPServer("webex-mcp-lab-04")
+2. Go to the MCP Inspector. Click on **Disconnect**.
+3. Change **Arguments** to `03_read_books.py` and click **Connect**.
+4. Click on **Tools** and then **List Tools**. You will see both `list_address_books` and `list_entries`. You can test it by providing a `"text"` argument.
+   ??? Note "Tools"
+       ![MCP Inspector Tool Run](assets/tools.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 
-        # Turn an HTTP failure into a sentence the model can relay to the user.
-        def _fail(response: httpx.Response) -> dict:
-            """Turn an HTTP failure into a sentence the model can pass on to the user."""
-            if response.status_code == 401:
-                return {"error": "Webex rejected the token. Check that it has not expired."}
-            if response.status_code == 403:
-                return {"error": "The token lacks Contact Center config permission (cjp:config_write)."}
-            if response.status_code == 404:
-                return {"error": "No such address book in this organization."}
-            if response.status_code == 429:
-                return {"error": "Rate limited by Webex. Wait a moment and try again."}
-            return {"error": f"Webex Contact Center returned HTTP {response.status_code}."}
+### Step 3.1.4: Create and Fill an Address Book
 
+Now, we are going to include the tools that performs writting actions. We are going to build two tools, `create_address_book` and `add_entry`. 
 
-        # Create a new address book and return its id.
-        @mcp.tool()
-        async def create_address_book(name: str, description: str = "") -> dict:
-            """Create a new address book. Returns its id, which add_entry then needs.
+1. Navigate to `03_custom_mcp/04_write_books.py` and review the code:
 
-            The MCP client asks the user for approval before this runs.
+    ??? Tip "Python Code"
+        ```python
             """
-            async with httpx.AsyncClient(timeout=15) as http:
-                response = await http.post(
-                    f"{ORG}/v3/address-book",
-                    headers=HEADERS,
-                    json={"name": name, "description": description, "parentType": "ORGANIZATION"},)
-
-            if response.status_code not in (200, 201):
-                return _fail(response)
-
-            book = response.json()
-            return {"created": True, "address_book_id": book.get("id"), "name": book.get("name")}
-
-
-        # Add a contact to an address book using the id from create_address_book.
-        @mcp.tool()
-        async def add_entry(address_book_id: str, name: str, number: str) -> dict:
-            """Add a contact to an address book. `number` should be E.164, e.g. +14155550101.
-
-            `address_book_id` is what create_address_book returned. The MCP client asks
-            the user for approval before this runs.
-            """
-            async with httpx.AsyncClient(timeout=15) as http:
-                response = await http.post(
-                    f"{ORG}/address-book/{address_book_id}/entry",
-                    headers=HEADERS,
-                    json={"name": name, "number": number},
-                )
-
-            if response.status_code not in (200, 201):
-                return _fail(response)
-
-            return {"added": True, "entry_id": response.json().get("id"), "name": name}
-
-
-        # Start the server on stdio and wait for a client to connect.
-        if __name__ == "__main__":
-            print(
-                "webex-mcp-lab-04 running on stdio - waiting for a client (Ctrl+C to stop).",
-                file=sys.stderr,
-            )
-            mcp.run()
-
-    ```
+        ```
 
 ## Step 3.2: Register in your IDE
 
