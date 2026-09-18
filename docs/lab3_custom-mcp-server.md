@@ -4,11 +4,25 @@ In this chapter you will build an MCP server that lets an AI assistant manage We
 
 ## Step 3.1: Building an MCP Server
 
-We will use the official `mcp` Python SDK to create our server. The SDK makes it incredibly easy to define tools and their execution logic using decorators.
+Before we write our first line of code, let's talk about how an MCP client (like VS Code) actually talks to an MCP server. The Model Context Protocol supports two primary transport methods: **stdio** and **SSE (Server-Sent Events) over HTTP**.
+
+### Choosing the Right Transport: stdio vs SSE
+
+| Feature | `stdio` (Standard Input/Output) | `SSE` (Streamable HTTP) |
+| --- | --- | --- |
+| **What is it?** | The client spawns the server as a local background process and communicates by reading/writing to its standard input and output streams. | The server runs as a standalone web service. The client connects over the network using HTTP and Server-Sent Events. |
+| **When to use it?** | - Local development and testing.<br>- Tools that run on the same machine as the client (e.g., VS Code connecting to a local script). | - Production deployments.<br>- When the server needs to be shared across multiple clients or users.<br>- When the server is hosted remotely. |
+| **Why?** | **Simplicity:** No network configuration, no exposed ports, and the lifecycle is tied to the client (if the client dies, the server dies). | **Scalability:** You can host the server once in the cloud, update it centrally, and have thousands of bots connect to it via URLs. |
+
+In previous labs, our bot connected to the official Webex MCP servers using **SSE** (`https://mcp.webexapis.com/...`). 
+
+For this lab, we will build our custom MCP servers using **stdio**. This is the standard approach for local development and allows us to test our tools instantly using the MCP Inspector and VS Code.
 
 ### Step 3.1.1: Simple MCP Server
 
 In this section we are going to start wit the simpliest MCP server that does real work: one tool, no network, no token. It takes a messy phone number and returns it in E.164 format.
+
+We will use the official `mcp` Python SDK to create our server. The SDK makes it incredibly easy to define tools and their execution logic using decorators.
 
 1. Navigate to `03_custom_mcp/01_hello_mcp.py` and review the code.
 
@@ -205,87 +219,88 @@ We will be using the [List Address Book(s) API](https://developer.webex.com/webe
 
 You can test directly in the UI, using the **Service App** token:
 
-![Control Hub](assets/addressbooks_3.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Control Hub](assets/addressbooks_3.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 Response should look like:
 
-```json
-{
-    "meta": {
-        "orgid": "74983fd5-5c18-45cb-bfcd-507005e05b0f",
-        "page": 0,
-        "pageSize": 100,
-        "totalPages": 1,
-        "totalRecords": 4,
-        "links": {
-            "self": "/organization/74983fd5-5c18-45cb-bfcd-507005e05b0f/v3/address-book?page=0&pageSize=100"
-        }
-    },
-    "data": [
-        {
-            "id": "3eaea255-f4d8-4b75-94e3-fe67ef23fb42",
-            "name": "HR Team",
-            "description": "Human Resources team contacts",
-            "parentType": "ORGANIZATION",
-            "links": [
-                {
-                    "rel": "self",
-                    "href": "/organization/74983fd5-5c18-45cb-bfcd-507005e05b0f/v3/address-book/3eaea255-f4d8-4b75-94e3-fe67ef23fb42"
-                }
-            ],
-            "createdTime": 1789726765000,
-            "lastUpdatedTime": 1789726765000
+??? Note "Response"
+    ```json
+    {
+        "meta": {
+            "orgid": "74983fd5-5c18-45cb-bfcd-507005e05b0f",
+            "page": 0,
+            "pageSize": 100,
+            "totalPages": 1,
+            "totalRecords": 4,
+            "links": {
+                "self": "/organization/74983fd5-5c18-45cb-bfcd-507005e05b0f/v3/address-book?page=0&pageSize=100"
+            }
         },
-        {
-            "id": "568f627a-802e-4c99-a74a-1b59207449c7",
-            "name": "Global Directory",
-            "description": "",
-            "parentType": "SITE",
-            "siteId": "b0e6657f-aefe-4309-a32e-30abe14a3d98",
-            "links": [
-                {
-                    "rel": "self",
-                    "href": "/organization/74983fd5-5c18-45cb-bfcd-507005e05b0f/v3/address-book/568f627a-802e-4c99-a74a-1b59207449c7"
-                },
-                {
-                    "rel": "site",
-                    "href": "/organization/74983fd5-5c18-45cb-bfcd-507005e05b0f/site/b0e6657f-aefe-4309-a32e-30abe14a3d98"
-                }
-            ],
-            "createdTime": 1789726749000,
-            "lastUpdatedTime": 1789726749000
-        },
-        {
-            "id": "b7d7a924-1615-494e-9d1e-81623b991fbf",
-            "name": "Technical Support Partners",
-            "description": "",
-            "parentType": "ORGANIZATION",
-            "links": [
-                {
-                    "rel": "self",
-                    "href": "/organization/74983fd5-5c18-45cb-bfcd-507005e05b0f/v3/address-book/b7d7a924-1615-494e-9d1e-81623b991fbf"
-                }
-            ],
-            "createdTime": 1789726854000,
-            "lastUpdatedTime": 1789726854000
-        },
-        {
-            "id": "be30e08a-0ae1-4f83-8438-dfbf630155eb",
-            "name": "Internal Directory",
-            "description": "Organization-wide internal contact directory",
-            "parentType": "ORGANIZATION",
-            "links": [
-                {
-                    "rel": "self",
-                    "href": "/organization/74983fd5-5c18-45cb-bfcd-507005e05b0f/v3/address-book/be30e08a-0ae1-4f83-8438-dfbf630155eb"
-                }
-            ],
-            "createdTime": 1789726828000,
-            "lastUpdatedTime": 1789726828000
-        }
-    ]
-}
-```
+        "data": [
+            {
+                "id": "3eaea255-f4d8-4b75-94e3-fe67ef23fb42",
+                "name": "HR Team",
+                "description": "Human Resources team contacts",
+                "parentType": "ORGANIZATION",
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "/organization/74983fd5-5c18-45cb-bfcd-507005e05b0f/v3/address-book/3eaea255-f4d8-4b75-94e3-fe67ef23fb42"
+                    }
+                ],
+                "createdTime": 1789726765000,
+                "lastUpdatedTime": 1789726765000
+            },
+            {
+                "id": "568f627a-802e-4c99-a74a-1b59207449c7",
+                "name": "Global Directory",
+                "description": "",
+                "parentType": "SITE",
+                "siteId": "b0e6657f-aefe-4309-a32e-30abe14a3d98",
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "/organization/74983fd5-5c18-45cb-bfcd-507005e05b0f/v3/address-book/568f627a-802e-4c99-a74a-1b59207449c7"
+                    },
+                    {
+                        "rel": "site",
+                        "href": "/organization/74983fd5-5c18-45cb-bfcd-507005e05b0f/site/b0e6657f-aefe-4309-a32e-30abe14a3d98"
+                    }
+                ],
+                "createdTime": 1789726749000,
+                "lastUpdatedTime": 1789726749000
+            },
+            {
+                "id": "b7d7a924-1615-494e-9d1e-81623b991fbf",
+                "name": "Technical Support Partners",
+                "description": "",
+                "parentType": "ORGANIZATION",
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "/organization/74983fd5-5c18-45cb-bfcd-507005e05b0f/v3/address-book/b7d7a924-1615-494e-9d1e-81623b991fbf"
+                    }
+                ],
+                "createdTime": 1789726854000,
+                "lastUpdatedTime": 1789726854000
+            },
+            {
+                "id": "be30e08a-0ae1-4f83-8438-dfbf630155eb",
+                "name": "Internal Directory",
+                "description": "Organization-wide internal contact directory",
+                "parentType": "ORGANIZATION",
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "/organization/74983fd5-5c18-45cb-bfcd-507005e05b0f/v3/address-book/be30e08a-0ae1-4f83-8438-dfbf630155eb"
+                    }
+                ],
+                "createdTime": 1789726828000,
+                "lastUpdatedTime": 1789726828000
+            }
+        ]
+    }
+    ```
 
 We are going to build now an MCP server that talks to the Webex Contact Center APIs and exposes two read-only tools — `list_address_books` and `list_entries`.
 
@@ -428,55 +443,55 @@ We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC
 4. Click on **Tools** and then **List Tools**. You will see both `list_address_books` and `list_entries`. Now we will test them.
 
     !!! Warning
-       For these API calls to work, you need to have `cjp:config_read` scope added to your Service App. If you didn't do it before, you need to add it, re-authorize your Service App and generate a new access token!
+        For these API calls to work, you need to have `cjp:config_read` scope added to your Service App. If you didn't do it before, you need to add it, re-authorize your Service App and generate a new access token!
 
 5. Run the `list_address_books` tool:
 
     ![List Address Books](assets/tools_4.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     ??? Note "Result"
         ```json
+        {
+          "count": 4,
+          "address_books": [
             {
-              "count": 4,
-              "address_books": [
-                {
-                  "id": "3eaea255-f4d8-4b75-94e3-fe67ef23fb42",
-                  "name": "HR Team",
-                  "description": "Human Resources team contacts"
-                },
-                {
-                  "id": "568f627a-802e-4c99-a74a-1b59207449c7",
-                  "name": "Global Directory",
-                  "description": ""
-                },
-                {
-                  "id": "b7d7a924-1615-494e-9d1e-81623b991fbf",
-                  "name": "Technical Support Partners",
-                  "description": ""
-                },
-                {
-                  "id": "be30e08a-0ae1-4f83-8438-dfbf630155eb",
-                  "name": "Internal Directory",
-                  "description": "Organization-wide internal contact directory"
-                }
-              ]
+              "id": "3eaea255-f4d8-4b75-94e3-fe67ef23fb42",
+              "name": "HR Team",
+              "description": "Human Resources team contacts"
+            },
+            {
+              "id": "568f627a-802e-4c99-a74a-1b59207449c7",
+              "name": "Global Directory",
+              "description": ""
+            },
+            {
+              "id": "b7d7a924-1615-494e-9d1e-81623b991fbf",
+              "name": "Technical Support Partners",
+              "description": ""
+            },
+            {
+              "id": "be30e08a-0ae1-4f83-8438-dfbf630155eb",
+              "name": "Internal Directory",
+              "description": "Organization-wide internal contact directory"
             }
-            ```
+          ]
+        }
+        ```
 6. Run the `list_entries` tool:
 
     ![List Entries](assets/tools_5.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     ??? Note "Result"
         ```json
+        {
+          "count": 1,
+          "entries": [
             {
-              "count": 1,
-              "entries": [
-                {
-                  "id": "379233b6-be13-4b3e-850f-ac945eb5a660",
-                  "name": "John M",
-                  "number": "+48573244479"
-                }
-              ]
+              "id": "379233b6-be13-4b3e-850f-ac945eb5a660",
+              "name": "John M",
+              "number": "+48573244479"
             }
-            ```
+          ]
+        }
+        ```
 
 ### Step 3.1.4: Create and Fill an Address Book
 
@@ -623,56 +638,126 @@ Now, we are going to include the tools that performs writting actions. We are go
 
 In this section, you will add and test your custom MCP servers directly in VS Code.
 
-1. Open the Command Palette (`Ctrl+Shift+P`) and type `MCP: Open User Configuration`.
-2. Add the configuration to `mcp.json`. You can change the `args` array to point to the specific script you want to test (e.g., `01_hello_mcp.py`, `03_read_books.py`, etc.).
+1. Add the following configuration to `mcp.json`. Delete what we have added before and save the file afterwards:
 
     ```json
     {
       "servers": {
         "webex-mcp-lab": {
-          "command": "/absolute/path/to/webex-mcp-lab/.venv/Scripts/python.exe",
+          "command": "${workspaceFolder}/webexone/bin/python",
           "args": ["03_custom_mcp/01_hello_mcp.py"],
-          "cwd": "/absolute/path/to/05-bots"
+          "cwd": "${workspaceFolder}"
         }
       }
     }
     ```
+    
+    You can change the `args` array to point to the specific script you want to test (e.g., `01_hello_mcp.py`, `03_read_books.py`, etc.) or add all of them:
+
+    ??? Note "MCP servers"
+        ```json
+        {
+          "servers": {
+            "hello-mcp": {
+              "command": "${workspaceFolder}/webexone/bin/python",
+              "args": ["03_custom_mcp/01_hello_mcp.py"],
+              "cwd": "${workspaceFolder}"
+            },
+            "hello-resource-prompt": {
+              "command": "${workspaceFolder}/webexone/bin/python",
+              "args": ["03_custom_mcp/02_hello_resource_prompt.py"],
+              "cwd": "${workspaceFolder}"
+            },
+            "read-books": {
+              "command": "${workspaceFolder}/webexone/bin/python",
+              "args": ["03_custom_mcp/03_read_books.py"],
+              "cwd": "${workspaceFolder}"
+            },
+            "write-books": {
+              "command": "${workspaceFolder}/webexone/bin/python",
+              "args": ["03_custom_mcp/04_write_books.py"],
+              "cwd": "${workspaceFolder}"
+            }
+          }
+        }
+        ```
 
     !!! Note
-        Point `command` at the Python interpreter inside your `.venv`, and set `cwd` to the lab folder so the server finds your `.env`. No environment-file flag is needed — the server loads `.env` itself.
+        We use VS Code variables like `${workspaceFolder}` so the configuration works on any machine without hardcoding absolute paths. If you are on Windows, the command would be `${workspaceFolder}/webexone/Scripts/python.exe`.
 
-3. Start the MCP server. Click the "Start" button in the `mcp.json` file, or use the Command Palette (`Ctrl+Shift+P` -> `MCP: List Servers`).
+2. Start the MCP server.
 
-    ![Start MCP](assets/lab6_img01.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-    ![List Servers](assets/lab6_img02.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        a. Click the "Start" button in the `mcp.json` file:
 
-    You will see MCP server logs in the output section automatically. 
+            ![Start MCP](assets/lab6_img02.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+        b. Or use the Command Palette (`Ctrl+Shift+P` -> `MCP: List Servers`).
+
+            ![List Servers](assets/lab6_img05.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+3. You will see MCP server logs in the Output section automatically:
+
+   ```terminal
+    2026-09-18 17:35:44.757 [info] Starting server webex-mcp-lab
+    2026-09-18 17:35:44.758 [info] Connection state: Starting
+    2026-09-18 17:35:44.758 [info] Starting server from LocalProcess extension host
+    2026-09-18 17:35:44.760 [info] Connection state: Starting
+    2026-09-18 17:35:44.760 [info] Connection state: Running
+    2026-09-18 17:35:45.231 [warning] [server stderr] 2026-09-18 17:35:45,230 INFO hello-mcp running on stdio - waiting for a client (Ctrl+C to stop).
+    2026-09-18 17:35:45.240 [info] Discovered 1 tools
+    ```
     
-    ![Output Logs](assets/lab6_img05.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-
 4. Open the VS Code Chat view and test your tools!
 
-    **Testing 01_hello_mcp.py:**
-    Ask: *"clean the number (415) 555-0101"*. 
-    
-    ![Chat Format](assets/lab6_img11.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    1. **Testing 01_hello_mcp.py:**
 
-    **Testing 02_hello_resource_prompt.py:**
-    Add Context -> MCP Resources -> `lab://greeting-rules`, and ask: *"What are the greeting rules?"*
+        - Ask: *"Clean the number (415) 555-0101"*. 
     
-    ![Add Context](assets/lab6_img16.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-    ![Ask Rules](assets/lab6_img18.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![Chat Format](assets/test1.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![Chat Format](assets/test2.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-    **Testing 03_read_books.py:**
-    Ask: *"list my address books, then show me the entries in the first one"*
+    2. **Testing 02_hello_resource_prompt.py:**
     
-    ![List Books](assets/lab6_img28.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        !!! Note
+            For Resources, there are currently two bugs in VS Code:
+            
+            - [Bug 291004](https://github.com/microsoft/vscode/issues/291004)
+            - [Bug 251747](https://github.com/microsoft/vscode/issues/251747)
+            
+            For now, you will need to add them manually.
+            
+            - At the bottom of the chat window, click  **+**, then **Add Context** -> **MCP Resources** -> `lab://greeting-rules`
 
-    **Testing 04_write_books.py:**
-    Ask the AI assistant to create an address book and entries there.
+            ??? Note "Images"
+                ![Ask Rules](assets/test3.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                ![Ask Rules](assets/test4.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                ![Ask Rules](assets/test5.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+        - Ask: *"What are the greeting rules?"*
+        
+            ![Ask Rules](assets/test6.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+    4. **Testing 03_read_books.py:**
     
-    ![Create Book](assets/lab6_img41.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-    ![Created Book](assets/lab6_img45.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        - Ask: *"List my address books, then show me the entries for WebexOne - Diejimen"*
+    
+            ![List Books](assets/test7.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![List Books](assets/test8.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![List Books](assets/test9.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+    5. **Testing 04_write_books.py:**
+    
+        - Ask: *"Create an address book called WebexOne - Diejimen2"*  
+        
+            ![Create Book](assets/test10.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![Create Book](assets/test11.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+        - Ask: *"Add an entry to the book, for number +1415555-0101"*
+        
+            ![Created Book](assets/test12.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![Created Book](assets/test13.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+            As no more information was provided, the agent added the name "Test Contact"
 
 ## Extra: Elicitation
 
@@ -680,16 +765,10 @@ We trusted the host to ask permission. This step explores what happens when the 
 
 The server exposes exactly two tools: `delete_address_book` and `delete_entry`. 
 
-1. Update `.vscode/mcp.json` to point at `03_custom_mcp/05_delete_books.py` and restart.
+1. Update `.vscode/mcp.json` to point at `03_custom_mcp/05_delete_books.py` and restart the server.
 
 ??? Tip "Python Code"
     ```python
-        """
-        Webex One 2026 - Troubleshoot and Manage Your Organization with an AI Assistant
-
-        - Diego Manuel Jimenez Moreno
-        - Mo Eyad Musallam
-        """
         # Step 05 - deleting with a safety net: elicitation asks "are you sure?" mid-call.
 
         import os
@@ -984,9 +1063,9 @@ Add your new server to `.vscode/mcp.json` the same way you did in Step 3.2, star
         {
           "servers": {
             "webex-calling-hub": {
-              "command": "/absolute/path/to/webex-mcp-lab/.venv/Scripts/python.exe",
+              "command": "${workspaceFolder}/webexone/bin/python",
               "args": ["03_custom_mcp/06_calling_hub.py"],
-              "cwd": "/absolute/path/to/05-bots"
+              "cwd": "${workspaceFolder}"
             }
           }
         }
