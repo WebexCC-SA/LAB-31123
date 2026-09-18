@@ -169,14 +169,14 @@ Next, we are going to build a single script that demonstrates the entire MCP arc
 2. Go to the MCP Inspector. Click on **Disconnect**.
 3. Change **Arguments** to `02_hello_resource_prompt.py` and click **Connect**.
 4. Click on **Resources** and then **List Resources**. You will see `lab://greeting-rules`. You can click it to read the greeting rules.
-   ??? Note "Resources"
-       ![MCP Inspector Tool Run](assets/resources.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ??? Note "Resources"
+        ![MCP Inspector Tool Run](assets/resources.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 5. Click on **Prompts** and then **List Prompts**. You will see `review_greeting`.
-   ??? Note "Prompts"
-       ![MCP Inspector Tool Run](assets/prompts.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ??? Note "Prompts"
+        ![MCP Inspector Tool Run](assets/prompts.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 6. Click on **Tools** and then **List Tools**. You will see `count_words`. You can test it by providing a `"text"` argument.
-   ??? Note "Tools"
-       ![MCP Inspector Tool Run](assets/tools.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ??? Note "Tools"
+        ![MCP Inspector Tool Run](assets/tools.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 ### Step 3.1.3: Reading from Webex Contact Center API
 
@@ -326,7 +326,6 @@ We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC
            | Japan | `jp1` | `https://api.wxcc-jp1.cisco.com` |
            | Singapore | `sg1` | `https://api.wxcc-sg1.cisco.com` |
 
-
         If you have login to the Webex for Developers portal with an account from that organization, you should also be able to find this information in the the Code Snippets examples:
         ![Org ID](assets/api_1.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
@@ -426,10 +425,58 @@ We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC
 
 2. Go to the MCP Inspector. Click on **Disconnect**.
 3. Change **Arguments** to `03_read_books.py` and click **Connect**.
-4. Click on **Tools** and then **List Tools**. You will see both `list_address_books` and `list_entries`. You can test it by providing a `"text"` argument.
-   ??? Note "Tools"
-       ![MCP Inspector Tool Run](assets/tools.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+4. Click on **Tools** and then **List Tools**. You will see both `list_address_books` and `list_entries`. Now we will test them.
 
+    !!! Warning
+       For these API calls to work, you need to have `cjp:config_read` scope added to your Service App. If you didn't do it before, you need to add it, re-authorize your Service App and generate a new access token!
+
+5. Run the `list_address_books` tool:
+
+    ![List Address Books](assets/tools_4.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ??? Note "Result"
+        ```json
+            {
+              "count": 4,
+              "address_books": [
+                {
+                  "id": "3eaea255-f4d8-4b75-94e3-fe67ef23fb42",
+                  "name": "HR Team",
+                  "description": "Human Resources team contacts"
+                },
+                {
+                  "id": "568f627a-802e-4c99-a74a-1b59207449c7",
+                  "name": "Global Directory",
+                  "description": ""
+                },
+                {
+                  "id": "b7d7a924-1615-494e-9d1e-81623b991fbf",
+                  "name": "Technical Support Partners",
+                  "description": ""
+                },
+                {
+                  "id": "be30e08a-0ae1-4f83-8438-dfbf630155eb",
+                  "name": "Internal Directory",
+                  "description": "Organization-wide internal contact directory"
+                }
+              ]
+            }
+            ```
+6. Run the `list_entries` tool:
+
+    ![List Entries](assets/tools_5.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ??? Note "Result"
+        ```json
+            {
+              "count": 1,
+              "entries": [
+                {
+                  "id": "379233b6-be13-4b3e-850f-ac945eb5a660",
+                  "name": "John M",
+                  "number": "+48573244479"
+                }
+              ]
+            }
+            ```
 
 ### Step 3.1.4: Create and Fill an Address Book
 
@@ -439,8 +486,138 @@ Now, we are going to include the tools that performs writting actions. We are go
 
     ??? Tip "Python Code"
         ```python
+        # Step 04 - writing: create an address book, then fill it with contacts.
+        
+        import logging
+        import os
+        import sys
+        import httpx
+        from dotenv import load_dotenv
+        from mcp.server import MCPServer
+        
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+        log = logging.getLogger("write-books")
+        
+        # Load credentials from .env.
+        load_dotenv()
+        
+        TOKEN = os.environ.get("ACCESS_TOKEN")
+        ORG_ID = os.environ.get("WEBEX_ORG_ID")
+        CONFIG_API_BASE = os.environ.get("WXCC_CONFIG_API_BASE", "")
+        
+        # Stop early if any credential is missing.
+        for _name, _value in (
+            ("ACCESS_TOKEN", TOKEN),
+            ("WEBEX_ORG_ID", ORG_ID),
+            ("WXCC_CONFIG_API_BASE", CONFIG_API_BASE),
+        ):
+            if not _value:
+                sys.exit(f"{_name} is not set. This lab needs Webex Contact Center - see .env.example.")
+        
+        # Build the API base URL and common headers.
+        ORG = f"{CONFIG_API_BASE.rstrip('/')}/organization/{ORG_ID}"
+        HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
+        
+        # Create an MCP server instance.
+        mcp = MCPServer("write-books")
+        
+        
+        # Turn an HTTP failure into a sentence the model can relay to the user.
+        def _fail(response: httpx.Response) -> dict:
+            """Turn an HTTP failure into a sentence the model can pass on to the user."""
+            if response.status_code == 401:
+                return {"error": "Webex rejected the token. Check that it has not expired."}
+            if response.status_code == 403:
+                return {"error": "The token lacks Contact Center config permission (cjp:config_write)."}
+            if response.status_code == 404:
+                return {"error": "No such address book in this organization."}
+            if response.status_code == 429:
+                return {"error": "Rate limited by Webex. Wait a moment and try again."}
+            return {"error": f"Webex Contact Center returned HTTP {response.status_code}."}
+        
+        
+        # Create a new address book and return its id.
+        @mcp.tool()
+        async def create_address_book(name: str, description: str = "") -> dict:
+            """Create a new address book. Returns its id, which add_entry then needs.
+        
+            The MCP client asks the user for approval before this runs.
             """
+            async with httpx.AsyncClient(timeout=15) as http:
+                response = await http.post(
+                    f"{ORG}/v3/address-book",
+                    headers=HEADERS,
+                    json={"name": name, "description": description, "parentType": "ORGANIZATION"},)
+        
+            if response.status_code not in (200, 201):
+                return _fail(response)
+        
+            book = response.json()
+            return {"created": True, "address_book_id": book.get("id"), "name": book.get("name")}
+        
+        
+        # Add a contact to an address book using the id from create_address_book.
+        @mcp.tool()
+        async def add_entry(address_book_id: str, name: str, number: str) -> dict:
+            """Add a contact to an address book. `number` should be E.164, e.g. +14155550101.
+        
+            `address_book_id` is what create_address_book returned. The MCP client asks
+            the user for approval before this runs.
+            """
+            async with httpx.AsyncClient(timeout=15) as http:
+                response = await http.post(
+                    f"{ORG}/address-book/{address_book_id}/entry",
+                    headers=HEADERS,
+                    json={"name": name, "number": number},
+                )
+        
+            if response.status_code not in (200, 201):
+                return _fail(response)
+        
+            return {"added": True, "entry_id": response.json().get("id"), "name": name}
+        
+        
+        # Start the server on stdio and wait for a client to connect.
+        if __name__ == "__main__":
+            log.info("write-books running on stdio - waiting for a client (Ctrl+C to stop).")
+            try:
+                mcp.run()
+            except KeyboardInterrupt:
+                log.info("Stopped.")
         ```
+
+2. Go to the MCP Inspector. Click on **Disconnect**.
+3. Change **Arguments** to `04_write_books.py` and click **Connect**.
+4. Click on **Tools** and then **List Tools**. You will see both `create_address_book` and `add_entry`. You will be testing now both.
+
+   !!! Warning
+       For these API calls to work, you need to have `cjp:config_read` and `cjp:config_write` scope added to your Service App. If you didn't do it before, you need to add it, re-authorize your Service App and generate a new access token!
+
+5. Create an Address Book with name "WebexOne - Username":
+
+    ![Create Address Book](assets/tools_6.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    !!! Note "Result"
+        ```json
+        {
+          "created": true,
+          "address_book_id": "ef60d796-ce1a-40c3-ae1d-7b1968c84bdc",
+          "name": "WebexOne - Diejimen"
+        }
+        ```
+
+6. Using the `address_book_id` provided, create an Entry, with your name and number:
+
+    ![Add Entry](assets/tools_7.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    !!! Note "Result"
+        ```json
+        {
+          "added": true,
+          "entry_id": "ce5471b8-7733-4de6-aeb3-bc2420f177e0",
+          "name": "Diego"
+        }
+        ```
+
+7. You could verify it was added using the tools in the previous exercise.
 
 ## Step 3.2: Register in your IDE
 
