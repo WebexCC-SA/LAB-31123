@@ -103,7 +103,7 @@ Because a Service App operates at a machine level and can access organization-wi
 
         `spark:mcp spark:messages_read spark:messages_write spark:rooms_read spark:rooms_write spark:memberships_read spark:memberships_write`
 
-        `spark:webhooks_read spark:webhooks_write ...`
+        `spark:webhooks_read spark:webhooks_write cjp:config_read cjp:config_write`
        
         For simplicity, in this lab, you can already select all of them.
        
