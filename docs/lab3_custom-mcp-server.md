@@ -718,24 +718,40 @@ In this section, you will add and test your custom MCP servers directly in VS Co
 
     2. **Testing 02_hello_resource_prompt.py:**
     
-        !!! Note
-            For Resources, there are currently two bugs in VS Code:
-            
-            - [Bug 291004](https://github.com/microsoft/vscode/issues/291004)
-            - [Bug 251747](https://github.com/microsoft/vscode/issues/251747)
-            
-            For now, you will need to add them manually.
-            
-            - At the bottom of the chat window, click  **+**, then **Add Context** -> **MCP Resources** -> `lab://greeting-rules`
-
-            ??? Note "Images"
-                ![Ask Rules](assets/test3.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-                ![Ask Rules](assets/test4.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-                ![Ask Rules](assets/test5.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-
-        - Ask: *"What are the greeting rules?"*
+        1. First, we are going to test the resource.
         
-            ![Ask Rules](assets/test6.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            !!! Note
+                For Resources, there are currently two bugs in VS Code:
+                
+                - [Bug 291004](https://github.com/microsoft/vscode/issues/291004)
+                - [Bug 251747](https://github.com/microsoft/vscode/issues/251747)
+                
+                For now, you will need to add them manually.
+                
+                - At the bottom of the chat window, click  **+**, then **Add Context** -> **MCP Resources** -> `lab://greeting-rules`
+    
+                ??? Note "Images"
+                    ![Ask Rules](assets/test3.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                    ![Ask Rules](assets/test4.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                    ![Ask Rules](assets/test5.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    
+            - Ask: *"What are the greeting rules?"*
+            
+                ![Ask Rules](assets/test6.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+        2. To test a prompt, you will load it on demand, start typing "/mcp" in the chat, and you will see the prompt:
+
+            ![Prompt](assets/prompt_1.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+            - Select "Insert as text":
+
+                ![Prompt](assets/prompt_2.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        
+            - Complete with the following test: *"Hello! I'm Sam and I'll obviously get back to you ASAP with a full resolution of your issue as soon as humanly possible."*
+
+                ![Prompt](assets/prompt_3.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                ![Prompt](assets/prompt_4.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                ![Prompt](assets/prompt_5.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     4. **Testing 03_read_books.py:**
     
@@ -761,24 +777,26 @@ In this section, you will add and test your custom MCP servers directly in VS Co
 
 ## Extra: Elicitation
 
-We trusted the host to ask permission. This step explores what happens when the server itself needs to ask a question mid-call. The MCP protocol calls this **elicitation**: the server pauses, sends a form to the user, and resumes based on the answer.
+So far, we trusted the host (VS Code) to ask permission before executing a tool. But what happens when the server itself needs to ask a question mid-call, like confirming a destructive action? 
 
-The server exposes exactly two tools: `delete_address_book` and `delete_entry`. 
+The MCP protocol calls this **elicitation**: the server pauses, sends a form to the user, and resumes based on the answer.
 
-1. Update `.vscode/mcp.json` to point at `03_custom_mcp/05_delete_books.py` and restart the server.
+Now, we will add to the server two tools destructive tools: `delete_address_book` and `delete_entry`. 
 
-??? Tip "Python Code"
-    ```python
+1. Navigate to `03_custom_mcp/05_delete_books.py` and review the code:
+
+    ??? Tip "Python Code"
+        ```python
         # Step 05 - deleting with a safety net: elicitation asks "are you sure?" mid-call.
-
+    
         import os
         import sys
         from typing import Annotated
-
+    
         import httpx
         from dotenv import load_dotenv
         from mcp.server import MCPServer
-
+    
         # Elicitation imports: the resolver pattern lets the server ask the user a question mid-call.
         from mcp.server.mcpserver import (
             AcceptedElicitation,
@@ -789,14 +807,14 @@ The server exposes exactly two tools: `delete_address_book` and `delete_entry`.
             Resolve,
         )
         from pydantic import BaseModel
-
+    
         # Load credentials from .env.
         load_dotenv()
-
+    
         TOKEN = os.environ.get("ACCESS_TOKEN")
         ORG_ID = os.environ.get("WEBEX_ORG_ID")
         CONFIG_API_BASE = os.environ.get("WXCC_CONFIG_API_BASE", "")
-
+    
         # Stop early if any credential is missing.
         for _name, _value in (
             ("ACCESS_TOKEN", TOKEN),
@@ -805,33 +823,33 @@ The server exposes exactly two tools: `delete_address_book` and `delete_entry`.
         ):
             if not _value:
                 sys.exit(f"{_name} is not set. This lab needs Webex Contact Center - see .env.example.")
-
+    
         # Build the API base URL and common headers.
         ORG = f"{CONFIG_API_BASE.rstrip('/')}/organization/{ORG_ID}"
         HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
-
+    
         # Create an MCP server instance.
         mcp = MCPServer("webex-mcp-lab-05")
-
-
+    
+    
         # The confirmation form the user sees: one boolean field.
         class Confirm(BaseModel):
             ok: bool
-
-
+    
+    
         # Resolver for address book deletion — always asks before proceeding.
         async def confirm_delete_book(address_book_id: str) -> Elicit[Confirm]:
             return Elicit(f"Delete address book '{address_book_id}'? This cannot be undone.", Confirm)
-
-
+    
+    
         # Resolver for entry deletion — always asks before proceeding.
         async def confirm_delete_entry(address_book_id: str, entry_id: str) -> Elicit[Confirm]:
             return Elicit(
                 f"Delete entry '{entry_id}' from book '{address_book_id}'? This cannot be undone.",
                 Confirm,
             )
-
-
+    
+    
         # Delete an address book after the user confirms via elicitation.
         @mcp.tool()
         async def delete_address_book(
@@ -852,8 +870,8 @@ The server exposes exactly two tools: `delete_address_book` and `delete_entry`.
                     return {"deleted": False, "reason": "You chose not to delete."}
                 case DeclinedElicitation() | CancelledElicitation():
                     return {"deleted": False, "reason": "Confirmation was declined or dismissed."}
-
-
+    
+    
         # Delete a single contact after the user confirms via elicitation.
         @mcp.tool()
         async def delete_entry(
@@ -876,8 +894,8 @@ The server exposes exactly two tools: `delete_address_book` and `delete_entry`.
                     return {"deleted": False, "reason": "You chose not to delete."}
                 case DeclinedElicitation() | CancelledElicitation():
                     return {"deleted": False, "reason": "Confirmation was declined or dismissed."}
-
-
+    
+    
         # Start the server on stdio and wait for a client to connect.
         if __name__ == "__main__":
             print(
@@ -885,39 +903,52 @@ The server exposes exactly two tools: `delete_address_book` and `delete_entry`.
                 file=sys.stderr,
             )
             mcp.run()
+        ```
 
+2. Update `.vscode/mcp.json` to include the new server, and start it:
+
+    ```json
+    {
+      "servers": {
+        "delete-books": {
+          "command": "${workspaceFolder}/webexone/bin/python",
+          "args": ["03_custom_mcp/05_delete_books.py"],
+          "cwd": "${workspaceFolder}"
+        }
+      }
+    } 
     ```
 
-2. Ask to delete a certain address book, it asks for the ID of that book, just click "Enter".
+3. Ask to delete a certain address book, it asks for the ID of that book, just click "Enter".
 
-![Delete Book](assets/lab6_img50.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Delete Book](assets/lab6_img50.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-This is the request from VS Code for tool execution approval:
+4. This is the request from VS Code for tool execution approval:
 
-![Approval Request](assets/lab6_img51.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Approval Request](assets/lab6_img51.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-You will see another approval requested here which is what elicitation means:
+5. You will see another approval requested here which is what elicitation means:
 
-![Elicitation Approval](assets/lab6_img52.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Elicitation Approval](assets/lab6_img52.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-!!! Tip "Watch for"
-    Two approval moments. First the host asks "call delete_address_book?", then the server's elicitation form asks "delete this specific book?". They are different layers.
+    !!! Tip "Watch for"
+        Two approval moments. First the host asks "call delete_address_book?", then the server's elicitation form asks "delete this specific book?". They are different layers.
 
-Since we are not sure what the ID of that address book is, it returns 404.
+6. Since we are not sure what the ID of that address book is, it returns 404.
 
-![404 Error](assets/lab6_img53.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![404 Error](assets/lab6_img53.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-Now we can delete the speed dial with a specific ID.
+7. Now we can delete the speed dial with a specific ID.
 
-![Delete Speed Dial](assets/lab6_img56.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Delete Speed Dial](assets/lab6_img56.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-The confirmation requested by the MCP server which requested for elicitation:
+8. The confirmation requested by the MCP server which requested for elicitation:
 
-![Elicitation Confirmation 1](assets/lab6_img59.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Elicitation Confirmation 1](assets/lab6_img59.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-Successfully deleted.
+9. Successfully deleted.
 
-![Successfully Deleted](assets/lab6_img62.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Successfully Deleted](assets/lab6_img62.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 ## Exercises
 
