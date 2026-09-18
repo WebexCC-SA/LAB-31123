@@ -55,46 +55,44 @@ In this section we are going to start wit the simpliest MCP server that does rea
     * cd ../03_custom_mcp
 
 3. To test our MCP server we will be using a tool called **MCP Inspector**. It is the official, interactive debugging tool for MCP servers. It runs a local web interface where you can list tools, resources, and prompts, and execute them directly without needing an LLM in the loop.
-
-    ```bash
-    npx @modelcontextprotocol/inspector python 01_hello_mcp.py
-    ```
+    
+    * npx @modelcontextprotocol/inspector python 01_hello_mcp.py
    
     !!! Note
         If it asks to install the `@modelcontextprotocol/inspector` package, press `y`.*
 
-        ```terminal
-        Need to install the following packages:
-        @modelcontextprotocol/inspector@1.0.2
-        Ok to proceed? (y) 
-        ```
+            ```terminal
+            Need to install the following packages:
+            @modelcontextprotocol/inspector@1.0.2
+            Ok to proceed? (y) 
+            ```
 
-6. Once it starts, it should open a new tab for you, if not, it will provide a local URL (usually `http://localhost:6274`). Open that URL in your browser.
+4. Once it starts, it should open a new tab for you, if not, it will provide a local URL (usually `http://localhost:6274`). Open that URL in your browser.
 
-    ![MCP Inspector Start](assets/inspector_start.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![MCP Inspector Start](assets/inspector_start.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-7. Select the following and click `Connect`:
+5. Select the following and click `Connect`:
 
-    |        	|                                     	      |
+    |        	|           |
     |-----------------------	|--------------|
     | **Transport Type**       	| STDIO |
     | **Command**       	| Python |
     | **Arguments**       	| 01_hello_mcp.py |
 
-    ![MCP Inspector Start](assets/inspector_2.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![MCP Inspector Start](assets/inspector_2.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-8. In the MCP Inspector web interface, click on the **Tools** tab, then **List Tools** and you will see the `format_phone` tool listed.
+6. In the MCP Inspector web interface, click on the **Tools** tab, then **List Tools** and you will see the `format_phone` tool listed.
 
     ![MCP Inspector Start](assets/inspector_3.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-9. Click on **format_phone**. In the arguments JSON editor, provide a messy phone number:
+7. Click on **format_phone**. In the arguments JSON editor, provide a messy phone number:
     ```json
     {
       "number": "(415) 555-0101"
     }
     ```
 
-10. Click **Run Tool**. You should see the result `+14155550101` returned immediately.
+8. Click **Run Tool**. You should see the result `+14155550101` returned immediately.
 
     !!! Note
         You may need to scroll down
@@ -110,8 +108,8 @@ Next, we are going to build a single script that demonstrates the entire MCP arc
 - **A tool** is an action the model calls. 
 - **A resource** is context the client attaches, like handing the model a rulebook. 
 - **A prompt** is the one primitive a human triggers directly — from a slash command or menu.
-
-- Navigate to `03_custom_mcp/02_hello_resource_prompt.py` and review the code:
+</br>
+1. Navigate to `03_custom_mcp/02_hello_resource_prompt.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -176,13 +174,13 @@ Next, we are going to build a single script that demonstrates the entire MCP arc
 4. Change **Arguments** to `02_hello_resource_prompt.py` and click **Connect**.
 5. Click on **Resources** and then **List Resources**. You will see `lab://greeting-rules`. You can click it to read the greeting rules.
    ??? Note "Resources"
-       ![MCP Inspector Tool Run](assets/resources.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+       ![MCP Inspector Tool Run](assets/resources.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 6. Click on **Prompts** and then **List Prompts**. You will see `review_greeting`.
    ??? Note "Prompts"
-       ![MCP Inspector Tool Run](assets/prompts.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+       ![MCP Inspector Tool Run](assets/prompts.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 7. Click on **Tools** and then **List Tools**. You will see `count_words`. You can test it by providing a `"text"` argument.
    ??? Note "Tools"
-       ![MCP Inspector Tool Run](assets/tools.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+       ![MCP Inspector Tool Run](assets/tools.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 ### Understand Webex Contact Center Address Book APIs
 
@@ -190,17 +188,20 @@ Before connecting to the real API, let's understand how Address Books work in We
 
 Below is a screenshot showing how address books are seen in the agent desktop:
 
-![Agent Desktop](assets/lab6_img29.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Agent Desktop](assets/lab6_img29.png){ width="800" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 #### Where are they configured?
 
-- In **Collaboration Control Hub** and navigate to **Contact Center**. Scroll down and select Address Book.
+They can only be configured by Administrators. In **Collaboration Control Hub** -> **Contact Center**, under **Desktop Experience** section, you have **Address Book**.
 
-    ![Control Hub](assets/lab6_img30.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Control Hub](assets/lab6_img30.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-- One address book is assigned to an agent profile.
-XXXXX
-You can explore the APIs in the [Webex Developer Portal](https://developer.webex.com/).
+One address book is assigned to an agent profile.
+
+You can also configure it using an API, using the Service App we created before. 
+
+
+You can explore Webex Contact Center APIs in the [Webex Developer Portal - WxCC APIs](https://developer.webex.com/webex-contact-center/docs/webex-contact-center).
 
 ![Select WxCC](assets/lab6_img39.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 ![API Sections](assets/lab6_img33.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
