@@ -1,0 +1,1252 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="LAB-31123: Building an AI Assistant to Manage and Troubleshoot Your Organization">
+      
+      
+        <meta name="author" content="Diego Manuel Jimenez Moreno">
+      
+      
+      
+        <link rel="prev" href="../lab3_custom-mcp-server/">
+      
+      
+        <link rel="next" href="../lab5_bot-integration/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../template_assets/webex75.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Lab 4 - Agent Skills - LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-4-agent-skills" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" class="md-header__button md-logo" aria-label="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" data-md-component="logo">
+      
+  <img src="../template_assets/webexLogo91.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 4 - Agent Skills
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../overview/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Lab
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" class="md-nav__button md-logo" aria-label="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" data-md-component="logo">
+      
+  <img src="../template_assets/webexLogo91.png" alt="logo">
+
+    </a>
+    LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab1_webex-mcp-in-ide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 1 - Webex MCP Servers in Your IDE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab2_webex-apis-troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2 - Webex APIs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab3_custom-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 3 - Build MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 4 - Agent Skills
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 4 - Agent Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#skills-vs-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skills vs MCP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#skills-vs-custom-instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skills vs Custom Instructions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-41-enable-agent-skills-and-verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4.1: Enable Agent Skills and verify
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4.1: Enable Agent Skills and verify">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#other-prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-42-skill-anatomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4.2: Skill anatomy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-43-progressive-disclosure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4.3: Progressive disclosure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-44-run-a-skill-guided-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4.4: Run a skill-guided scenario
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-45-see-the-difference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4.5: See the difference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab5_bot-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 5 - Integrate an AI Assistant with a Webex Bot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab6_mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 6 - MCP Servers in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab7_skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 7 - Skills in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab8_use-cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 8 - Use Cases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conclusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-4-agent-skills">Lab 4 - Agent Skills</h1>
+<p>In this section, you will use an <strong>Agent Skill</strong> to encode operational expertise —
+<em>how</em> to review Webex meetings thoroughly — separately from MCP tool connectivity,
+and run it directly inside <strong>VS Code Chat (Agent mode)</strong> with no code.</p>
+<p>Skills aren't just fancy instructions — they're <strong>portable, task-specific
+workflows</strong> that load only when you need them. Unlike custom instructions, which
+define coding standards, skills bring scripts, examples, and automation into the
+mix, making agents truly <strong>action-oriented</strong>.</p>
+<p>You cloned <code>WebexOne2026</code> in Getting Started. The skill lives in the standard
+auto-discovery location: <code>.agents/skills/</code>.</p>
+<h2 id="skills-vs-mcp">Skills vs MCP</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Responsibility</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MCP server</strong></td>
+<td>What the assistant <em>can do</em> — governed API access</td>
+<td>Webex Meeting tools (list meetings, participants, summaries, recordings)</td>
+</tr>
+<tr>
+<td><strong>Agent Skills</strong></td>
+<td><em>How</em> to use those tools — runbooks and judgment</td>
+<td>"For every meeting, also check participants, summary, recording, transcript, then triage"</td>
+</tr>
+</tbody>
+</table>
+<pre class="mermaid"><code>flowchart TB
+    Skills[Agent Skill - HOW]
+    MCP[Webex Meeting MCP - WHAT]
+    Client[VS Code Chat - Agent mode]
+    Skills --&gt; Client
+    MCP --&gt; Client
+    Client --&gt; Webex[Webex Meeting APIs]</code></pre>
+<p>A skill does not add tools. It tells the assistant to <strong>use the tools it already
+has, more thoroughly</strong>.</p>
+<h2 id="skills-vs-custom-instructions">Skills vs Custom Instructions</h2>
+<p>If you already use <code>.github/copilot-instructions.md</code> or custom instructions in
+VS Code, you may wonder how skills differ. They serve different purposes:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Custom Instructions</th>
+<th>Agent Skills</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Purpose</strong></td>
+<td>Coding standards and guidelines</td>
+<td>Task-specific workflows and runbooks</td>
+</tr>
+<tr>
+<td><strong>Scope</strong></td>
+<td>Always applied to every conversation</td>
+<td>Loaded on demand when the task matches</td>
+</tr>
+<tr>
+<td><strong>Content</strong></td>
+<td>Instructions only</td>
+<td>Instructions + scripts + examples + resources</td>
+</tr>
+<tr>
+<td><strong>Standard</strong></td>
+<td>VS Code–specific</td>
+<td>Open standard (<a href="https://agentskills.io">agentskills.io</a>) — portable across 30+ agents</td>
+</tr>
+</tbody>
+</table>
+<p>Use custom instructions for <em>"always format imports this way."</em>
+Use skills for <em>"when reviewing meetings, check all five dimensions and triage."</em></p>
+<h2 id="step-41-enable-agent-skills-and-verify">Step 4.1: Enable Agent Skills and verify</h2>
+<p>Before looking at the skill itself, make sure VS Code can discover it.</p>
+<ol>
+<li>Open <strong>Settings</strong> (<code>Ctrl+,</code>) and search for <code>chat.useAgentSkills</code>.</li>
+<li>
+<p><strong>Enable</strong> the checkbox.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This setting must be enabled or skills will not load. If you skip this step,
+nothing else in this lab will work.</p>
+</div>
+</li>
+<li>
+<p>Reload the window: <code>Ctrl+Shift+P</code> → <code>Developer: Reload Window</code>.</p>
+</li>
+<li>
+<p>Open <strong>Chat</strong> (<code>Ctrl+Shift+P</code> → <code>Chat: Open Chat (Agent)</code>).</p>
+</li>
+<li>
+<p><strong>Verify discovery</strong> — ask the agent:</p>
+<div class="highlight"><pre><span></span><code>What skills are available?
+</code></pre></div>
+<p>The agent should list <code>meeting-review</code> with its description. If it does,
+skills are working and you can proceed.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <code>meeting-review</code> does not appear:</p>
+<ul>
+<li>Confirm <code>chat.useAgentSkills</code> is enabled (step 2)</li>
+<li>Confirm <code>.agents/skills/meeting-review/SKILL.md</code> exists in the cloned repo</li>
+<li>Reload the window again (<code>Developer: Reload Window</code>)</li>
+</ul>
+</div>
+</li>
+</ol>
+<p>VS Code automatically scans these project directories for skills
+(<a href="https://code.visualstudio.com/docs/agent-customization/agent-skills">VS Code docs</a>):</p>
+<table>
+<thead>
+<tr>
+<th>Location</th>
+<th>Convention</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.agents/skills/</code></td>
+<td>agentskills.io cross-host standard</td>
+</tr>
+<tr>
+<td><code>.github/skills/</code></td>
+<td>GitHub convention</td>
+</tr>
+<tr>
+<td><code>.claude/skills/</code></td>
+<td>Anthropic convention</td>
+</tr>
+</tbody>
+</table>
+<p>The cloned repo places the skill in <code>.agents/skills/</code> — the most portable
+option. <strong>No settings file is needed</strong> for auto-discovery.</p>
+<h3 id="other-prerequisites">Other prerequisites</h3>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>How to set up</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VS Code <strong>&gt;= 1.108</strong></td>
+<td><code>Help &gt; About</code></td>
+</tr>
+<tr>
+<td>OpenAI model configured</td>
+<td>Lab 1 Step 1.2 — <code>Chat: Manage Language Models</code> → OpenAI → enter API key</td>
+</tr>
+<tr>
+<td>Webex Meeting MCP connected</td>
+<td>Lab 1 — add the meeting server to <code>.vscode/mcp.json</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="step-42-skill-anatomy">Step 4.2: Skill anatomy</h2>
+<p>A skill is a folder containing a <code>SKILL.md</code> file — an open standard defined by
+<a href="https://agentskills.io/home">agentskills.io</a>.</p>
+<p>In the cloned repo, the skill is at:</p>
+<div class="highlight"><pre><span></span><code>.agents/skills/meeting-review/SKILL.md
+</code></pre></div>
+<p>Open it and look at the front matter:</p>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">meeting-review</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+<span class="w">  </span><span class="no">Use when a user asks about their meetings, schedule, or asks you to</span>
+<span class="w">  </span><span class="no">review or triage meetings for a person. Do not just list meetings —</span>
+<span class="w">  </span><span class="no">investigate each one across all available Webex Meeting tools...</span>
+<span class="nn">---</span>
+</code></pre></div>
+<p>Two rules from the agentskills.io specification:</p>
+<ul>
+<li><code>name</code> must be lowercase letters, numbers, and hyphens;  and <strong>match the folder name</strong>.</li>
+<li><code>description</code> says what the skill does <strong>and when to use it</strong> — this is what the
+  agent reads to decide whether to load the skill.</li>
+</ul>
+<p>The body below the front matter is the runbook: for each meeting, check
+participants, summary, recording, and transcript; flag gaps; produce a
+prioritized action list.</p>
+<h2 id="step-43-progressive-disclosure">Step 4.3: Progressive disclosure</h2>
+<p>Agent Skills load in three stages so many skills can be available cheaply:</p>
+<ol>
+<li><strong>Discovery</strong> — at startup, the agent loads only each skill's name and
+   description (~100 tokens).</li>
+<li><strong>Activation</strong> — when a task matches, it reads the full <code>SKILL.md</code> body.</li>
+<li><strong>Execution</strong> — it follows the steps, calling MCP tools as instructed.</li>
+</ol>
+<p>Full instructions load only when needed.</p>
+<h2 id="step-44-run-a-skill-guided-scenario">Step 4.4: Run a skill-guided scenario</h2>
+<ol>
+<li>Open <strong>Chat</strong> (<code>Ctrl+Shift+P</code> → <code>Chat: Open Chat (Agent)</code>).</li>
+<li>Ensure the <strong>Webex Meeting MCP</strong> is started.</li>
+<li>Ask:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>Review the meetings for user1@webexone-ai-assistant.wbx.ai. Check who joined the
+past meetings, whether summaries and recordings exist, and flag anything missing.
+For upcoming meetings, check if there's an agenda.
+</code></pre></div>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/vscode_skill_1.png" data-title="vsskill1" data-desc-position="top"><img alt="vsskill1" src="../assets/vscode_skill_1.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="400"></a></p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/vscode_skill_2.png" data-title="vsskill2" data-desc-position="top"><img alt="vsskill2" src="../assets/vscode_skill_2.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="700"></a></p>
+<p>Expected behavior:</p>
+<ul>
+<li>The agent activates <code>meeting-review</code>.</li>
+<li>It calls <strong>multiple</strong> Webex Meeting tools per meeting (participants, summary,
+  recording, transcript) — not just a flat list.</li>
+<li>It flags missing artifacts, triages missed meetings, and returns a prioritized
+  action list.</li>
+</ul>
+<p>You can also invoke it explicitly by typing <code>/meeting-review</code> in the chat.</p>
+<h2 id="step-45-see-the-difference">Step 4.5: See the difference</h2>
+<p>To feel the value, compare:</p>
+<ul>
+<li><strong>Without the skill</strong> (temporarily rename the <code>.agents/skills/meeting-review/</code>
+  folder and reload): the agent lists meetings and stops — one tool call, one scope.</li>
+<li><strong>With the skill</strong>: the agent investigates five scopes per meeting and produces
+  actions.
+<div class="highlight"><pre><span></span><code>![vsskill3](./assets/vscode_no_skill.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+
+WITHOUT skill              WITH skill
+-------------              ----------
+list meetings (done)       list meetings
+                           + participants + summary + recording + transcript
+                           + triage + prioritized actions
+1 scope, 1 call            5 scopes, many calls
+</code></pre></div></li>
+</ul>
+<p>Same tools, same data — the skill supplies the judgment.</p>
+<h2 id="exercise">Exercise</h2>
+<ol>
+<li><strong>Read the skill</strong> — open <code>.agents/skills/meeting-review/SKILL.md</code> and find
+   the rule that tells the agent to check <em>all</em> dimensions.</li>
+<li><strong>Edit the skill</strong> — add one rule (for example: "flag any meeting longer than
+   60 minutes with more than 8 attendees as a <em>review candidate</em>"). Save.</li>
+<li><strong>Re-run</strong> the scenario in Chat and confirm your new rule is applied — no
+   code change required, just the edited <code>SKILL.md</code>.</li>
+</ol>
+<h2 id="next">Next</h2>
+<p>In <strong>Lab 7</strong> you build the Python <strong>skill loader</strong> that does what VS Code did for
+you here — reading the <em>same</em> <code>meeting-review/SKILL.md</code>, unchanged — and wire it
+into a bot, then onboard a second skill. See <code>07_skills_bot/</code> in the cloned repo.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../lab3_custom-mcp-server/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Lab 3 - Build MCP Server">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Lab 3 - Build MCP Server
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../lab5_bot-integration/" class="md-footer__link md-footer__link--next" aria-label="Next: Lab 5 - Integrate an AI Assistant with a Webex Bot">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Lab 5 - Integrate an AI Assistant with a Webex Bot
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2026 Cisco
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.instant", "navigation.top", "navigation.footer", "search.suggest", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../template_assets/js/newLoad.js"></script>
+      
+        <script src="../template_assets/js/setInfo.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": false, "openEffect": "fade", "closeEffect": "fade", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

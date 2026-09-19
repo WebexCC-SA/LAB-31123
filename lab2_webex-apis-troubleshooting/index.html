@@ -1,0 +1,1591 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="LAB-31123: Building an AI Assistant to Manage and Troubleshoot Your Organization">
+      
+      
+        <meta name="author" content="Diego Manuel Jimenez Moreno">
+      
+      
+      
+        <link rel="prev" href="../lab1_webex-mcp-in-ide/">
+      
+      
+        <link rel="next" href="../lab3_custom-mcp-server/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../template_assets/webex75.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Lab 2 - Webex APIs - LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-2-webex-apis" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" class="md-header__button md-logo" aria-label="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" data-md-component="logo">
+      
+  <img src="../template_assets/webexLogo91.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 2 - Webex APIs
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../overview/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Lab
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" class="md-nav__button md-logo" aria-label="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" data-md-component="logo">
+      
+  <img src="../template_assets/webexLogo91.png" alt="logo">
+
+    </a>
+    LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab1_webex-mcp-in-ide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 1 - Webex MCP Servers in Your IDE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2 - Webex APIs
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2 - Webex APIs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#step-21-general-webex-apis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2.1 - General Webex APIs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2.1 - General Webex APIs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#webex-for-developers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Webex For Developers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calling-apis-using-bruno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calling APIs using Bruno
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calling-apis-using-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calling APIs using Python
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-22-service-apps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2.2: Service Apps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2.2: Service Apps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-service-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Service App?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scopes-mcp-vs-service-apps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scopes: MCP vs. Service Apps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-catch-user-context-vs-machine-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Catch: User Context vs. Machine Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-approval-process-global-vs-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Approval Process: Global vs. Local
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-23-create-the-service-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2.3: Create the Service App
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2.3: Create the Service App">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authorize-your-service-app-in-your-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authorize your Service App in your organization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Token
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-24-using-the-token-to-call-an-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2.4: Using the token to call an API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extra-refresh-your-access_token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extra: Refresh your access_token
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-25-webex-apis-for-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2.5 - Webex APIs for Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2.5 - Webex APIs for Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#webex-status-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Webex Status API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-and-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit and compliance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calling-and-meetings-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calling and meetings troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting guide
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-26-the-n-m-problem-mcp-solves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2.6: The N × M problem MCP solves
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-27-when-to-use-webex-apis-vs-webex-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2.7: When to use Webex APIs vs Webex MCP
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab3_custom-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 3 - Build MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab4_agent-skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 4 - Agent Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab5_bot-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 5 - Integrate an AI Assistant with a Webex Bot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab6_mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 6 - MCP Servers in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab7_skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 7 - Skills in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab8_use-cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 8 - Use Cases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conclusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-2-webex-apis">Lab 2 - Webex APIs</h1>
+<p>In this section, you will start exploring Webex REST APIs. You will do a quick review on how to use Bruno, then create a <strong>Service App</strong>. That token is what you will use as soon as you need <strong>admin</strong> access — Control Hub, Calling numbers, audit, reports — because a Personal Access Token does not have those rights.</p>
+<p>After that, we will look at the APIs that can be used to manage and troubleshoot an organization — status, audit, compliance, reports, calling, and meetings.</p>
+<h2 id="step-21-general-webex-apis">Step 2.1 - General Webex APIs</h2>
+<p>In the previous section, we enabled our Agent to use MCP Servers to perform actions on our behalf.</p>
+<p>At the end of the day, an MCP server is just a list of tools that our agent can use. Those tools are executing API calls. Now, we will be making those API calls ourselves.</p>
+<h3 id="webex-for-developers">Webex For Developers</h3>
+<p>Navigate to:<br></p>
+<ul>
+<li><a href="https://developer.webex.com/" target="_blank">Webex for Developers</a></li>
+</ul>
+<p>Use the same Webex credentials provided for the lab. </p>
+<div class="admonition warning">
+<p class="admonition-title">Placeholder: Get Personal Access Token</p>
+<p>[PLACEHOLDER: Add instructions and screenshots showing how to log into the Developer Portal, click on the profile icon, and copy the Personal Access Token (Developer Token). Explain that this token is valid for 12 hours and is useful for <strong>user-level</strong> Try It calls (for example Messaging). Do not use it for admin / Control Hub APIs — those come next with a Service App.]</p>
+</div>
+<p>https://developer.webex.com/messaging/docs/messaging</p>
+<h3 id="calling-apis-using-bruno">Calling APIs using Bruno</h3>
+<h3 id="calling-apis-using-python">Calling APIs using Python</h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A Personal Access Token acts as <strong>you</strong>. User-level APIs (list <em>your</em> rooms, <em>your</em> meetings) can work. As soon as you call an <strong>admin</strong> API — numbers, people in the org, audit, licenses — you will get <code>403 Forbidden</code> or empty data. That is expected. We fix it with a Service App before we start troubleshooting.</p>
+</div>
+<h2 id="step-22-service-apps">Step 2.2: Service Apps</h2>
+<p>A Personal Access Token is fine for a quick test in the portal, but it has two problems for this lab:</p>
+<ol>
+<li><strong>Rights:</strong> It is user context. Organizational troubleshooting needs admin scopes (Calling config, people, audit, reports).</li>
+<li><strong>Lifetime:</strong> It <strong>expires after 12 hours</strong>. That is not valid for anything that should keep running.</li>
+</ol>
+<p>This is where <strong>Service Apps</strong> come in.</p>
+<h3 id="what-is-a-service-app">What is a Service App?</h3>
+<p>A Service App is a type of Webex integration designed for <strong>machine-to-machine</strong> communication. </p>
+<p>Unlike a Personal Access Token (which acts on behalf of <em>you</em>, the user), a Service App has no user context. It acts as a system or background service. This makes it the perfect choice for administrative tasks, compliance, and <strong>organizational troubleshooting</strong>.</p>
+<h3 id="scopes-mcp-vs-service-apps">Scopes: MCP vs. Service Apps</h3>
+<p>You have already seen how scopes work. When we looked at the <a href="https://developer.webex.com/mcp/docs/meetings-mcp-server">Meetings MCP Server documentation</a>, we saw that the MCP token acts as a wrapper around specific permissions (like <code>meeting:schedules_read</code> or <code>meeting:schedules_write</code>). </p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/scope_1.png" data-title="Scope" data-desc-position="top"><img alt="Scope" src="../assets/scope_1.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="850"></a></p>
+<p>Service Apps use this exact same concept. When you create a Service App, you must define its <strong>scopes</strong> to strictly limit what the machine is allowed to do. To allow the Service App to connect to an MCP Server, it must include the <code>spark:mcp</code> scope, alongside any other API scopes the tools require.</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/scope_3.png" data-title="Scope" data-desc-position="top"><img alt="Scope" src="../assets/scope_3.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This applies to pre-defined Webex MCP Servers.</p>
+</div>
+<h3 id="the-catch-user-context-vs-machine-context">The Catch: User Context vs. Machine Context</h3>
+<p>Because a Service App token is just a standard Webex OAuth 2.0 Bearer token, you can pass it to an MCP Server exactly like you did with your Personal Access Token. However, there is an important difference in how the APIs behave:</p>
+<ol>
+<li>
+<p><strong>Personal Access Token (User Context):</strong> 
+   When you used your personal token with the <code>webex-list-meetings</code> MCP tool, the Webex API knew exactly <em>who</em> was asking. It automatically fetched <em>your</em> meetings.</p>
+</li>
+<li>
+<p><strong>Service App Token (Machine Context):</strong>
+   A Service App is a faceless machine. If it calls <code>webex-list-meetings</code> without specifying a user, the API will likely return an empty list because the machine itself doesn't have a calendar. </p>
+</li>
+</ol>
+<p>Since our final goal is <strong>organizational troubleshooting</strong>, we <em>want</em> machine-level access. Troubleshooting tools—like looking up organization-wide call diagnostics, checking user provisioning status, or pulling admin logs—are designed for admins. They don't rely on a "me" context; they look at the organization as a whole. </p>
+<h3 id="the-approval-process-global-vs-local">The Approval Process: Global vs. Local</h3>
+<p>Because a Service App operates at a machine level and can access organization-wide data, it requires strict security oversight. </p>
+<ul>
+<li><strong>MCP Servers:</strong> As you saw earlier, MCP servers (like the Webex Meetings MCP) are <strong>global</strong> services provided by Cisco or partners. An admin simply toggles them "on" for the organization in Control Hub.</li>
+<li><strong>Service Apps:</strong> Service Apps are <strong>local</strong> to your organization's development. Because you are building a custom application, a Webex Administrator must explicitly review the requested scopes and authorize your specific Service App before it can generate any tokens.</li>
+</ul>
+<h2 id="step-23-create-the-service-app">Step 2.3: Create the Service App</h2>
+<ol>
+<li>Log into <a href="https://developer.webex.com/" target="_blank">developer.webex.com</a> with the credentials that were provided.</li>
+<li>In the top right corner of the page, click your avatar and then select <a href="https://developer.webex.com/my-apps" target="_blank">My Webex Apps</a>.</li>
+<li>Click <strong>Create a New App</strong>.</li>
+<li>
+<p>On the ‘Create a New App’ page, find the Service App card and click the ‘Create a Service App’ button.</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/bot_1.png" data-title="Service App" data-desc-position="top"><img alt="Service App" src="../assets/bot_1.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="850"></a></p>
+</li>
+<li>
+<p>Enter the following information:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>App name</strong></td>
+<td>WebexOne-<strong><em>USERNAME</em></strong></td>
+</tr>
+<tr>
+<td><strong>Icon</strong></td>
+<td>Choose one of the available options</td>
+</tr>
+<tr>
+<td><strong>Description</strong></td>
+<td>Service App for WebexOne</td>
+</tr>
+<tr>
+<td><strong>Contact Email</strong></td>
+<td>userX@webexone-ai-assistant.wbx.ai</td>
+</tr>
+<tr>
+<td><strong>Scopes</strong></td>
+<td>spark:mcp spark:messages_read spark:messages_write spark:rooms_read spark:rooms_write spark:memberships_read spark:memberships_write spark:webhooks_read spark:webhooks_write spark-admin:telephony_config_read</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>These are the scopes for <strong>Webex Messaging MCP</strong> and the <strong>Numbers API</strong>. Scopes depend on which MCP server or API you want to use.</p>
+<p>Later in this lab, you would need to update the scopes to:</p>
+<p><code>spark:mcp spark:messages_read spark:messages_write spark:rooms_read spark:rooms_write spark:memberships_read spark:memberships_write</code></p>
+<p><code>spark:webhooks_read spark:webhooks_write cjp:config_read cjp:config_write</code></p>
+<p>For simplicity, in this lab, you can already select all of them.</p>
+<p>IMPORTANT: In a real environment, you should be very careful with the assigned scopes and select the minimum required.</p>
+</div>
+</li>
+<li>
+<p>Once you have entered the information, your screen should look similar to this:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/serviceapp_1.png" data-title="Service App" data-desc-position="top"><img alt="Service App" src="../assets/serviceapp_1.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="900"></a></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>From this page, you need to save the <strong>Client ID</strong> and <strong>Client Secret</strong>:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/serviceapp_2.png" data-title="Service App" data-desc-position="top"><img alt="Service App" src="../assets/serviceapp_2.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="900"></a></p>
+<p>Open the <code>.env</code> file at the root of your project and copy them into it:</p>
+<div class="highlight"><pre><span></span><code>CLIENT_ID=
+CLIENT_SECRET=
+</code></pre></div>
+</div>
+</li>
+<li>
+<p>In the same page, at the top, in the <code>Admin Authorization</code> section, click on <strong>Request admin authorization</strong> and you should see it like:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/serviceapp_3.png" data-title="Service App" data-desc-position="top"><img alt="Service App" src="../assets/serviceapp_3.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="900"></a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not do this step, the app won't be visible for admins to authorize.</p>
+</div>
+</li>
+</ol>
+<h3 id="authorize-your-service-app-in-your-organization">Authorize your Service App in your organization</h3>
+<p>Once the Service App is created, we will need to authorize it. </p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This is a task that can only be performed by an admin. Presenters will demo it; the next steps are just for reference.</p>
+</div>
+<p>To authorize a <strong>Service App</strong>, go to <strong>Collaboration Control Hub</strong> -&gt; <strong>Apps</strong> -&gt; <strong>Service Apps</strong> and select <strong>Other service apps</strong>. Select the Service App you want to authorize, and click <strong>Authorize</strong> and <strong>Save</strong>:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/serviceapp_4.png" data-title="Service App" data-desc-position="top"><img alt="Service App" src="../assets/serviceapp_4.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="900"></a></p>
+<p>To use the newly created <strong>Service App</strong>, you will need to get an <strong>Access token</strong>. </p>
+<h3 id="access-token">Access Token</h3>
+<p>After the <strong>Service App</strong> has been authorized, you will be able to generate an <strong>Access token</strong>.</p>
+<ol>
+<li>Return to <strong>Webex for Developers</strong>, go to <strong>My Webex Apps</strong> and select your <strong>Service App</strong>.</li>
+<li>
+<p>In the section <strong>Org Authorizations</strong>, select your Organization from the dropdown. </p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/serviceapp_5.png" data-title="Service App" data-desc-position="top"><img alt="Service App" src="../assets/serviceapp_5.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="900"></a></p>
+</li>
+<li>
+<p>Enter your <strong>Client Secret</strong> and click <strong>Generate tokens</strong>:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/serviceapp_6.png" data-title="Service App" data-desc-position="top"><img alt="Service App" src="../assets/serviceapp_6.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="900"></a></p>
+</li>
+<li>
+<p>Copy your <strong>access token</strong> and your <strong>refresh token</strong> into <code>.env</code>:</p>
+<div class="highlight"><pre><span></span><code>ACCESS_TOKEN=
+REFRESH_TOKEN=
+</code></pre></div>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The expiration time for the access token is 14 days, while the refresh token expires in 90 days.</p>
+</div>
+<p>From now on, use this <strong>Service App access token</strong> for API testing in Bruno and for the custom MCP server in the next lab.</p>
+<h2 id="step-24-using-the-token-to-call-an-api">Step 2.4: Using the token to call an API</h2>
+<p>Now, we will test that the Service App token works by making a standard REST API call using <strong>Bruno</strong> (or Postman). </p>
+<p>To demonstrate Control Hub management capabilities, we will use the <strong>Numbers API</strong> to list the phone numbers configured in the organization. This is a typical administrative task. A Personal Access Token would fail here; the Service App should succeed.</p>
+<ol>
+<li>Open <strong>Bruno</strong> and create a new <code>GET</code> request.</li>
+<li>Set the URL to: <code>https://webexapis.com/v1/telephony/config/numbers</code></li>
+<li>Go to the <strong>Headers</strong> tab and add:</li>
+<li><strong>Name</strong>: <code>Authorization</code></li>
+<li><strong>Value</strong>: <code>Bearer YOUR_SERVICE_APP_ACCESS_TOKEN</code> (replace with the token from your <code>.env</code> file)</li>
+<li>Click <strong>Send</strong>.</li>
+</ol>
+<p><strong>Equivalent cURL command:</strong>
+</p><div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer YOUR_SERVICE_APP_ACCESS_TOKEN"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">"https://webexapis.com/v1/telephony/config/numbers"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div><p></p>
+<p>You should receive a JSON response containing a list of phone numbers in your organization, proving your Service App is successfully authenticating and retrieving organizational data.</p>
+<h2 id="extra-refresh-your-access_token">Extra: Refresh your access_token</h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is not required for this lab, but it is important to keep in mind for production environments.</p>
+</div>
+<p>As mentioned earlier, the <strong>access_token</strong> will expire after 14 days, and the <strong>refresh_token</strong> will expire in 90 days. It is crucial to handle these expiration scenarios if you have an app running in production.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When a refresh token is used to generate a new access token, the refresh token's expiration time is reset.</p>
+</div>
+<p>You can refresh your <strong>access_token</strong> using your <strong>refresh_token</strong>, <strong>client_id</strong>, and <strong>client_secret</strong> by making a POST request to the Webex API. </p>
+<p>To manage the token expiration and refresh, we have provided a <code>TokenManager</code> class. This class checks if the token is expired and automatically updates your <code>.env</code> file so the new token persists across restarts.</p>
+<ol>
+<li>
+<p>Navigate to <code>02_webex_apis/token_manager.py</code> and review the code:</p>
+<details class="tip">
+<summary>Python Code</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span><span class="p">,</span> <span class="n">set_key</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"token-manager"</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TokenManager</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env_path</span><span class="o">=</span><span class="s2">".env"</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env_path</span> <span class="o">=</span> <span class="n">env_path</span>
+        <span class="n">load_dotenv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env_path</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_id</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"CLIENT_ID"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_secret</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"CLIENT_SECRET"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh_token_val</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"REFRESH_TOKEN"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"ACCESS_TOKEN"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expires_at</span> <span class="o">=</span> <span class="mi">0</span> 
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Returns a valid access token, refreshing it if necessary."""</span>
+        <span class="c1"># If we have a token and it hasn't expired (with a 60s safety buffer)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="ow">and</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">expires_at</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span>
+
+        <span class="c1"># Otherwise, refresh the token</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Forces a token refresh via the Webex API."""</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Refreshing Service App token..."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">client_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_secret</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">refresh_token_val</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Missing CLIENT_ID, CLIENT_SECRET, or REFRESH_TOKEN in environment."</span><span class="p">)</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">"https://webexapis.com/v1/access_token"</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">'grant_type'</span><span class="p">:</span> <span class="s1">'refresh_token'</span><span class="p">,</span>
+            <span class="s1">'refresh_token'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">refresh_token_val</span><span class="p">,</span>
+            <span class="s1">'client_id'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_id</span><span class="p">,</span>
+            <span class="s1">'client_secret'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_secret</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">'Content-type'</span><span class="p">:</span> <span class="s1">'application/x-www-form-urlencoded'</span>
+        <span class="p">}</span>
+
+        <span class="c1"># This is the raw REST API call to Webex to exchange the refresh token</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="n">token_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="o">=</span> <span class="n">token_data</span><span class="p">[</span><span class="s1">'access_token'</span><span class="p">]</span>
+
+            <span class="c1"># Calculate expiration time (subtract 60 seconds for safety buffer)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">expires_at</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="n">token_data</span><span class="p">[</span><span class="s1">'expires_in'</span><span class="p">]</span> <span class="o">-</span> <span class="mi">60</span>
+
+            <span class="c1"># If a new refresh token is provided, update it</span>
+            <span class="k">if</span> <span class="s1">'refresh_token'</span> <span class="ow">in</span> <span class="n">token_data</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">refresh_token_val</span> <span class="o">=</span> <span class="n">token_data</span><span class="p">[</span><span class="s1">'refresh_token'</span><span class="p">]</span>
+                <span class="n">set_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env_path</span><span class="p">,</span> <span class="s2">"REFRESH_TOKEN"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">refresh_token_val</span><span class="p">)</span>
+
+            <span class="c1"># Update the access token in the .env file for persistence</span>
+            <span class="n">set_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env_path</span><span class="p">,</span> <span class="s2">"ACCESS_TOKEN"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">)</span>
+
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Token refreshed successfully."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to refresh token: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+</details>
+</li>
+<li>
+<p>Navigate to <code>02_webex_apis/02_refresh.py</code> and review the code. This script imports the <code>TokenManager</code> to perform the refresh:</p>
+<details class="tip">
+<summary>Python Code</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">token_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">TokenManager</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2"> </span><span class="si">%(message)s</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Testing TokenManager..."</span><span class="p">)</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">TokenManager</span><span class="p">()</span>
+
+    <span class="c1"># Force a refresh by calling refresh() directly instead of get_token()</span>
+    <span class="n">new_token</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">--- Token Refreshed ---"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"New Access Token: </span><span class="si">{</span><span class="n">new_token</span><span class="p">[:</span><span class="mi">15</span><span class="p">]</span><span class="si">}</span><span class="s2">... (truncated)"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Your .env file has been automatically updated!"</span><span class="p">)</span>
+</code></pre></div>
+</details>
+</li>
+<li>
+<p>Run your code with the following command:</p>
+<ul>
+<li><code>python 02_webex_apis/02_refresh.py</code></li>
+</ul>
+</li>
+<li>
+<p>After running the code, you will see that the token was refreshed successfully, and if you check your <code>.env</code> file, the <code>ACCESS_TOKEN</code> and <code>REFRESH_TOKEN</code> values have been updated automatically.</p>
+</li>
+</ol>
+<h2 id="step-25-webex-apis-for-troubleshooting">Step 2.5 - Webex APIs for Troubleshooting</h2>
+<p>You now have a token with <strong>admin</strong> scopes. Use the Service App <code>ACCESS_TOKEN</code> in Bruno for the calls below. The Webex Status API is public and does not need a token.</p>
+<h3 id="webex-status-api">Webex Status API</h3>
+<p>Check platform health before deep-diving into org-specific issues.</p>
+<p>Reference: <a href="https://developer.webex.com/calling/docs/webex-status-api" target="_blank">Webex Status API</a></p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>https://status.webex.com/api/v2/status.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<p>Typical checks:</p>
+<ul>
+<li>Status summary and component rollup</li>
+<li>Unresolved incidents</li>
+<li>Scheduled maintenance</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Screenshot needed</p>
+<p>Add screenshot of status summary JSON or Control Hub status page alongside API output.</p>
+</div>
+<h3 id="audit-and-compliance">Audit and compliance</h3>
+<table>
+<thead>
+<tr>
+<th>API area</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Admin Audit Events</td>
+<td>Track configuration changes and admin actions</td>
+</tr>
+<tr>
+<td>Compliance Events</td>
+<td>Monitor messaging and room events as compliance officer</td>
+</tr>
+<tr>
+<td>Security Audit Events</td>
+<td>Review security-related admin activity</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">"https://webexapis.com/v1/adminAudit/events?max=10"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<h3 id="reports">Reports</h3>
+<p>Generate usage and activity reports for analysis:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"reportTemplateId": "REPLACE_WITH_TEMPLATE_ID"}'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>https://webexapis.com/v1/reports<span class="w"> </span><span class="p">|</span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Report templates and scopes vary by license. Your lab instructor will provide the template IDs available in the lab org. Add the matching scopes to the Service App if you get <code>403</code>.</p>
+</div>
+<h3 id="calling-and-meetings-troubleshooting">Calling and meetings troubleshooting</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>API starting point</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Call quality investigation</td>
+<td>Detailed Call History, Meeting Qualities</td>
+</tr>
+<tr>
+<td>Agent / queue issues</td>
+<td>Calling Service Settings, Call Routing APIs</td>
+</tr>
+<tr>
+<td>Meeting attendance / stats</td>
+<td>Meetings, Meeting Participants</td>
+</tr>
+</tbody>
+</table>
+<p>Example — list phone numbers (same call as Step 2.4):</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$ACCESS_TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">"https://webexapis.com/v1/telephony/config/numbers"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<h3 id="troubleshooting-guide">Troubleshooting guide</h3>
+<p>Review the official guide for diagnostic workflows:</p>
+<ul>
+<li><a href="https://developer.webex.com/explore/docs/api/guides/troubleshooting" target="_blank">Webex API Troubleshooting Guide</a></li>
+</ul>
+<p>Suggested lab activities (from session deck):</p>
+<ol>
+<li>Check general Webex Status</li>
+<li>Review admin audit events</li>
+<li>Create a report and download it</li>
+<li>Review compliance events</li>
+<li>Retrieve call history and meeting statistics</li>
+</ol>
+<h2 id="exercises">Exercises</h2>
+<p>TBC</p>
+<hr>
+<h2 id="step-26-the-n-m-problem-mcp-solves">Step 2.6: The N × M problem MCP solves</h2>
+<p>Without a standard protocol, every AI application needs custom glue code for every backend system — creating fragile, exponential integration work.</p>
+<p>MCP reduces this to <strong>N + M</strong> connections by providing a universal interface between AI hosts and platform capabilities.</p>
+<h2 id="step-27-when-to-use-webex-apis-vs-webex-mcp">Step 2.7: When to use Webex APIs vs Webex MCP</h2>
+<table>
+<thead>
+<tr>
+<th>Choose Webex REST APIs when…</th>
+<th>Choose Webex MCP when…</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>You need full control over every request</td>
+<td>You want natural-language access from an AI client</td>
+</tr>
+<tr>
+<td>Performance and custom business logic matter</td>
+<td>You need rapid prototyping across MCP-compatible tools</td>
+</tr>
+<tr>
+<td>You build enterprise apps with webhooks</td>
+<td>You connect IDE or agent frameworks to Webex quickly</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../lab1_webex-mcp-in-ide/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Lab 1 - Webex MCP Servers in Your IDE">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Lab 1 - Webex MCP Servers in Your IDE
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../lab3_custom-mcp-server/" class="md-footer__link md-footer__link--next" aria-label="Next: Lab 3 - Build MCP Server">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Lab 3 - Build MCP Server
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2026 Cisco
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.instant", "navigation.top", "navigation.footer", "search.suggest", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../template_assets/js/newLoad.js"></script>
+      
+        <script src="../template_assets/js/setInfo.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": false, "openEffect": "fade", "closeEffect": "fade", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

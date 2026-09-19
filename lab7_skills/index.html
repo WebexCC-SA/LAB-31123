@@ -1,0 +1,1161 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="LAB-31123: Building an AI Assistant to Manage and Troubleshoot Your Organization">
+      
+      
+        <meta name="author" content="Diego Manuel Jimenez Moreno">
+      
+      
+      
+        <link rel="prev" href="../lab6_mcp/">
+      
+      
+        <link rel="next" href="../lab8_use-cases/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../template_assets/webex75.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Lab 7 - Skills in AI Assistant - LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-7-skills-in-the-ai-assistant" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" class="md-header__button md-logo" aria-label="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" data-md-component="logo">
+      
+  <img src="../template_assets/webexLogo91.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 7 - Skills in AI Assistant
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../overview/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Lab
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" class="md-nav__button md-logo" aria-label="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" data-md-component="logo">
+      
+  <img src="../template_assets/webexLogo91.png" alt="logo">
+
+    </a>
+    LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab1_webex-mcp-in-ide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 1 - Webex MCP Servers in Your IDE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab2_webex-apis-troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2 - Webex APIs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab3_custom-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 3 - Build MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab4_agent-skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 4 - Agent Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab5_bot-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 5 - Integrate an AI Assistant with a Webex Bot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab6_mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 6 - MCP Servers in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 7 - Skills in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 7 - Skills in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-71-the-skillloader-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7.1: The SkillLoader class
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-72-discover-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7.2: Discover skills
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-73-progressive-disclosure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7.3: Progressive disclosure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-74-the-value-with-and-without" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7.4: The value — with and without
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-75-the-full-bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7.5: The full bot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-76-onboard-a-second-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7.6: Onboard a second skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-77-what-you-built" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7.7: What you built
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab8_use-cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 8 - Use Cases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conclusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-7-skills-in-the-ai-assistant">Lab 7 - Skills in the AI Assistant</h1>
+<p>In <strong>Lab 4</strong> you dropped the <code>meeting-review</code> skill into VS Code Chat (Agent
+mode) and it just worked — zero code. In this lab you build and <strong>own the
+mechanism</strong>: a Python <strong>skill loader</strong> that reads the <em>same</em> <code>SKILL.md</code> file,
+wire it into a bot, and then <strong>onboard a second skill</strong>.</p>
+<p>Same skill file. Same format. You now control the loader.</p>
+<p>All paths below are in the <code>WebexOne2026</code> repo you cloned in Getting Started.</p>
+<h3 id="setup">Setup</h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>07_skills_bot
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+cp<span class="w"> </span>.env.example<span class="w"> </span>.env<span class="w">    </span><span class="c1"># then edit .env</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Scripts 01 and 02 need <strong>no credentials</strong>. Script 03 needs <code>OPENAI_API_KEY</code>.
+Script 04 (the full bot) needs <code>BOT_TOKEN</code>, <code>OPENAI_API_KEY</code>, and MCP tokens.</p>
+</div>
+<h2 id="step-71-the-skillloader-class">Step 7.1: The SkillLoader class</h2>
+<p>Before running any script, read the shared foundation they all use.</p>
+<p>Open <code>07_skills_bot/skill_loader.py</code>:</p>
+<details class="tip">
+<summary>skill_loader.py</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Skill</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">instructions</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instructions</span> <span class="o">=</span> <span class="n">instructions</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SkillLoader</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skills_dir</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skills_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">skills_dir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skills</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_skills</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_skills</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">skill_path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">skills_dir</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span><span class="s2">"SKILL.md"</span><span class="p">):</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="n">skill_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"---"</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="n">skill_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">description</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"description"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">skills</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Skill</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_skill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">skills</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_skills_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"- </span><span class="si">{</span><span class="n">s</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">s</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">skills</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+</code></pre></div>
+</details>
+<p>This class does three things:</p>
+<ol>
+<li><strong>Discover</strong> — scan a directory for <code>SKILL.md</code> files, parse YAML frontmatter</li>
+<li><strong>Summarize</strong> — <code>get_all_skills_summary()</code> returns one-line-per-skill for the system prompt</li>
+<li><strong>Activate</strong> — <code>get_skill(name).instructions</code> returns the full body on demand</li>
+</ol>
+<p>Every script in this folder imports <code>SkillLoader</code> from this file. One class,
+one parser, shared everywhere.</p>
+<h2 id="step-72-discover-skills">Step 7.2: Discover skills</h2>
+<p>Run:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>01_what_is_a_skill.py
+</code></pre></div>
+<p>This script creates a <code>SkillLoader</code>, points it at <code>skills/</code>, and prints every
+discovered skill's <code>name</code> and <code>description</code>. You should see at least
+<code>meeting-review</code> and <code>troubleshoot-address-books</code>.</p>
+<p>This is the <strong>Discovery</strong> stage — what the agent learns at startup.</p>
+<h2 id="step-73-progressive-disclosure">Step 7.3: Progressive disclosure</h2>
+<p>Run:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>02_progressive_disclosure.py
+</code></pre></div>
+<p>It shows the Discovery-stage summary (~100 tokens) alongside the full
+Activation-stage body (~700+ tokens), and reports the size ratio.</p>
+<div class="highlight"><pre><span></span><code>Discovery summary:    ~91 tokens
+Full body:           ~736 tokens
+Full body is 8x larger.
+</code></pre></div>
+<p>With 10 skills, loading all bodies at startup costs ~7,300 tokens.
+Progressive disclosure keeps it at ~900 tokens — loading the full body only
+when the agent decides the skill is relevant.</p>
+<h2 id="step-74-the-value-with-and-without">Step 7.4: The value — with and without</h2>
+<p>Run:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>03_with_and_without_skill.py
+</code></pre></div>
+<p>This imports the Chapter 6 agent (<code>06_mcp_bot/llm.py</code> + <code>06_mcp_bot/mcp_client.py</code>),
+asks the same question twice — skill off, then on — and prints both answers.</p>
+<div class="highlight"><pre><span></span><code>WITHOUT skill              WITH skill
+-------------              ----------
+list meetings (done)       list meetings
+                           + participants + summary + recording + transcript
+                           + triage + prioritized actions
+1 scope, 1 call            5 scopes, many calls
+</code></pre></div>
+<p>If <code>WEBEX_MEETING_MCP_TOKEN</code> is not set, the example uses a canned dataset so the
+A/B still runs.</p>
+<p><strong>Key insight:</strong> the skill uses <code>SkillLoader.get_skill("meeting-review").instructions</code>
+to inject the runbook into the system prompt. Same class as scripts 01 and 02.</p>
+<h2 id="step-75-the-full-bot">Step 7.5: The full bot</h2>
+<p>Run:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>04_bot_skills.py
+</code></pre></div>
+<p>This is the capstone: a Webex bot connected to multiple MCP servers (messaging +
+meeting + custom), with the <code>SkillLoader</code> wired in. It:</p>
+<ol>
+<li>Discovers skills on startup (<code>SkillLoader</code>)</li>
+<li>Injects the skill summaries into the system prompt (<code>get_all_skills_summary()</code>)</li>
+<li>Gives the LLM a <code>read_skill_runbook</code> tool that calls <code>get_skill(name).instructions</code></li>
+<li>The LLM decides when to load a skill — same progressive disclosure pattern</li>
+</ol>
+<p>In Webex, ask your bot:</p>
+<blockquote>
+<p><em>"Review the meetings for user1@webexone-ai-assistant.wbx.ai — check who
+joined, summaries, and recordings, and flag anything missing."</em></p>
+</blockquote>
+<p>The LLM sees <code>meeting-review</code> in the skill summary, calls <code>read_skill_runbook</code>,
+reads the full runbook, then follows it.</p>
+<h2 id="step-76-onboard-a-second-skill">Step 7.6: Onboard a second skill</h2>
+<p><code>07_skills_bot/skills/</code> already includes a second skill:</p>
+<div class="highlight"><pre><span></span><code>skills/
+    meeting-review/SKILL.md
+    troubleshoot-address-books/SKILL.md   &lt;- second skill
+</code></pre></div>
+<p>Restart the bot — it discovers both automatically (the loader scans the
+directory). Ask a contact-center question:</p>
+<blockquote>
+<p><em>"An agent says they can't see any contacts in their address book on the
+desktop. Can you investigate?"</em></p>
+</blockquote>
+<p>The LLM loads <code>troubleshoot-address-books</code> and follows its cross-server runbook.</p>
+<div class="admonition note">
+<p class="admonition-title">Prerequisite for troubleshoot-address-books</p>
+<p>This skill orchestrates the capstone <strong>address-book</strong> and
+<strong>desktop-profile</strong> MCP servers plus the local <code>check_webex_status</code>
+tool. Those servers must be connected for the skill to execute its steps.</p>
+</div>
+<p>Adding a skill is just adding a folder — no code change. The loader discovers it.</p>
+<h2 id="step-77-what-you-built">Step 7.7: What you built</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Script</th>
+<th>Concept</th>
+<th>SkillLoader method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>—</td>
+<td><code>skill_loader.py</code></td>
+<td>The shared class</td>
+<td><code>__init__</code>, <code>_load_skills</code></td>
+</tr>
+<tr>
+<td>01</td>
+<td><code>01_what_is_a_skill.py</code></td>
+<td>Discovery</td>
+<td><code>SkillLoader(dir).skills</code></td>
+</tr>
+<tr>
+<td>02</td>
+<td><code>02_progressive_disclosure.py</code></td>
+<td>3 stages</td>
+<td><code>get_all_skills_summary()</code> + <code>get_skill().instructions</code></td>
+</tr>
+<tr>
+<td>03</td>
+<td><code>03_with_and_without_skill.py</code></td>
+<td>Value A/B</td>
+<td><code>get_skill().instructions</code> → system prompt</td>
+</tr>
+<tr>
+<td>04</td>
+<td><code>04_bot_skills.py</code></td>
+<td>Bot integration</td>
+<td><code>get_all_skills_summary()</code> + <code>read_skill_runbook</code> tool</td>
+</tr>
+</tbody>
+</table>
+<p>The skill file never changed between Lab 4 and Lab 7. Only the host did:
+VS Code Chat there, your Python loader + bot here. <strong>Write the skill once,
+run it anywhere.</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../lab6_mcp/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Lab 6 - MCP Servers in AI Assistant">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Lab 6 - MCP Servers in AI Assistant
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../lab8_use-cases/" class="md-footer__link md-footer__link--next" aria-label="Next: Lab 8 - Use Cases">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Lab 8 - Use Cases
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2026 Cisco
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.instant", "navigation.top", "navigation.footer", "search.suggest", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../template_assets/js/newLoad.js"></script>
+      
+        <script src="../template_assets/js/setInfo.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": false, "openEffect": "fade", "closeEffect": "fade", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

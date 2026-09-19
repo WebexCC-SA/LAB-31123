@@ -1,0 +1,2280 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="LAB-31123: Building an AI Assistant to Manage and Troubleshoot Your Organization">
+      
+      
+        <meta name="author" content="Diego Manuel Jimenez Moreno">
+      
+      
+      
+        <link rel="prev" href="../lab5_bot-integration/">
+      
+      
+        <link rel="next" href="../lab7_skills/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../template_assets/webex75.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Lab 6 - MCP Servers in AI Assistant - LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-6-mcp-servers-in-ai-assistant" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" class="md-header__button md-logo" aria-label="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" data-md-component="logo">
+      
+  <img src="../template_assets/webexLogo91.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 6 - MCP Servers in AI Assistant
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../overview/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Lab
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" class="md-nav__button md-logo" aria-label="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" data-md-component="logo">
+      
+  <img src="../template_assets/webexLogo91.png" alt="logo">
+
+    </a>
+    LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab1_webex-mcp-in-ide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 1 - Webex MCP Servers in Your IDE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab2_webex-apis-troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2 - Webex APIs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab3_custom-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 3 - Build MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab4_agent-skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 4 - Agent Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab5_bot-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 5 - Integrate an AI Assistant with a Webex Bot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 6 - MCP Servers in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 6 - MCP Servers in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-request-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Request Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-61-build-the-mcp-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6.1: Build the MCP Client
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-62-list-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6.2: List tools
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-63-call-a-specific-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6.3: Call a specific tool
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-64-use-an-llm-to-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6.4: Use an LLM to call
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-65-hub" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6.5: Hub
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-66-integration-with-the-bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6.6: Integration with the Bot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-67-custom-mcp-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6.7: Custom MCP server
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extra-local-tool-adaptive-card" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extra: Local Tool + Adaptive Card
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extra-from-the-ide-to-a-bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extra: From the IDE to a bot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extra: From the IDE to a bot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-the-ide-does-it-in-the-background" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the IDE does it in the background
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-that-is-not-enough-for-a-bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why that is not enough for a bot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is-there-another-way-to-put-mcp-in-webex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Is there another way to put MCP in Webex?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frameworks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frameworks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab7_skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 7 - Skills in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab8_use-cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 8 - Use Cases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conclusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-6-mcp-servers-in-ai-assistant">Lab 6 - MCP Servers in AI Assistant</h1>
+<p>You already used MCP in Visual Studio Code (Lab 1) and built a custom MCP server (Lab 3). The IDE was the host: it hid the client, the tool loop, and the HTTP session.</p>
+<p>In Lab 5 you built a Webex bot with an LLM, but it still has no tools. In this section you write the <strong>MCP client</strong> in Python and plug it into that bot, so people in Webex can call the same tools you used in the IDE.</p>
+<p>The bot will use <strong>tools</strong> (the same primitive as in Lab 3). VS Code can attach resources and prompts for you; a bot has to choose tools from the user's message.</p>
+<h2 id="architecture">Architecture</h2>
+<pre class="mermaid"><code>flowchart LR
+    User[Webex User] &lt;--&gt;|Messages| Bot[Webex Bot]
+    Bot &lt;--&gt;|Prompts &amp; Responses| Agent[LLM]
+    Agent &lt;--&gt;|Tool Calls| MCP[MCP Client]
+    MCP &lt;--&gt;|MCP Protocol| Server[MCP Server]
+    Server &lt;--&gt;|REST| API[Webex APIs]</code></pre>
+<h3 id="the-request-flow">The Request Flow</h3>
+<p>Here is how a single question travels through that architecture:</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant U as Webex User
+    participant B as Webex Bot
+    participant A as AI Assistant
+    participant C as MCP Client
+    participant S as MCP Server
+    participant W as Webex API
+
+    U-&gt;&gt;B: "What meetings do I have this week?"
+    B-&gt;&gt;A: Forward message + context
+    A-&gt;&gt;A: LLM plans next action
+    A-&gt;&gt;C: Call tool webex-list-meetings
+    C-&gt;&gt;S: tools/call
+    S-&gt;&gt;W: GET /v1/meetings
+    W--&gt;&gt;S: Meetings data
+    S--&gt;&gt;C: Filtered JSON
+    C--&gt;&gt;A: Tool result
+    A-&gt;&gt;B: Summary of upcoming meetings
+    B-&gt;&gt;U: Response in Webex space</code></pre>
+<h2 id="step-61-build-the-mcp-client">Step 6.1: Build the MCP Client</h2>
+<p>These are the MCP components used in this section:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+<th>In this section</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Host</strong></td>
+<td>App that creates MCP clients (later also LLM / bot)</td>
+<td>Python scripts and Webex bot</td>
+</tr>
+<tr>
+<td><strong>Client</strong></td>
+<td>One session, one server, one token</td>
+<td><code>McpClient</code></td>
+</tr>
+<tr>
+<td><strong>Server</strong></td>
+<td>Exposes tools (and resources/prompts)</td>
+<td>Hosted Webex Messaging MCP and Meetings MCP</td>
+</tr>
+</tbody>
+</table>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Host["MCP Host"]
+        UI[Terminal or Webex bot]
+        LLM[LLM]
+        C1[MCP Client - Messaging]
+        C2[MCP Client - Meetings]
+        UI --&gt; LLM
+        LLM --&gt; C1
+        LLM --&gt; C2
+    end
+    S1["MCP Server\nwebex-messaging"]
+    S2["MCP Server\nwebex-meeting"]
+    C1 &lt;--&gt;|Streamable HTTP + Bearer token| S1
+    C2 &lt;--&gt;|Streamable HTTP + Bearer token| S2</code></pre>
+<p>To integrate the Webex MCP Servers into your Assistant, you need an MCP Client.</p>
+<ol>
+<li>
+<p>Navigate to <code>06_mcp_bot/mcp_client.py</code> and review the code:</p>
+<details class="tip">
+<summary>Python Code</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">asynccontextmanager</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClientSession</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp.client.stdio</span><span class="w"> </span><span class="kn">import</span> <span class="n">StdioServerParameters</span><span class="p">,</span> <span class="n">stdio_client</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp.client.streamable_http</span><span class="w"> </span><span class="kn">import</span> <span class="n">streamable_http_client</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp.shared._httpx_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_mcp_http_client</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"mcp.client.streamable_http"</span><span class="p">)</span><span class="o">.</span><span class="n">addFilter</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">record</span><span class="p">:</span> <span class="s2">"Error parsing SSE message"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span>
+<span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">McpClient</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""One MCP session = one remote URL + token, or one local stdio command."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">access_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="o">=</span> <span class="n">access_token</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="n">command</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cwd</span> <span class="o">=</span> <span class="n">cwd</span>
+
+    <span class="nd">@asynccontextmanager</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">StdioServerParameters</span><span class="p">(</span>
+                <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cwd</span>
+            <span class="p">)</span>
+            <span class="k">async</span> <span class="k">with</span> <span class="n">stdio_client</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">):</span>
+                <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+                    <span class="k">yield</span> <span class="n">session</span>
+            <span class="k">return</span>
+
+        <span class="n">http</span> <span class="o">=</span> <span class="n">create_mcp_http_client</span><span class="p">(</span><span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Bearer </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="si">}</span><span class="s2">"</span><span class="p">})</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">http</span><span class="p">:</span>
+            <span class="k">async</span> <span class="k">with</span> <span class="n">streamable_http_client</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">http_client</span><span class="o">=</span><span class="n">http</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">):</span>
+                <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+                    <span class="k">yield</span> <span class="n">session</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">list_tools</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">(</span><span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">list_tools</span><span class="p">())</span><span class="o">.</span><span class="n">tools</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># The SDK runs the transport in a task group, so the real error is nested.</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exception</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">call_tool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arguments</span> <span class="ow">or</span> <span class="p">{})</span>
+                <span class="n">texts</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">content</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="s2">"type"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"text"</span><span class="p">]</span>
+                <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span> <span class="k">if</span> <span class="n">texts</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exception</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div>
+</details>
+</li>
+</ol>
+<p>This MCP client can talk to a remote Webex MCP server (URL + token) or a local custom server (<code>command</code> + <code>args</code>, stdio). The next exercises use HTTP. The last exercise adds the Lab 3 server over stdio.</p>
+<h2 id="step-62-list-tools">Step 6.2: List tools</h2>
+<p>Now, we will connect to the MCP server using the client. In this first exercise, we will list the Tools available in the Webex Meetings MCP server.</p>
+<ol>
+<li>
+<p>Navigate to <code>06_mcp_bot/01_list_tools.py</code> and review the code:</p>
+<details class="tip">
+<summary>Python Code</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">McpClient</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">truststore</span>
+
+    <span class="n">truststore</span><span class="o">.</span><span class="n">inject_into_ssl</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="n">MEETING_MCP_URL</span> <span class="o">=</span> <span class="s2">"https://mcp.webexapis.com/mcp/webex-meeting"</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2"> </span><span class="si">%(message)s</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"mcp-list-tools"</span><span class="p">)</span>
+
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="n">MEETING_TOKEN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"WEBEX_MEETING_MCP_TOKEN"</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">MEETING_TOKEN</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">"Set WEBEX_MEETING_MCP_TOKEN in your .env file"</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">tools</span> <span class="o">=</span> <span class="k">await</span> <span class="n">McpClient</span><span class="p">(</span><span class="n">MEETING_TOKEN</span><span class="p">,</span> <span class="n">MEETING_MCP_URL</span><span class="p">)</span><span class="o">.</span><span class="n">list_tools</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">tools</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span><span class="si">}</span><span class="s2"> tool(s) from </span><span class="si">{</span><span class="n">MEETING_MCP_URL</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  - </span><span class="si">{</span><span class="n">tool</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">tool</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+</details>
+</li>
+<li>
+<p>In VS Code, change your terminal to the correct folder:</p>
+<ul>
+<li>cd ../06_mcp_bot</li>
+</ul>
+</li>
+<li>
+<p>Open the <code>.env</code> file at the root of your project and copy the Webex MCP Tokens into it:</p>
+<div class="highlight"><pre><span></span><code>WEBEX_MEETING_MCP_TOKEN=your_meetings_mcp_token
+</code></pre></div>
+</li>
+<li>
+<p>Run your code with the following command:</p>
+<ul>
+<li>python 01_list_tools.py</li>
+</ul>
+</li>
+<li>
+<p>You will see the following in the terminal:</p>
+<div class="highlight"><pre><span></span><code>2026-09-15 11:09:39,412 INFO 8 tool(s) from https://mcp.webexapis.com/mcp/webex-meeting
+2026-09-15 11:09:39,412 INFO   - webex-list-meetings: List Webex meetings for the authenticated user. Returns meeting details including meeting number, topic, start/end time, host info, and optionally the full invitee list with pagination. Meetings are streamed progressively as result chunks during fetch and returned as a complete array in the final response. Filter by date range, meeting number, topic keyword, meetingType, or state. The returned &amp;#39;id&amp;#39; field is the meetingId used to identify a specific meeting. Use meetingType&amp;#61;&amp;#39;meeting&amp;#39; and state&amp;#61;&amp;#39;ended&amp;#39; to find ended meeting instances. Default meetingType is &amp;#39;meetingSeries&amp;#39; which returns upcoming recurring meetings. Invitees are fully paginated (no truncation). Rate-limited API calls are retried automatically.
+2026-09-15 11:09:39,412 INFO   - webex-create-meeting: Create a new Webex meeting. Requires a title and start time. Optionally specify end time or duration, invitees, recurrence pattern, timezone, and meeting password. Returns the created meeting details including meeting number, join link, and SIP address.
+2026-09-15 11:09:39,412 INFO   - webex-update-meeting: Update properties of an existing Webex meeting and/or manage invitees in one call. Requires meetingId (available from webex-list-meetings). Meeting property updates are partial: only provided fields are changed. Invitee operations support add, update role/displayName, and remove by email. Best-effort behavior: if multiple operations are requested, successful operations are returned along with per-operation errors.
+2026-09-15 11:09:39,412 INFO   - webex-delete-meeting: Delete a scheduled Webex meeting by meeting ID (available from webex-list-meetings). Optionally send cancellation email to attendees (sendEmail, default true). Admin users can delete on behalf of a host using hostEmail.
+2026-09-15 11:09:39,412 INFO   - webex-get-meeting-status: Retrieve meeting details and optionally fetch all participants. Supported meetingId types are meeting series ID, scheduled meeting ID, and meeting instance ID (in-progress or ended). When participants are included, all participants are fetched across all pages and streamed as result chunks. Participant data is available when the caller is the meeting host; attendees may not have access to participant details even when meeting details are visible. Use includeParticipants&amp;#61;false to fetch meeting status only when participant access is restricted.
+2026-09-15 11:09:39,413 INFO   - webex-get-meeting-summary: Retrieve the AI-generated summary and action items for an ended Webex meeting. Requires a meetingId from an ended meeting instance (available from webex-list-meetings with meetingType&amp;#61;&amp;#39;meeting&amp;#39; and state&amp;#61;&amp;#39;ended&amp;#39;). Returns HTML summary notes and a list of action items in plaintext. Only works for meetings where Webex AI Assistant was enabled. Not supported for Webex for Government (FedRAMP). Only summaries for meetings hosted by or shared with the authenticated user can be retrieved. Summaries for meetings the user merely attended (but did not host) are not accessible unless the host has explicitly shared the meeting content.
+2026-09-15 11:09:39,413 INFO   - webex-list-recordings: List meeting recording metadata and access URLs (playback link, download link). Returns metadata only — not video content. Automatically paginates through all results using Link:rel&amp;#61;next until the total reaches the &amp;#39;max&amp;#39; limit. Each recording is streamed as a chunk for real-time progress, and the full array is included in the final response. Retries automatically on rate limits (HTTP 429). Filter by meetingId to find recordings for a specific meeting (accepts any ID type: series, scheduled, or instance; available from webex-list-meetings). Only recordings of meetings hosted by or shared with the authenticated user are returned. Recordings for meetings the user merely attended (but did not host) will not appear unless the host has explicitly shared the recording.
+2026-09-15 11:09:39,413 INFO   - webex-list-transcripts: List all accessible transcripts, including Meeting Transcripts generated by Webex/Cisco AI Assistant or Closed Captions and transcripts attached to meeting recordings. For Meeting Transcript content, the tool downloads and locally parses the complete VTT from the exact vttDownloadLink returned by Webex; only if that fails does it paginate the snippets API. It then lists recordings and retrieves recording details only for meetings without a usable Meeting Transcript. Meeting Transcripts take precedence so the same meeting is not returned again from the recording source. If both VTT and snippets content retrieval fail, an available recording transcript replaces it as fallback. Multiple recording parts for one meeting are combined chronologically into one result. If recording discovery is unavailable after Meeting Transcripts were retrieved, those results are preserved and data.warnings reports that recording-backed results may be incomplete. Automatically paginates list APIs up to &amp;#39;max&amp;#39;, retries HTTP 429 responses, and optionally includes transcript content. Only meetings hosted by or shared with the authenticated user are returned.
+</code></pre></div>
+<p>The 8 tools available are printed there.</p>
+</li>
+</ol>
+<h2 id="step-63-call-a-specific-tool">Step 6.3: Call a specific tool</h2>
+<p>Now that we have listed the tools, we will write the code that actually calls a tool. In this example, we will call "webex-list-meetings".</p>
+<ol>
+<li>
+<p>Navigate to <code>06_mcp_bot/02_list_meetings.py</code> and review the code:</p>
+<details class="tip">
+<summary>Python Code</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">timezone</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">McpClient</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">truststore</span>
+
+    <span class="n">truststore</span><span class="o">.</span><span class="n">inject_into_ssl</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="n">MEETING_MCP_URL</span> <span class="o">=</span> <span class="s2">"https://mcp.webexapis.com/mcp/webex-meeting"</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2"> </span><span class="si">%(message)s</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"mcp-list-meetings"</span><span class="p">)</span>
+
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="n">MEETING_TOKEN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"WEBEX_MEETING_MCP_TOKEN"</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">MEETING_TOKEN</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">"Set WEBEX_MEETING_MCP_TOKEN in your .env file"</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+    <span class="n">arguments</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"from"</span><span class="p">:</span> <span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2">T00:00:00Z"</span><span class="p">),</span>
+        <span class="s2">"to"</span><span class="p">:</span> <span class="p">(</span><span class="n">now</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2">T23:59:59Z"</span><span class="p">),</span>
+        <span class="s2">"meetingType"</span><span class="p">:</span> <span class="s2">"scheduledMeeting"</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Calling webex-list-meetings </span><span class="si">{</span><span class="n">arguments</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">McpClient</span><span class="p">(</span><span class="n">MEETING_TOKEN</span><span class="p">,</span> <span class="n">MEETING_MCP_URL</span><span class="p">)</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span>
+        <span class="s2">"webex-list-meetings"</span><span class="p">,</span>
+        <span class="n">arguments</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+</details>
+</li>
+<li>
+<p>Run your code with the following command:</p>
+<ul>
+<li>python 02_list_meetings.py</li>
+</ul>
+</li>
+<li>
+<p>You should see the meeting scheduled in Lab 1:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code>2026-09-14 19:28:03,729 INFO {"data":{"meetings":[{"id":"cd9966d90d5a43bfa8e002f6e8b6aa4e","meetingNumber":"26604791633","title":"Meeting with user1@webexone-ai-assistant.wbx.ai","start":"2026-09-15T16:00:00Z","end":"2026-09-15T17:00:00Z","state":"ready","meetingType":"scheduledMeeting","timezone":"UTC","hostDisplayName":"admin@webexone-ai-assistant.wbx.ai","hostEmail":"admin@webexone-ai-assistant.wbx.ai","webLink":"https://webexone-ai-assistant-sbx.webex.com/webexone-ai-assistant-sbx/j.php?MTID=mea0739a573d6ff87dbab949d46715c08","sipAddress":"26604791633@webexone-ai-assistant-sbx.webex.com","invitees":[{"id":"cd9966d90d5a43bfa8e002f6e8b6aa4e_4266817701","email":"user1@webexone-ai-assistant.wbx.ai","displayName":"user1@webexone-ai-assistant.wbx.ai","coHost":false,"panelist":false}]}],"count":1,"totalMeetings":1},"success":true}
+</code></pre></div>
+<p>In this case, we have printed the raw information that the tool returned.</p>
+<h2 id="step-64-use-an-llm-to-call">Step 6.4: Use an LLM to call</h2>
+<p>In this scenario, the LLM will choose which tool to use from the catalog. We will make a query in natural language, and the LLM will decide which tool from the list is needed to get that information. The LLM will then process the result and reply to us in natural language.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Our query will be a constant inside the code.</p>
+</div>
+<ol>
+<li>
+<p>Navigate to <code>06_mcp_bot/llm.py</code> and review the code. We will use this module from now on as a wrapper to call OpenAI:</p>
+<details class="tip">
+<summary>Python Code</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+
+<span class="n">OPENAI_URL</span> <span class="o">=</span> <span class="s2">"https://api.openai.com/v1/chat/completions"</span>
+<span class="n">MAX_STEPS</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"mcp-llm"</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ask_llm</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""One Chat Completions round. Returns the assistant message (text or tool calls)."""</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+        <span class="n">OPENAI_URL</span><span class="p">,</span>
+        <span class="n">headers</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">"Authorization"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Bearer </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">'OPENAI_API_KEY'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="s2">"Content-Type"</span><span class="p">:</span> <span class="s2">"application/json"</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">"model"</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"OPENAI_MODEL"</span><span class="p">,</span> <span class="s2">"gpt-5-nano"</span><span class="p">),</span>
+            <span class="s2">"messages"</span><span class="p">:</span> <span class="n">messages</span><span class="p">,</span>
+            <span class="s2">"tools"</span><span class="p">:</span> <span class="n">tools</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">"choices"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">"message"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">as_openai_tools</span><span class="p">(</span><span class="n">mcp_tools</span><span class="p">):</span>
+    <span class="c1"># An MCP tool already describes itself with a JSON schema, which is what OpenAI wants.</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"function"</span><span class="p">,</span>
+            <span class="s2">"function"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"name"</span><span class="p">:</span> <span class="n">tool</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">"description"</span><span class="p">:</span> <span class="n">tool</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+                <span class="s2">"parameters"</span><span class="p">:</span> <span class="n">tool</span><span class="o">.</span><span class="n">input_schema</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">mcp_tools</span>
+    <span class="p">]</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_turn</span><span class="p">(</span><span class="n">mcp</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="n">MAX_STEPS</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_steps</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">ask_llm</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="n">tool_calls</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tool_calls"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tool_calls</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"content"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">"(no answer)"</span>
+
+        <span class="k">for</span> <span class="n">call</span> <span class="ow">in</span> <span class="n">tool_calls</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">call</span><span class="p">[</span><span class="s2">"function"</span><span class="p">][</span><span class="s2">"name"</span><span class="p">]</span>
+            <span class="n">arguments</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">call</span><span class="p">[</span><span class="s2">"function"</span><span class="p">][</span><span class="s2">"arguments"</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">"</span><span class="si">{}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"LLM asked for </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">arguments</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">mcp</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"tool"</span><span class="p">,</span> <span class="s2">"tool_call_id"</span><span class="p">:</span> <span class="n">call</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">result</span> <span class="ow">or</span> <span class="s2">"Tool error"</span><span class="p">}</span>
+            <span class="p">)</span>
+
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"Stopped after </span><span class="si">{</span><span class="n">max_steps</span><span class="si">}</span><span class="s2"> tool steps without a final answer."</span>
+</code></pre></div>
+</details>
+</li>
+<li>
+<p>Navigate to <code>06_mcp_bot/03_llm.py</code> and review the code:</p>
+<details class="tip">
+<summary>Python Code</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">as_openai_tools</span><span class="p">,</span> <span class="n">run_turn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">McpClient</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">truststore</span>
+
+    <span class="n">truststore</span><span class="o">.</span><span class="n">inject_into_ssl</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="n">MEETING_MCP_URL</span> <span class="o">=</span> <span class="s2">"https://mcp.webexapis.com/mcp/webex-meeting"</span>
+<span class="n">QUESTION</span> <span class="o">=</span> <span class="s2">"What meetings do I have scheduled this week?"</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2"> </span><span class="si">%(message)s</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"mcp-llm"</span><span class="p">)</span>
+
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="n">MEETING_TOKEN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"WEBEX_MEETING_MCP_TOKEN"</span><span class="p">)</span>
+<span class="n">OPENAI_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"OPENAI_API_KEY"</span><span class="p">)</span>
+<span class="n">OPENAI_MODEL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"OPENAI_MODEL"</span><span class="p">,</span> <span class="s2">"gpt-5-nano"</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">MEETING_TOKEN</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">"Set WEBEX_MEETING_MCP_TOKEN in your .env file"</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">OPENAI_API_KEY</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">"Set OPENAI_API_KEY in your .env file"</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">McpClient</span><span class="p">(</span><span class="n">MEETING_TOKEN</span><span class="p">,</span> <span class="n">MEETING_MCP_URL</span><span class="p">)</span>
+    <span class="n">tools</span> <span class="o">=</span> <span class="n">as_openai_tools</span><span class="p">(</span><span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">list_tools</span><span class="p">())</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Offering </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span><span class="si">}</span><span class="s2"> Meetings MCP tool(s) to </span><span class="si">{</span><span class="n">OPENAI_MODEL</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"system"</span><span class="p">,</span>
+            <span class="s2">"content"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"You help a Webex user with their meetings. Today is </span><span class="si">{</span><span class="n">today</span><span class="si">}</span><span class="s2"> (UTC). "</span>
+                <span class="s2">"Answer only from tool results, never from memory, and keep replies short."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="p">{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">QUESTION</span><span class="p">},</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="n">run_turn</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Question: </span><span class="si">{</span><span class="n">QUESTION</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">()))</span>
+</code></pre></div>
+</details>
+</li>
+<li>
+<p>Open the <code>.env</code> file at the root of your project and set the <code>OPENAI_API_KEY</code>:</p>
+<div class="highlight"><pre><span></span><code>OPENAI_API_KEY=
+</code></pre></div>
+</li>
+<li>
+<p>Run your code with the following command:</p>
+<ul>
+<li>python 03_llm.py</li>
+</ul>
+</li>
+<li>
+<p>You should see in the console how tools were offered to the model, which one it picked, and its answer:</p>
+<div class="highlight"><pre><span></span><code>2026-09-15 11:14:54,415 INFO Offering 8 Meetings MCP tool(s) to gpt-5-nano
+2026-09-15 11:15:02,662 INFO LLM asked for webex-list-meetings {'from': '2026-09-14T00:00:00Z', 'to': '2026-09-21T00:00:00Z', 'max': 100, 'includeParticipants': False}
+...
+2026-09-15 11:15:33,840 INFO Here’s what you have this week:
+
+- Meeting: Meeting with user1@webexone-ai-assistant.wbx.ai
+  - When: 2026-09-15 16:00–17:00 UTC
+  - Meeting number: 26604791633
+  - Host: admin@webexone-ai-assistant.wbx.ai
+  - Join: https://webexone-ai-assistant-sbx.webex.com/webexone-ai-assistant-sbx/j.php?MTID=m4bc7e596e836eadff3446f07b1379e7e
+  - SIP: 26604791633@webexone-ai-assistant-sbx.webex.com
+
+Want me to add this to your calendar or share the invite?
+</code></pre></div>
+</li>
+</ol>
+<h2 id="step-65-hub">Step 6.5: Hub</h2>
+<p>So far we have only added one Webex Meeting MCP Server. Now, we will also add the Webex Messaging MCP server. The LLM won't pick a server; it only picks a tool name, as all tools are going to be presented together. We will introduce the class <code>McpHub</code>, which lists tools from every server as one combined list and, when the model calls a name, routes that call to the right client.</p>
+<ol>
+<li>
+<p>Navigate to <code>06_mcp_bot/mcp_hub.py</code> and review the code:</p>
+<details class="tip">
+<summary>Python Code</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">mcp_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">McpClient</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">McpHub</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">servers</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clients</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">servers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">McpClient</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">clients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">url</span><span class="p">,</span> <span class="n">token</span> <span class="o">=</span> <span class="n">item</span>
+                <span class="k">if</span> <span class="n">token</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">clients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">McpClient</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">url</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_by_name</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">list_tools</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tools</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_by_name</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">client</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">clients</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">list_tools</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_by_name</span><span class="p">[</span><span class="n">tool</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">client</span>
+                <span class="n">tools</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tool</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tools</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">call_tool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_by_name</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_tools</span><span class="p">()</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_by_name</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown MCP tool: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<div class="admonition note">
+<p class="admonition-title">Configuration-Driven Architecture</p>
+<p>In this lab, we are hardcoding the MCP Server URLs (e.g., <code>https://mcp.webexapis.com/mcp/webex-messaging</code>) directly in our Python scripts so you can clearly see the flow of data. </p>
+<p>In a production environment, a hub like this should be <strong>configuration-driven</strong>. Instead of hardcoding URLs, your bot would read a configuration file (like the <code>mcp.json</code> used by VS Code) or load a list of active servers from a database or <code>.env</code> file. This allows administrators to add, remove, or update MCP servers without modifying the bot's source code.</p>
+</div>
+</li>
+<li>
+<p>Navigate to <code>06_mcp_bot/04_hub.py</code> and review the code. In this exercise, we will ask two questions to the LLM: one related to My Meetings and another related to My Spaces.</p>
+<details class="tip">
+<summary>Python Code</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">as_openai_tools</span><span class="p">,</span> <span class="n">run_turn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp_hub</span><span class="w"> </span><span class="kn">import</span> <span class="n">McpHub</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">truststore</span>
+
+    <span class="n">truststore</span><span class="o">.</span><span class="n">inject_into_ssl</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="n">MESSAGING_MCP_URL</span> <span class="o">=</span> <span class="s2">"https://mcp.webexapis.com/mcp/webex-messaging"</span>
+<span class="n">MEETING_MCP_URL</span> <span class="o">=</span> <span class="s2">"https://mcp.webexapis.com/mcp/webex-meeting"</span>
+<span class="n">QUESTION</span> <span class="o">=</span> <span class="s2">"What meetings do I have this week, and how many spaces do I have?"</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2"> </span><span class="si">%(message)s</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"mcp-hub"</span><span class="p">)</span>
+
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="n">MESSAGING_TOKEN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"WEBEX_MESSAGING_MCP_TOKEN"</span><span class="p">)</span>
+<span class="n">MEETING_TOKEN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"WEBEX_MEETING_MCP_TOKEN"</span><span class="p">)</span>
+<span class="n">OPENAI_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"OPENAI_API_KEY"</span><span class="p">)</span>
+<span class="n">OPENAI_MODEL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"OPENAI_MODEL"</span><span class="p">,</span> <span class="s2">"gpt-5-nano"</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">OPENAI_API_KEY</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">"Set OPENAI_API_KEY in your .env file"</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">MESSAGING_TOKEN</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">MEETING_TOKEN</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span>
+        <span class="s2">"Set WEBEX_MESSAGING_MCP_TOKEN and/or WEBEX_MEETING_MCP_TOKEN in your .env file"</span>
+    <span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">hub</span> <span class="o">=</span> <span class="n">McpHub</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="p">(</span><span class="n">MESSAGING_MCP_URL</span><span class="p">,</span> <span class="n">MESSAGING_TOKEN</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">MEETING_MCP_URL</span><span class="p">,</span> <span class="n">MEETING_TOKEN</span><span class="p">),</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">tools</span> <span class="o">=</span> <span class="n">as_openai_tools</span><span class="p">(</span><span class="k">await</span> <span class="n">hub</span><span class="o">.</span><span class="n">list_tools</span><span class="p">())</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Offering </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span><span class="si">}</span><span class="s2"> tool(s) from </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">hub</span><span class="o">.</span><span class="n">clients</span><span class="p">)</span><span class="si">}</span><span class="s2"> MCP server(s) to </span><span class="si">{</span><span class="n">OPENAI_MODEL</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"system"</span><span class="p">,</span>
+            <span class="s2">"content"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"You help a Webex user with messaging and meetings. Today is </span><span class="si">{</span><span class="n">today</span><span class="si">}</span><span class="s2"> (UTC). "</span>
+                <span class="s2">"Answer only from tool results, never from memory, and keep replies short."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="p">{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">QUESTION</span><span class="p">},</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="n">run_turn</span><span class="p">(</span><span class="n">hub</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Question: </span><span class="si">{</span><span class="n">QUESTION</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">()))</span>
+</code></pre></div>
+</details>
+</li>
+<li>
+<p>Open the <code>.env</code> file at the root of your project and set the <code>WEBEX_MESSAGING_MCP_TOKEN</code> if you didn't do it before:</p>
+<div class="highlight"><pre><span></span><code>WEBEX_MESSAGING_MCP_TOKEN=your_messaging_mcp_token
+</code></pre></div>
+</li>
+<li>
+<p>Run your code with the following command:</p>
+<ul>
+<li>python 04_hub.py</li>
+</ul>
+</li>
+<li>
+<p>You should see now that the tools were combined together. The LLM decided to make two different calls (one for each part of the question), and then it combined the answers in natural language.</p>
+<div class="highlight"><pre><span></span><code>2026-09-15 11:43:47,642 INFO Question: What meetings do I have this week, and how many spaces do I have?
+...
+2026-09-15 11:44:16,109 INFO Offering 32 tool(s) from 2 MCP server(s) to gpt-5-nano
+2026-09-15 11:44:24,942 INFO LLM asked for webex-list-meetings {'from': '2026-09-14T00:00:00Z', 'to': '2026-09-21T00:00:00Z', 'max': 100}
+...
+2026-09-15 11:44:34,230 INFO LLM asked for webex-search-spaces {'max': 200}
+...
+2026-09-15 11:47:52,401 INFO Here’s what I found:
+
+- This week’s meetings (UTC window 2026-09-14 to 2026-09-21):
+  - 1 meeting: Meeting with user1@webexone-ai-assistant.wbx.ai
+    - Start: 2026-09-15 16:00 UTC
+    - End: 2026-09-15 17:00 UTC
+    - Meeting number: 26604791633
+    - Status: active
+
+- Spaces: 2 total
+  - Direct: WebexOne-diejimen
+  - Group: WebexOne - Diejimen
+
+Want me to pull more details or set reminders?
+</code></pre></div>
+</li>
+</ol>
+<h2 id="step-66-integration-with-the-bot">Step 6.6: Integration with the Bot</h2>
+<p>Now, as we did in the previous section, we will combine what we have done to provide direct access from a Webex Bot.</p>
+<ol>
+<li>
+<p>Navigate to <code>06_mcp_bot/05_bot.py</code> and review the code:</p>
+<details class="tip">
+<summary>Python Code</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">as_openai_tools</span><span class="p">,</span> <span class="n">run_turn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp_hub</span><span class="w"> </span><span class="kn">import</span> <span class="n">McpHub</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"05_bot"</span><span class="p">))</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">websocket_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebSocketClient</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">truststore</span>
+
+    <span class="n">truststore</span><span class="o">.</span><span class="n">inject_into_ssl</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="n">MESSAGING_MCP_URL</span> <span class="o">=</span> <span class="s2">"https://mcp.webexapis.com/mcp/webex-messaging"</span>
+<span class="n">MEETING_MCP_URL</span> <span class="o">=</span> <span class="s2">"https://mcp.webexapis.com/mcp/webex-meeting"</span>
+<span class="n">ERROR_REPLY</span> <span class="o">=</span> <span class="s2">"Sorry, I could not answer that right now. Please try again in a moment."</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2"> </span><span class="si">%(message)s</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"mcp-bot"</span><span class="p">)</span>
+
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="n">BOT_TOKEN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"BOT_TOKEN"</span><span class="p">)</span>
+<span class="n">MESSAGING_TOKEN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"WEBEX_MESSAGING_MCP_TOKEN"</span><span class="p">)</span>
+<span class="n">MEETING_TOKEN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"WEBEX_MEETING_MCP_TOKEN"</span><span class="p">)</span>
+<span class="n">OPENAI_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"OPENAI_API_KEY"</span><span class="p">)</span>
+<span class="n">OPENAI_MODEL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"OPENAI_MODEL"</span><span class="p">,</span> <span class="s2">"gpt-5-nano"</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">BOT_TOKEN</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">"Set BOT_TOKEN in your .env file"</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">OPENAI_API_KEY</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">"Set OPENAI_API_KEY in your .env file"</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">MESSAGING_TOKEN</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">MEETING_TOKEN</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span>
+        <span class="s2">"Set WEBEX_MESSAGING_MCP_TOKEN and/or WEBEX_MEETING_MCP_TOKEN in your .env file"</span>
+    <span class="p">)</span>
+
+<span class="n">hub</span> <span class="o">=</span> <span class="n">McpHub</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="n">MESSAGING_MCP_URL</span><span class="p">,</span> <span class="n">MESSAGING_TOKEN</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">MEETING_MCP_URL</span><span class="p">,</span> <span class="n">MEETING_TOKEN</span><span class="p">),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">answer</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">sender</span><span class="p">):</span>
+    <span class="n">tools</span> <span class="o">=</span> <span class="n">as_openai_tools</span><span class="p">(</span><span class="k">await</span> <span class="n">hub</span><span class="o">.</span><span class="n">list_tools</span><span class="p">())</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Offering </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span><span class="si">}</span><span class="s2"> tool(s) from </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">hub</span><span class="o">.</span><span class="n">clients</span><span class="p">)</span><span class="si">}</span><span class="s2"> MCP server(s) to </span><span class="si">{</span><span class="n">OPENAI_MODEL</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"system"</span><span class="p">,</span>
+            <span class="s2">"content"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"You are a Webex assistant helping </span><span class="si">{</span><span class="n">sender</span><span class="si">}</span><span class="s2">. Today is </span><span class="si">{</span><span class="n">today</span><span class="si">}</span><span class="s2"> (UTC). "</span>
+                <span class="s2">"Answer only from tool results, never from memory, and reply in a short "</span>
+                <span class="s2">"friendly chat message."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="p">{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">question</span><span class="p">},</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="n">run_turn</span><span class="p">(</span><span class="n">hub</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">handle_message</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"text"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">sender</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="s2">"personEmail"</span><span class="p">]</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Received from </span><span class="si">{</span><span class="n">sender</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">reply_with_assistant</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">text</span><span class="p">))</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">reply_with_assistant</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">question</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">reply</span> <span class="o">=</span> <span class="k">await</span> <span class="n">answer</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">sender</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">"Assistant turn failed"</span><span class="p">)</span>
+        <span class="n">reply</span> <span class="o">=</span> <span class="n">ERROR_REPLY</span>
+    <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="s2">"roomId"</span><span class="p">],</span> <span class="n">reply</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Sent to </span><span class="si">{</span><span class="n">sender</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">reply</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">bot</span> <span class="o">=</span> <span class="n">WebSocketClient</span><span class="p">(</span><span class="n">access_token</span><span class="o">=</span><span class="n">BOT_TOKEN</span><span class="p">,</span> <span class="n">on_message</span><span class="o">=</span><span class="n">handle_message</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Listening as </span><span class="si">{</span><span class="n">bot</span><span class="o">.</span><span class="n">me</span><span class="p">[</span><span class="s1">'emails'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> via WebSocket... (Ctrl+C to stop)"</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">bot</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Stopped."</span><span class="p">)</span>
+</code></pre></div>
+</details>
+</li>
+<li>
+<p>Make sure you have set the <code>BOT_TOKEN</code> in the <code>.env</code> file at the root of your project:</p>
+<div class="highlight"><pre><span></span><code>BOT_TOKEN=
+</code></pre></div>
+</li>
+<li>
+<p>Run your code with the following command:</p>
+<ul>
+<li>python 05_bot.py</li>
+</ul>
+</li>
+<li>
+<p>Ask your bot for the meetings that you have scheduled for tomorrow:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/meeting_6.png" data-title="Meeting" data-desc-position="top"><img alt="Meeting" src="../assets/meeting_6.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="850"></a></p>
+</li>
+<li>
+<p>In the console you will see the following:</p>
+<div class="highlight"><pre><span></span><code>2026-09-14 20:06:58,631 INFO Received from admin@webexone-ai-assistant.wbx.ai: What meetings do I have tomorrow?
+...
+2026-09-15 11:58:47,999 INFO Offering 32 tool(s) from 2 MCP server(s) to gpt-5-nano
+2026-09-14 20:07:08,344 INFO LLM asked for webex-list-meetings {'from': '2026-09-15T00:00:00Z', 'to': '2026-09-16T00:00:00Z', 'max': 50, 'includeParticipants': False}
+...
+2026-09-14 20:07:09,152 INFO HTTP Request: POST https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 200 OK"
+2026-09-14 20:07:09,152 INFO Received session ID: b909621b-a64c-4a33-979f-8be53f25e9e9
+2026-09-14 20:07:09,405 INFO HTTP Request: POST https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 202 Accepted"
+2026-09-14 20:07:11,683 INFO HTTP Request: POST https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 200 OK"
+2026-09-14 20:07:13,539 INFO HTTP Request: POST https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 200 OK"
+2026-09-14 20:07:14,831 INFO HTTP Request: DELETE https://mcp.webexapis.com/mcp/webex-meeting "HTTP/1.1 200 OK"
+2026-09-14 20:07:22,913 INFO Sent to admin@webexone-ai-assistant.wbx.ai: Tomorrow (2026-09-15) you have one meeting:
+
+- Title: Meeting with user1@webexone-ai-assistant.wbx.ai
+- Time: 16:00–17:00 UTC
+- Meeting number: 26604791633
+- Join link: https://webexone-ai-assistant-sbx.webex.com/webexone-ai-assistant-sbx/j.php?MTID=mea0739a573d6ff87dbab949d46715c08
+- Host: admin@webexone-ai-assistant.wbx.ai
+- SIP: 26604791633@webexone-ai-assistant-sbx.webex.com
+
+Would you like me to set a reminder or share invitees?
+</code></pre></div>
+</li>
+</ol>
+<h2 id="step-67-custom-mcp-server">Step 6.7: Custom MCP server</h2>
+<p>Now you have a bot that can access the Webex MCP servers. Let's add now our custom MCP server.</p>
+<p>Official Webex MCP servers are remote: the client uses Streamable HTTP and a Bearer token. The server you built in Lab 3 is <strong>local</strong>. VS Code started it with <code>command</code> and <code>args</code> over <strong>stdio</strong>. The bot has to do the same: spawn <code>03_custom_mcp/03_read_books.py</code> and add that client to the hub.</p>
+<p>The LLM still sees one list of tools. It does not know which server a tool came from.</p>
+<p>The Service App <code>ACCESS_TOKEN</code> is not sent on the MCP transport. The custom server reads it from <code>.env</code> when it starts, the same as in Lab 3.</p>
+<ol>
+<li>
+<p>Navigate to <code>06_mcp_bot/06_custom.py</code> and review the code. The only new part is the stdio client passed into <code>McpHub</code>:</p>
+<details class="tip">
+<summary>Python Code</summary>
+<div class="highlight"><pre><span></span><code><span class="n">LAB_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
+<span class="n">CUSTOM_SERVER</span> <span class="o">=</span> <span class="n">LAB_ROOT</span> <span class="o">/</span> <span class="s2">"03_custom_mcp"</span> <span class="o">/</span> <span class="s2">"03_read_books.py"</span>
+
+<span class="n">custom</span> <span class="o">=</span> <span class="n">McpClient</span><span class="p">(</span>
+    <span class="n">command</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
+    <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">CUSTOM_SERVER</span><span class="p">)],</span>
+    <span class="n">cwd</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">LAB_ROOT</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">hub</span> <span class="o">=</span> <span class="n">McpHub</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="n">MESSAGING_MCP_URL</span><span class="p">,</span> <span class="n">MESSAGING_TOKEN</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">MEETING_MCP_URL</span><span class="p">,</span> <span class="n">MEETING_TOKEN</span><span class="p">),</span>
+        <span class="n">custom</span><span class="p">,</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+</code></pre></div>
+</details>
+<p>You can point <code>args</code> at <code>04_write_books.py</code> instead if you want the bot to create books and entries.</p>
+</li>
+<li>
+<p>Run your code with the following command:</p>
+<ul>
+<li><code>python 06_custom.py</code></li>
+</ul>
+</li>
+<li>
+<p>In Webex, ask:</p>
+<ul>
+<li>List my Contact Center address books</li>
+</ul>
+<p>You should see in the terminal that tools from <strong>three</strong> servers were offered, and that the model called <code>list_address_books</code> (or <code>list_entries</code>), not a Meetings tool.</p>
+<div class="highlight"><pre><span></span><code>INFO Offering 35 tool(s) from 3 MCP server(s) to gpt-5-nano
+INFO LLM asked for list_address_books {'limit': 50}
+</code></pre></div>
+<p>The reply in the space is the LLM summary of the tool result.</p>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the custom tools are missing, check that <code>ACCESS_TOKEN</code>, <code>WEBEX_ORG_ID</code>, and <code>WXCC_CONFIG_API_BASE</code> are set in <code>.env</code>, and that <code>cwd</code> is the lab folder so the server can find that file.</p>
+</div>
+<hr>
+<h2 id="extra-local-tool-adaptive-card">Extra: Local Tool + Adaptive Card</h2>
+<p>In Webex, we also have the capability to use <strong>Adaptive Cards</strong>. Adaptive Cards allow us to format the message and add actions, such as a Join button on each meeting, instead of a long block of chat text.</p>
+<p>In this exercise, we will do two things:</p>
+<ul>
+<li>Create the <code>send_meetings_card</code> function, that generates an Adaptive Card for the meetings.</li>
+<li>Give the LLM a local tool, so it can call this new function when it decides.</li>
+</ul>
+<p>In this case, we have built a card that will be sent as a summary when we have meetings:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Container"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"separator"</span><span class="p">:</span><span class="w"> </span><span class="err">True</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextBlock"</span><span class="p">,</span><span class="w"> </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="err">mee</span><span class="kc">t</span><span class="err">i</span><span class="kc">n</span><span class="err">g</span><span class="p">[</span><span class="s2">"title"</span><span class="p">],</span><span class="w"> </span><span class="nt">"weight"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bolder"</span><span class="p">,</span><span class="w"> </span><span class="nt">"wrap"</span><span class="p">:</span><span class="w"> </span><span class="err">True</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FactSet"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="p">{</span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"When"</span><span class="p">,</span><span class="w"> </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="err">whe</span><span class="kc">n</span><span class="err">(mee</span><span class="kc">t</span><span class="err">i</span><span class="kc">n</span><span class="err">g)</span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Host"</span><span class="p">,</span><span class="w"> </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="err">mee</span><span class="kc">t</span><span class="err">i</span><span class="kc">n</span><span class="err">g.ge</span><span class="kc">t</span><span class="err">(</span><span class="s2">"hostEmail"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unknown"</span><span class="err">)</span><span class="p">},</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ActionSet"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"actions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="p">{</span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Action.OpenUrl"</span><span class="p">,</span><span class="w"> </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Join"</span><span class="p">,</span><span class="w"> </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="err">mee</span><span class="kc">t</span><span class="err">i</span><span class="kc">n</span><span class="err">g</span><span class="p">[</span><span class="s2">"webLink"</span><span class="p">]}</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Buttons and Cards Designer</p>
+<p>You can use the <strong>Buttons and Cards Designer</strong> to build your own:</p>
+<ul>
+<li><a href="https://developer.webex.com/buttons-and-cards-designer" target="_blank">Buttons and Cards Designer</a></li>
+</ul>
+</div>
+<ol>
+<li>
+<p>Navigate to <code>06_mcp_bot/07_card.py</code> and review the code. Take a look at how we have defined our local Tool and the system prompt attached to the LLM:</p>
+<details class="tip">
+<summary>Python Code</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">as_openai_tools</span><span class="p">,</span> <span class="n">run_turn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp_hub</span><span class="w"> </span><span class="kn">import</span> <span class="n">McpHub</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"05_bot"</span><span class="p">))</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">websocket_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebSocketClient</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">truststore</span>
+
+    <span class="n">truststore</span><span class="o">.</span><span class="n">inject_into_ssl</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="n">MESSAGING_MCP_URL</span> <span class="o">=</span> <span class="s2">"https://mcp.webexapis.com/mcp/webex-messaging"</span>
+<span class="n">MEETING_MCP_URL</span> <span class="o">=</span> <span class="s2">"https://mcp.webexapis.com/mcp/webex-meeting"</span>
+<span class="n">MESSAGES_URL</span> <span class="o">=</span> <span class="s2">"https://webexapis.com/v1/messages"</span>
+<span class="n">CARD_CONTENT_TYPE</span> <span class="o">=</span> <span class="s2">"application/vnd.microsoft.card.adaptive"</span>
+<span class="n">ERROR_REPLY</span> <span class="o">=</span> <span class="s2">"Sorry, I could not answer that right now. Please try again in a moment."</span>
+<span class="n">SEND_MEETINGS_CARD</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"function"</span><span class="p">,</span>
+    <span class="s2">"function"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"send_meetings_card"</span><span class="p">,</span>
+        <span class="s2">"description"</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s2">"Post an Adaptive Card in the Webex space with title, time, host, and a Join "</span>
+            <span class="s2">"button for each meeting. Call this after webex-list-meetings when "</span>
+            <span class="s2">"data.meetings is not empty. Pass that meetings array. Do not invent meetings."</span>
+        <span class="p">),</span>
+        <span class="s2">"parameters"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"object"</span><span class="p">,</span>
+            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"meetings"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"array"</span><span class="p">,</span>
+                    <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"The meetings array from webex-list-meetings (data.meetings)."</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="s2">"required"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"meetings"</span><span class="p">],</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2"> </span><span class="si">%(message)s</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"mcp-card-bot"</span><span class="p">)</span>
+
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="n">BOT_TOKEN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"BOT_TOKEN"</span><span class="p">)</span>
+<span class="n">MESSAGING_TOKEN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"WEBEX_MESSAGING_MCP_TOKEN"</span><span class="p">)</span>
+<span class="n">MEETING_TOKEN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"WEBEX_MEETING_MCP_TOKEN"</span><span class="p">)</span>
+<span class="n">OPENAI_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"OPENAI_API_KEY"</span><span class="p">)</span>
+<span class="n">OPENAI_MODEL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"OPENAI_MODEL"</span><span class="p">,</span> <span class="s2">"gpt-5-nano"</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">BOT_TOKEN</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">"Set BOT_TOKEN in your .env file"</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">OPENAI_API_KEY</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">"Set OPENAI_API_KEY in your .env file"</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">MESSAGING_TOKEN</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">MEETING_TOKEN</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span>
+        <span class="s2">"Set WEBEX_MESSAGING_MCP_TOKEN and/or WEBEX_MEETING_MCP_TOKEN in your .env file"</span>
+    <span class="p">)</span>
+
+<span class="n">hub</span> <span class="o">=</span> <span class="n">McpHub</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="n">MESSAGING_MCP_URL</span><span class="p">,</span> <span class="n">MESSAGING_TOKEN</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">MEETING_MCP_URL</span><span class="p">,</span> <span class="n">MEETING_TOKEN</span><span class="p">),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">when</span><span class="p">(</span><span class="n">meeting</span><span class="p">):</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">meeting</span><span class="p">[</span><span class="s2">"start"</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"Z"</span><span class="p">,</span> <span class="s2">"+00:00"</span><span class="p">))</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">meeting</span><span class="p">[</span><span class="s2">"end"</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"Z"</span><span class="p">,</span> <span class="s2">"+00:00"</span><span class="p">))</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">start</span><span class="si">:</span><span class="s2">%a %d %b %H:%M</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">end</span><span class="si">:</span><span class="s2">%H:%M</span><span class="si">}</span><span class="s2"> UTC"</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">build_card</span><span class="p">(</span><span class="n">meetings</span><span class="p">):</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"TextBlock"</span><span class="p">,</span>
+            <span class="s2">"text"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Meetings in the next 7 days (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">meetings</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span><span class="p">,</span>
+            <span class="s2">"size"</span><span class="p">:</span> <span class="s2">"Large"</span><span class="p">,</span>
+            <span class="s2">"weight"</span><span class="p">:</span> <span class="s2">"Bolder"</span><span class="p">,</span>
+            <span class="s2">"wrap"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+    <span class="k">for</span> <span class="n">meeting</span> <span class="ow">in</span> <span class="n">meetings</span><span class="p">:</span>
+        <span class="n">body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Container"</span><span class="p">,</span>
+                <span class="s2">"separator"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">"items"</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"TextBlock"</span><span class="p">,</span> <span class="s2">"text"</span><span class="p">:</span> <span class="n">meeting</span><span class="p">[</span><span class="s2">"title"</span><span class="p">],</span> <span class="s2">"weight"</span><span class="p">:</span> <span class="s2">"Bolder"</span><span class="p">,</span> <span class="s2">"wrap"</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"FactSet"</span><span class="p">,</span>
+                        <span class="s2">"facts"</span><span class="p">:</span> <span class="p">[</span>
+                            <span class="p">{</span><span class="s2">"title"</span><span class="p">:</span> <span class="s2">"When"</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">:</span> <span class="n">when</span><span class="p">(</span><span class="n">meeting</span><span class="p">)},</span>
+                            <span class="p">{</span><span class="s2">"title"</span><span class="p">:</span> <span class="s2">"Host"</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">:</span> <span class="n">meeting</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"hostEmail"</span><span class="p">,</span> <span class="s2">"unknown"</span><span class="p">)},</span>
+                        <span class="p">],</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"ActionSet"</span><span class="p">,</span>
+                        <span class="s2">"actions"</span><span class="p">:</span> <span class="p">[</span>
+                            <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Action.OpenUrl"</span><span class="p">,</span> <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"Join"</span><span class="p">,</span> <span class="s2">"url"</span><span class="p">:</span> <span class="n">meeting</span><span class="p">[</span><span class="s2">"webLink"</span><span class="p">]}</span>
+                        <span class="p">],</span>
+                    <span class="p">},</span>
+                <span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"$schema"</span><span class="p">:</span> <span class="s2">"http://adaptivecards.io/schemas/adaptive-card.json"</span><span class="p">,</span>
+        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"AdaptiveCard"</span><span class="p">,</span>
+        <span class="s2">"version"</span><span class="p">:</span> <span class="s2">"1.3"</span><span class="p">,</span>
+        <span class="s2">"body"</span><span class="p">:</span> <span class="n">body</span><span class="p">,</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">send_card</span><span class="p">(</span><span class="n">room_id</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">card</span><span class="p">):</span>
+    <span class="c1"># A card rides along as an attachment; text is the fallback for clients that cannot render it.</span>
+    <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+        <span class="n">MESSAGES_URL</span><span class="p">,</span>
+        <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Bearer </span><span class="si">{</span><span class="n">BOT_TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="p">},</span>
+        <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">"roomId"</span><span class="p">:</span> <span class="n">room_id</span><span class="p">,</span>
+            <span class="s2">"text"</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span>
+            <span class="s2">"attachments"</span><span class="p">:</span> <span class="p">[{</span><span class="s2">"contentType"</span><span class="p">:</span> <span class="n">CARD_CONTENT_TYPE</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">card</span><span class="p">}],</span>
+        <span class="p">},</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">answer</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">room_id</span><span class="p">):</span>
+    <span class="n">tools</span> <span class="o">=</span> <span class="n">as_openai_tools</span><span class="p">(</span><span class="k">await</span> <span class="n">hub</span><span class="o">.</span><span class="n">list_tools</span><span class="p">())</span> <span class="o">+</span> <span class="p">[</span><span class="n">SEND_MEETINGS_CARD</span><span class="p">]</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Offering </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span><span class="si">}</span><span class="s2"> tool(s) to </span><span class="si">{</span><span class="n">OPENAI_MODEL</span><span class="si">}</span><span class="s2"> (MCP + send_meetings_card)"</span><span class="p">)</span>
+    <span class="n">posted</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"card"</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_meetings_card</span><span class="p">(</span><span class="n">arguments</span><span class="p">):</span>
+        <span class="n">meetings</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"meetings"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">meetings</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">"No meetings to put on a card. Reply in a short chat message instead."</span>
+        <span class="n">send_card</span><span class="p">(</span><span class="n">room_id</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"You have </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">meetings</span><span class="p">)</span><span class="si">}</span><span class="s2"> meeting(s)"</span><span class="p">,</span> <span class="n">build_card</span><span class="p">(</span><span class="n">meetings</span><span class="p">))</span>
+        <span class="n">posted</span><span class="p">[</span><span class="s2">"card"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Sent a card with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">meetings</span><span class="p">)</span><span class="si">}</span><span class="s2"> meeting(s)"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">"Adaptive Card posted in the space. Give a short confirmation; do not re-list the meetings."</span>
+
+    <span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"system"</span><span class="p">,</span>
+            <span class="s2">"content"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"You are a Webex assistant helping </span><span class="si">{</span><span class="n">sender</span><span class="si">}</span><span class="s2">. Today is </span><span class="si">{</span><span class="n">today</span><span class="si">}</span><span class="s2"> (UTC). "</span>
+                <span class="s2">"Answer only from tool results, never from memory. "</span>
+                <span class="s2">"When webex-list-meetings returns meetings, call send_meetings_card with "</span>
+                <span class="s2">"that meetings array so the user gets Join buttons. "</span>
+                <span class="s2">"If there are no meetings, or the question is not about meetings, reply in chat."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="p">{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">question</span><span class="p">},</span>
+    <span class="p">]</span>
+    <span class="n">reply</span> <span class="o">=</span> <span class="k">await</span> <span class="n">run_turn</span><span class="p">(</span><span class="n">hub</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="p">{</span><span class="s2">"send_meetings_card"</span><span class="p">:</span> <span class="n">send_meetings_card</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">reply</span><span class="p">,</span> <span class="n">posted</span><span class="p">[</span><span class="s2">"card"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">handle_message</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"text"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">sender</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="s2">"personEmail"</span><span class="p">]</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Received from </span><span class="si">{</span><span class="n">sender</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">reply_with_assistant</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">text</span><span class="p">))</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">reply_with_assistant</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">question</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">reply</span><span class="p">,</span> <span class="n">posted_card</span> <span class="o">=</span> <span class="k">await</span> <span class="n">answer</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">message</span><span class="p">[</span><span class="s2">"roomId"</span><span class="p">])</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">"Assistant turn failed"</span><span class="p">)</span>
+        <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="s2">"roomId"</span><span class="p">],</span> <span class="n">ERROR_REPLY</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="n">posted_card</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Card already sent to </span><span class="si">{</span><span class="n">sender</span><span class="si">}</span><span class="s2">; LLM said: </span><span class="si">{</span><span class="n">reply</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="s2">"roomId"</span><span class="p">],</span> <span class="n">reply</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Sent to </span><span class="si">{</span><span class="n">sender</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">reply</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">bot</span> <span class="o">=</span> <span class="n">WebSocketClient</span><span class="p">(</span><span class="n">access_token</span><span class="o">=</span><span class="n">BOT_TOKEN</span><span class="p">,</span> <span class="n">on_message</span><span class="o">=</span><span class="n">handle_message</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Listening as </span><span class="si">{</span><span class="n">bot</span><span class="o">.</span><span class="n">me</span><span class="p">[</span><span class="s1">'emails'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> via WebSocket... (Ctrl+C to stop)"</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">bot</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Stopped."</span><span class="p">)</span>
+</code></pre></div>
+</details>
+</li>
+<li>
+<p>Run your code with the following command:</p>
+<ul>
+<li>python 07_card.py</li>
+</ul>
+</li>
+<li>
+<p>Ask your bot about your meetings. You should see in the terminal that all tools were presented to the agent, and it chose first to list the meetings, and then to send the card.</p>
+<div class="highlight"><pre><span></span><code>2026-09-15 13:34:47,265 INFO Received from admin@webexone-ai-assistant.wbx.ai: What meetings do I have?
+...
+2026-09-15 13:34:54,828 INFO Offering 33 tool(s) to gpt-5-nano (MCP + send_meetings_card)
+2026-09-15 13:35:01,261 INFO LLM asked for webex-list-meetings {}
+...
+2026-09-15 13:35:16,198 INFO LLM asked for send_meetings_card {'meetings': [{'id': 'cd9966d90d5a43bfa8e002f6e8b6aa4e', 'meetingNumber': '26604791633', 'title': 'Meeting with user1@webexone-ai-assistant.wbx.ai', 'start': '2026-09-15T16:00:00Z', 'end': '2026-09-15T17:00:00Z', 'state': 'active', 'meetingType': 'meetingSeries', 'timezone': 'UTC', 'hostDisplayName': 'admin@webexone-ai-assistant.wbx.ai', 'hostEmail': 'admin@webexone-ai-assistant.wbx.ai', 'webLink': 'https://webexone-ai-assistant-sbx.webex.com/webexone-ai-assistant-sbx/j.php?MTID=m4bc7e596e836eadff3446f07b1379e7e', 'sipAddress': '26604791633@webexone-ai-assistant-sbx.webex.com', 'invitees': [{'id': 'cd9966d90d5a43bfa8e002f6e8b6aa4e_4266817701', 'email': 'user1@webexone-ai-assistant.wbx.ai', 'displayName': 'user1@webexone-ai-assistant.wbx.ai', 'coHost': False, 'panelist': False}]}], 'count': 1, 'totalMeetings': 1}
+...
+2026-09-15 13:35:22,029 INFO Card already sent to admin@webexone-ai-assistant.wbx.ai; LLM said: A joinable meeting card has been posted in this space for your upcoming meeting. Open the card and click Join to attend.
+</code></pre></div>
+</li>
+<li>
+<p>You will receive the following card in your conversation:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/meeting_7.png" data-title="Meeting" data-desc-position="top"><img alt="Meeting" src="../assets/meeting_7.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="650"></a></p>
+<p>If you press join, it will try to open the Webex App to join the meeting.</p>
+</li>
+</ol>
+<hr>
+<h2 id="extra-from-the-ide-to-a-bot">Extra: From the IDE to a bot</h2>
+<p>In Labs 1 and 3, you already used MCP <strong>without writing a client</strong>. You configured servers in <strong>VS Code</strong> and asked an agent in the editor. That worked because the IDE <strong>is</strong> an MCP host.</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph IDE["Part 1 - VS Code"]
+        UI[Chat in the editor]
+        LOOP[Tool loop built into the IDE]
+        C1[MCP Client - Messaging]
+        C2[MCP Client - Meetings]
+        UI --&gt; LOOP
+        LOOP --&gt; C1
+        LOOP --&gt; C2
+    end
+    subgraph BOT["This section - Webex bot"]
+        WX[User in a Webex space]
+        HOST[Your Python host]
+        H1[MCP Client - Messaging]
+        H2[MCP Client - Meetings]
+        WX --&gt; HOST
+        HOST --&gt; H1
+        HOST --&gt; H2
+    end
+    S1["MCP Server\nwebex-messaging"]
+    S2["MCP Server\nwebex-meeting"]
+    C1 &lt;--&gt; S1
+    C2 &lt;--&gt; S2
+    H1 &lt;--&gt; S1
+    H2 &lt;--&gt; S2</code></pre>
+<p>The three MCP roles do not change. Only <strong>who is the host</strong> changes.</p>
+<h3 id="how-the-ide-does-it-in-the-background">How the IDE does it in the background</h3>
+<p>When you chat with the agent in VS Code:</p>
+<ol>
+<li>The editor is the <strong>host</strong>. It owns the LLM and the UI.</li>
+<li>For each MCP URL in your config, it opens a <strong>client</strong> (one session per server).</li>
+<li>It calls <code>list_tools</code>, converts those tools into something the model understands, and runs the same loop we wrote by hand: model asks for a tool → host calls the server → result goes back to the model → the model answers in the chat panel.</li>
+</ol>
+<p>You never saw <code>streamable_http_client</code> or <code>tool_calls</code> because the IDE hides them. The HTTP calls, the Bearer token, and the tool names are the same ones you used in <code>01</code>–<code>04</code>.</p>
+<h3 id="why-that-is-not-enough-for-a-bot">Why that is not enough for a bot</h3>
+<p>The IDE assistant is <strong>personal</strong>. It runs on your laptop, for you. A colleague cannot open your VS Code window and ask it to list <em>their</em> spaces.</p>
+<p>A <strong>Webex bot</strong> is a host that other people can reach: they message a bot in a 1:1 or a space, and your process answers. No IDE will do that for them. That is the reason this section exists.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>VS Code agent</th>
+<th>This section (custom bot)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host</td>
+<td>The IDE</td>
+<td>Your Python process</td>
+</tr>
+<tr>
+<td>Who can use it</td>
+<td>The person at that machine</td>
+<td>Anyone who can message the bot</td>
+</tr>
+<tr>
+<td>You write</td>
+<td>Config (URL + token)</td>
+<td>Client, hub, loop, WebSocket</td>
+</tr>
+<tr>
+<td>Good for</td>
+<td>Trying MCP, personal productivity</td>
+<td>An assistant inside Webex</td>
+</tr>
+</tbody>
+</table>
+<h3 id="is-there-another-way-to-put-mcp-in-webex">Is there another way to put MCP in Webex?</h3>
+<p>Yes, without a custom Python bot:</p>
+<ul>
+<li><strong>Webex AI / agentic apps.</strong> An admin can enable Cisco-hosted MCP servers in <a href="https://developer.webex.com/mcp/docs/webex-mcp-server-overview" target="_blank">Collaboration Control Hub</a> so the <strong>Webex AI Assistant</strong> (in the Webex app) can call those tools. Users stay in Webex; Cisco’s product is the host.</li>
+<li><strong>Other Microsoft / Cisco product hosts</strong> (for example Copilot Studio) can also sit in front of MCP. Again you configure, you do not write the loop.</li>
+</ul>
+<p>Those paths are the right choice when you want the <strong>stock Webex assistant</strong> to use Messaging or Meetings tools. They are <strong>not</strong> the right choice when you need:</p>
+<ul>
+<li>your own LLM and prompts</li>
+<li>allowlists (who may talk to the bot)</li>
+<li>Adaptive Cards or other custom replies</li>
+<li>tools mixed from Webex MCP <strong>and</strong> your own servers</li>
+<li>a bot identity you control (<code>WebexOne-*USERNAME*</code>)</li>
+</ul>
+<p>That is why this lab builds the host: so the <strong>bot</strong> is the integration, not the IDE and not only Cisco’s built-in assistant.</p>
+<h3 id="frameworks">Frameworks</h3>
+<p>If you keep a custom bot but do not want to maintain the tool loop, agent frameworks wrap <strong>exactly</strong> what <code>03_llm</code> and <code>04_hub</code> do:</p>
+<table>
+<thead>
+<tr>
+<th>Framework</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>LangGraph</strong> (via <code>langchain-mcp-adapters</code>)</td>
+<td>Graph agents; <code>MultiServerMCPClient</code> ≈ our hub</td>
+</tr>
+<tr>
+<td><strong>Semantic Kernel</strong></td>
+<td>Native MCP client/server, multi-language</td>
+</tr>
+<tr>
+<td><strong>OpenAI Agents SDK</strong></td>
+<td>Small agents; MCP over stdio or HTTP</td>
+</tr>
+<tr>
+<td><strong>Pydantic AI</strong></td>
+<td>Typed Python agents with MCP toolsets</td>
+</tr>
+</tbody>
+</table>
+<p>The official MCP Python SDK also has a higher-level <code>Client</code> and a <code>ClientSessionGroup</code> that aggregates several servers — the same job as <code>mcp_hub.py</code>.</p>
+<p>We still wrote the loop so you can see every call. In production, you can keep the Webex bot and the tokens, and swap the loop for a framework when you need memory, approvals, retries, or tracing.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>MCP support in IDEs and frameworks changes often. Check current docs before you standardise on one host.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../lab5_bot-integration/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Lab 5 - Integrate an AI Assistant with a Webex Bot">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Lab 5 - Integrate an AI Assistant with a Webex Bot
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../lab7_skills/" class="md-footer__link md-footer__link--next" aria-label="Next: Lab 7 - Skills in AI Assistant">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Lab 7 - Skills in AI Assistant
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2026 Cisco
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.instant", "navigation.top", "navigation.footer", "search.suggest", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../template_assets/js/newLoad.js"></script>
+      
+        <script src="../template_assets/js/setInfo.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": false, "openEffect": "fade", "closeEffect": "fade", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
