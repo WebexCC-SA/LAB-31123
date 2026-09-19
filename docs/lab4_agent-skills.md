@@ -154,10 +154,10 @@ past meetings, whether summaries and recordings exist, and flag anything missing
 For upcoming meetings, check if there's an agenda.
 ```
 
-![vsskill](./assets/vscode_skill_1.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![vsskill1](./assets/vscode_skill_1.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 
-![vsskill](./assets/vscode_skill_2.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![vsskill2](./assets/vscode_skill_2.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 Expected behavior:
 
@@ -177,8 +177,11 @@ To feel the value, compare:
   folder and reload): the agent lists meetings and stops — one tool call, one scope.
 - **With the skill**: the agent investigates five scopes per meeting and produces
   actions.
-
 ```
+
+![vsskill3](./assets/vscode_no_skill.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+
 WITHOUT skill              WITH skill
 -------------              ----------
 list meetings (done)       list meetings
