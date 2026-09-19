@@ -154,10 +154,10 @@ past meetings, whether summaries and recordings exist, and flag anything missing
 For upcoming meetings, check if there's an agenda.
 ```
 
-    ![Create_token](./assets/vscode_skill_1.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![vsskill](./assets/vscode_skill_1.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 
-    ![Create_token](./assets/vscode_skill_2.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![vsskill](./assets/vscode_skill_2.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 Expected behavior:
 
