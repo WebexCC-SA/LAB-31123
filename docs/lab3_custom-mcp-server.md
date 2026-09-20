@@ -1096,6 +1096,19 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
                     for d in devices
                 ]
             }
+            
+        @mcp.tool()
+        async def get_location_call_settings(location_id: str) -> dict:
+            """Manage specific calling settings for a location."""
+            async with httpx.AsyncClient(timeout=15) as http:
+                r = await http.get(
+                    f"https://webexapis.com/v1/telephony/config/locations/{location_id}/callSettings",
+                    headers=HEADERS
+                )
+            if r.status_code != 200:
+                return {"error": f"HTTP {r.status_code}: {r.text}"}
+            
+            return r.json()
     
         if __name__ == "__main__":
             log.info("webex-calling-mcp running on stdio - waiting for a client (Ctrl+C to stop).")
@@ -1305,6 +1318,19 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
                     for rep in reports
                 ]
             }
+            
+        @mcp.tool()
+        async def get_meeting_qualities(meeting_id: str) -> dict:
+            """Analytics and diagnostics for meetings."""
+            async with httpx.AsyncClient(timeout=15) as http:
+                r = await http.get(
+                    f"https://webexapis.com/v1/meeting/qualities?meetingId={meeting_id}",
+                    headers=HEADERS
+                )
+            if r.status_code != 200:
+                return {"error": f"HTTP {r.status_code}: {r.text}"}
+            
+            return r.json()
     
         if __name__ == "__main__":
             log.info("webex-troubleshooting-mcp running on stdio - waiting for a client (Ctrl+C to stop).")
