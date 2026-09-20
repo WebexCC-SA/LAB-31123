@@ -12,51 +12,45 @@ At the end of the day, an MCP server is just a list of tools that our agent can 
 
 ### Webex For Developers
 
-Navigate to:<br />
+Navigate to [Webex for Developers](https://developer.webex.com/){:target="_blank"} and log in with your provided lab credentials.
 
-- [Webex for Developers](https://developer.webex.com/){:target="_blank"}
+### Get your Personal Access Token
 
-Use the same Webex credentials provided for the lab. 
+For the simplicity of this hands-on lab, we will use your Personal Access Token (PAT). Because you are an Administrator in this sandbox, your PAT automatically inherits all your admin rights. It requires no scope configuration and lasts for 12 hours—perfect for a workshop.
 
-!!! Warning "Placeholder: Get Personal Access Token"
-    [PLACEHOLDER: Add instructions and screenshots showing how to log into the Developer Portal, click on the profile icon, and copy the Personal Access Token (Developer Token). Explain that this token is valid for 12 hours and is useful for **user-level** Try It calls (for example Messaging). Do not use it for admin / Control Hub APIs — those come next with a Service App.]
+1. In [Webex for Developers](https://developer.webex.com/){:target="_blank"}, in the top right corner, click your avatar and select **Copy Developer Token**.
+2. Open the `.env` file at the root of your project and paste it as your `ACCESS_TOKEN`:
 
-https://developer.webex.com/messaging/docs/messaging
+    ```env
+    ACCESS_TOKEN=your_copied_token_here
+    ```
+    
+    *(Note: This token expires in 12 hours. If your MCP servers stop working tomorrow, you will need to copy a fresh one.)*
 
-### Calling APIs using Bruno
+## Step 2.2: Production Architecture (Service Apps & Integrations)
 
-### Calling APIs using Python
+While a Personal Access Token is perfect for a quick lab, it has a major problem for production: **It expires after 12 hours**. That is not valid for a bot that should keep running forever.
 
-!!! Note
-    A Personal Access Token acts as **you**. User-level APIs (list *your* rooms, *your* meetings) can work. As soon as you call an **admin** API — numbers, people in the org, audit, licenses — you will get `403 Forbidden` or empty data. That is expected. We fix it with a Service App before we start troubleshooting.
-
-## Step 2.2: Service Apps
-
-A Personal Access Token is fine for a quick test in the portal, but it has two problems for this lab:
-
-1. **Rights:** It is user context. Organizational troubleshooting needs admin scopes (Calling config, people, audit, reports).
-2. **Lifetime:** It **expires after 12 hours**. That is not valid for anything that should keep running.
-
-This is where **Service Apps** come in.
+This is where **Service Apps** and **OAuth Integrations** come in.
 
 ### What is a Service App?
 
 A Service App is a type of Webex integration designed for **machine-to-machine** communication. 
 
-Unlike a Personal Access Token (which acts on behalf of *you*, the user), a Service App has no user context. It acts as a system or background service. This makes it the perfect choice for administrative tasks, compliance, and **organizational troubleshooting**.
+Unlike a Personal Access Token (which acts on behalf of *you*, the user), a Service App has no user context. It acts as a system or background service. This makes it the perfect choice for administrative tasks and compliance.
 
-### Scopes: MCP vs. Service Apps
+### Tokens and Scopes
 
 You have already seen how scopes work. When we looked at the [Meetings MCP Server documentation](https://developer.webex.com/mcp/docs/meetings-mcp-server), we saw that the MCP token acts as a wrapper around specific permissions (like `meeting:schedules_read` or `meeting:schedules_write`). 
 
 ![Scope](./assets/scope_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-Service Apps use this exact same concept. When you create a Service App, you must define its **scopes** to strictly limit what the machine is allowed to do. To allow the Service App to connect to an MCP Server, it must include the `spark:mcp` scope, alongside any other API scopes the tools require.
+Every Webex API requires specific scopes. How you get those scopes depends on the token type:
+
+1. **Personal Access Token (What we are using):** The Developer Token you just copied automatically inherits *all* the scopes your user account has. Since you are an Admin, it has admin scopes.
+2. **Service Apps (Production):** When you create a Service App, you must explicitly define its **scopes** to strictly limit what the machine is allowed to do. If it needs to connect to an official Webex MCP Server, it must include the `spark:mcp` scope, alongside any other API scopes the tools require.
 
 ![Scope](./assets/scope_3.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-!!! Note
-    This applies to pre-defined Webex MCP Servers.
 
 ### The Catch: User Context vs. Machine Context
 
@@ -68,246 +62,112 @@ Because a Service App token is just a standard Webex OAuth 2.0 Bearer token, you
 2. **Service App Token (Machine Context):**
    A Service App is a faceless machine. If it calls `webex-list-meetings` without specifying a user, the API will likely return an empty list because the machine itself doesn't have a calendar. 
 
-Since our final goal is **organizational troubleshooting**, we *want* machine-level access. Troubleshooting tools—like looking up organization-wide call diagnostics, checking user provisioning status, or pulling admin logs—are designed for admins. They don't rely on a "me" context; they look at the organization as a whole. 
+!!! Note "Architectural Gotcha: Analytics and Reports"
+    While Service Apps are perfect for most administrative tasks, Webex Analytics and Reporting APIs strictly require **User Context**—they block Service Apps (machine-to-machine tokens) by design. 
+    
+    If a production AI Assistant needs to pull Analytics or Reports, it cannot use a Service App. Instead, it uses an **OAuth Integration**. The bot sends the user a "Log In" button, the human admin logs in, and the bot receives a user-bound token to pull reports on their behalf.
 
-### The Approval Process: Global vs. Local
+### The Approval Process
 
-Because a Service App operates at a machine level and can access organization-wide data, it requires strict security oversight. 
+Because a Service App operates at a machine level and can access organization-wide data, it requires strict security oversight. A Webex Administrator must explicitly review the requested scopes and authorize the specific Service App in Control Hub before it can generate any tokens.
 
-* **MCP Servers:** As you saw earlier, MCP servers (like the Webex Meetings MCP) are **global** services provided by Cisco or partners. An admin simply toggles them "on" for the organization in Control Hub.
-* **Service Apps:** Service Apps are **local** to your organization's development. Because you are building a custom application, a Webex Administrator must explicitly review the requested scopes and authorize your specific Service App before it can generate any tokens.
+*(For this lab, we are skipping the Service App creation process to avoid managing scopes and approvals. We will rely entirely on your Personal Access Token.)*
 
-## Step 2.3: Create the Service App
+??? Note "Reference: How to Create a Service App"
+    If you ever need to create a Service App for a production environment, here is how you do it:
+    
+    1. Log into [developer.webex.com](https://developer.webex.com/){:target="_blank"}.
+    2. In the top right corner of the page, click your avatar and then select [My Webex Apps](https://developer.webex.com/my-apps){:target="_blank"}.
+    3. Click **Create a New App**.
+    4. On the ‘Create a New App’ page, find the Service App card and click the ‘Create a Service App’ button.
+    
+        ![Service App](./assets/bot_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    
+    5. Enter the necessary information (Name, Icon, Description, Contact Email).
+    6. Select the **Scopes** your machine needs. For example, to read phone numbers, you would need `spark-admin:telephony_config_read`.
+    7. Once created, you will get a **Client ID** and **Client Secret**.
+    8. At the top, in the `Admin Authorization` section, click on **Request admin authorization**.
+    
+        ![Service App](./assets/serviceapp_3.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    
+    9. A Webex Administrator must then go to **Collaboration Control Hub** -> **Apps** -> **Service Apps**, select your app, and click **Authorize**.
+    10. Finally, you return to the Developer Portal, select your Org under **Org Authorizations**, enter your Client Secret, and click **Generate tokens** to get your 14-day `access_token` and 90-day `refresh_token`.
 
-1. Log into [developer.webex.com](https://developer.webex.com/){:target="_blank"} with the credentials that were provided.
-2. In the top right corner of the page, click your avatar and then select [My Webex Apps](https://developer.webex.com/my-apps){:target="_blank"}.
-3. Click **Create a New App**.
-4. On the ‘Create a New App’ page, find the Service App card and click the ‘Create a Service App’ button.
-
-    ![Service App](./assets/bot_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-
-5. Enter the following information:
-
-    |        	|                                     	      |
-    |-----------------------	|-------------------------------------------------|
-    | **App name**       	| WebexOne-***USERNAME***                  |
-    | **Icon**       	| Choose one of the available options                     |
-    | **Description**       	| Service App for WebexOne                   |
-    | **Contact Email**       	| userX@webexone-ai-assistant.wbx.ai |
-    | **Scopes** | spark:mcp spark:messages_read spark:messages_write spark:rooms_read spark:rooms_write spark:memberships_read spark:memberships_write spark:webhooks_read spark:webhooks_write spark-admin:telephony_config_read |
-
-    !!! Warning
-        These are the scopes for **Webex Messaging MCP** and the **Numbers API**. Scopes depend on which MCP server or API you want to use.
-       
-        Later in this lab, you would need to update the scopes to:
-
-        `spark:mcp spark:messages_read spark:messages_write spark:rooms_read spark:rooms_write spark:memberships_read spark:memberships_write`
-
-        `spark:webhooks_read spark:webhooks_write cjp:config_read cjp:config_write`
-       
-        For simplicity, in this lab, you can already select all of them.
-       
-        IMPORTANT: In a real environment, you should be very careful with the assigned scopes and select the minimum required.
-
-6. Once you have entered the information, your screen should look similar to this:
-
-    ![Service App](./assets/serviceapp_1.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-    !!! Warning
-        From this page, you need to save the **Client ID** and **Client Secret**:
-
-        ![Service App](./assets/serviceapp_2.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-        Open the `.env` file at the root of your project and copy them into it:
-
-        ```env
-        CLIENT_ID=
-        CLIENT_SECRET=
-        ```
-
-7. In the same page, at the top, in the `Admin Authorization` section, click on **Request admin authorization** and you should see it like:
-
-    ![Service App](./assets/serviceapp_3.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-    !!! Note
-        If you do not do this step, the app won't be visible for admins to authorize.
-
-### Authorize your Service App in your organization
-
-Once the Service App is created, we will need to authorize it. 
-
-!!! Warning
-    This is a task that can only be performed by an admin. Presenters will demo it; the next steps are just for reference.
-
-To authorize a **Service App**, go to **Collaboration Control Hub** -> **Apps** -> **Service Apps** and select **Other service apps**. Select the Service App you want to authorize, and click **Authorize** and **Save**:
-
-![Service App](./assets/serviceapp_4.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-To use the newly created **Service App**, you will need to get an **Access token**. 
-
-### Access Token
-
-After the **Service App** has been authorized, you will be able to generate an **Access token**.
-
-1. Return to **Webex for Developers**, go to **My Webex Apps** and select your **Service App**.
-2. In the section **Org Authorizations**, select your Organization from the dropdown. 
-
-    ![Service App](./assets/serviceapp_5.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-3. Enter your **Client Secret** and click **Generate tokens**:
-
-    ![Service App](./assets/serviceapp_6.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-4. Copy your **access token** and your **refresh token** into `.env`:
-
-    ```env
-    ACCESS_TOKEN=
-    REFRESH_TOKEN=
+    **How to Refresh a Service App Token**
+    
+    Unlike a Personal Access Token which simply expires, a Service App token can be refreshed programmatically using the `refresh_token`.
+    
+    You can refresh your **access_token** by making a POST request to the Webex API:
+    
+    ```python
+    import requests
+    
+    url = "https://webexapis.com/v1/access_token"
+    payload = {
+        'grant_type': 'refresh_token',
+        'refresh_token': 'YOUR_REFRESH_TOKEN',
+        'client_id': 'YOUR_CLIENT_ID',
+        'client_secret': 'YOUR_CLIENT_SECRET',
+    }
+    headers = {
+        'Content-type': 'application/x-www-form-urlencoded'
+    }
+    
+    response = requests.post(url, headers=headers, data=payload)
+    print(response.json()) # Contains the new access_token and refresh_token
     ```
 
-!!! Note
-    The expiration time for the access token is 14 days, while the refresh token expires in 90 days.
 
-From now on, use this **Service App access token** for API testing in Bruno and for the custom MCP server in the next lab.
+## Step 2.3: Calling Webex APIs
 
-## Step 2.4: Using the token to call an API
+Now that we have our token, we can start making API calls. The [Webex Developer Portal](https://developer.webex.com/docs/api/v1/){:target="_blank"} provides documentation and ready-to-use code snippets for all APIs. You can select your preferred language (cURL, Python, Node.js, etc.) and copy the code directly.
 
-Now, we will test that the Service App token works by making a standard REST API call using **Bruno** (or Postman). 
+To demonstrate Control Hub management capabilities, we will use the **Numbers API** to list the phone numbers configured in the organization. This is a typical administrative task.
 
-To demonstrate Control Hub management capabilities, we will use the **Numbers API** to list the phone numbers configured in the organization. This is a typical administrative task. A Personal Access Token would fail here; the Service App should succeed.
+### Calling APIs using Bruno
 
 1. Open **Bruno** and create a new `GET` request.
 2. Set the URL to: `https://webexapis.com/v1/telephony/config/numbers`
 3. Go to the **Headers** tab and add:
    * **Name**: `Authorization`
-   * **Value**: `Bearer YOUR_SERVICE_APP_ACCESS_TOKEN` (replace with the token from your `.env` file)
+   * **Value**: `Bearer YOUR_ACCESS_TOKEN` (replace with the token from your `.env` file)
 4. Click **Send**.
 
-**Equivalent cURL command:**
+### Calling APIs using cURL
+
+You can find the equivalent cURL command directly in the Developer Portal. It looks like this:
+
 ```bash
-curl -s -H "Authorization: Bearer YOUR_SERVICE_APP_ACCESS_TOKEN" \
+curl -s -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   "https://webexapis.com/v1/telephony/config/numbers" | python -m json.tool
 ```
 
-You should receive a JSON response containing a list of phone numbers in your organization, proving your Service App is successfully authenticating and retrieving organizational data.
+### Calling APIs using Python
 
-## Extra: Refresh your access_token
+Similarly, the portal provides Python snippets using the `requests` library. You can run this in a simple script:
 
-!!! Note
-    This is not required for this lab, but it is important to keep in mind for production environments.
+```python
+import requests
+import os
+from dotenv import load_dotenv
 
-As mentioned earlier, the **access_token** will expire after 14 days, and the **refresh_token** will expire in 90 days. It is crucial to handle these expiration scenarios if you have an app running in production.
+load_dotenv()
+token = os.getenv("ACCESS_TOKEN")
 
-!!! Note
-    When a refresh token is used to generate a new access token, the refresh token's expiration time is reset.
+url = "https://webexapis.com/v1/telephony/config/numbers"
+headers = {
+    "Authorization": f"Bearer {token}"
+}
 
-You can refresh your **access_token** using your **refresh_token**, **client_id**, and **client_secret** by making a POST request to the Webex API. 
+response = requests.get(url, headers=headers)
+print(response.json())
+```
 
-To manage the token expiration and refresh, we have provided a `TokenManager` class. This class checks if the token is expired and automatically updates your `.env` file so the new token persists across restarts.
+You should receive a JSON response containing a list of phone numbers in your organization, proving you are successfully authenticating and retrieving organizational data.
 
-1. Navigate to `02_webex_apis/token_manager.py` and review the code:
+## Step 2.4 - Webex APIs for Troubleshooting
 
-    ??? Tip "Python Code"
-        ```python
-        import os
-        import time
-        import logging
-        import requests
-        from dotenv import load_dotenv, set_key
-        
-        log = logging.getLogger("token-manager")
-        
-        class TokenManager:
-            def __init__(self, env_path=".env"):
-                self.env_path = env_path
-                load_dotenv(self.env_path)
-                
-                self.client_id = os.getenv("CLIENT_ID")
-                self.client_secret = os.getenv("CLIENT_SECRET")
-                self.refresh_token_val = os.getenv("REFRESH_TOKEN")
-                self.access_token = os.getenv("ACCESS_TOKEN")
-                self.expires_at = 0 
-        
-            def get_token(self):
-                """Returns a valid access token, refreshing it if necessary."""
-                # If we have a token and it hasn't expired (with a 60s safety buffer)
-                if self.access_token and time.time() < self.expires_at:
-                    return self.access_token
-                
-                # Otherwise, refresh the token
-                return self.refresh()
-        
-            def refresh(self):
-                """Forces a token refresh via the Webex API."""
-                log.info("Refreshing Service App token...")
-                if not all([self.client_id, self.client_secret, self.refresh_token_val]):
-                    raise ValueError("Missing CLIENT_ID, CLIENT_SECRET, or REFRESH_TOKEN in environment.")
-        
-                url = "https://webexapis.com/v1/access_token"
-                payload = {
-                    'grant_type': 'refresh_token',
-                    'refresh_token': self.refresh_token_val,
-                    'client_id': self.client_id,
-                    'client_secret': self.client_secret,
-                }
-                headers = {
-                    'Content-type': 'application/x-www-form-urlencoded'
-                }
-        
-                # This is the raw REST API call to Webex to exchange the refresh token
-                response = requests.post(url, headers=headers, data=payload)
-                
-                if response.status_code == 200:
-                    token_data = response.json()
-                    self.access_token = token_data['access_token']
-                    
-                    # Calculate expiration time (subtract 60 seconds for safety buffer)
-                    self.expires_at = time.time() + token_data['expires_in'] - 60
-                    
-                    # If a new refresh token is provided, update it
-                    if 'refresh_token' in token_data:
-                        self.refresh_token_val = token_data['refresh_token']
-                        set_key(self.env_path, "REFRESH_TOKEN", self.refresh_token_val)
-        
-                    # Update the access token in the .env file for persistence
-                    set_key(self.env_path, "ACCESS_TOKEN", self.access_token)
-                    
-                    log.info("Token refreshed successfully.")
-                    return self.access_token
-                else:
-                    raise Exception(f"Failed to refresh token: {response.status_code} - {response.text}")
-        ```
-
-2. Navigate to `02_webex_apis/02_refresh.py` and review the code. This script imports the `TokenManager` to perform the refresh:
-
-    ??? Tip "Python Code"
-        ```python
-        import logging
-        from token_manager import TokenManager
-        
-        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-        
-        if __name__ == "__main__":
-            print("Testing TokenManager...")
-            manager = TokenManager()
-            
-            # Force a refresh by calling refresh() directly instead of get_token()
-            new_token = manager.refresh()
-            
-            print("\n--- Token Refreshed ---")
-            print(f"New Access Token: {new_token[:15]}... (truncated)")
-            print("\nYour .env file has been automatically updated!")
-        ```
-
-3. Run your code with the following command:
-
-    * `python 02_webex_apis/02_refresh.py`
-
-4. After running the code, you will see that the token was refreshed successfully, and if you check your `.env` file, the `ACCESS_TOKEN` and `REFRESH_TOKEN` values have been updated automatically.
-
-## Step 2.5 - Webex APIs for Troubleshooting
-
-You now have a token with **admin** scopes. Use the Service App `ACCESS_TOKEN` in Bruno for the calls below. The Webex Status API is public and does not need a token.
+You now have a token with **admin** scopes. Use the `ACCESS_TOKEN` in Bruno for the calls below. The Webex Status API is public and does not need a token.
 
 ### Webex Status API
 
@@ -353,7 +213,7 @@ curl -s -X POST -H "Authorization: Bearer $ACCESS_TOKEN" \
 ```
 
 !!! Note
-    Report templates and scopes vary by license. Your lab instructor will provide the template IDs available in the lab org. Add the matching scopes to the Service App if you get `403`.
+    Report templates and scopes vary by license. Your lab instructor will provide the template IDs available in the lab org.
 
 ### Calling and meetings troubleshooting
 
@@ -363,7 +223,7 @@ curl -s -X POST -H "Authorization: Bearer $ACCESS_TOKEN" \
 | Agent / queue issues | Calling Service Settings, Call Routing APIs |
 | Meeting attendance / stats | Meetings, Meeting Participants |
 
-Example — list phone numbers (same call as Step 2.4):
+Example — list phone numbers (same call as Step 2.3):
 
 ```bash
 curl -s -H "Authorization: Bearer $ACCESS_TOKEN" \
@@ -390,13 +250,13 @@ TBC
 
 ---
 
-## Step 2.6: The N × M problem MCP solves
+## Step 2.5: The N × M problem MCP solves
 
 Without a standard protocol, every AI application needs custom glue code for every backend system — creating fragile, exponential integration work.
 
 MCP reduces this to **N + M** connections by providing a universal interface between AI hosts and platform capabilities.
 
-## Step 2.7: When to use Webex APIs vs Webex MCP
+## Step 2.6: When to use Webex APIs vs Webex MCP
 
 | Choose Webex REST APIs when… | Choose Webex MCP when… |
 | --- | --- |
