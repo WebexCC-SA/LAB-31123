@@ -1373,11 +1373,7 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
         }
         ```
 
-    2. Reload the window if needed (`Developer: Reload Window`).
-    3. Open the Command Palette (`Ctrl+Shift+P`), type **MCP: List Servers**, select each server, and click **Start Server**.
-    4. In Output you should see tools discovered for each of them.
-
-        ![List Servers](assets/placeholder_list_servers.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    2. Start each server, either from `mcp.json` file or open the Command Palette (`Ctrl+Shift+P`), type **MCP: List Servers**, select each server, and click **Start Server**.
 
 ### Test the MCP Servers
 
@@ -1390,7 +1386,10 @@ In Chat, ask a question that needs **multiple** tools across different servers, 
 ??? Solution
 
     1. Open **Chat: Open Chat (Agent)** and make sure your custom servers are attached.
-    2. Ask the question in natural language. You should see tool calls (`list_numbers`, then `list_people`, then `unresolved_incidents`).
+    2. Ask the question in natural language. You should see tool calls (`list_numbers`, then `list_people`, then `unresolved_incidents`):
+
+        ![Chat Tools](assets/placeholder_chat_tools.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        
     3. Allow the tools when VS Code prompts.
     4. The final answer should be written by the LLM from the tool results, not a hardcoded string.
 
@@ -1398,6 +1397,15 @@ In Chat, ask a question that needs **multiple** tools across different servers, 
 
         !!! Warning
             If a tool returns `403`, the Service App is missing a scope.
+
+
+            - `spark-admin:telephony_config_read` (for Calling numbers/locations)
+            - `spark-admin:devices_read` (for Calling devices)
+            - `spark-admin:people_read` (for Control Hub people)
+            - `spark-admin:workspaces_read` (for Control Hub workspaces)
+            - `spark-admin:licenses_read` (for Control Hub licenses)
+            - `spark-admin:roles_read` (for Control Hub roles)
+            - `spark-admin:admin_audit_events_read` (for Troubleshooting audit events)
 
 #### Test with MCP Inspector (Optional)
 
