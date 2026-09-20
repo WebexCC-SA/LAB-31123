@@ -93,11 +93,11 @@ We will use the official `mcp` Python SDK to create our server. The SDK makes it
     | **Command**       	| Python |
     | **Arguments**       	| 01_hello_mcp.py |
 
-    ![MCP Inspector Start](assets/inspector_2.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![MCP Inspector Start](assets/inspector_2.png){ width="350" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 6. In the MCP Inspector web interface, click on the **Tools** tab, then **List Tools** and you will see the `format_phone` tool listed.
 
-    ![MCP Inspector Start](assets/inspector_3.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![MCP Inspector Start](assets/inspector_3.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 7. Click on **format_phone**. In the arguments JSON editor, provide a messy phone number:
     ```json
@@ -111,7 +111,7 @@ We will use the official `mcp` Python SDK to create our server. The SDK makes it
     !!! Note
         You may need to scroll down
 
-    ![MCP Inspector Tool Run](assets/inspector_run.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![MCP Inspector Tool Run](assets/inspector_run.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     This confirms your server works perfectly in isolation! You can stop the MCP in your terminal with `Ctrl+C`, we will still use the MCP inspector in the next exercise.
 
@@ -184,13 +184,13 @@ Next, we are going to build a single script that demonstrates the entire MCP arc
 3. Change **Arguments** to `02_hello_resource_prompt.py` and click **Connect**.
 4. Click on **Resources** and then **List Resources**. You will see `lab://greeting-rules`. You can click it to read the greeting rules.
     ??? Note "Resources"
-        ![MCP Inspector Tool Run](assets/resources.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![MCP Inspector Tool Run](assets/resources.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 5. Click on **Prompts** and then **List Prompts**. You will see `review_greeting`.
     ??? Note "Prompts"
-        ![MCP Inspector Tool Run](assets/prompts.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![MCP Inspector Tool Run](assets/prompts.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 6. Click on **Tools** and then **List Tools**. You will see `count_words`. You can test it by providing a `"text"` argument.
     ??? Note "Tools"
-        ![MCP Inspector Tool Run](assets/tools.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![MCP Inspector Tool Run](assets/tools.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 ### Step 3.1.3: Reading from Webex Contact Center API
 
@@ -215,7 +215,7 @@ One address book is assigned to an agent profile.
 You can explore Webex Contact Center APIs in the [Webex Developer Portal - WxCC APIs](https://developer.webex.com/webex-contact-center/docs/webex-contact-center).
 We will be using the [List Address Book(s) API](https://developer.webex.com/webex-contact-center/docs/api/v1/address-book/list-address-books) 
 
-![Control Hub](assets/addressbooks_2.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Control Hub](assets/addressbooks_2.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 You can test directly in the UI, using the **Service App** token:
 
@@ -312,11 +312,11 @@ We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC
     
         For `WEBEX_ORG_ID`, you need to go in Collaboration Control Hub to Account:
     
-        ![Org ID](assets/orgid_1.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![Org ID](assets/orgid_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     
         For `WXCC_CONFIG_API_BASE`, you can find it using this information (in this case it will be `us1`):
     
-        ![API Base](assets/orgid_2.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![API Base](assets/orgid_2.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     
         While general Webex APIs use a global endpoint (`https://webexapis.com/v1`), Webex Contact Center (WxCC) specific data and agent APIs route through regional endpoints. [1](https://www.cisco.com/c/en/us/support/docs/contact-center/webex-contact-center/218418-configure-webex-contact-center-apis-with.html)
         
@@ -342,7 +342,7 @@ We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC
            | Singapore | `sg1` | `https://api.wxcc-sg1.cisco.com` |
 
         If you have login to the Webex for Developers portal with an account from that organization, you should also be able to find this information in the the Code Snippets examples:
-        ![Org ID](assets/api_1.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![Org ID](assets/api_1.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 1. Navigate to `03_custom_mcp/03_read_books.py` and review the code:
 
@@ -447,7 +447,7 @@ We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC
 
 5. Run the `list_address_books` tool:
 
-    ![List Address Books](assets/tools_4.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![List Address Books](assets/tools_4.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     ??? Note "Result"
         ```json
         {
@@ -478,7 +478,7 @@ We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC
         ```
 6. Run the `list_entries` tool:
 
-    ![List Entries](assets/tools_5.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![List Entries](assets/tools_5.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     ??? Note "Result"
         ```json
         {
@@ -610,7 +610,7 @@ Now, we are going to include the tools that performs writting actions. We are go
 
 5. Create an Address Book with name "WebexOne - Username":
 
-    ![Create Address Book](assets/tools_6.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Create Address Book](assets/tools_6.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     !!! Note "Result"
         ```json
         {
@@ -622,7 +622,7 @@ Now, we are going to include the tools that performs writting actions. We are go
 
 6. Using the `address_book_id` provided, create an Entry, with your name and number:
 
-    ![Add Entry](assets/tools_7.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Add Entry](assets/tools_7.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     !!! Note "Result"
         ```json
         {
@@ -682,22 +682,21 @@ In this section, you will add and test your custom MCP servers directly in VS Co
         }
         ```
 
-    !!! Note
         We use VS Code variables like `${workspaceFolder}` so the configuration works on any machine without hardcoding absolute paths. If you are on Windows, the command would be `${workspaceFolder}/webexone/Scripts/python.exe`.
 
 2. Start the MCP server.
 
-        a. Click the "Start" button in the `mcp.json` file:
+    a. Click the "Start" button in the `mcp.json` file:
 
-            ![Start MCP](assets/lab6_img02.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![Start MCP](assets/lab6_img02.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-        b. Or use the Command Palette (`Ctrl+Shift+P` -> `MCP: List Servers`).
+    b. Or use the Command Palette (`Ctrl+Shift+P` -> `MCP: List Servers`).
 
-            ![List Servers](assets/lab6_img05.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![List Servers](assets/lab6_img05.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 3. You will see MCP server logs in the Output section automatically:
 
-   ```terminal
+    ```terminal
     2026-09-18 17:35:44.757 [info] Starting server webex-mcp-lab
     2026-09-18 17:35:44.758 [info] Connection state: Starting
     2026-09-18 17:35:44.758 [info] Starting server from LocalProcess extension host
@@ -707,20 +706,20 @@ In this section, you will add and test your custom MCP servers directly in VS Co
     2026-09-18 17:35:45.240 [info] Discovered 1 tools
     ```
     
-4. Open the VS Code Chat view and test your tools!
+4. Open VS Code Chat view and test your tools!
 
     1. **Testing 01_hello_mcp.py:**
 
         - Ask: *"Clean the number (415) 555-0101"*. 
     
-            ![Chat Format](assets/test1.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-            ![Chat Format](assets/test2.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![Chat Format](assets/test1.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![Chat Format](assets/test2.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     2. **Testing 02_hello_resource_prompt.py:**
     
         1. First, we are going to test the resource.
         
-            !!! Note
+            !!! Warning
                 For Resources, there are currently two bugs in VS Code:
                 
                 - [Bug 291004](https://github.com/microsoft/vscode/issues/291004)
@@ -731,47 +730,47 @@ In this section, you will add and test your custom MCP servers directly in VS Co
                 - At the bottom of the chat window, click  **+**, then **Add Context** -> **MCP Resources** -> `lab://greeting-rules`
     
                 ??? Note "Images"
-                    ![Ask Rules](assets/test3.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-                    ![Ask Rules](assets/test4.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-                    ![Ask Rules](assets/test5.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                    ![Ask Rules](assets/test3.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                    ![Ask Rules](assets/test4.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                    ![Ask Rules](assets/test5.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     
             - Ask: *"What are the greeting rules?"*
             
-                ![Ask Rules](assets/test6.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                ![Ask Rules](assets/test6.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
         2. To test a prompt, you will load it on demand, start typing "/mcp" in the chat, and you will see the prompt:
 
-            ![Prompt](assets/prompt_1.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![Prompt](assets/prompt_1.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
             - Select "Insert as text":
 
-                ![Prompt](assets/prompt_2.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                ![Prompt](assets/prompt_2.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
         
             - Complete with the following test: *"Hello! I'm Sam and I'll obviously get back to you ASAP with a full resolution of your issue as soon as humanly possible."*
 
-                ![Prompt](assets/prompt_3.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-                ![Prompt](assets/prompt_4.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-                ![Prompt](assets/prompt_5.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                ![Prompt](assets/prompt_3.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                ![Prompt](assets/prompt_4.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                ![Prompt](assets/prompt_5.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     4. **Testing 03_read_books.py:**
     
         - Ask: *"List my address books, then show me the entries for WebexOne - Diejimen"*
     
-            ![List Books](assets/test7.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-            ![List Books](assets/test8.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-            ![List Books](assets/test9.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![List Books](assets/test7.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![List Books](assets/test8.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![List Books](assets/test9.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     5. **Testing 04_write_books.py:**
     
         - Ask: *"Create an address book called WebexOne - Diejimen2"*  
         
-            ![Create Book](assets/test10.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-            ![Create Book](assets/test11.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![Create Book](assets/test10.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![Create Book](assets/test11.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
         - Ask: *"Add an entry to the book, for number +1415555-0101"*
         
-            ![Created Book](assets/test12.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-            ![Created Book](assets/test13.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![Created Book](assets/test12.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![Created Book](assets/test13.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
             As no more information was provided, the agent added the name "Test Contact"
 
@@ -919,36 +918,40 @@ Now, we will add to the server two tools destructive tools: `delete_address_book
     } 
     ```
 
-3. Ask to delete a certain address book, it asks for the ID of that book, just click "Enter".
+3. To test it, we will ask our agent to delete the Address Book we have just created using its ID:
 
-    ![Delete Book](assets/lab6_img50.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    - Ask: *"Delete the address book with id 41e05f35-a2cd-4f3e-9d1b-3be7514080ce"*
 
-4. This is the request from VS Code for tool execution approval:
+4. The LLM itself asked us to confirm if we want to delete it:
 
-    ![Approval Request](assets/lab6_img51.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Approval Request](assets/delete_1.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-5. You will see another approval requested here which is what elicitation means:
+5. Once you confirm, there is a request from VS Code for tool execution approval, as we got previously:
 
-    ![Elicitation Approval](assets/lab6_img52.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Approval Request](assets/delete_2.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+6. You will see another approval requested here which is what **Elicitation** means:
+
+    ![Elicitation Approval](assets/delete_3.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     !!! Tip "Watch for"
-        Two approval moments. First the host asks "call delete_address_book?", then the server's elicitation form asks "delete this specific book?". They are different layers.
+        We got three approval moments. 
+        
+        - First, the LLM asked us to confirm the action.
+        - Second, the MCP Client (VS Code) asks us to confirm tool execution.
+        - Third, the MCP Server's elicitation form asks for final confirmation.
+        
+        They are different layers.
 
-6. Since we are not sure what the ID of that address book is, it returns 404.
+7. After you select `True`, book will be deleted:
 
-    ![404 Error](assets/lab6_img53.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Elicitation Confirmation 1](assets/delete_4.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-7. Now we can delete the speed dial with a specific ID.
+8. If you have connected `read-books` MCP, you can confirm that book is not listed anymore:
 
-    ![Delete Speed Dial](assets/lab6_img56.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    - Ask: *"List my address books"*
 
-8. The confirmation requested by the MCP server which requested for elicitation:
-
-    ![Elicitation Confirmation 1](assets/lab6_img59.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-
-9. Successfully deleted.
-
-    ![Successfully Deleted](assets/lab6_img62.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Delete Confirmation](assets/delete_5.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 ## Exercises
 
