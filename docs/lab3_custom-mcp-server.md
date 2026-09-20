@@ -14,13 +14,13 @@ Before we write our first line of code, let's talk about how an MCP client (like
 | **When to use it?** | - Local development and testing.<br>- Tools that run on the same machine as the client (e.g., VS Code connecting to a local script). | - Production deployments.<br>- When the server needs to be shared across multiple clients or users.<br>- When the server is hosted remotely. |
 | **Why?** | **Simplicity:** No network configuration, no exposed ports, and the lifecycle is tied to the client (if the client dies, the server dies). | **Scalability:** You can host the server once in the cloud, update it centrally, and have thousands of bots connect to it via URLs. |
 
-In previou labs, you **VS Code** connected to the official Webex MCP servers using **SSE** (`https://mcp.webexapis.com/...`). 
+In previous labs, your **VS Code** was connected to the official Webex MCP servers using **SSE** (`https://mcp.webexapis.com/...`). 
 
 For this lab, we will build our custom MCP servers using **stdio**. This is the standard approach for local development and allows us to test our tools instantly using the MCP Inspector and VS Code.
 
 ### Step 3.1.1: Simple MCP Server
 
-In this section we are going to start wit the simpliest MCP server that does real work: one tool, no network, no token. It takes a messy phone number and returns it in E.164 format.
+In this section, we are going to start with the simplest MCP server that does real work: one tool, no network, no token. It takes a messy phone number and returns it in E.164 format.
 
 We will use the official `mcp` Python SDK to create our server. The SDK makes it incredibly easy to define tools and their execution logic using decorators.
 
@@ -68,7 +68,7 @@ We will use the official `mcp` Python SDK to create our server. The SDK makes it
 
     * cd ../03_custom_mcp
 
-3. To test our MCP server we will be using a tool called **MCP Inspector**. It is the official, interactive debugging tool for MCP servers. It runs a local web interface where you can list tools, resources, and prompts, and execute them directly without needing an LLM in the loop.
+3. To test our MCP server, we will be using a tool called **MCP Inspector**. It is the official, interactive debugging tool for MCP servers. It runs a local web interface where you can list tools, resources, and prompts, and execute them directly without needing an LLM in the loop.
     
     * npx @modelcontextprotocol/inspector python 01_hello_mcp.py
    
@@ -341,7 +341,7 @@ We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC
            | Japan | `jp1` | `https://api.wxcc-jp1.cisco.com` |
            | Singapore | `sg1` | `https://api.wxcc-sg1.cisco.com` |
 
-        If you have login to the Webex for Developers portal with an account from that organization, you should also be able to find this information in the the Code Snippets examples:
+        If you have logged in to the Webex for Developers portal with an account from that organization, you should also be able to find this information in the Code Snippets examples:
         ![Org ID](assets/api_1.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 1. Navigate to `03_custom_mcp/03_read_books.py` and review the code:
@@ -440,7 +440,7 @@ We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC
 
 2. Go to the MCP Inspector. Click on **Disconnect**.
 3. Change **Arguments** to `03_read_books.py` and click **Connect**.
-4. Click on **Tools** and then **List Tools**. You will see both `list_address_books` and `list_entries`. Now we will test them.
+4. Click on **Tools** and then **List Tools**. You will see both `list_address_books` and `list_entries`. Now, we will test them.
 
     !!! Warning
         For these API calls to work, you need to have `cjp:config_read` scope added to your Service App. If you didn't do it before, you need to add it, re-authorize your Service App and generate a new access token!
@@ -495,7 +495,7 @@ We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC
 
 ### Step 3.1.4: Create and Fill an Address Book
 
-Now, we are going to include the tools that performs writting actions. We are going to build two tools, `create_address_book` and `add_entry`. 
+Now, we are going to include the tools that perform writing actions. We are going to build two tools, `create_address_book` and `add_entry`. 
 
 1. Navigate to `03_custom_mcp/04_write_books.py` and review the code:
 
@@ -603,7 +603,7 @@ Now, we are going to include the tools that performs writting actions. We are go
 
 2. Go to the MCP Inspector. Click on **Disconnect**.
 3. Change **Arguments** to `04_write_books.py` and click **Connect**.
-4. Click on **Tools** and then **List Tools**. You will see both `create_address_book` and `add_entry`. You will be testing now both.
+4. Click on **Tools** and then **List Tools**. You will see both `create_address_book` and `add_entry`. You will be testing both now.
 
    !!! Warning
        For these API calls to work, you need to have `cjp:config_read` and `cjp:config_write` scope added to your Service App. If you didn't do it before, you need to add it, re-authorize your Service App and generate a new access token!
@@ -638,7 +638,7 @@ Now, we are going to include the tools that performs writting actions. We are go
 
 In this section, you will add and test your custom MCP servers directly in VS Code.
 
-1. Add the following configuration to `mcp.json`. Delete what we have added before and save the file afterwards:
+1. Add the following configuration to `mcp.json`. Delete what we added before and save the file afterwards:
 
     ```json
     {
@@ -730,9 +730,9 @@ In this section, you will add and test your custom MCP servers directly in VS Co
                 - At the bottom of the chat window, click  **+**, then **Add Context** -> **MCP Resources** -> `lab://greeting-rules`
     
                 ??? Note "Images"
-                    ![Ask Rules](assets/test3.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-                    ![Ask Rules](assets/test4.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-                    ![Ask Rules](assets/test5.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                    ![Ask Rules](assets/test3.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                    ![Ask Rules](assets/test4.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                    ![Ask Rules](assets/test5.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     
             - Ask: *"What are the greeting rules?"*
             
@@ -780,7 +780,7 @@ So far, we trusted the host (VS Code) to ask permission before executing a tool.
 
 The MCP protocol calls this **elicitation**: the server pauses, sends a form to the user, and resumes based on the answer.
 
-Now, we will add to the server two tools destructive tools: `delete_address_book` and `delete_entry`. 
+Now, we will add to the server two destructive tools: `delete_address_book` and `delete_entry`. 
 
 1. Navigate to `03_custom_mcp/05_delete_books.py` and review the code:
 
@@ -947,7 +947,7 @@ Now, we will add to the server two tools destructive tools: `delete_address_book
 
     ![Elicitation Confirmation 1](assets/delete_4.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-8. If you have connected `read-books` MCP, you can confirm that book is not listed anymore:
+8. If you have connected the `read-books` MCP, you can confirm that the book is not listed anymore:
 
     - Ask: *"List my address books"*
 
@@ -971,10 +971,9 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
 | --- | --- | --- |
 | **Numbers** | List phone numbers in the org, see if they are assigned | [Numbers](https://developer.webex.com/calling/docs/api/v1/numbers){:target="_blank"} |
 | **Locations** | Calling locations, which numbers and users belong where | [Locations](https://developer.webex.com/calling/docs/api/v1/locations){:target="_blank"} |
-| **People (Calling settings)** | User calling features (DND, forwarding, numbers on the user) | [People](https://developer.webex.com/admin/docs/api/v1/people){:target="_blank"} · [Webex Calling provisioning](https://developer.webex.com/calling/docs/api/guides/webex-calling-provisioning-apis){:target="_blank"} |
+| **Location Call Settings** | Manage specific calling settings for a location | [Location Call Settings](https://developer.webex.com/calling/docs/api/v1/location-call-settings){:target="_blank"} |
 | **Devices** | Phones and room devices registered in the org | [Devices](https://developer.webex.com/docs/api/v1/devices){:target="_blank"} |
-| **Call queues / hunt groups** | Queue membership and routing (when investigating “calls not landing”) | [Webex Calling provisioning](https://developer.webex.com/calling/docs/api/guides/webex-calling-provisioning-apis){:target="_blank"} |
-| **Detailed Call History** | Recent CDRs for a call-quality or “who called whom” investigation | [Detailed Call History](https://developer.webex.com/calling/docs/api/v1/reports-detailed-call-history){:target="_blank"} |
+| **Call Routing** | Dial plans, route groups, and routing choices | [Call Routing](https://developer.webex.com/calling/docs/api/v1/call-routing){:target="_blank"} |
 
 #### Control Hub management
 
@@ -984,7 +983,6 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
 | **Licenses** | What the org is entitled to, and remaining counts | [Licenses](https://developer.webex.com/admin/docs/api/v1/licenses){:target="_blank"} |
 | **Roles** | Admin roles available in the org | [Roles](https://developer.webex.com/admin/docs/api/v1/roles){:target="_blank"} |
 | **Workspaces** | Meeting rooms and desk areas | [Workspaces](https://developer.webex.com/calling/docs/api/v1/workspaces){:target="_blank"} |
-| **Admin Audit Events** | Who changed what in Control Hub | [Admin Audit Events](https://developer.webex.com/admin/docs/api/v1/admin-audit-events){:target="_blank"} |
 
 #### Troubleshooting / platform
 
@@ -992,113 +990,354 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
 | --- | --- | --- |
 | **Webex Status** | Platform incidents before you blame the org | [Webex Status API](https://developer.webex.com/calling/docs/webex-status-api){:target="_blank"} |
 | **Reports** | Usage and activity reports | [Reports](https://developer.webex.com/admin/docs/api/v1/reports){:target="_blank"} |
-| **Troubleshooting guide** | Suggested diagnostic workflows | [API Troubleshooting Guide](https://developer.webex.com/explore/docs/api/guides/troubleshooting){:target="_blank"} |
+| **Detailed Call History** | Recent CDRs for a call-quality or “who called whom” investigation | [Detailed Call History](https://developer.webex.com/calling/docs/api/v1/reports-detailed-call-history){:target="_blank"} |
+| **Admin Audit Events** | Who changed what in Control Hub | [Admin Audit Events](https://developer.webex.com/admin/docs/api/v1/admin-audit-events){:target="_blank"} |
+| **Meeting Qualities** | Analytics and diagnostics for meetings | [Meeting Qualities](https://developer.webex.com/admin/docs/api/v1/meeting-qualities){:target="_blank"} |
 
-!!! Note
-    Exact paths and scopes can vary by license. Confirm each API on developer.webex.com and add the matching scopes to your Service App if a call returns `403`.
+### Build the MCP servers
 
-### Build the MCP server
+- Create three new files, one for each domain:
+    
+    1. `03_custom_mcp/06_calling_mcp.py`
+    2. `03_custom_mcp/07_control_hub_mcp.py`
+    3. `03_custom_mcp/08_troubleshooting_mcp.py`
 
-Create a new file, for example `03_custom_mcp/06_calling_hub.py`, with at least **two tools**:
+    Keep each tool small: call one endpoint, return a short JSON list (id, name, status), not the full raw payload.
 
-1. One Calling tool (for example list numbers, or numbers that are unassigned).
-2. One Control Hub tool (for example list people, or recent admin audit events).
+    !!! Note "Note on Tool Complexity and Actions"
+        For this exercise, you can focus on **listing** (read-only) operations only, to keep it simple and fast.
 
-Keep each tool small: call one endpoint, return a short JSON list (id, name, status), not the full raw payload.
-
-??? Solution
-
-    Create a new file `03_custom_mcp/06_calling_hub.py` and paste this code:
-
-    ```python
-    import os
-    import sys
-    import httpx
-    from dotenv import load_dotenv
-    from mcp.server import MCPServer
-
-    load_dotenv()
-    TOKEN = os.environ.get("ACCESS_TOKEN")
-
-    if not TOKEN:
-        sys.exit("ACCESS_TOKEN is not set. Please set it in your .env file.")
-
-    HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
-
-    mcp = MCPServer("webex-calling-hub")
-
-    @mcp.tool()
-    async def list_numbers(max_results: int = 25) -> dict:
-        """List phone numbers configured in the organization."""
-        async with httpx.AsyncClient(timeout=15) as http:
-            r = await http.get(
-                "https://webexapis.com/v1/telephony/config/numbers",
-                headers=HEADERS,
-                params={"max": max_results}
-            )
-        if r.status_code != 200:
-            return {"error": f"HTTP {r.status_code}: {r.text}"}
-        
-        numbers = r.json().get("phoneNumbers", [])
-        return {
-            "count": len(numbers),
-            "numbers": [
-                {"number": n.get("phoneNumber"), "state": n.get("state"), "location": n.get("location", {}).get("name")}
-                for n in numbers
-            ]
-        }
-
-    @mcp.tool()
-    async def list_people(max_results: int = 10) -> dict:
-        """List users (people) in the organization."""
-        async with httpx.AsyncClient(timeout=15) as http:
-            r = await http.get(
-                "https://webexapis.com/v1/people",
-                headers=HEADERS,
-                params={"max": max_results}
-            )
-        if r.status_code != 200:
-            return {"error": f"HTTP {r.status_code}: {r.text}"}
-        
-        people = r.json().get("items", [])
-        return {
-            "count": len(people),
-            "people": [
-                {"id": p.get("id"), "emails": p.get("emails"), "displayName": p.get("displayName")}
-                for p in people
-            ]
-        }
-
-    @mcp.tool()
-    async def unresolved_incidents() -> dict:
-        """Check Webex for any unresolved platform incidents."""
-        async with httpx.AsyncClient(timeout=15) as http:
-            r = await http.get("https://status.webex.com/api/v2/incidents/unresolved.json")
-        if r.status_code != 200:
-            return {"error": f"HTTP {r.status_code}: {r.text}"}
-        
-        incidents = r.json().get("incidents", [])
-        return {"count": len(incidents), "incidents": incidents}
-
-    if __name__ == "__main__":
-        print("webex-calling-hub running on stdio.", file=sys.stderr)
-        mcp.run()
-    ```
-
-### Register the server in your IDE
-
-Add your new server to `.vscode/mcp.json` the same way you did in Step 3.2, start it, and confirm tools are discovered in the Output view.
+        The full versions are provided and used later in the lab.
 
 ??? Solution
 
-    1. Open `.vscode/mcp.json` and add the new server configuration:
+    1. Create `03_custom_mcp/06_calling_mcp.py` and paste this code:
+
+        ```python
+        import logging
+        import os
+        import sys
+        import httpx
+        from dotenv import load_dotenv
+        from mcp.server import MCPServer
+    
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+        log = logging.getLogger("calling-mcp")
+    
+        load_dotenv()
+        TOKEN = os.environ.get("ACCESS_TOKEN")
+    
+        if not TOKEN:
+            sys.exit("ACCESS_TOKEN is not set. Please set it in your .env file.")
+    
+        HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
+    
+        mcp = MCPServer("webex-calling-mcp")
+    
+        @mcp.tool()
+        async def list_numbers(max_results: int = 25) -> dict:
+            """List phone numbers configured in the organization."""
+            async with httpx.AsyncClient(timeout=15) as http:
+                r = await http.get(
+                    "https://webexapis.com/v1/telephony/config/numbers",
+                    headers=HEADERS,
+                    params={"max": max_results}
+                )
+            if r.status_code != 200:
+                return {"error": f"HTTP {r.status_code}: {r.text}"}
+            
+            numbers = r.json().get("phoneNumbers", [])
+            return {
+                "count": len(numbers),
+                "numbers": [
+                    {"number": n.get("phoneNumber"), "state": n.get("state"), "location": n.get("location", {}).get("name")}
+                    for n in numbers
+                ]
+            }
+            
+        @mcp.tool()
+        async def list_locations(max_results: int = 10) -> dict:
+            """List locations in the organization."""
+            async with httpx.AsyncClient(timeout=15) as http:
+                r = await http.get(
+                    "https://webexapis.com/v1/locations",
+                    headers=HEADERS,
+                    params={"max": max_results}
+                )
+            if r.status_code != 200:
+                return {"error": f"HTTP {r.status_code}: {r.text}"}
+            
+            locations = r.json().get("items", [])
+            return {
+                "count": len(locations),
+                "locations": [
+                    {"id": l.get("id"), "name": l.get("name"), "address": l.get("address", {}).get("city")}
+                    for l in locations
+                ]
+            }
+        
+        @mcp.tool()
+        async def list_devices(max_results: int = 10) -> dict:
+            """List devices in the organization."""
+            async with httpx.AsyncClient(timeout=15) as http:
+                r = await http.get(
+                    "https://webexapis.com/v1/devices",
+                    headers=HEADERS,
+                    params={"max": max_results}
+                )
+            if r.status_code != 200:
+                return {"error": f"HTTP {r.status_code}: {r.text}"}
+            
+            devices = r.json().get("items", [])
+            return {
+                "count": len(devices),
+                "devices": [
+                    {"id": d.get("id"), "product": d.get("product"), "type": d.get("type"), "connectionStatus": d.get("connectionStatus")}
+                    for d in devices
+                ]
+            }
+    
+        if __name__ == "__main__":
+            log.info("webex-calling-mcp running on stdio - waiting for a client (Ctrl+C to stop).")
+            try:
+                mcp.run()
+            except KeyboardInterrupt:
+                log.info("Stopped.")
+        ```
+
+    2. Create `03_custom_mcp/07_control_hub_mcp.py` and paste this code:
+
+        ```python
+        import logging
+        import os
+        import sys
+        import httpx
+        from dotenv import load_dotenv
+        from mcp.server import MCPServer
+    
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+        log = logging.getLogger("control-hub-mcp")
+    
+        load_dotenv()
+        TOKEN = os.environ.get("ACCESS_TOKEN")
+    
+        if not TOKEN:
+            sys.exit("ACCESS_TOKEN is not set. Please set it in your .env file.")
+    
+        HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
+    
+        mcp = MCPServer("webex-control-hub-mcp")
+    
+        @mcp.tool()
+        async def list_people(max_results: int = 10) -> dict:
+            """List users (people) in the organization."""
+            async with httpx.AsyncClient(timeout=15) as http:
+                r = await http.get(
+                    "https://webexapis.com/v1/people",
+                    headers=HEADERS,
+                    params={"max": max_results}
+                )
+            if r.status_code != 200:
+                return {"error": f"HTTP {r.status_code}: {r.text}"}
+            
+            people = r.json().get("items", [])
+            return {
+                "count": len(people),
+                "people": [
+                    {"id": p.get("id"), "emails": p.get("emails"), "displayName": p.get("displayName")}
+                    for p in people
+                ]
+            }
+            
+        @mcp.tool()
+        async def list_workspaces(max_results: int = 10) -> dict:
+            """List workspaces in the organization."""
+            async with httpx.AsyncClient(timeout=15) as http:
+                r = await http.get(
+                    "https://webexapis.com/v1/workspaces",
+                    headers=HEADERS,
+                    params={"max": max_results}
+                )
+            if r.status_code != 200:
+                return {"error": f"HTTP {r.status_code}: {r.text}"}
+            
+            workspaces = r.json().get("items", [])
+            return {
+                "count": len(workspaces),
+                "workspaces": [
+                    {"id": w.get("id"), "displayName": w.get("displayName"), "type": w.get("type")}
+                    for w in workspaces
+                ]
+            }
+        
+        @mcp.tool()
+        async def list_licenses() -> dict:
+            """List licenses in the organization."""
+            async with httpx.AsyncClient(timeout=15) as http:
+                r = await http.get(
+                    "https://webexapis.com/v1/licenses",
+                    headers=HEADERS
+                )
+            if r.status_code != 200:
+                return {"error": f"HTTP {r.status_code}: {r.text}"}
+            
+            licenses = r.json().get("items", [])
+            return {
+                "count": len(licenses),
+                "licenses": [
+                    {"id": l.get("id"), "name": l.get("name"), "consumedUnits": l.get("consumedUnits"), "totalUnits": l.get("totalUnits")}
+                    for l in licenses
+                ]
+            }
+            
+        @mcp.tool()
+        async def list_roles(max_results: int = 20) -> dict:
+            """List admin roles available in the organization."""
+            async with httpx.AsyncClient(timeout=15) as http:
+                r = await http.get(
+                    "https://webexapis.com/v1/roles",
+                    headers=HEADERS,
+                    params={"max": max_results}
+                )
+            if r.status_code != 200:
+                return {"error": f"HTTP {r.status_code}: {r.text}"}
+            
+            roles = r.json().get("items", [])
+            return {
+                "count": len(roles),
+                "roles": [
+                    {"id": role.get("id"), "name": role.get("name"), "description": role.get("description")}
+                    for role in roles
+                ]
+            }
+    
+        if __name__ == "__main__":
+            log.info("webex-control-hub-mcp running on stdio - waiting for a client (Ctrl+C to stop).")
+            try:
+                mcp.run()
+            except KeyboardInterrupt:
+                log.info("Stopped.")
+        ```
+
+    3. Create `03_custom_mcp/08_troubleshooting_mcp.py` and paste this code:
+
+        ```python
+        import logging
+        import os
+        import sys
+        import httpx
+        from datetime import datetime, timedelta, timezone
+        from dotenv import load_dotenv
+        from mcp.server import MCPServer
+    
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+        log = logging.getLogger("troubleshooting-mcp")
+        
+        load_dotenv()
+        TOKEN = os.environ.get("ACCESS_TOKEN")
+        ORG_ID = os.environ.get("WEBEX_ORG_ID")
+        
+        if not TOKEN or not ORG_ID:
+            sys.exit("ACCESS_TOKEN and WEBEX_ORG_ID must be set in your .env file.")
+        
+        HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
+    
+        mcp = MCPServer("webex-troubleshooting-mcp")
+    
+        @mcp.tool()
+        async def unresolved_incidents() -> dict:
+            """Check Webex for any unresolved platform incidents."""
+            async with httpx.AsyncClient(timeout=15) as http:
+                r = await http.get("https://status.webex.com/api/v2/incidents/unresolved.json")
+            if r.status_code != 200:
+                return {"error": f"HTTP {r.status_code}: {r.text}"}
+            
+            incidents = r.json().get("incidents", [])
+            return {"count": len(incidents), "incidents": incidents}
+            
+        @mcp.tool()
+        async def list_admin_audit_events(days_back: int = 7, max_results: int = 10) -> dict:
+            """List recent admin audit events in the organization."""
+            now = datetime.now(timezone.utc)
+            past = now - timedelta(days=days_back)
+            
+            params = {
+                "orgId": ORG_ID,
+                "from": past.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z",
+                "to": now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z",
+                "max": max_results
+            }
+            
+            async with httpx.AsyncClient(timeout=15) as http:
+                r = await http.get(
+                    "https://webexapis.com/v1/adminAudit/events",
+                    headers=HEADERS,
+                    params=params
+                )
+            if r.status_code != 200:
+                return {"error": f"HTTP {r.status_code}: {r.text}"}
+            
+            events = r.json().get("items", [])
+            return {
+                "count": len(events),
+                "events": [
+                    {"id": e.get("id"), "actionText": e.get("actionText"), "actorOrgName": e.get("actorOrgName"), "created": e.get("created")}
+                    for e in events
+                ]
+            }
+            
+        @mcp.tool()
+        async def list_reports() -> dict:
+            """List recent usage and activity reports generated in the organization."""
+            async with httpx.AsyncClient(timeout=15) as http:
+                r = await http.get(
+                    "https://webexapis.com/v1/reports",
+                    headers=HEADERS
+                )
+            if r.status_code != 200:
+                return {"error": f"HTTP {r.status_code}: {r.text}"}
+            
+            reports = r.json().get("items", [])
+            return {
+                "count": len(reports),
+                "reports": [
+                    {"id": rep.get("Id"), "title": rep.get("title"), "status": rep.get("status")}
+                    for rep in reports
+                ]
+            }
+    
+        if __name__ == "__main__":
+            log.info("webex-troubleshooting-mcp running on stdio - waiting for a client (Ctrl+C to stop).")
+            try:
+                mcp.run()
+            except KeyboardInterrupt:
+                log.info("Stopped.")
+        ```
+
+### Register the servers in your IDE
+
+- Add your new servers to `.vscode/mcp.json` the same way you did in Step 3.2, start them, and confirm tools are discovered in the Output view.
+
+??? Solution
+
+    1. Open `.vscode/mcp.json` and add the new server configurations:
 
         ```json
         {
           "servers": {
-            "webex-calling-hub": {
+            "calling-mcp": {
               "command": "${workspaceFolder}/webexone/bin/python",
-              "args": ["03_custom_mcp/06_calling_hub.py"],
+              "args": ["03_custom_mcp/06_calling_mcp.py"],
+              "cwd": "${workspaceFolder}"
+            },
+            "control-hub-mcp": {
+              "command": "${workspaceFolder}/webexone/bin/python",
+              "args": ["03_custom_mcp/07_control_hub_mcp.py"],
+              "cwd": "${workspaceFolder}"
+            },
+            "troubleshooting-mcp": {
+              "command": "${workspaceFolder}/webexone/bin/python",
+              "args": ["03_custom_mcp/08_troubleshooting_mcp.py"],
               "cwd": "${workspaceFolder}"
             }
           }
@@ -1106,24 +1345,38 @@ Add your new server to `.vscode/mcp.json` the same way you did in Step 3.2, star
         ```
 
     2. Reload the window if needed (`Developer: Reload Window`).
-    3. Open the Command Palette (`Ctrl+Shift+P`), type **MCP: List Servers**, select `webex-calling-hub`, and click **Start Server**.
-    4. In Output you should see tools discovered.
+    3. Open the Command Palette (`Ctrl+Shift+P`), type **MCP: List Servers**, select each server, and click **Start Server**.
+    4. In Output you should see tools discovered for each of them.
 
-    ![List Servers](assets/placeholder_list_servers.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![List Servers](assets/placeholder_list_servers.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-### Ask the assistant
+### Test the MCP Servers
 
-In Chat, ask a question that needs **both** tools, so the assistant has to chain them. For example:
+#### Test in VS Code
 
-- *List the phone numbers in this organization. Then tell me how many users we have, and whether Webex has any unresolved incidents.*
+In Chat, ask a question that needs **multiple** tools across different servers, so the assistant has to chain them. For example:
+
+- Ask: "*List the phone numbers in this organization. Then tell me how many users we have, and whether Webex has any unresolved incidents.*"
 
 ??? Solution
 
-    1. Open **Chat: Open Chat (Agent)** and make sure your custom server is attached.
-    2. Ask the question in natural language. You should see tool calls (numbers, then people or status).
+    1. Open **Chat: Open Chat (Agent)** and make sure your custom servers are attached.
+    2. Ask the question in natural language. You should see tool calls (`list_numbers`, then `list_people`, then `unresolved_incidents`).
     3. Allow the tools when VS Code prompts.
     4. The final answer should be written by the LLM from the tool results, not a hardcoded string.
 
-    ![Chat Tools](assets/placeholder_chat_tools.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![Chat Tools](assets/placeholder_chat_tools.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-    If a tool returns `403`, the Service App is missing a scope. Add it in the developer portal, generate a new token, update `.env`, and restart the server.
+        !!! Warning
+            If a tool returns `403`, the Service App is missing a scope.
+
+#### Test with MCP Inspector (Optional)
+
+You can also test each of these servers in isolation using the MCP Inspector, just as you did before:
+
+1. In your terminal, run the inspector for the Calling MCP:
+   ```bash
+   npx @modelcontextprotocol/inspector python 03_custom_mcp/06_calling_mcp.py
+   ```
+2. Connect in the browser, list tools, and test them.
+3. Repeat for `07_control_hub_mcp.py` and `08_troubleshooting_mcp.py`.
