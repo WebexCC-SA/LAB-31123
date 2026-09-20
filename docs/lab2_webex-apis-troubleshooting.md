@@ -85,13 +85,25 @@ Because a Service App operates at a machine level and can access organization-wi
     
     5. Enter the necessary information (Name, Icon, Description, Contact Email).
     6. Select the **Scopes** your machine needs. For example, to read phone numbers, you would need `spark-admin:telephony_config_read`.
+    
+        ![Service App](./assets/serviceapp_1.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    
     7. Once created, you will get a **Client ID** and **Client Secret**.
+    
+        ![Service App](./assets/serviceapp_2.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        
     8. At the top, in the `Admin Authorization` section, click on **Request admin authorization**.
     
         ![Service App](./assets/serviceapp_3.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
     
     9. A Webex Administrator must then go to **Collaboration Control Hub** -> **Apps** -> **Service Apps**, select your app, and click **Authorize**.
+    
+        ![Service App](./assets/serviceapp_4.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    
     10. Finally, you return to the Developer Portal, select your Org under **Org Authorizations**, enter your Client Secret, and click **Generate tokens** to get your 14-day `access_token` and 90-day `refresh_token`.
+    
+        ![Service App](./assets/serviceapp_5.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        ![Service App](./assets/serviceapp_6.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     **How to Refresh a Service App Token**
     
