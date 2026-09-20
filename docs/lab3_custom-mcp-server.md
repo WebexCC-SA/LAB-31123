@@ -14,7 +14,7 @@ Before we write our first line of code, let's talk about how an MCP client (like
 | **When to use it?** | - Local development and testing.<br>- Tools that run on the same machine as the client (e.g., VS Code connecting to a local script). | - Production deployments.<br>- When the server needs to be shared across multiple clients or users.<br>- When the server is hosted remotely. |
 | **Why?** | **Simplicity:** No network configuration, no exposed ports, and the lifecycle is tied to the client (if the client dies, the server dies). | **Scalability:** You can host the server once in the cloud, update it centrally, and have thousands of bots connect to it via URLs. |
 
-In previous labs, our bot connected to the official Webex MCP servers using **SSE** (`https://mcp.webexapis.com/...`). 
+In previou labs, you **VS Code** connected to the official Webex MCP servers using **SSE** (`https://mcp.webexapis.com/...`). 
 
 For this lab, we will build our custom MCP servers using **stdio**. This is the standard approach for local development and allows us to test our tools instantly using the MCP Inspector and VS Code.
 
@@ -83,7 +83,7 @@ We will use the official `mcp` Python SDK to create our server. The SDK makes it
 
 4. Once it starts, it should open a new tab for you, if not, it will provide a local URL (usually `http://localhost:6274`). Open that URL in your browser.
 
-    ![MCP Inspector Start](assets/inspector_start.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![MCP Inspector Start](assets/inspector_start.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 5. Select the following and click `Connect`:
 
