@@ -984,7 +984,7 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
 | **Roles** | Admin roles available in the org | [Roles](https://developer.webex.com/admin/docs/api/v1/roles){:target="_blank"} |
 | **Workspaces** | Meeting rooms and desk areas | [Workspaces](https://developer.webex.com/calling/docs/api/v1/workspaces){:target="_blank"} |
 
-#### Troubleshooting / platform
+#### Troubleshooting
 
 | API | What it is useful for | Documentation |
 | --- | --- | --- |
