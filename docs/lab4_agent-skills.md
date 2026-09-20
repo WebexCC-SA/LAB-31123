@@ -85,6 +85,9 @@ Before looking at the skill itself, make sure VS Code can discover it.
   ```text
     What skills are available?
   ```
+  ![vsskill1](./assets/skillquestion.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+
     The agent should list `meeting-review` with its description. If it does,
     skills are working and you can proceed.
     !!! Note
