@@ -1013,332 +1013,335 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
 
     1. Create `03_custom_mcp/06_calling_mcp.py` and paste this code:
 
-        ```python
-        import logging
-        import os
-        import sys
-        import httpx
-        from dotenv import load_dotenv
-        from mcp.server import MCPServer
-    
-        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-        log = logging.getLogger("calling-mcp")
-    
-        load_dotenv()
-        TOKEN = os.environ.get("ACCESS_TOKEN")
-    
-        if not TOKEN:
-            sys.exit("ACCESS_TOKEN is not set. Please set it in your .env file.")
-    
-        HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
-    
-        mcp = MCPServer("webex-calling-mcp")
-    
-        @mcp.tool()
-        async def list_numbers(max_results: int = 25) -> dict:
-            """List phone numbers configured in the organization."""
-            async with httpx.AsyncClient(timeout=15) as http:
-                r = await http.get(
-                    "https://webexapis.com/v1/telephony/config/numbers",
-                    headers=HEADERS,
-                    params={"max": max_results}
-                )
-            if r.status_code != 200:
-                return {"error": f"HTTP {r.status_code}: {r.text}"}
-            
-            numbers = r.json().get("phoneNumbers", [])
-            return {
-                "count": len(numbers),
-                "numbers": [
-                    {"number": n.get("phoneNumber"), "state": n.get("state"), "location": n.get("location", {}).get("name")}
-                    for n in numbers
-                ]
-            }
-            
-        @mcp.tool()
-        async def list_locations(max_results: int = 10) -> dict:
-            """List locations in the organization."""
-            async with httpx.AsyncClient(timeout=15) as http:
-                r = await http.get(
-                    "https://webexapis.com/v1/locations",
-                    headers=HEADERS,
-                    params={"max": max_results}
-                )
-            if r.status_code != 200:
-                return {"error": f"HTTP {r.status_code}: {r.text}"}
-            
-            locations = r.json().get("items", [])
-            return {
-                "count": len(locations),
-                "locations": [
-                    {"id": l.get("id"), "name": l.get("name"), "address": l.get("address", {}).get("city")}
-                    for l in locations
-                ]
-            }
+        ??? Tip "Python Code"
+            ```python
+            import logging
+            import os
+            import sys
+            import httpx
+            from dotenv import load_dotenv
+            from mcp.server import MCPServer
         
-        @mcp.tool()
-        async def list_devices(max_results: int = 10) -> dict:
-            """List devices in the organization."""
-            async with httpx.AsyncClient(timeout=15) as http:
-                r = await http.get(
-                    "https://webexapis.com/v1/devices",
-                    headers=HEADERS,
-                    params={"max": max_results}
-                )
-            if r.status_code != 200:
-                return {"error": f"HTTP {r.status_code}: {r.text}"}
+            logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+            log = logging.getLogger("calling-mcp")
+        
+            load_dotenv()
+            TOKEN = os.environ.get("ACCESS_TOKEN")
+        
+            if not TOKEN:
+                sys.exit("ACCESS_TOKEN is not set. Please set it in your .env file.")
+        
+            HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
+        
+            mcp = MCPServer("webex-calling-mcp")
+        
+            @mcp.tool()
+            async def list_numbers(max_results: int = 25) -> dict:
+                """List phone numbers configured in the organization."""
+                async with httpx.AsyncClient(timeout=15) as http:
+                    r = await http.get(
+                        "https://webexapis.com/v1/telephony/config/numbers",
+                        headers=HEADERS,
+                        params={"max": max_results}
+                    )
+                if r.status_code != 200:
+                    return {"error": f"HTTP {r.status_code}: {r.text}"}
+                
+                numbers = r.json().get("phoneNumbers", [])
+                return {
+                    "count": len(numbers),
+                    "numbers": [
+                        {"number": n.get("phoneNumber"), "state": n.get("state"), "location": n.get("location", {}).get("name")}
+                        for n in numbers
+                    ]
+                }
+                
+            @mcp.tool()
+            async def list_locations(max_results: int = 10) -> dict:
+                """List locations in the organization."""
+                async with httpx.AsyncClient(timeout=15) as http:
+                    r = await http.get(
+                        "https://webexapis.com/v1/locations",
+                        headers=HEADERS,
+                        params={"max": max_results}
+                    )
+                if r.status_code != 200:
+                    return {"error": f"HTTP {r.status_code}: {r.text}"}
+                
+                locations = r.json().get("items", [])
+                return {
+                    "count": len(locations),
+                    "locations": [
+                        {"id": l.get("id"), "name": l.get("name"), "address": l.get("address", {}).get("city")}
+                        for l in locations
+                    ]
+                }
             
-            devices = r.json().get("items", [])
-            return {
-                "count": len(devices),
-                "devices": [
-                    {"id": d.get("id"), "product": d.get("product"), "type": d.get("type"), "connectionStatus": d.get("connectionStatus")}
-                    for d in devices
-                ]
-            }
-            
-        @mcp.tool()
-        async def get_location_call_settings(location_id: str) -> dict:
-            """Manage specific calling settings for a location."""
-            async with httpx.AsyncClient(timeout=15) as http:
-                r = await http.get(
-                    f"https://webexapis.com/v1/telephony/config/locations/{location_id}/callSettings",
-                    headers=HEADERS
-                )
-            if r.status_code != 200:
-                return {"error": f"HTTP {r.status_code}: {r.text}"}
-            
-            return r.json()
-    
-        if __name__ == "__main__":
-            log.info("webex-calling-mcp running on stdio - waiting for a client (Ctrl+C to stop).")
-            try:
-                mcp.run()
-            except KeyboardInterrupt:
-                log.info("Stopped.")
-        ```
+            @mcp.tool()
+            async def list_devices(max_results: int = 10) -> dict:
+                """List devices in the organization."""
+                async with httpx.AsyncClient(timeout=15) as http:
+                    r = await http.get(
+                        "https://webexapis.com/v1/devices",
+                        headers=HEADERS,
+                        params={"max": max_results}
+                    )
+                if r.status_code != 200:
+                    return {"error": f"HTTP {r.status_code}: {r.text}"}
+                
+                devices = r.json().get("items", [])
+                return {
+                    "count": len(devices),
+                    "devices": [
+                        {"id": d.get("id"), "product": d.get("product"), "type": d.get("type"), "connectionStatus": d.get("connectionStatus")}
+                        for d in devices
+                    ]
+                }
+                
+            @mcp.tool()
+            async def get_location_call_settings(location_id: str) -> dict:
+                """Manage specific calling settings for a location."""
+                async with httpx.AsyncClient(timeout=15) as http:
+                    r = await http.get(
+                        f"https://webexapis.com/v1/telephony/config/locations/{location_id}/callSettings",
+                        headers=HEADERS
+                    )
+                if r.status_code != 200:
+                    return {"error": f"HTTP {r.status_code}: {r.text}"}
+                
+                return r.json()
+        
+            if __name__ == "__main__":
+                log.info("webex-calling-mcp running on stdio - waiting for a client (Ctrl+C to stop).")
+                try:
+                    mcp.run()
+                except KeyboardInterrupt:
+                    log.info("Stopped.")
+            ```
 
     2. Create `03_custom_mcp/07_control_hub_mcp.py` and paste this code:
 
-        ```python
-        import logging
-        import os
-        import sys
-        import httpx
-        from dotenv import load_dotenv
-        from mcp.server import MCPServer
-    
-        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-        log = logging.getLogger("control-hub-mcp")
-    
-        load_dotenv()
-        TOKEN = os.environ.get("ACCESS_TOKEN")
-    
-        if not TOKEN:
-            sys.exit("ACCESS_TOKEN is not set. Please set it in your .env file.")
-    
-        HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
-    
-        mcp = MCPServer("webex-control-hub-mcp")
-    
-        @mcp.tool()
-        async def list_people(max_results: int = 10) -> dict:
-            """List users (people) in the organization."""
-            async with httpx.AsyncClient(timeout=15) as http:
-                r = await http.get(
-                    "https://webexapis.com/v1/people",
-                    headers=HEADERS,
-                    params={"max": max_results}
-                )
-            if r.status_code != 200:
-                return {"error": f"HTTP {r.status_code}: {r.text}"}
-            
-            people = r.json().get("items", [])
-            return {
-                "count": len(people),
-                "people": [
-                    {"id": p.get("id"), "emails": p.get("emails"), "displayName": p.get("displayName")}
-                    for p in people
-                ]
-            }
-            
-        @mcp.tool()
-        async def list_workspaces(max_results: int = 10) -> dict:
-            """List workspaces in the organization."""
-            async with httpx.AsyncClient(timeout=15) as http:
-                r = await http.get(
-                    "https://webexapis.com/v1/workspaces",
-                    headers=HEADERS,
-                    params={"max": max_results}
-                )
-            if r.status_code != 200:
-                return {"error": f"HTTP {r.status_code}: {r.text}"}
-            
-            workspaces = r.json().get("items", [])
-            return {
-                "count": len(workspaces),
-                "workspaces": [
-                    {"id": w.get("id"), "displayName": w.get("displayName"), "type": w.get("type")}
-                    for w in workspaces
-                ]
-            }
+        ??? Tip "Python Code"
+            ```python
+            import logging
+            import os
+            import sys
+            import httpx
+            from dotenv import load_dotenv
+            from mcp.server import MCPServer
         
-        @mcp.tool()
-        async def list_licenses() -> dict:
-            """List licenses in the organization."""
-            async with httpx.AsyncClient(timeout=15) as http:
-                r = await http.get(
-                    "https://webexapis.com/v1/licenses",
-                    headers=HEADERS
-                )
-            if r.status_code != 200:
-                return {"error": f"HTTP {r.status_code}: {r.text}"}
+            logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+            log = logging.getLogger("control-hub-mcp")
+        
+            load_dotenv()
+            TOKEN = os.environ.get("ACCESS_TOKEN")
+        
+            if not TOKEN:
+                sys.exit("ACCESS_TOKEN is not set. Please set it in your .env file.")
+        
+            HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
+        
+            mcp = MCPServer("webex-control-hub-mcp")
+        
+            @mcp.tool()
+            async def list_people(max_results: int = 10) -> dict:
+                """List users (people) in the organization."""
+                async with httpx.AsyncClient(timeout=15) as http:
+                    r = await http.get(
+                        "https://webexapis.com/v1/people",
+                        headers=HEADERS,
+                        params={"max": max_results}
+                    )
+                if r.status_code != 200:
+                    return {"error": f"HTTP {r.status_code}: {r.text}"}
+                
+                people = r.json().get("items", [])
+                return {
+                    "count": len(people),
+                    "people": [
+                        {"id": p.get("id"), "emails": p.get("emails"), "displayName": p.get("displayName")}
+                        for p in people
+                    ]
+                }
+                
+            @mcp.tool()
+            async def list_workspaces(max_results: int = 10) -> dict:
+                """List workspaces in the organization."""
+                async with httpx.AsyncClient(timeout=15) as http:
+                    r = await http.get(
+                        "https://webexapis.com/v1/workspaces",
+                        headers=HEADERS,
+                        params={"max": max_results}
+                    )
+                if r.status_code != 200:
+                    return {"error": f"HTTP {r.status_code}: {r.text}"}
+                
+                workspaces = r.json().get("items", [])
+                return {
+                    "count": len(workspaces),
+                    "workspaces": [
+                        {"id": w.get("id"), "displayName": w.get("displayName"), "type": w.get("type")}
+                        for w in workspaces
+                    ]
+                }
             
-            licenses = r.json().get("items", [])
-            return {
-                "count": len(licenses),
-                "licenses": [
-                    {"id": l.get("id"), "name": l.get("name"), "consumedUnits": l.get("consumedUnits"), "totalUnits": l.get("totalUnits")}
-                    for l in licenses
-                ]
-            }
-            
-        @mcp.tool()
-        async def list_roles(max_results: int = 20) -> dict:
-            """List admin roles available in the organization."""
-            async with httpx.AsyncClient(timeout=15) as http:
-                r = await http.get(
-                    "https://webexapis.com/v1/roles",
-                    headers=HEADERS,
-                    params={"max": max_results}
-                )
-            if r.status_code != 200:
-                return {"error": f"HTTP {r.status_code}: {r.text}"}
-            
-            roles = r.json().get("items", [])
-            return {
-                "count": len(roles),
-                "roles": [
-                    {"id": role.get("id"), "name": role.get("name"), "description": role.get("description")}
-                    for role in roles
-                ]
-            }
-    
-        if __name__ == "__main__":
-            log.info("webex-control-hub-mcp running on stdio - waiting for a client (Ctrl+C to stop).")
-            try:
-                mcp.run()
-            except KeyboardInterrupt:
-                log.info("Stopped.")
-        ```
+            @mcp.tool()
+            async def list_licenses() -> dict:
+                """List licenses in the organization."""
+                async with httpx.AsyncClient(timeout=15) as http:
+                    r = await http.get(
+                        "https://webexapis.com/v1/licenses",
+                        headers=HEADERS
+                    )
+                if r.status_code != 200:
+                    return {"error": f"HTTP {r.status_code}: {r.text}"}
+                
+                licenses = r.json().get("items", [])
+                return {
+                    "count": len(licenses),
+                    "licenses": [
+                        {"id": l.get("id"), "name": l.get("name"), "consumedUnits": l.get("consumedUnits"), "totalUnits": l.get("totalUnits")}
+                        for l in licenses
+                    ]
+                }
+                
+            @mcp.tool()
+            async def list_roles(max_results: int = 20) -> dict:
+                """List admin roles available in the organization."""
+                async with httpx.AsyncClient(timeout=15) as http:
+                    r = await http.get(
+                        "https://webexapis.com/v1/roles",
+                        headers=HEADERS,
+                        params={"max": max_results}
+                    )
+                if r.status_code != 200:
+                    return {"error": f"HTTP {r.status_code}: {r.text}"}
+                
+                roles = r.json().get("items", [])
+                return {
+                    "count": len(roles),
+                    "roles": [
+                        {"id": role.get("id"), "name": role.get("name"), "description": role.get("description")}
+                        for role in roles
+                    ]
+                }
+        
+            if __name__ == "__main__":
+                log.info("webex-control-hub-mcp running on stdio - waiting for a client (Ctrl+C to stop).")
+                try:
+                    mcp.run()
+                except KeyboardInterrupt:
+                    log.info("Stopped.")
+            ```
 
     3. Create `03_custom_mcp/08_troubleshooting_mcp.py` and paste this code:
 
-        ```python
-        import logging
-        import os
-        import sys
-        import httpx
-        from datetime import datetime, timedelta, timezone
-        from dotenv import load_dotenv
-        from mcp.server import MCPServer
-    
-        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-        log = logging.getLogger("troubleshooting-mcp")
+        ??? Tip "Python Code"
+            ```python
+            import logging
+            import os
+            import sys
+            import httpx
+            from datetime import datetime, timedelta, timezone
+            from dotenv import load_dotenv
+            from mcp.server import MCPServer
         
-        load_dotenv()
-        TOKEN = os.environ.get("ACCESS_TOKEN")
-        ORG_ID = os.environ.get("WEBEX_ORG_ID")
+            logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+            log = logging.getLogger("troubleshooting-mcp")
+            
+            load_dotenv()
+            TOKEN = os.environ.get("ACCESS_TOKEN")
+            ORG_ID = os.environ.get("WEBEX_ORG_ID")
+            
+            if not TOKEN or not ORG_ID:
+                sys.exit("ACCESS_TOKEN and WEBEX_ORG_ID must be set in your .env file.")
+            
+            HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
         
-        if not TOKEN or not ORG_ID:
-            sys.exit("ACCESS_TOKEN and WEBEX_ORG_ID must be set in your .env file.")
+            mcp = MCPServer("webex-troubleshooting-mcp")
         
-        HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
-    
-        mcp = MCPServer("webex-troubleshooting-mcp")
-    
-        @mcp.tool()
-        async def unresolved_incidents() -> dict:
-            """Check Webex for any unresolved platform incidents."""
-            async with httpx.AsyncClient(timeout=15) as http:
-                r = await http.get("https://status.webex.com/api/v2/incidents/unresolved.json")
-            if r.status_code != 200:
-                return {"error": f"HTTP {r.status_code}: {r.text}"}
-            
-            incidents = r.json().get("incidents", [])
-            return {"count": len(incidents), "incidents": incidents}
-            
-        @mcp.tool()
-        async def list_admin_audit_events(days_back: int = 7, max_results: int = 10) -> dict:
-            """List recent admin audit events in the organization."""
-            now = datetime.now(timezone.utc)
-            past = now - timedelta(days=days_back)
-            
-            params = {
-                "orgId": ORG_ID,
-                "from": past.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z",
-                "to": now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z",
-                "max": max_results
-            }
-            
-            async with httpx.AsyncClient(timeout=15) as http:
-                r = await http.get(
-                    "https://webexapis.com/v1/adminAudit/events",
-                    headers=HEADERS,
-                    params=params
-                )
-            if r.status_code != 200:
-                return {"error": f"HTTP {r.status_code}: {r.text}"}
-            
-            events = r.json().get("items", [])
-            return {
-                "count": len(events),
-                "events": [
-                    {"id": e.get("id"), "actionText": e.get("actionText"), "actorOrgName": e.get("actorOrgName"), "created": e.get("created")}
-                    for e in events
-                ]
-            }
-            
-        @mcp.tool()
-        async def list_reports() -> dict:
-            """List recent usage and activity reports generated in the organization."""
-            async with httpx.AsyncClient(timeout=15) as http:
-                r = await http.get(
-                    "https://webexapis.com/v1/reports",
-                    headers=HEADERS
-                )
-            if r.status_code != 200:
-                return {"error": f"HTTP {r.status_code}: {r.text}"}
-            
-            reports = r.json().get("items", [])
-            return {
-                "count": len(reports),
-                "reports": [
-                    {"id": rep.get("Id"), "title": rep.get("title"), "status": rep.get("status")}
-                    for rep in reports
-                ]
-            }
-            
-        @mcp.tool()
-        async def get_meeting_qualities(meeting_id: str) -> dict:
-            """Analytics and diagnostics for meetings."""
-            async with httpx.AsyncClient(timeout=15) as http:
-                r = await http.get(
-                    f"https://webexapis.com/v1/meeting/qualities?meetingId={meeting_id}",
-                    headers=HEADERS
-                )
-            if r.status_code != 200:
-                return {"error": f"HTTP {r.status_code}: {r.text}"}
-            
-            return r.json()
-    
-        if __name__ == "__main__":
-            log.info("webex-troubleshooting-mcp running on stdio - waiting for a client (Ctrl+C to stop).")
-            try:
-                mcp.run()
-            except KeyboardInterrupt:
-                log.info("Stopped.")
-        ```
+            @mcp.tool()
+            async def unresolved_incidents() -> dict:
+                """Check Webex for any unresolved platform incidents."""
+                async with httpx.AsyncClient(timeout=15) as http:
+                    r = await http.get("https://status.webex.com/api/v2/incidents/unresolved.json")
+                if r.status_code != 200:
+                    return {"error": f"HTTP {r.status_code}: {r.text}"}
+                
+                incidents = r.json().get("incidents", [])
+                return {"count": len(incidents), "incidents": incidents}
+                
+            @mcp.tool()
+            async def list_admin_audit_events(days_back: int = 7, max_results: int = 10) -> dict:
+                """List recent admin audit events in the organization."""
+                now = datetime.now(timezone.utc)
+                past = now - timedelta(days=days_back)
+                
+                params = {
+                    "orgId": ORG_ID,
+                    "from": past.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z",
+                    "to": now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z",
+                    "max": max_results
+                }
+                
+                async with httpx.AsyncClient(timeout=15) as http:
+                    r = await http.get(
+                        "https://webexapis.com/v1/adminAudit/events",
+                        headers=HEADERS,
+                        params=params
+                    )
+                if r.status_code != 200:
+                    return {"error": f"HTTP {r.status_code}: {r.text}"}
+                
+                events = r.json().get("items", [])
+                return {
+                    "count": len(events),
+                    "events": [
+                        {"id": e.get("id"), "actionText": e.get("actionText"), "actorOrgName": e.get("actorOrgName"), "created": e.get("created")}
+                        for e in events
+                    ]
+                }
+                
+            @mcp.tool()
+            async def list_reports() -> dict:
+                """List recent usage and activity reports generated in the organization."""
+                async with httpx.AsyncClient(timeout=15) as http:
+                    r = await http.get(
+                        "https://webexapis.com/v1/reports",
+                        headers=HEADERS
+                    )
+                if r.status_code != 200:
+                    return {"error": f"HTTP {r.status_code}: {r.text}"}
+                
+                reports = r.json().get("items", [])
+                return {
+                    "count": len(reports),
+                    "reports": [
+                        {"id": rep.get("Id"), "title": rep.get("title"), "status": rep.get("status")}
+                        for rep in reports
+                    ]
+                }
+                
+            @mcp.tool()
+            async def get_meeting_qualities(meeting_id: str) -> dict:
+                """Analytics and diagnostics for meetings."""
+                async with httpx.AsyncClient(timeout=15) as http:
+                    r = await http.get(
+                        f"https://webexapis.com/v1/meeting/qualities?meetingId={meeting_id}",
+                        headers=HEADERS
+                    )
+                if r.status_code != 200:
+                    return {"error": f"HTTP {r.status_code}: {r.text}"}
+                
+                return r.json()
+        
+            if __name__ == "__main__":
+                log.info("webex-troubleshooting-mcp running on stdio - waiting for a client (Ctrl+C to stop).")
+                try:
+                    mcp.run()
+                except KeyboardInterrupt:
+                    log.info("Stopped.")
+            ```
 
 ### Register the servers in your IDE
 
