@@ -85,8 +85,6 @@ Before looking at the skill itself, make sure VS Code can discover it.
   ```text
     What skills are available?
   ```
-  ![vsskill1](./assets/skillquestion.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
 
     The agent should list `meeting-review` with its description. If it does,
     skills are working and you can proceed.
@@ -150,21 +148,20 @@ Open it and look at the front matter:
 ---
 name: meeting-review
 description: >-
-  Use when a user asks about their meetings, schedule, or asks you to
-  review or triage meetings for a person. Do not just list meetings —
-  investigate each one across all available Webex Meeting tools...
+  Use when a user asks to review or prepare for upcoming meetings.
+  Check each meeting for agenda, invitees, and scheduling conflicts.
+  Flag anything missing and produce a preparation checklist.
 ---
 ```
 
-Two rules from the agentskills.io specification:
+Two rules from the [agentskills.io specification](https://agentskills.io/specification):
 
-- `name` must be lowercase letters, numbers, and hyphens;  and **match the folder name**.
+- `name` must be lowercase letters, numbers, and hyphens, and **match the folder name**.
 - `description` says what the skill does **and when to use it** — this is what the
-agent reads to decide whether to load the skill.
+  agent reads to decide whether to load the skill.
 
-The body below the front matter is the runbook: for each meeting, check
-participants, summary, recording, and transcript; flag gaps; produce a
-prioritized action list.
+The body below the front matter is the runbook: check each upcoming meeting for
+agenda, invitees, and conflicts; produce a preparation checklist.
 
 ## Step 4.3: Progressive disclosure
 
@@ -177,66 +174,108 @@ Agent Skills load in three stages so many skills can be available cheaply:
 
 Full instructions load only when needed.
 
-## Step 4.4: Run a skill-guided scenario
+## Step 4.4: Create meeting data
+
+Before testing the skill, create two meetings so there is data to review.
+One meeting will have an agenda; the other will not.
 
 1. Open **Chat** (`Ctrl+Shift+P` → `Chat: Open Chat (Agent)`).
 2. Ensure the **Webex Meeting MCP** is started.
-3. Ask:
+3. Schedule the first meeting (with an agenda):
 
 ```text
-Review the meetings for user1@webexone-ai-assistant.wbx.ai. Check who joined the
-past meetings, whether summaries and recordings exist, and flag anything missing.
-For upcoming meetings, check if there's an agenda.
+Schedule a meeting with admin@webexone-ai-assistant.wbx.ai for tomorrow
+at 10am. Title: "Planning Session". Agenda: review project milestones
+and assign action items.
 ```
-![vsskill1](./assets/vscode_skill_1.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-![vsskill2](./assets/vscode_skill_2.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+4. Schedule the second meeting (without an agenda):
+
+```text
+Schedule a meeting with admin@webexone-ai-assistant.wbx.ai for tomorrow
+at 2pm. Title: "Architecture Review".
+```
+
+You now have two upcoming meetings — one with an agenda, one without. The
+skill will flag the difference.
+
+## Step 4.5: Run the skill
+
+1. Invoke the skill explicitly:
+
+```text
+/meeting-review
+```
+
+Then ask:
+
+```text
+Help me prepare for my upcoming meetings. Check if agendas are set
+and flag anything I should prepare.
+```
 
 Expected behavior:
 
 - The agent activates `meeting-review`.
-- It calls **multiple** Webex Meeting tools per meeting (participants, summary,
-recording, transcript) — not just a flat list.
-- It flags missing artifacts, triages missed meetings, and returns a prioritized
-action list.
+- It checks each upcoming meeting for agenda, invitees, and conflicts.
+- It flags `NO AGENDA` on the Architecture Review.
+- It produces a preparation checklist.
 
-You can also invoke it explicitly by typing `/meeting-review` in the chat.
+```text
+UPCOMING — Planning Session | tomorrow 10:00
+  Agenda: review project milestones and assign action items
+  --> Ready.
 
-## Step 4.5: ~~See~~ the difference
+UPCOMING — Architecture Review | tomorrow 14:00
+  Agenda: NO AGENDA
+  --> Add an agenda before the meeting.
+
+PREPARATION CHECKLIST
+1. Add an agenda to Architecture Review.
+```
+
+## Step 4.6: See the difference
 
 To feel the value, compare:
 
 - **Without the skill** (temporarily rename the `.agents/skills/meeting-review/`
-folder and reload): the agent lists meetings and stops — one tool call, one scope.
-- **With the skill**: the agent investigates five scopes per meeting and produces
-actions.
-
-![vsskill3](./assets/vscode_no_skill.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+  folder and reload): the agent lists meetings and stops — title, time, done.
+- **With the skill**: the agent checks agenda readiness for each meeting and
+  produces a preparation checklist with concrete actions.
 
 ```
 WITHOUT skill              WITH skill
 -------------              ----------
 list meetings (done)       list meetings
-                           + participants + summary + recording + transcript
-                           + triage + prioritized actions
-1 scope, 1 call            5 scopes, many calls
+                           + check agenda per meeting
+                           + flag NO AGENDA
+                           + preparation checklist
+plain listing              actionable preparation
 ```
 
 Same tools, same data — the skill supplies the judgment.
 
 ## Exercise
 
-1. **Read the skill** — open `.agents/skills/meeting-review/SKILL.md` and find
-  the rule that tells the agent to check *all* dimensions.
-2. **Edit the skill** — add one rule (for example: "flag any meeting longer than
-  60 minutes with more than 8 attendees as a *review candidate*"). Save.
-3. **Re-run** the scenario in Chat and confirm your new rule is applied — no
-  code change required, just the edited `SKILL.md`.
+1. **Fix it** — add an agenda to the Architecture Review meeting:
 
+    ```text
+    Update the Architecture Review meeting. Add this agenda:
+    review API design, security model, and deployment plan.
+    ```
 
+2. **Re-run the skill** — invoke `/meeting-review` again and confirm the
+   `NO AGENDA` flag is gone. The skill now shows both meetings as ready.
+
+3. **Edit the skill** — open `.agents/skills/meeting-review/SKILL.md` and add
+   one rule (for example: "flag any meeting with only one invitee as
+   *needs more participants*"). Save the file.
+
+4. **Re-run** the scenario in Chat and confirm your new rule is applied — no
+   code change required, just the edited `SKILL.md`.
 
 ## Next
 
-In **Lab 7** you build the Python **skill loader** that does what VS Code did for
-you here — reading the *same* `meeting-review/SKILL.md`, unchanged — and wire it
-into a bot, then onboard a second skill. See `07_skills_bot/` in the cloned repo.
+In **Lab 7** you build the Python **skill loader** that reads a more advanced
+version of this skill — one that also reviews past meetings for attendance,
+summaries, recordings, and transcripts. See `07_skills_bot/` in the cloned repo.
