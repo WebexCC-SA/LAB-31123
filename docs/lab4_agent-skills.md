@@ -174,74 +174,72 @@ Agent Skills load in three stages so many skills can be available cheaply:
 
 Full instructions load only when needed.
 
-## Step 4.4: Create meeting data
+## Step 4.4: Schedule meetings (data setup)
 
-Before testing the skill, create two meetings so there is data to review.
-One meeting will have an agenda; the other will not.
+Schedule two meetings so there is data to review. Neither will have an agenda —
+the Webex Meeting MCP scheduling tool does not expose an agenda parameter. That
+limitation is intentional for this exercise: the skill will flag the gap.
 
 1. Open **Chat** (`Ctrl+Shift+P` → `Chat: Open Chat (Agent)`).
 2. Ensure the **Webex Meeting MCP** is started.
-3. Schedule the first meeting (with an agenda):
+3. Schedule the first meeting:
 
 ```text
-Schedule a meeting with admin@webexone-ai-assistant.wbx.ai for tomorrow
-at 10am. Title: "Planning Session". Agenda: review project milestones
-and assign action items.
+Schedule a meeting with admin@webexone-ai-assistant.wbx.ai tomorrow at 10am.
+Title: Planning Session. Do not create any local files.
 ```
 
-4. Schedule the second meeting (without an agenda):
+4. Schedule the second meeting:
 
 ```text
-Schedule a meeting with admin@webexone-ai-assistant.wbx.ai for tomorrow
-at 2pm. Title: "Architecture Review".
+Schedule a meeting with admin@webexone-ai-assistant.wbx.ai tomorrow at 2pm.
+Title: Architecture Review. Do not create any local files.
 ```
 
-You now have two upcoming meetings — one with an agenda, one without. The
-skill will flag the difference.
+You now have two upcoming meetings, both without agendas.
 
-## Step 4.5: Run the skill
+## Step 4.5: List meetings without the skill
 
-1. Invoke the skill explicitly:
+Temporarily disable the skill: rename the `skills` folder inside `.agents/`
+(for example to `skills-off`), then reload the window.
+
+Ask:
+
+```text
+What meetings do I have scheduled?
+```
+
+The agent lists them — title, time, host. No flags, no readiness check, no
+actions. That is all it does without the skill.
+
+## Step 4.6: Use the skill
+
+Re-enable the skill: rename the folder back to `skills`, then reload.
+
+Invoke the skill:
 
 ```text
 /meeting-review
+Help me prepare for my upcoming meetings.
 ```
 
-Then ask:
-
-```text
-Help me prepare for my upcoming meetings. Check if agendas are set
-and flag anything I should prepare.
-```
-
-Expected behavior:
-
-- The agent activates `meeting-review`.
-- It checks each upcoming meeting for agenda, invitees, and conflicts.
-- It flags `NO AGENDA` on the Architecture Review.
-- It produces a preparation checklist.
+The skill checks each meeting for agenda, invitees, and conflicts:
 
 ```text
 UPCOMING — Planning Session | tomorrow 10:00
-  Agenda: review project milestones and assign action items
-  --> Ready.
+  Agenda: NO AGENDA
+  --> Add an agenda before the meeting.
 
 UPCOMING — Architecture Review | tomorrow 14:00
   Agenda: NO AGENDA
   --> Add an agenda before the meeting.
 
 PREPARATION CHECKLIST
-1. Add an agenda to Architecture Review.
+1. Add agendas to both meetings.
 ```
 
-## Step 4.6: See the difference
-
-To feel the value, compare:
-
-- **Without the skill** (temporarily rename the `.agents/skills/meeting-review/`
-  folder and reload): the agent lists meetings and stops — title, time, done.
-- **With the skill**: the agent checks agenda readiness for each meeting and
-  produces a preparation checklist with concrete actions.
+The difference between Step 4.5 and Step 4.6 is the skill's value: the same
+tools, the same data, but the skill added judgment.
 
 ```
 WITHOUT skill              WITH skill
@@ -253,26 +251,50 @@ list meetings (done)       list meetings
 plain listing              actionable preparation
 ```
 
-Same tools, same data — the skill supplies the judgment.
+## Exercise: Skills as guardrails
 
-## Exercise
+### Part A — Observe a problem
 
-1. **Fix it** — add an agenda to the Architecture Review meeting:
+Ask the agent to add an agenda:
 
-    ```text
-    Update the Architecture Review meeting. Add this agenda:
-    review API design, security model, and deployment plan.
-    ```
+```text
+Add an agenda to the Planning Session meeting.
+Set it to: review project milestones and assign action items.
+```
 
-2. **Re-run the skill** — invoke `/meeting-review` again and confirm the
-   `NO AGENDA` flag is gone. The skill now shows both meetings as ready.
+Watch what the agent does. It may:
 
-3. **Edit the skill** — open `.agents/skills/meeting-review/SKILL.md` and add
-   one rule (for example: "flag any meeting with only one invitee as
-   *needs more participants*"). Save the file.
+- Use the `webex-update-meeting` tool to set the agenda in Webex ✓
+- Create a local text file for the agenda ✗
 
-4. **Re-run** the scenario in Chat and confirm your new rule is applied — no
-   code change required, just the edited `SKILL.md`.
+If the agent tries to create a file, **decline the action**. That is the wrong
+behavior — the agenda should be stored in Webex, not on disk.
+
+### Part B — Add a guardrail to the skill
+
+Open `skills/meeting-review/SKILL.md` and add a new section at the bottom:
+
+```markdown
+## Guardrails
+
+- Never create, edit, or save local files for agendas or meeting data.
+- Use only Webex Meeting MCP tools for meeting operations.
+- If a tool does not support the requested field, report the limitation
+  instead of creating a file.
+```
+
+Save the file.
+
+### Part C — Re-run and compare
+
+Ask the same question again. The agent should now either use the MCP update
+tool or report the limitation — instead of creating a file.
+
+You just used a skill to fix agent behavior. No code change. One markdown edit.
+
+!!! Tip "What you learned"
+    Skills are not just workflows. They are also **guardrails**. A skill can
+    tell the agent what to do, how to do it, and what **not** to do.
 
 ## Next
 
