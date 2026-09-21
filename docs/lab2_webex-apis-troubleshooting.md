@@ -188,7 +188,7 @@ Check platform health before deep-diving into org-specific issues.
 Reference: [Webex Status API](https://developer.webex.com/calling/docs/webex-status-api){:target="_blank"}
 
 ```bash
-curl -s https://status.webex.com/api/v2/status.json | python -m json.tool
+curl -s https://status.webex.com/status.json | python -m json.tool
 ```
 
 Typical checks:
