@@ -13,7 +13,7 @@ Scan the QR code to be added to the Webex space for Q&A and more.
 - **Webex Client** — interact with your bot and verify assistant responses
 - **Visual Studio Code** — edit code, configure MCP servers, and run the lab assistant
 - **Webex for Developers** — create bots, Webex MCP tokens, service app, and review API documentation
-- **Bruno** - TBC
+- **Bruno** — call Webex REST APIs by hand before wrapping them as MCP tools
 
 ## Webex lab credentials
 
@@ -84,4 +84,22 @@ Visual Studio Code will be used for Python-based bot development, service app co
 
     ![Create_token](./assets/vscode_16.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-### Bruno / Postman
+## Bruno
+
+Bruno is the API client you will use to call Webex REST APIs. It stores collections as files on your machine, so there is no account to create and nothing to sign into.
+
+1. Open **Bruno** from the desktop.
+
+    ![Bruno](./assets/bruno_1.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+2. Click **Create Collection** and name it `WebexOne`:
+
+    ![Bruno](./assets/bruno_2.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+3. Create the environment that will hold your token. Open the environment selector in the top right corner, choose **Configure**, add an environment called `WebexOne`, and add one variable:
+
+    | Variable | Value |
+    | --- | --- |
+    | `token` | Leave empty for now |
+
+    ![Bruno](./assets/bruno_3.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
