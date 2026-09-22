@@ -4,21 +4,25 @@ In the previous section, we enabled our agent to use MCP servers to perform acti
 
 In this section you will make those API calls yourself. This matters because the official MCP servers cover only a limited set of APIs, and we want to give our agent more tools and possibilities. That is what we will build in the next labs.
 
-
 ## Step 2.1 - Get a Personal Access Token
 
 During the previous lab, you used an **Agentic MCP App token** to perform actions. That is a special token, scoped to execute actions through the MCP servers, and it only works with the official Webex MCP servers. It will not work for the direct API calls in this lab.
 
 For the simplicity of this hands-on lab, we will use your Personal Access Token (PAT) instead. Because you are an administrator in this sandbox, your PAT automatically inherits all your admin rights. It requires no scope configuration and lasts for 12 hours, which is perfect for a workshop.
 
-1. In [Webex for Developers](https://developer.webex.com/){:target="_blank"}, in the top right corner, click your avatar and select **Copy Developer Token**.
+1. In [Webex for Developers](https://developer.webex.com/){:target="_blank"}, in the top right corner, click your avatar and select copy the **Bearer** token.
+
+    ![Token](./assets/token_6.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
 2. Open the `.env` file at the root of your project (you copied it from `.env.example` in Getting Started) and paste the token:
 
     ```env
-    ACCESS_TOKEN=your_copied_token_here
+    ACCESS_TOKEN=
     ```
 
 3. Paste the same token into the `token` variable of your Bruno environment, so your requests can use `Bearer {{token}}`.
+
+    ![Token](./assets/token_7.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ## Step 2.2: Production Architecture (Service Apps & Integrations)
 
@@ -126,29 +130,75 @@ For this lab we skip that process. Everything from here on uses your Personal Ac
 
 Now that we have our token, we can start making API calls. The [Webex Developer Portal](https://developer.webex.com/docs/api/v1/){:target="_blank"} provides documentation and ready-to-use code snippets for all APIs. You can select your preferred language (cURL, Python, Node.js, etc.) and copy the code directly.
 
-To demonstrate Control Hub management capabilities, we will use the **Numbers API** to list the phone numbers configured in the organization. This is a typical administrative task.
+Every Webex API call has the same anatomy: a method, a URL, and an `Authorization` header carrying your token. Once you have seen that, the tool you use is a matter of what you are trying to do:
+
+| Tool | What we will use it for |
+| --- | --- |
+| **cURL** | A quick check from the terminal. No setup, and it is what you paste into a ticket so a colleague can reproduce your result. |
+| **Bruno** | Exploring an API properly: saved requests, the token in an environment variable, and IDs from one response feeding the next. |
+| **Python** | The form an assistant needs. This is the shape your Lab 3 MCP tools take. |
+
+### Calling APIs using cURL
+
+Start with the smallest possible call: who does this token belong to?
+
+!!! Warning
+    Replace `YOUR_ACCESS_TOKEN` with the token from your `.env` file.
+
+```bash
+curl -s -H "Authorization: Bearer YOUR_ACCESS_TOKEN" "https://webexapis.com/v1/people/me" | python -m json.tool
+```
+
+The response is your own user record. That is the entire API call: a method, a URL, and a header proving who you are. If this returns `401`, your token is wrong or expired, and no call will work.
+
+Now something only an administrator can ask — what is the organization entitled to?
+
+```bash
+curl -s -H "Authorization: Bearer YOUR_ACCESS_TOKEN" "https://webexapis.com/v1/licenses" | python -m json.tool
+```
+
+Two commands in, and you have already proved both halves of what you need: the token is valid, and it carries admin rights.
 
 ### Calling APIs using Bruno
 
-1. In the `WebexOne` collection you created in Getting Started, add a new `GET` request.
+cURL is fine for one-off checks, but it gets painful as soon as you want to keep a call, tweak its parameters, or reuse an ID from a previous response. That is where Bruno comes in.
+
+To demonstrate Control Hub management capabilities, we will use the **Numbers API** to list the phone numbers configured in the organization. This is a typical administrative task.
+
+1. In the `WebexOne` collection you created in Getting Started, add a new `GET` request called `List Numbers`.
 2. Set the URL to: `https://webexapis.com/v1/telephony/config/numbers`
 3. Go to the **Headers** tab and add:
    * **Name**: `Authorization`
    * **Value**: `Bearer {{token}}` (this reads the token from your Bruno environment)
-4. Click **Send**.
+4. Click **Send**. You should get the phone numbers in the organization, each with its state and location.
 
-### Calling APIs using cURL
+Notice what you did not do: you did not paste the token into the request.
+!!! Note
+    When the token expires in 12 hours, you have to update the environment.
 
-You can find the equivalent cURL command directly in the Developer Portal. It looks like this:
+Now add a second request, and use a query parameter to keep the response small:
 
-```bash
-curl -s -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  "https://webexapis.com/v1/telephony/config/numbers" | python -m json.tool
-```
+5. Duplicate the request, rename it `List Locations`, and set the URL to `https://webexapis.com/v1/telephony/config/locations`.
+6. Open the **Params** tab and add a query parameter `max` with value `10`, then **Send**.
+
+Finally, chain the two calls. Most troubleshooting work looks like this: one call gives you an ID, and the next call needs it.
+
+7. From the locations response, copy the `id` of one location.
+8. Add it to your environment as a variable called `locationId`.
+9. Create one more request, `Get Location`, with the URL `https://webexapis.com/v1/telephony/config/locations/{{locationId}}`, and **Send**.
+
+You now have the calling configuration of a single location: its announcement language, its calling line ID, its outbound dialing rules. Notice that this detail was not in the list response — you had to ask for it specifically, with an ID you obtained from an earlier call.
 
 ### Calling APIs using Python
 
-Similarly, the portal provides Python snippets using the `requests` library. You can run this in a simple script:
+Bruno is where you explore an API. Code is how you automate it once you know it works. To close this step, we will list the users in the organization from a Python script.
+
+First, see where this snippet comes from:
+
+1. Open the [List People](https://developer.webex.com/admin/docs/api/v1/people/list-people){:target="_blank"} reference in the Developer Portal.
+2. In the code panel on the right, switch the language selector to **Python**. The portal generates a ready-to-run snippet for the endpoint you are reading about, with your own token filled in.
+
+The version below is the same request, reading the token from `.env` instead of hardcoding it:
 
 ```python
 import requests
@@ -158,23 +208,31 @@ from dotenv import load_dotenv
 load_dotenv()
 token = os.getenv("ACCESS_TOKEN")
 
-url = "https://webexapis.com/v1/telephony/config/numbers"
+url = "https://webexapis.com/v1/people"
 headers = {
     "Authorization": f"Bearer {token}"
 }
 
-response = requests.get(url, headers=headers)
+response = requests.get(url, headers=headers, params={"max": 5})
 print(response.json())
 ```
 
-You should receive a JSON response containing a list of phone numbers in your organization, proving you are successfully authenticating and retrieving organizational data.
+You should receive a JSON response containing a list of people in your organization.
 
 ## Step 2.4 - Webex APIs for Troubleshooting
 
-You now have a token with **admin** scopes. Use the `ACCESS_TOKEN` in Bruno for the calls below. The Webex Status API is public and does not need a token.
+From here on we work in Bruno, adding each call to your `WebexOne` collection so you can keep the requests and reuse the IDs they return.
+
+Unless a call says otherwise, every request needs the same header:
+
+| Header | Value |
+| --- | --- |
+| `Authorization` | `Bearer {{token}}` |
 
 !!! Note
     The organization ID has already been set for you, both below and as `WEBEX_ORG_ID` in `.env`: `74983fd5-5c18-45cb-bfcd-507005e05b0f`.
+
+    Add it to your Bruno environment as `orgId` so you can write `{{orgId}}` instead of pasting it.
 
 ### Webex Status API
 
@@ -182,10 +240,10 @@ Check platform health before deep-diving into org-specific issues.
 
 Reference: [Webex Status API](https://developer.webex.com/calling/docs/webex-status-api){:target="_blank"}
 
-```bash
-curl -s https://status.webex.com/status.json | python -m json.tool
-curl -s https://status.webex.com/unresolved-incidents.json | python -m json.tool
-```
+This is the one exception to the rule above: the Status API is public, so these two requests need **no** `Authorization` header at all.
+
+1. Create a `GET` request called `Webex Status` with the URL `https://status.webex.com/status.json` and **Send**.
+2. Create a `GET` request called `Unresolved Incidents` with the URL `https://status.webex.com/unresolved-incidents.json` and **Send**.
 
 Typical checks:
 
@@ -204,16 +262,21 @@ Typical checks:
 | Compliance Events | Monitor messaging and room events as compliance officer |
 | Security Audit Events | Review security-related admin activity |
 
-Admin Audit Events require `orgId`, `from`, and `to`. The interesting fields (`actionText`, `actorEmail`, `eventCategory`) sit under each item's `data` object, not at the top level.
+Admin Audit Events will not accept a bare URL: `orgId`, `from`, and `to` are all mandatory.
 
-```bash
-curl -s -H "Authorization: Bearer $ACCESS_TOKEN" \
-  --get "https://webexapis.com/v1/adminAudit/events" \
-  --data-urlencode "orgId=74983fd5-5c18-45cb-bfcd-507005e05b0f" \
-  --data-urlencode "from=2026-09-15T00:00:00.000Z" \
-  --data-urlencode "to=2026-09-22T23:59:59.000Z" \
-  --data-urlencode "max=10" | python -m json.tool
-```
+1. Create a `GET` request called `Admin Audit Events` with the URL `https://webexapis.com/v1/adminAudit/events`.
+2. In the **Params** tab, add:
+
+    | Parameter | Value |
+    | --- | --- |
+    | `orgId` | `{{orgId}}` |
+    | `from` | `2026-09-15T00:00:00.000Z` |
+    | `to` | `2026-09-22T23:59:59.000Z` |
+    | `max` | `10` |
+
+3. **Send**, then expand one item in the response.
+
+Look closely at where the useful values are: `actionText`, `actorEmail`, and `eventCategory` sit inside each item's `data` object, not at the top level. Remember this when you build the audit tool in Lab 3.
 
 ### Reports
 
@@ -221,28 +284,19 @@ Reports are not generated automatically. You create one from a template, then li
 
 Org-level templates (`identifier` is `org`) need only `templateId`, `startDate`, and `endDate`. Meetings templates also need `siteList`. Lab accounts are Meetings site admins, so those work if you pass the site URL (`webexone-ai-assistant-sbx.webex.com`).
 
-List templates:
+1. Create a `GET` request called `List Report Templates` with the URL `https://webexapis.com/v1/report/templates` and **Send**. Find *User Activity Summary* in the response and note its `Id` (`115`) and its `identifier` (`org`).
+2. Create a `POST` request called `Create Report` with the URL `https://webexapis.com/v1/reports`. Open the **Body** tab, choose **JSON**, and paste:
 
-```bash
-curl -s -H "Authorization: Bearer $ACCESS_TOKEN" \
-  "https://webexapis.com/v1/report/templates" | python -m json.tool
-```
+    ```json
+    {
+      "templateId": 115,
+      "startDate": "2026-09-10",
+      "endDate": "2026-09-19"
+    }
+    ```
 
-Create an org-level report (template `115` is *User Activity Summary*):
-
-```bash
-curl -s -X POST -H "Authorization: Bearer $ACCESS_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"templateId": 115, "startDate": "2026-09-10", "endDate": "2026-09-19"}' \
-  https://webexapis.com/v1/reports | python -m json.tool
-```
-
-List generated reports:
-
-```bash
-curl -s -H "Authorization: Bearer $ACCESS_TOKEN" \
-  "https://webexapis.com/v1/reports" | python -m json.tool
-```
+3. **Send**. The response returns the new report `Id`.
+4. Create a `GET` request called `List Reports` with the URL `https://webexapis.com/v1/reports` and **Send**. Your report appears with a status of `waiting` at first, then `done` once Webex has generated it.
 
 ### Calling and meetings troubleshooting
 
@@ -252,46 +306,56 @@ curl -s -H "Authorization: Bearer $ACCESS_TOKEN" \
 | Agent / queue issues | Calling Service Settings, Call Routing APIs |
 | Meeting attendance / stats | Meetings, Meeting Participants |
 
-Location calling config:
+A device that "does not work" is a good example of why one call is rarely enough.
 
-```bash
-curl -s -H "Authorization: Bearer $ACCESS_TOKEN" \
-  "https://webexapis.com/v1/telephony/config/locations" | python -m json.tool
-```
+1. Create a `GET` request called `List Devices` with the URL `https://webexapis.com/v1/devices` and **Send**.
 
-Meeting Qualities lives on a **different host** and only accepts the ID of a meeting that already ended (the instance ID with `_I_` in the middle). List ended meetings first, then ask for qualities:
+If that comes back empty even though a phone exists in Control Hub, the phone has not registered to the cloud yet. Webex Calling devices assigned to a workspace are visible through the calling configuration instead:
 
-```bash
-curl -s -H "Authorization: Bearer $ACCESS_TOKEN" \
-  --get "https://webexapis.com/v1/meetings" \
-  --data-urlencode "meetingType=meeting" \
-  --data-urlencode "state=ended" \
-  --data-urlencode "max=5" | python -m json.tool
+2. Create a `GET` request called `List Workspaces` with the URL `https://webexapis.com/v1/workspaces`, add a `max` parameter of `5`, and **Send**. Copy the `id` of a workspace into your environment as `workspaceId`.
+3. Create a `GET` request called `Get Workspace Devices` with the URL `https://webexapis.com/v1/telephony/config/workspaces/{{workspaceId}}/devices` and **Send**.
 
-curl -s -H "Authorization: Bearer $ACCESS_TOKEN" \
-  --get "https://analytics.webexapis.com/v1/meeting/qualities" \
-  --data-urlencode "meetingId=ENDED_MEETING_ID" | python -m json.tool
-```
+The response shows the device model and its `activationState`. A phone whose activation code has never been redeemed sits in `ACTIVATING`, which explains the empty list in step 1.
 
-`GET https://webexapis.com/v1/devices` only returns devices that have registered to the cloud. A phone still in `ACTIVATING` state will not appear there.
+!!! Note "Detailed Call History needs more than an admin token"
+    The CDR APIs require the dedicated `spark-admin:calling_cdr_read` scope, so they are not reachable with the Personal Access Token used in this lab. In production this is one of the cases where you would use a Service App with that scope explicitly granted.
+
+Meeting Qualities has two constraints worth remembering, because both return a `404` that looks like a bad meeting ID. It lives on a **different host**, and it only accepts the ID of a meeting that already ended (the instance ID with `_I_` in the middle). So you list the ended meetings first:
+
+4. Create a `GET` request called `List Ended Meetings` with the URL `https://webexapis.com/v1/meetings` and these parameters:
+
+    | Parameter | Value |
+    | --- | --- |
+    | `meetingType` | `meeting` |
+    | `state` | `ended` |
+    | `max` | `5` |
+
+5. **Send**, then copy the `id` of one meeting into your environment as `meetingId`.
+6. Create a `GET` request called `Get Meeting Qualities` with the URL `https://analytics.webexapis.com/v1/meeting/qualities`, add a `meetingId` parameter of `{{meetingId}}`, and **Send**.
+
+You get one entry per participant, with client type, operating system, network type, and join time. That is the data you would use to answer "why was that call bad?".
 
 ## Exercises
 
-Run these in Bruno or cURL, using your `ACCESS_TOKEN`:
+Run these in Bruno, using the requests you just built:
 
 1. Check general Webex status, including unresolved incidents (no token needed).
 2. Review the admin audit events for the last few days, and find an `actionText` value under `data` rather than at the top level of the item.
 3. Create a report from an org-level template, then list reports until its status is `done`.
 4. List ended meetings, then pull meeting qualities for one of them. Remember the different host.
-5. List locations and read the calling configuration of the first one.
+5. List the registered devices. If the list is empty, find the workspace phone through the calling configuration and report its `activationState`.
 
-## Step 2.5: Why MCP matters, not just APIs
+## Step 2.5: From API calls to agent tools
 
-You have now used both routes to the same organization data: in Lab 1 you asked an assistant in natural language, and in this lab you made the calls yourself. It is worth stopping on why the second route is hard to hand to an AI assistant directly.
+In Bruno you did not answer a troubleshooting question with a single request. You listed locations, copied an `id`, and asked for that location's calling config. You listed ended meetings, then asked for qualities. You listed workspaces, then asked one of them for its devices.
 
-### What the raw APIs asked of you
+That chain is the real work: one call produces the identifier the next call needs. You were the one concatenating them. Later in the lab, the agent will do that concatenation for you. You will ask a question in natural language, and the model will choose *list locations*, read the ID from the result, and call *get location* on its own. Same APIs, same order, no copy-paste.
 
-Look back at what you needed to know to complete Step 2.4, none of which was about troubleshooting:
+That is only possible if the assistant can see those calls as **tools** rather than as URLs you have to type. An MCP server is not a new Webex product. It is the Webex APIs you just called, wrapped: a name, a short description, and an input schema, so the model can discover what exists and chain it.
+
+### What you would have to teach the model without MCP
+
+Look back at what you needed to know to complete this lab, none of which was the actual troubleshooting question:
 
 - Which endpoint answers the question, out of hundreds in the portal
 - Which parameters are mandatory, such as `orgId`, `from`, and `to` on audit events
@@ -299,29 +363,26 @@ Look back at what you needed to know to complete Step 2.4, none of which was abo
 - That reports must be created before they can be listed, and which template IDs exist
 - That Meeting Qualities is on a different host and only accepts an ended meeting instance ID
 
-That knowledge is real, and it is exactly what an assistant does not have. If you wanted an LLM to make these calls directly, you would have to teach it every URL, parameter, and quirk above, and re-teach it whenever the API changed.
+That knowledge is real. If you wanted an LLM to hit `webexapis.com` directly, you would have to teach it every URL, parameter, and quirk above, and re-teach it whenever the API changed. Wrapping each call as an MCP tool moves that knowledge into the tool description, which is why this chapter had to come first: you cannot wrap what you have not seen.
 
 ### The N × M problem
 
 Now multiply that. Every AI application that needs Webex has to learn those details. Every other platform an AI application touches has the same kind of details. Wiring **N** applications to **M** systems by hand produces N × M pieces of fragile glue code, each maintained separately.
 
-MCP turns that into **N + M**. Each system is exposed once, through a standard interface, and any MCP-capable host can use it. A tool in MCP carries its own name, description, and input schema, so the model can discover what exists and how to call it instead of being told in advance.
-
-That is the real difference: with a REST API, *you* decide which call to make and when. With MCP, you describe capabilities once and let the model choose. The API call still happens underneath, which is why understanding the APIs in this lab was the prerequisite.
+MCP turns that into **N + M**. Each system is exposed once as an MCP server, and every MCP-capable host speaks the same protocol to reach it.
 
 ### When to use which
 
 | Choose Webex REST APIs when… | Choose Webex MCP when… |
 | --- | --- |
 | You need full control over every request | You want natural-language access from an AI client |
-| Performance and custom business logic matter | You need rapid prototyping across MCP-compatible tools |
+| Performance and custom business logic matter | You need the assistant to chain calls the way you just did in Bruno |
 | You build enterprise apps with webhooks | You connect IDE or agent frameworks to Webex quickly |
 
-These are not competing choices. MCP does not replace the APIs, it packages them for a model to use.
+These are not competing choices. MCP does not replace the APIs. The HTTP call still happens underneath, with the same token and the same JSON. MCP is how you give an agent **new capabilities** on top of APIs that already exist.
 
 ### Where this leaves us
 
-The official MCP servers from Lab 1 cover messaging, meetings, workspaces, and more, but there is no official server for Webex Calling or Control Hub troubleshooting, which is exactly the set of APIs you just called by hand.
+The current official MCP servers explored before wrap messaging, meetings, and workspaces, and more, but they are user-oriented: they act on *a person's* meetings, messages, and rooms. There is no official server for Webex Calling or Control Hub troubleshooting, which is exactly the set of APIs you just called by hand, and that is the organization-level capability we are after.
 
-So in Lab 3 you will wrap them yourself: the same endpoints, the same token, now exposed as tools with descriptions and schemas that an assistant can discover and chain on its own.
-
+In the next section will wrap them yourself: the same endpoints, the same token, now exposed as tools. The assistant will then concatenate them the way you concatenated them in Bruno, automatically.
