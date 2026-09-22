@@ -337,13 +337,49 @@ You get one entry per participant, with client type, operating system, network t
 
 ## Exercises
 
-Run these in Bruno, using the requests you just built:
+Build these in Bruno as new requests in your `WebexOne` collection. If you need help, you can check the solution.
 
-1. Check general Webex status, including unresolved incidents (no token needed).
-2. Review the admin audit events for the last few days, and find an `actionText` value under `data` rather than at the top level of the item.
-3. Create a report from an org-level template, then list reports until its status is `done`.
-4. List ended meetings, then pull meeting qualities for one of them. Remember the different host.
-5. List the registered devices. If the list is empty, find the workspace phone through the calling configuration and report its `activationState`.
+1. List people, copy one `id` into your environment as `personId`, then get that person's details. Report the `displayName` and how many licenses they have.
+
+    - [List People](https://developer.webex.com/admin/docs/api/v1/people/list-people){:target="_blank"}
+    - [Get Person Details](https://developer.webex.com/admin/docs/api/v1/people/get-person-details){:target="_blank"}
+
+    ??? Solution
+
+        1. Create a `GET` request called `List People` with the URL `https://webexapis.com/v1/people`, add a `max` parameter of `5`, and **Send**. As an administrator you can call this with no filter, a regular user would have to pass `email` or `displayName`.
+        2. From the `items` array, copy the `id` of one person into your environment as `personId`.
+        3. Create a `GET` request called `Get Person Details` with the URL `https://webexapis.com/v1/people/{{personId}}` and **Send**.
+
+        The list response does not include licenses. The single-person response does, in a `licenses` array. Its length is the answer.
+
+2. List hunt groups, copy a hunt group's `id` and `locationId`, then get the details for that hunt group. Report the hunt group name and how many agents it has.
+
+    - [Read the List of Hunt Groups](https://developer.webex.com/calling/docs/api/v1/features-hunt-group/read-the-list-of-hunt-groups){:target="_blank"}
+    - [Get Details for a Hunt Group](https://developer.webex.com/calling/docs/api/v1/features-hunt-group/get-details-for-a-hunt-group){:target="_blank"}
+
+    ??? Solution
+
+        1. Create a `GET` request called `List Hunt Groups` with the URL `https://webexapis.com/v1/telephony/config/huntGroups`, add a `max` parameter of `10`, and **Send**.
+        2. From the `huntGroups` array, copy the hunt group `id` and its `locationId` into your environment as `huntGroupId` and `locationId`. This chain needs two identifiers, because the detail endpoint is nested under the location.
+        3. Create a `GET` request called `Get Hunt Group` with the URL `https://webexapis.com/v1/telephony/config/locations/{{locationId}}/huntGroups/{{huntGroupId}}` and **Send**.
+
+        The response gives you the hunt group `name`, its number or extension, the `callPolicies` that decide how calls are distributed, and the `agents` array. The length of `agents` is the answer.
+
+        If `huntGroups` is empty, the organization has no hunt group configured. Run the same chain against [call queues](https://developer.webex.com/calling/docs/api/v1/features-call-queue/read-the-list-of-call-queue-or-customer-assist-queues){:target="_blank"} instead, passing `hasCxEssentials=false`.
+
+3. Reuse a `meetingId` from the ended-meetings request you already built, then list the participants of that meeting. Report how many people joined.
+
+    - [List Meetings](https://developer.webex.com/meeting/docs/api/v1/meetings/list-meetings){:target="_blank"}
+    - [List Meeting Participants](https://developer.webex.com/meeting/docs/api/v1/meeting-participants/list-meeting-participants){:target="_blank"}
+
+    ??? Solution
+
+        1. Send the `List Ended Meetings` request from Step 2.4 again, with `meetingType=meeting`, `state=ended`, and `max=5`. Copy the `id` of one meeting into your environment as `meetingId`.
+        2. Create a `GET` request called `List Meeting Participants` with the URL `https://webexapis.com/v1/meetingParticipants`, add a `meetingId` parameter of `{{meetingId}}`, and **Send**.
+
+        Each entry in `items` is one participant, with their `email`, `displayName`, whether they were the `host`, and their join and leave times. The number of entries is the answer.
+
+        Like Meeting Qualities, this API only accepts a meeting that is in progress or already ended, so a scheduled meeting that never ran will fail here too.
 
 ## Step 2.5: From API calls to agent tools
 
@@ -353,7 +389,7 @@ That chain is the real work: one call produces the identifier the next call need
 
 That is only possible if the assistant can see those calls as **tools** rather than as URLs you have to type. An MCP server is not a new Webex product. It is the Webex APIs you just called, wrapped: a name, a short description, and an input schema, so the model can discover what exists and chain it.
 
-### What you would have to teach the model without MCP
+### The knowledge behind every call
 
 Look back at what you needed to know to complete this lab, none of which was the actual troubleshooting question:
 
@@ -371,7 +407,7 @@ Now multiply that. Every AI application that needs Webex has to learn those deta
 
 MCP turns that into **N + M**. Each system is exposed once as an MCP server, and every MCP-capable host speaks the same protocol to reach it.
 
-### When to use which
+### APIs vs MCP
 
 | Choose Webex REST APIs when… | Choose Webex MCP when… |
 | --- | --- |
@@ -381,8 +417,9 @@ MCP turns that into **N + M**. Each system is exposed once as an MCP server, and
 
 These are not competing choices. MCP does not replace the APIs. The HTTP call still happens underneath, with the same token and the same JSON. MCP is how you give an agent **new capabilities** on top of APIs that already exist.
 
-### Where this leaves us
+### Why you need your own server
 
 The current official MCP servers explored before wrap messaging, meetings, and workspaces, and more, but they are user-oriented: they act on *a person's* meetings, messages, and rooms. There is no official server for Webex Calling or Control Hub troubleshooting, which is exactly the set of APIs you just called by hand, and that is the organization-level capability we are after.
 
 In the next section will wrap them yourself: the same endpoints, the same token, now exposed as tools. The assistant will then concatenate them the way you concatenated them in Bruno, automatically.
+
