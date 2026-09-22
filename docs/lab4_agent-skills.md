@@ -52,9 +52,6 @@ VS Code, you may wonder how skills differ. They serve different purposes:
 | **Standard** | VS Code–specific                     | Open standard ([agentskills.io](https://agentskills.io)) — portable across 30+ agents |
 
 
-Use custom instructions for *"always format imports this way."*
-Use skills for *"when reviewing meetings, check all five dimensions and triage."*
-
 ## Step 4.1: Configure the MCP server and enable Agent Skills
 
 ### Configure the Webex Meeting MCP at user scope
@@ -68,32 +65,22 @@ window, regardless of which folder you have open.
 
 ```json
 {
-  "inputs": [
-    {
-      "type": "promptString",
-      "id": "webex-meeting-token",
-      "description": "Webex Meeting MCP personal access token",
-      "password": true
-    }
-  ],
-  "servers": {
-    "webex-meeting": {
-      "type": "http",
-      "url": "https://mcp.webexapis.com/mcp/webex-meeting",
-      "headers": {
-        "Authorization": "Bearer ${input:webex-meeting-token}"
-      }
-    }
+ "servers": {
+  "webex-meeting": {
+   "type": "stdio",
+   "command": "npx",
+   "args": [
+    "-y",
+    "mcp-remote",
+    "https://mcp.webexapis.com/mcp/webex-messaging",
+    "--header",
+    "Authorization: Bearer WEBEX_MCP_TOKEN"
+   ]
   }
+ }
 }
 ```
 
-4. Save. VS Code prompts for the token on first use and stores it securely.
-
-!!! Warning
-    Never paste a real token directly into a configuration file, and never
-    commit one to the repository. The `promptString` input above keeps the
-    token out of the file.
 
 ### Enable Agent Skills
 
@@ -118,24 +105,6 @@ These paths are relative to the folder you opened as your **workspace**. You do
 not need to memorise them: the `/skills` flow in the next step writes the file
 to a supported location for you. **No settings entry is needed.**
 
-### Other prerequisites
-
-
-| Requirement                 | How to set up                                                            |
-| --------------------------- | ------------------------------------------------------------------------ |
-| VS Code **>= 1.108**        | `Help > About`                                                           |
-| A chat model configured     | Lab 1 Step 1.2 — `Chat: Manage Language Models`                          |
-| Webex Meeting MCP connected | the user-scope configuration above |
-
-
-!!! Note "About model choice"
-    Small, low-cost models are noticeably worse at loading skills on their own
-    and at following guardrails. If your results differ from this guide, try a
-    larger model before assuming the skill is wrong. Step 4.6 makes this
-    difference visible on purpose.
-
-
-
 
 ## Step 4.2: Create the skill
 
@@ -144,12 +113,22 @@ A skill is a folder containing a `SKILL.md` file — an open standard defined by
 
 1. In the Chat view, type `/skills` and press Enter to open the **Configure
    Skills** menu.
-2. Choose to create a **New Skill**, pick **Workspace** or **User** scope, and
+
+   ![skill_discovery](./assets/lab4/createskill1.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+   ![skill_discovery](./assets/lab4/createskill2.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+   ![skill_discovery](./assets/lab4/createskill3.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+2. Choose to create a **New Skill**, pick **User** scope, and
    name it exactly:
 
 ```text
 meeting-review
 ```
+
+![skill_discovery](./assets/lab4/createskill4.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
 
 !!! Warning
     The `name` in the front matter must match the folder name exactly, using
@@ -262,10 +241,10 @@ Do **not** ask the agent "what skills are available?" — a model with no skill
 loaded will answer that question plausibly anyway. Check observable state
 instead.
 
-1. Type `/` in the chat input. `meeting-review` should appear in the list.
-2. After any response, expand the **References** section to confirm which
-   customizations were actually included.
-3. Or run `Chat: Open Customizations` and open the **Skills** tab.
+Type `/` in the chat input. `meeting-review` should appear in the list.
+
+![skill_discovery](./assets/lab4/skill_discovery.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
 
 !!! Note "If `meeting-review` does not appear"
     - Confirm `chat.useAgentSkills` is enabled (Step 4.1).
@@ -430,6 +409,8 @@ on your behalf, silently.
 
 Open your `meeting-review` skill (`/skills` → select it → edit) and add this
 line to the **Gotchas** section:
+
+![skill_discovery](./assets/lab4/editskill.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ```markdown
 - Never write agenda text you invented. Draft the wording, show it to the user,
