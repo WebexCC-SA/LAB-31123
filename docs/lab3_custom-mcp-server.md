@@ -1383,29 +1383,19 @@ In Chat, ask a question that needs **multiple** tools across different servers, 
 
 - Ask: "*List the phone numbers in this organization. Then tell me how many users we have, and whether Webex has any unresolved incidents.*"
 
-??? Solution
+    ![Chat Tools](assets/exercise_1.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-    1. Open **Chat: Open Chat (Agent)** and make sure your custom servers are attached.
-    2. Ask the question in natural language. You should see tool calls (`list_numbers`, then `list_people`, then `unresolved_incidents`):
+- Ask: "*List our locations. Then pick the first location and get its call settings. Finally, show me all the devices we have registered.*"
 
-        ![Chat Tools](assets/placeholder_chat_tools.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-        
-    3. Allow the tools when VS Code prompts.
-    4. The final answer should be written by the LLM from the tool results, not a hardcoded string.
+    ![Chat Tools](assets/exercise_4.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-        ![Chat Tools](assets/placeholder_chat_tools.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+- Ask: "*What licenses do we have available? Also, please list all the workspaces and the available admin roles.*"
 
-        !!! Warning
-            If a tool returns `403`, the Service App is missing a scope.
+    ![Chat Tools](assets/exercise_5.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
+- Ask: "*Check the admin audit events for the last 3 days. Also, list any available reports we have generated.*"
 
-            - `spark-admin:telephony_config_read` (for Calling numbers/locations)
-            - `spark-admin:devices_read` (for Calling devices)
-            - `spark-admin:people_read` (for Control Hub people)
-            - `spark-admin:workspaces_read` (for Control Hub workspaces)
-            - `spark-admin:licenses_read` (for Control Hub licenses)
-            - `spark-admin:roles_read` (for Control Hub roles)
-            - `spark-admin:admin_audit_events_read` (for Troubleshooting audit events)
+    ![Chat Tools](assets/exercise_6.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 #### Test with MCP Inspector (Optional)
 
