@@ -1103,7 +1103,7 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
                 """Manage specific calling settings for a location."""
                 async with httpx.AsyncClient(timeout=15) as http:
                     r = await http.get(
-                        f"https://webexapis.com/v1/telephony/config/locations/{location_id}/callSettings",
+                        f"https://webexapis.com/v1/telephony/config/locations/{location_id}",
                         headers=HEADERS
                     )
                 if r.status_code != 200:
@@ -1297,7 +1297,13 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
                 return {
                     "count": len(events),
                     "events": [
-                        {"id": e.get("id"), "actionText": e.get("actionText"), "actorOrgName": e.get("actorOrgName"), "created": e.get("created")}
+                        {
+                            "id": e.get("id"),
+                            "created": e.get("created"),
+                            "actionText": e.get("data", {}).get("actionText"),
+                            "actorEmail": e.get("data", {}).get("actorEmail"),
+                            "category": e.get("data", {}).get("eventCategory"),
+                        }
                         for e in events
                     ]
                 }
@@ -1323,12 +1329,45 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
                 }
                 
             @mcp.tool()
-            async def get_meeting_qualities(meeting_id: str) -> dict:
-                """Analytics and diagnostics for meetings."""
+            async def list_ended_meetings(days_back: int = 7, max_results: int = 10) -> dict:
+                """List meetings that already ended, so their IDs can be used for quality analysis."""
+                now = datetime.now(timezone.utc)
+                past = now - timedelta(days=days_back)
+            
+                params = {
+                    "meetingType": "meeting",
+                    "state": "ended",
+                    "from": past.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    "to": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    "max": max_results
+                }
+            
                 async with httpx.AsyncClient(timeout=15) as http:
                     r = await http.get(
-                        f"https://webexapis.com/v1/meeting/qualities?meetingId={meeting_id}",
-                        headers=HEADERS
+                        "https://webexapis.com/v1/meetings",
+                        headers=HEADERS,
+                        params=params
+                    )
+                if r.status_code != 200:
+                    return {"error": f"HTTP {r.status_code}: {r.text}"}
+            
+                meetings = r.json().get("items", [])
+                return {
+                    "count": len(meetings),
+                    "meetings": [
+                        {"id": m.get("id"), "title": m.get("title"), "start": m.get("start"), "end": m.get("end")}
+                        for m in meetings
+                    ]
+                }
+                
+            @mcp.tool()
+            async def get_meeting_qualities(meeting_id: str) -> dict:
+                """Analytics and diagnostics for an ended meeting. Use the ID from list_ended_meetings."""
+                async with httpx.AsyncClient(timeout=15) as http:
+                    r = await http.get(
+                        "https://analytics.webexapis.com/v1/meeting/qualities",
+                        headers=HEADERS,
+                        params={"meetingId": meeting_id}
                     )
                 if r.status_code != 200:
                     return {"error": f"HTTP {r.status_code}: {r.text}"}
@@ -1397,13 +1436,20 @@ In Chat, ask a question that needs **multiple** tools across different servers, 
 
     ![Chat Tools](assets/exercise_6.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
+- Ask: "*Find the most recent meeting that ended and show me its quality data.*"
+
+    ![Chat Tools](assets/exercise_7.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
 #### Test with MCP Inspector (Optional)
 
 You can also test each of these servers in isolation using the MCP Inspector, just as you did before:
 
 1. In your terminal, run the inspector for the Calling MCP:
    ```bash
-   npx @modelcontextprotocol/inspector python 03_custom_mcp/06_calling_mcp.py
+   npx @modelcontextprotocol/inspector python 06_calling_mcp.py
    ```
 2. Connect in the browser, list tools, and test them.
+
+    ![Chat Tools](assets/exercise_8.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
 3. Repeat for `07_control_hub_mcp.py` and `08_troubleshooting_mcp.py`.
