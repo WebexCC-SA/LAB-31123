@@ -31,38 +31,38 @@ MCP servers are **NOT** enabled by default in your organization; you need to ena
 !!! Warning "Important"
     These steps have been completed prior to this lab since you are all sharing the same organization, but this information is relevant for your own organizations. The presenters will demonstrate this process.
 
-1. If you try to access MCP for the first time, you will see a message: **No allowed MCP servers found**.
-
-    ![Create_token](./assets/token_4.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-2. To enable them, go to **Collaboration Control Hub** -> **Apps** -> **Agentic Apps** and select the **Webex** tab:
-
-    ![Create_token](./assets/controlhub_1.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-3. To enable any of them, click "Allowed for all users" and save:
-
-    ![Create_token](./assets/controlhub_2.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-4. You are not done yet. If you try to use an MCP server now, you will see an error similar to this in the terminal:
-
-    ```bash
-    2026-09-14 12:21:38.230 [warning] [server stderr] [63062] Fatal error: SdkHttpError: Error POSTing to endpoint: {"id":0,"jsonrpc":"2.0","error":{"code":-32003,"message":"You don't have access to this MCP server yet. Ask your administrator to enable it for your account or organization.","data":{"reason":"ACCESS_DENIED"}}}
-    2026-09-14 12:21:38.230 [warning] [server stderr]     at StreamableHTTPClientTransport._send (XXXX/.npm/_npx/705d23756ff7dacc/node_modules/mcp-remote/dist/chunk-EFMRUNOV.js:31464:15)
-    2026-09-14 12:21:38.230 [warning] [server stderr]     at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
-    2026-09-14 12:21:38.231 [warning] [server stderr]   code: 'CLIENT_HTTP_NOT_IMPLEMENTED',
-    2026-09-14 12:21:38.231 [warning] [server stderr]   data: {
-    2026-09-14 12:21:38.231 [warning] [server stderr]     status: 403,
-    2026-09-14 12:21:38.231 [warning] [server stderr]     statusText: 'Forbidden',
-    2026-09-14 12:21:38.231 [warning] [server stderr]     text: `{"id":0,"jsonrpc":"2.0","error":{"code":-32003,"message":"You don't have access to this MCP server yet. Ask your administrator to enable it for your account or organization.","data":{"reason":"ACCESS_DENIED"}}}`
-    ```
-
-    You need to allow specific Tools per MCP server.
-
-5. Go to the MCP server, select the **Tools** tab, and enable the ones you want to allow users to use. In this case, all of them will be enabled:
-
-    ![Create_token](./assets/controlhub_3.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-    After this change, users will be able to use the server.
+    1. If you try to access MCP for the first time, you will see a message: **No allowed MCP servers found**.
+    
+        ![Create_token](./assets/token_4.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    
+    2. To enable them, go to **Collaboration Control Hub** -> **Apps** -> **Agentic Apps** and select the **Webex** tab:
+    
+        ![Create_token](./assets/controlhub_1.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    
+    3. To enable any of them, click "Allowed for all users" and save:
+    
+        ![Create_token](./assets/controlhub_2.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    
+    4. You are not done yet. If you try to use an MCP server now, you will see an error similar to this in the terminal:
+    
+        ```bash
+        2026-09-14 12:21:38.230 [warning] [server stderr] [63062] Fatal error: SdkHttpError: Error POSTing to endpoint: {"id":0,"jsonrpc":"2.0","error":{"code":-32003,"message":"You don't have access to this MCP server yet. Ask your administrator to enable it for your account or organization.","data":{"reason":"ACCESS_DENIED"}}}
+        2026-09-14 12:21:38.230 [warning] [server stderr]     at StreamableHTTPClientTransport._send (XXXX/.npm/_npx/705d23756ff7dacc/node_modules/mcp-remote/dist/chunk-EFMRUNOV.js:31464:15)
+        2026-09-14 12:21:38.230 [warning] [server stderr]     at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+        2026-09-14 12:21:38.231 [warning] [server stderr]   code: 'CLIENT_HTTP_NOT_IMPLEMENTED',
+        2026-09-14 12:21:38.231 [warning] [server stderr]   data: {
+        2026-09-14 12:21:38.231 [warning] [server stderr]     status: 403,
+        2026-09-14 12:21:38.231 [warning] [server stderr]     statusText: 'Forbidden',
+        2026-09-14 12:21:38.231 [warning] [server stderr]     text: `{"id":0,"jsonrpc":"2.0","error":{"code":-32003,"message":"You don't have access to this MCP server yet. Ask your administrator to enable it for your account or organization.","data":{"reason":"ACCESS_DENIED"}}}`
+        ```
+    
+        You need to allow specific Tools per MCP server.
+    
+    5. Go to the MCP server, select the **Tools** tab, and enable the ones you want to allow users to use. In this case, all of them will be enabled:
+    
+        ![Create_token](./assets/controlhub_3.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    
+        After this change, users will be able to use the server.
 
 ## Step 1.1: Adding an MCP server to VS Code
 
