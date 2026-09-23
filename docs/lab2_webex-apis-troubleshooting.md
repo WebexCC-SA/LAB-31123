@@ -12,7 +12,7 @@ For the simplicity of this hands-on lab, we will use your Personal Access Token 
 
 1. In [Webex for Developers](https://developer.webex.com/){:target="_blank"}, in the top right corner, click your avatar and select copy the **Bearer** token.
 
-    ![Token](./assets/token_6.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Token](./assets/token_6.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 2. Open the `.env` file at the root of your project (you copied it from `.env.example` in Getting Started) and paste the token:
 
@@ -22,7 +22,7 @@ For the simplicity of this hands-on lab, we will use your Personal Access Token 
 
 3. Paste the same token into the `token` variable of your Bruno environment, so your requests can use `Bearer {{token}}`.
 
-    ![Token](./assets/token_7.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Token](./assets/token_7.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ## Step 2.2: Production Architecture (Service Apps & Integrations)
 
@@ -83,24 +83,24 @@ For this lab we skip that process. Everything from here on uses your Personal Ac
     5. Enter the necessary information (Name, Icon, Description, Contact Email).
     6. Select the **Scopes** your machine needs. For example, to read phone numbers, you would need `spark-admin:telephony_config_read`.
 
-        ![Service App](./assets/serviceapp_1.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        ![Service App](./assets/serviceapp_1.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     7. Once created, you will get a **Client ID** and **Client Secret**.
 
-        ![Service App](./assets/serviceapp_2.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        ![Service App](./assets/serviceapp_2.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     8. At the top, in the `Admin Authorization` section, click on **Request admin authorization**.
 
-        ![Service App](./assets/serviceapp_3.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        ![Service App](./assets/serviceapp_3.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     9. A Webex Administrator must then go to **Collaboration Control Hub** -> **Apps** -> **Service Apps**, select your app, and click **Authorize**.
 
-        ![Service App](./assets/serviceapp_4.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        ![Service App](./assets/serviceapp_4.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     10. Finally, you return to the Developer Portal, select your Org under **Org Authorizations**, enter your Client Secret, and click **Generate tokens** to get your 14-day `access_token` and 90-day `refresh_token`.
 
-        ![Service App](./assets/serviceapp_5.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-        ![Service App](./assets/serviceapp_6.png){ width="900" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        ![Service App](./assets/serviceapp_5.png){ width="800" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        ![Service App](./assets/serviceapp_6.png){ width="800" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     **How to Refresh a Service App Token**
 
