@@ -94,7 +94,7 @@ Bruno is the API client you will use to call Webex REST APIs. It stores collecti
 
 2. Click **Create Collection** and name it `WebexOne`:
 
-    ![Bruno](./assets/bruno_2.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Bruno](./assets/bruno_2.png){ width="350" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 3. Create the environment that will hold your token. Open the environment selector in the top right corner, choose **Configure**, add an environment called `WebexOne`, and add one variable:
 
@@ -102,4 +102,4 @@ Bruno is the API client you will use to call Webex REST APIs. It stores collecti
     | --- | --- |
     | `token` | Leave empty for now |
 
-    ![Bruno](./assets/bruno_3.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Bruno](./assets/bruno_3.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
