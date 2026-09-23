@@ -32,11 +32,18 @@ To begin, you'll log into your dedicated Webex lab account. This will allow you 
 2. **Enter Lab Credentials:** When prompted, enter the **Webex email address and password** provided to you.
 
 !!! Note
-    You can also log in at [Webex](https://web.webex.com/){:target="_blank"} 
+    You can also log in at [Webex](https://web.webex.com/){:target="_blank"}
+
+## Log into Webex for Developers
+
+Use the same lab credentials you just used for the Webex Client.
+
+1. Open [Webex for Developers](https://developer.webex.com/){:target="_blank"} in a browser.
+2. Sign in with the **Webex email address and password** from the lab handout.
 
 ## Visual Studio
 
-Visual Studio Code will be used for Python-based bot development, service app configuration, and the agentic app and MCP server exercises.
+Visual Studio Code will be used for Python-based bot development, the agentic app, and the MCP server exercises.
 
 1. Open Visual Studio Code from the desktop:
 
@@ -63,26 +70,28 @@ Visual Studio Code will be used for Python-based bot development, service app co
 2. Create a virtual environment and install dependencies:
 
     ```bash
-    python -m venv .venv
-    .\webexone2026\Scripts\activate.ps1
+    python -m venv webexone
+    .\webexone\Scripts\Activate.ps1
     pip install -r requirements.txt
     ```
-    
+
 3. Copy the environment template and fill in your values:
 
     ```bash
     cp .env.example .env
     ```
 
-### Chat
+### Open the Chat
 
-1. Open the Command Palette (`Ctrl+Shift+P`) and type "Chat: Open Chat (Agent)".
+You will talk to the assistant from the VS Code Chat view.
 
-    ![Create_token](./assets/vscode_6.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+1. Open the Command Palette (`Ctrl+Shift+P`) and type `Chat: Open Chat (Agent)`.
 
-    The Chat should open on the side:
+    ![vscode_chat](./assets/vscode_6.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-    ![Create_token](./assets/vscode_16.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    The Chat view should open on the side:
+
+    ![vscode_chat](./assets/vscode_16.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ## Bruno
 
