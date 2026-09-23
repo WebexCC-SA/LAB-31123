@@ -12,15 +12,15 @@ For the simplicity of this hands-on lab, we will use your Personal Access Token 
 
 1. In [Webex for Developers](https://developer.webex.com/){:target="_blank"}, in the top right corner, click your avatar and select copy the **Bearer** token.
 
-    ![Token](./assets/token_6.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Token](./assets/token_6.png){ width="350" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-2. Open the `.env` file at the root of your project (you copied it from `.env.example` in Getting Started) and paste the token:
+2. Open the `.env` file at the root of your project (you copied it from `.env.example` in Getting Started), paste the token and save the file:
 
     ```env
     ACCESS_TOKEN=
     ```
 
-3. Paste the same token into the `token` variable of your Bruno environment, so your requests can use `Bearer {{token}}`.
+3. Paste the same token into the `token` variable of your Bruno environment, so your requests can use `Bearer {{token}}` and save.
 
     ![Token](./assets/token_7.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
@@ -49,7 +49,7 @@ Every Webex API requires specific scopes. How you get those scopes depends on th
 
 ![Scope](./assets/scope_3.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-### The Catch: User Context vs. Machine Context
+### User Context vs. Machine Context
 
 A Service App token is still a standard Webex OAuth 2.0 Bearer token, so you can pass it to an MCP server the same way you passed a PAT. However, the APIs do not behave the same:
 
@@ -59,18 +59,18 @@ A Service App token is still a standard Webex OAuth 2.0 Bearer token, so you can
 2. **Service App Token (Machine Context):**
    A Service App is a faceless machine. If it calls `webex-list-meetings` without specifying a user, the API will likely return an empty list because the machine itself does not have a calendar.
 
-!!! Note "Architectural Gotcha: Analytics and Reports"
+!!! Warning "Analytics and Reports"
     Service Apps work for most administrative tasks. Webex Analytics and Reporting APIs require **user context** — they block Service Apps by design.
 
     If a production AI assistant needs to pull analytics or reports, it cannot use a Service App. It uses an **OAuth Integration**: the bot sends the user a "Log In" button, the human admin logs in, and the bot receives a user-bound token.
 
-### The Approval Process
+### Service Apps
 
 Because a Service App operates at machine level and can access organization-wide data, a Webex administrator must review the requested scopes and authorize the app in Control Hub before it can generate tokens.
 
 For this lab we skip that process. Everything from here on uses your Personal Access Token.
 
-??? Note "Reference: How to Create a Service App"
+??? Note "Reference: How to Create and approve a Service App"
     If you ever need a Service App in production, here is how you do it:
 
     1. Log into [developer.webex.com](https://developer.webex.com/){:target="_blank"}.
@@ -104,27 +104,37 @@ For this lab we skip that process. Everything from here on uses your Personal Ac
 
     **How to Refresh a Service App Token**
 
-    Unlike a Personal Access Token which simply expires, a Service App token can be refreshed programmatically using the `refresh_token`.
+    Unlike a Personal Access Token which simply expires, a Service App token can be refreshed using the `refresh_token`. That is just another Webex API call: a form-encoded `POST` to `https://webexapis.com/v1/access_token` with these fields:
 
-    You can refresh your **access_token** by making a POST request to the Webex API as shown in the following python example:
+    | Field | Value |
+    | --- | --- |
+    | `grant_type` | `refresh_token` |
+    | `client_id` | The Client ID from the Service App |
+    | `client_secret` | The Client Secret from the Service App |
+    | `refresh_token` | The 90-day refresh token generated above |
 
-    ```python
-    import requests
+    The response returns a new `access_token` and a new `refresh_token`. Store both; the previous refresh token is no longer valid.
 
-    url = "https://webexapis.com/v1/access_token"
-    payload = {
-        'grant_type': 'refresh_token',
-        'refresh_token': 'YOUR_REFRESH_TOKEN',
-        'client_id': 'YOUR_CLIENT_ID',
-        'client_secret': 'YOUR_CLIENT_SECRET',
-    }
-    headers = {
-        'Content-type': 'application/x-www-form-urlencoded'
-    }
+    The Developer Portal has the same request, with snippets in the language you need: [Using the Refresh Token](https://developer.webex.com/create/docs/authentication#using-the-refresh-token){:target="_blank"}.
 
-    response = requests.post(url, headers=headers, data=payload)
-    print(response.json()) # Contains the new access_token and refresh_token
-    ```
+    ??? Tip "Python Code" 
+        ```python
+        import requests
+    
+        url = "https://webexapis.com/v1/access_token"
+        payload = {
+            'grant_type': 'refresh_token',
+            'refresh_token': 'YOUR_REFRESH_TOKEN',
+            'client_id': 'YOUR_CLIENT_ID',
+            'client_secret': 'YOUR_CLIENT_SECRET',
+        }
+        headers = {
+            'Content-type': 'application/x-www-form-urlencoded'
+        }
+    
+        response = requests.post(url, headers=headers, data=payload)
+        print(response.json()) # Contains the new access_token and refresh_token
+        ```
 
 ## Step 2.3: Calling Webex APIs
 
