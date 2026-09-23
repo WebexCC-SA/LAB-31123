@@ -22,7 +22,7 @@ For the simplicity of this hands-on lab, we will use your Personal Access Token 
 
 3. Paste the same token into the `token` variable of your Bruno environment, so your requests can use `Bearer {{token}}` and save.
 
-    ![Token](./assets/token_7.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Token](./assets/token_7.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ## Step 2.2: Production Architecture (Service Apps & Integrations)
 
@@ -420,7 +420,10 @@ To demonstrate Control Hub management capabilities, we will use the **Numbers AP
 
     | Header | Value |
     | --- | --- |
-    | `Authorization` | `Bearer {{token}}` (this reads the token from your Bruno environment) |
+    | `Authorization` | `Bearer {{token}}`|
+
+    !!! Note
+        `{{token}}` reads the token from your Bruno environment.
 
     ![Bruno](./assets/bruno_5.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
    
@@ -485,12 +488,19 @@ First, see where this snippet comes from:
 
     ??? Tip "Python Code"
         ```python
-        import requests
+        # Step 01 - list people in the organization. Same shape as the Developer Portal snippet, token from .env.
+        
+        import json
         import os
+        import sys
+        import requests
         from dotenv import load_dotenv
         
         load_dotenv()
         token = os.getenv("ACCESS_TOKEN")
+        
+        if not token:
+            sys.exit("ACCESS_TOKEN is not set. Copy it into your .env file (see Getting Started).")
         
         url = "https://webexapis.com/v1/people"
         headers = {
@@ -498,7 +508,7 @@ First, see where this snippet comes from:
         }
         
         response = requests.get(url, headers=headers, params={"max": 5})
-        print(response.json())
+        print(json.dumps(response.json(), indent=2))
         ```
 
 4. In VS Code, make sure your terminal is in the correct folder:
@@ -512,11 +522,215 @@ First, see where this snippet comes from:
 6. You should receive a JSON response containing a list of people in your organization.
 
     ??? Note "Full response"
-    ```json
-    {'notFoundIds': None, 'items': [{'id': 'Y2lzY29zcGFyazovL3VzL1BFT1BMRS9lNmEzMGMyNi1hNTBmLTQxODAtODM4MS0yNDIyZGNhOWYwMjc', 'emails': ['admin@webexone-ai-assistant.wbx.ai'], 'sipAddresses': [{'type': 'personal-room', 'value': '26627884171@webexone-ai-assistant-sbx.webex.com', 'primary': False}, {'type': 'personal-room', 'value': 'admin61@webexone-ai-assistant-sbx.webex.com', 'primary': False}, {'type': 'cloud-calling', 'value': 'admin@webexone-ai-assistant-sbx.calls.webex.com', 'primary': True}], 'displayName': 'admin@webexone-ai-assistant.wbx.ai', 'nickName': 'admin', 'firstName': 'admin', 'lastName': 'admin', 'orgId': 'Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi83NDk4M2ZkNS01YzE4LTQ1Y2ItYmZjZC01MDcwMDVlMDViMGY', 'roles': ['Y2lzY29zcGFyazovL3VzL1JPTEUvaWRfZnVsbF9hZG1pbg'], 'licenses': ['Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkNKUFBSTV9kOTJmMDcxNi00MzM1LTRjYzEtOWYyOC1iODJiZmVmMTRmMzM', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkVFXzRkZDBjMWUwLTdhYWUtNDhjZi1iYTQzLTM2M2MxM2RlNDMwYl93ZWJleG9uZS1haS1hc3Npc3RhbnQtc2J4LndlYmV4LmNvbQ', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOk1TX2ZkY2E5ZDBkLTJkZmEtNDM5Yi04MmM4LTUzMDU3MGVjOWY1Yw', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUQ19hMjQ3MzgyOC1hOTgwLTQ3MmYtODE5ZC02YjljY2UwOGU5MmI', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkNGXzQzNWIzZGYxLWI3NDYtNGE2MS04Y2Y5LTc4M2RlOWNjY2ZiZA', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUTV9mNWZkZTM1Zi00NzA0LTQ2MGEtODEwZi00YzVkMzUyNDFlNjk', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZTU18xYjcyOGZmOS03ZGU4LTRjYjctOTU0MC0yOTMyMGI1YTQyY2I', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOlJUVF9lZWVjNGQ2ZC0wNTFhLTRiMjAtODIzNi0xZDM0YWQyYzU3MzQ', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZNU185ZWNhNzgxNC0zMzEzLTQ2NGYtOTY0Mi0wMjM5ODc1YmM5Zjg'], 'created': '2026-09-14T08:42:42.096Z', 'lastModified': '2026-09-23T10:07:18.779Z', 'lastActivity': '2026-09-23T10:08:58.494Z', 'status': 'inactive', 'invitePending': False, 'loginEnabled': True, 'type': 'person', 'siteUrls': ['webexone-ai-assistant-sbx.webex.com']}, {'id': 'Y2lzY29zcGFyazovL3VzL1BFT1BMRS8xOGMyYzQ4OS0yZmVmLTRhMTUtYTRiZC1jYWI3YjY1ZDg0MTY', 'emails': ['pod0@webexone-ai-assistant.wbx.ai'], 'sipAddresses': [{'type': 'cloud-calling', 'value': 'pod0@webexone-ai-assistant-sbx.calls.webex.com', 'primary': True}], 'displayName': 'Pod 0', 'nickName': 'Pod', 'firstName': 'Pod', 'lastName': '0', 'orgId': 'Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi83NDk4M2ZkNS01YzE4LTQ1Y2ItYmZjZC01MDcwMDVlMDViMGY', 'roles': ['Y2lzY29zcGFyazovL3VzL1JPTEUvaWRfZnVsbF9hZG1pbg'], 'licenses': ['Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUTV9mNWZkZTM1Zi00NzA0LTQ2MGEtODEwZi00YzVkMzUyNDFlNjk', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZTU18xYjcyOGZmOS03ZGU4LTRjYjctOTU0MC0yOTMyMGI1YTQyY2I', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZNU185ZWNhNzgxNC0zMzEzLTQ2NGYtOTY0Mi0wMjM5ODc1YmM5Zjg', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUQ19hMjQ3MzgyOC1hOTgwLTQ3MmYtODE5ZC02YjljY2UwOGU5MmI'], 'created': '2026-09-23T10:06:45.423Z', 'lastModified': '2026-09-23T10:08:45.930Z', 'status': 'unknown', 'invitePending': False, 'loginEnabled': True, 'type': 'person', 'siteUrls': ['webexone-ai-assistant-sbx.webex.com']}, {'id': 'Y2lzY29zcGFyazovL3VzL1BFT1BMRS9kNWY3ZTBmZi1mMGZiLTRjNWUtYTE2Zi02YzBmNmRmMzc1YzY', 'emails': ['pod10@webexone-ai-assistant.wbx.ai'], 'sipAddresses': [{'type': 'cloud-calling', 'value': 'pod10@webexone-ai-assistant-sbx.calls.webex.com', 'primary': True}], 'displayName': 'Pod 10', 'nickName': 'Pod', 'firstName': 'Pod', 'lastName': '10', 'orgId': 'Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi83NDk4M2ZkNS01YzE4LTQ1Y2ItYmZjZC01MDcwMDVlMDViMGY', 'roles': ['Y2lzY29zcGFyazovL3VzL1JPTEUvaWRfZnVsbF9hZG1pbg'], 'licenses': ['Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUTV9mNWZkZTM1Zi00NzA0LTQ2MGEtODEwZi00YzVkMzUyNDFlNjk', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZTU18xYjcyOGZmOS03ZGU4LTRjYjctOTU0MC0yOTMyMGI1YTQyY2I', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZNU185ZWNhNzgxNC0zMzEzLTQ2NGYtOTY0Mi0wMjM5ODc1YmM5Zjg', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUQ19hMjQ3MzgyOC1hOTgwLTQ3MmYtODE5ZC02YjljY2UwOGU5MmI'], 'created': '2026-09-21T08:45:41.526Z', 'lastModified': '2026-09-21T08:45:53.137Z', 'status': 'unknown', 'invitePending': True, 'loginEnabled': True, 'type': 'person', 'siteUrls': ['webexone-ai-assistant-sbx.webex.com']}, {'id': 'Y2lzY29zcGFyazovL3VzL1BFT1BMRS9hMjQ2YjQ4Yi01NGVjLTQxMGQtYTVhMC00MGNiNjQyM2E1ZWY', 'emails': ['pod11@webexone-ai-assistant.wbx.ai'], 'sipAddresses': [{'type': 'cloud-calling', 'value': 'pod11@webexone-ai-assistant-sbx.calls.webex.com', 'primary': True}], 'displayName': 'Pod 11', 'nickName': 'Pod', 'firstName': 'Pod', 'lastName': '11', 'orgId': 'Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi83NDk4M2ZkNS01YzE4LTQ1Y2ItYmZjZC01MDcwMDVlMDViMGY', 'roles': ['Y2lzY29zcGFyazovL3VzL1JPTEUvaWRfZnVsbF9hZG1pbg'], 'licenses': ['Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUTV9mNWZkZTM1Zi00NzA0LTQ2MGEtODEwZi00YzVkMzUyNDFlNjk', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZTU18xYjcyOGZmOS03ZGU4LTRjYjctOTU0MC0yOTMyMGI1YTQyY2I', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZNU185ZWNhNzgxNC0zMzEzLTQ2NGYtOTY0Mi0wMjM5ODc1YmM5Zjg', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUQ19hMjQ3MzgyOC1hOTgwLTQ3MmYtODE5ZC02YjljY2UwOGU5MmI'], 'created': '2026-09-21T08:46:08.286Z', 'lastModified': '2026-09-21T08:46:19.901Z', 'status': 'unknown', 'invitePending': True, 'loginEnabled': True, 'type': 'person', 'siteUrls': ['webexone-ai-assistant-sbx.webex.com']}, {'id': 'Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MjAwMjBmZC1jMTczLTQyZmUtYWYxMS05NGM3NzYyNzY2NDA', 'emails': ['pod12@webexone-ai-assistant.wbx.ai'], 'sipAddresses': [{'type': 'cloud-calling', 'value': 'pod12@webexone-ai-assistant-sbx.calls.webex.com', 'primary': True}], 'displayName': 'Pod 12', 'nickName': 'Pod', 'firstName': 'Pod', 'lastName': '12', 'orgId': 'Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi83NDk4M2ZkNS01YzE4LTQ1Y2ItYmZjZC01MDcwMDVlMDViMGY', 'roles': ['Y2lzY29zcGFyazovL3VzL1JPTEUvaWRfZnVsbF9hZG1pbg'], 'licenses': ['Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUTV9mNWZkZTM1Zi00NzA0LTQ2MGEtODEwZi00YzVkMzUyNDFlNjk', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZTU18xYjcyOGZmOS03ZGU4LTRjYjctOTU0MC0yOTMyMGI1YTQyY2I', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZNU185ZWNhNzgxNC0zMzEzLTQ2NGYtOTY0Mi0wMjM5ODc1YmM5Zjg', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUQ19hMjQ3MzgyOC1hOTgwLTQ3MmYtODE5ZC02YjljY2UwOGU5MmI'], 'created': '2026-09-21T08:46:13.957Z', 'lastModified': '2026-09-21T08:46:25.563Z', 'status': 'unknown', 'invitePending': True, 'loginEnabled': True, 'type': 'person', 'siteUrls': ['webexone-ai-assistant-sbx.webex.com']}]}
-    ```
+        ```json
+        {
+          "notFoundIds": null,
+          "items": [
+            {
+              "id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS9lNmEzMGMyNi1hNTBmLTQxODAtODM4MS0yNDIyZGNhOWYwMjc",
+              "emails": [
+                "admin@webexone-ai-assistant.wbx.ai"
+              ],
+              "sipAddresses": [
+                {
+                  "type": "personal-room",
+                  "value": "26627884171@webexone-ai-assistant-sbx.webex.com",
+                  "primary": false
+                },
+                {
+                  "type": "personal-room",
+                  "value": "admin61@webexone-ai-assistant-sbx.webex.com",
+                  "primary": false
+                },
+                {
+                  "type": "cloud-calling",
+                  "value": "admin@webexone-ai-assistant-sbx.calls.webex.com",
+                  "primary": true
+                }
+              ],
+              "displayName": "admin@webexone-ai-assistant.wbx.ai",
+              "nickName": "admin",
+              "firstName": "admin",
+              "lastName": "admin",
+              "orgId": "Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi83NDk4M2ZkNS01YzE4LTQ1Y2ItYmZjZC01MDcwMDVlMDViMGY",
+              "roles": [
+                "Y2lzY29zcGFyazovL3VzL1JPTEUvaWRfZnVsbF9hZG1pbg"
+              ],
+              "licenses": [
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkNKUFBSTV9kOTJmMDcxNi00MzM1LTRjYzEtOWYyOC1iODJiZmVmMTRmMzM",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkVFXzRkZDBjMWUwLTdhYWUtNDhjZi1iYTQzLTM2M2MxM2RlNDMwYl93ZWJleG9uZS1haS1hc3Npc3RhbnQtc2J4LndlYmV4LmNvbQ",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOk1TX2ZkY2E5ZDBkLTJkZmEtNDM5Yi04MmM4LTUzMDU3MGVjOWY1Yw",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUQ19hMjQ3MzgyOC1hOTgwLTQ3MmYtODE5ZC02YjljY2UwOGU5MmI",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkNGXzQzNWIzZGYxLWI3NDYtNGE2MS04Y2Y5LTc4M2RlOWNjY2ZiZA",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUTV9mNWZkZTM1Zi00NzA0LTQ2MGEtODEwZi00YzVkMzUyNDFlNjk",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZTU18xYjcyOGZmOS03ZGU4LTRjYjctOTU0MC0yOTMyMGI1YTQyY2I",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOlJUVF9lZWVjNGQ2ZC0wNTFhLTRiMjAtODIzNi0xZDM0YWQyYzU3MzQ",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZNU185ZWNhNzgxNC0zMzEzLTQ2NGYtOTY0Mi0wMjM5ODc1YmM5Zjg"
+              ],
+              "created": "2026-09-14T08:42:42.096Z",
+              "lastModified": "2026-09-23T10:07:18.779Z",
+              "lastActivity": "2026-09-23T10:08:58.494Z",
+              "status": "inactive",
+              "invitePending": false,
+              "loginEnabled": true,
+              "type": "person",
+              "siteUrls": [
+                "webexone-ai-assistant-sbx.webex.com"
+              ]
+            },
+            {
+              "id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS8xOGMyYzQ4OS0yZmVmLTRhMTUtYTRiZC1jYWI3YjY1ZDg0MTY",
+              "emails": [
+                "pod0@webexone-ai-assistant.wbx.ai"
+              ],
+              "sipAddresses": [
+                {
+                  "type": "cloud-calling",
+                  "value": "pod0@webexone-ai-assistant-sbx.calls.webex.com",
+                  "primary": true
+                }
+              ],
+              "displayName": "Pod 0",
+              "nickName": "Pod",
+              "firstName": "Pod",
+              "lastName": "0",
+              "orgId": "Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi83NDk4M2ZkNS01YzE4LTQ1Y2ItYmZjZC01MDcwMDVlMDViMGY",
+              "roles": [
+                "Y2lzY29zcGFyazovL3VzL1JPTEUvaWRfZnVsbF9hZG1pbg"
+              ],
+              "licenses": [
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUTV9mNWZkZTM1Zi00NzA0LTQ2MGEtODEwZi00YzVkMzUyNDFlNjk",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZTU18xYjcyOGZmOS03ZGU4LTRjYjctOTU0MC0yOTMyMGI1YTQyY2I",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZNU185ZWNhNzgxNC0zMzEzLTQ2NGYtOTY0Mi0wMjM5ODc1YmM5Zjg",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUQ19hMjQ3MzgyOC1hOTgwLTQ3MmYtODE5ZC02YjljY2UwOGU5MmI"
+              ],
+              "created": "2026-09-23T10:06:45.423Z",
+              "lastModified": "2026-09-23T10:08:45.930Z",
+              "status": "unknown",
+              "invitePending": false,
+              "loginEnabled": true,
+              "type": "person",
+              "siteUrls": [
+                "webexone-ai-assistant-sbx.webex.com"
+              ]
+            },
+            {
+              "id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS9kNWY3ZTBmZi1mMGZiLTRjNWUtYTE2Zi02YzBmNmRmMzc1YzY",
+              "emails": [
+                "pod10@webexone-ai-assistant.wbx.ai"
+              ],
+              "sipAddresses": [
+                {
+                  "type": "cloud-calling",
+                  "value": "pod10@webexone-ai-assistant-sbx.calls.webex.com",
+                  "primary": true
+                }
+              ],
+              "displayName": "Pod 10",
+              "nickName": "Pod",
+              "firstName": "Pod",
+              "lastName": "10",
+              "orgId": "Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi83NDk4M2ZkNS01YzE4LTQ1Y2ItYmZjZC01MDcwMDVlMDViMGY",
+              "roles": [
+                "Y2lzY29zcGFyazovL3VzL1JPTEUvaWRfZnVsbF9hZG1pbg"
+              ],
+              "licenses": [
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUTV9mNWZkZTM1Zi00NzA0LTQ2MGEtODEwZi00YzVkMzUyNDFlNjk",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZTU18xYjcyOGZmOS03ZGU4LTRjYjctOTU0MC0yOTMyMGI1YTQyY2I",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZNU185ZWNhNzgxNC0zMzEzLTQ2NGYtOTY0Mi0wMjM5ODc1YmM5Zjg",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUQ19hMjQ3MzgyOC1hOTgwLTQ3MmYtODE5ZC02YjljY2UwOGU5MmI"
+              ],
+              "created": "2026-09-21T08:45:41.526Z",
+              "lastModified": "2026-09-21T08:45:53.137Z",
+              "status": "unknown",
+              "invitePending": true,
+              "loginEnabled": true,
+              "type": "person",
+              "siteUrls": [
+                "webexone-ai-assistant-sbx.webex.com"
+              ]
+            },
+            {
+              "id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS9hMjQ2YjQ4Yi01NGVjLTQxMGQtYTVhMC00MGNiNjQyM2E1ZWY",
+              "emails": [
+                "pod11@webexone-ai-assistant.wbx.ai"
+              ],
+              "sipAddresses": [
+                {
+                  "type": "cloud-calling",
+                  "value": "pod11@webexone-ai-assistant-sbx.calls.webex.com",
+                  "primary": true
+                }
+              ],
+              "displayName": "Pod 11",
+              "nickName": "Pod",
+              "firstName": "Pod",
+              "lastName": "11",
+              "orgId": "Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi83NDk4M2ZkNS01YzE4LTQ1Y2ItYmZjZC01MDcwMDVlMDViMGY",
+              "roles": [
+                "Y2lzY29zcGFyazovL3VzL1JPTEUvaWRfZnVsbF9hZG1pbg"
+              ],
+              "licenses": [
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUTV9mNWZkZTM1Zi00NzA0LTQ2MGEtODEwZi00YzVkMzUyNDFlNjk",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZTU18xYjcyOGZmOS03ZGU4LTRjYjctOTU0MC0yOTMyMGI1YTQyY2I",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZNU185ZWNhNzgxNC0zMzEzLTQ2NGYtOTY0Mi0wMjM5ODc1YmM5Zjg",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUQ19hMjQ3MzgyOC1hOTgwLTQ3MmYtODE5ZC02YjljY2UwOGU5MmI"
+              ],
+              "created": "2026-09-21T08:46:08.286Z",
+              "lastModified": "2026-09-21T08:46:19.901Z",
+              "status": "unknown",
+              "invitePending": true,
+              "loginEnabled": true,
+              "type": "person",
+              "siteUrls": [
+                "webexone-ai-assistant-sbx.webex.com"
+              ]
+            },
+            {
+              "id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MjAwMjBmZC1jMTczLTQyZmUtYWYxMS05NGM3NzYyNzY2NDA",
+              "emails": [
+                "pod12@webexone-ai-assistant.wbx.ai"
+              ],
+              "sipAddresses": [
+                {
+                  "type": "cloud-calling",
+                  "value": "pod12@webexone-ai-assistant-sbx.calls.webex.com",
+                  "primary": true
+                }
+              ],
+              "displayName": "Pod 12",
+              "nickName": "Pod",
+              "firstName": "Pod",
+              "lastName": "12",
+              "orgId": "Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi83NDk4M2ZkNS01YzE4LTQ1Y2ItYmZjZC01MDcwMDVlMDViMGY",
+              "roles": [
+                "Y2lzY29zcGFyazovL3VzL1JPTEUvaWRfZnVsbF9hZG1pbg"
+              ],
+              "licenses": [
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUTV9mNWZkZTM1Zi00NzA0LTQ2MGEtODEwZi00YzVkMzUyNDFlNjk",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZTU18xYjcyOGZmOS03ZGU4LTRjYjctOTU0MC0yOTMyMGI1YTQyY2I",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZNU185ZWNhNzgxNC0zMzEzLTQ2NGYtOTY0Mi0wMjM5ODc1YmM5Zjg",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUQ19hMjQ3MzgyOC1hOTgwLTQ3MmYtODE5ZC02YjljY2UwOGU5MmI"
+              ],
+              "created": "2026-09-21T08:46:13.957Z",
+              "lastModified": "2026-09-21T08:46:25.563Z",
+              "status": "unknown",
+              "invitePending": true,
+              "loginEnabled": true,
+              "type": "person",
+              "siteUrls": [
+                "webexone-ai-assistant-sbx.webex.com"
+              ]
+            }
+          ]
+        }
+        ```
 
 ## Step 2.4 - Webex APIs for Troubleshooting
+
+You now know how to call Webex APIs with different methdos (cURL, Bruno, and Python). The rest of this section uses that on the APIs an administrator actually reaches for when something is wrong: platform status, audit events, reports, devices, and meeting quality.
+
+These are organization-level calls. The official MCP servers you used before act on *a person's* meetings and messages. They do not cover Webex Calling or Control Hub troubleshooting, which is the gap we will fill.
 
 From here on we work in Bruno, adding each call to your `WebexOne` collection so you can keep the requests and reuse the IDs they return.
 
@@ -526,10 +740,14 @@ Unless a call says otherwise, every request needs the same header:
 | --- | --- |
 | `Authorization` | `Bearer {{token}}` |
 
-!!! Note
+!!! Warning "Important"
     The organization ID has already been set for you, both below and as `WEBEX_ORG_ID` in `.env`: `74983fd5-5c18-45cb-bfcd-507005e05b0f`.
 
-    Add it to your Bruno environment as `orgId` so you can write `{{orgId}}` instead of pasting it.
+    Add it to your Bruno environment as `orgId` so you can write `{{orgId}}` instead of pasting it:
+
+    ![Bruno](./assets/bruno_13.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+    Save it.    
 
 ### Webex Status API
 
@@ -539,25 +757,233 @@ Reference: [Webex Status API](https://developer.webex.com/calling/docs/webex-sta
 
 This is the one exception to the rule above: the Status API is public, so these two requests need **no** `Authorization` header at all.
 
-1. Create a `GET` request called `Webex Status` with the URL `https://status.webex.com/status.json` and **Send**.
-2. Create a `GET` request called `Unresolved Incidents` with the URL `https://status.webex.com/unresolved-incidents.json` and **Send**.
+1. Create a `GET` request called `Webex Status` with the URL `https://status.webex.com/status.json` and **Send**:
 
-Typical checks:
+    ![Bruno](./assets/bruno_14.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-- Status summary and component rollup
-- Unresolved incidents
-- Scheduled maintenance
+    `Yellow` indicates that there is an incident going on.
 
-!!! Note "Screenshot needed"
-    Add screenshot of status summary JSON or Control Hub status page alongside API output.
+2. Create a `GET` request called `Unresolved Incidents` with the URL `https://status.webex.com/unresolved-incidents.json` and **Send**:
+
+    ![Bruno](./assets/bruno_15.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+    ??? Note "Full response"
+        ```json
+        {
+          "incidents": [
+            {
+              "sourceId": null,
+              "end_at": "2026-09-14T20:45:36.847Z",
+              "commercial": true,
+              "components": [
+                {
+                  "commercial": true,
+                  "link": null,
+                  "created_at": "2023-02-13T14:17:51.680Z",
+                  "description": null,
+                  "externalId": null,
+                  "fedRAMP": false,
+                  "helpLink": null,
+                  "updated_at": "2026-03-04T17:34:57.306Z",
+                  "group_id": null,
+                  "unavailableRegions": [],
+                  "name": "Gateway and Solutions",
+                  "regionStatusMap": null,
+                  "id": "334c1400aba911ed93ed5f2993f8c502",
+                  "position": 3,
+                  "isGroup": "Y",
+                  "product_group": "WebexMeeting",
+                  "serviceId": "891",
+                  "status": "operational"
+                }
+              ],
+              "autoStatusSetting": false,
+              "regions": [
+                "N. America (West)",
+                "N. America (East)"
+              ],
+              "incidentType": "INCIDENT",
+              "created_at": "2026-09-14T20:45:36.847Z",
+              "changeId": null,
+              "start_at": "2026-09-14T20:45:36.847Z",
+              "degradedComponents": [
+                "334c1400aba911ed93ed5f2993f8c502",
+                "fac6cf70e2b311edafb4e799ce19309d"
+              ],
+              "majorComponents": [],
+              "updated_at": "2026-09-22T21:05:13.399Z",
+              "id": "3d2595f0b07d11f1b8d75d44686f2b97",
+              "serviceId": "891",
+              "autoStatusSettingFlag": null,
+              "impact": "minor",
+              "forceRestoreComponentsFlag": null,
+              "externalId": null,
+              "forceRestoreComponents": false,
+              "fedRAMP": false,
+              "commercialFlag": null,
+              "maintenanceComponents": [],
+              "fedRAMPFlag": null,
+              "resolved_at": null,
+              "name": "Gateway and Solutions: Some users may experience intermittent degraded audio/video quality when joining Microsoft Teams meetings via VIMT",
+              "incident_updates": [
+                {
+                  "incident_id": "3d2595f0b07d11f1b8d75d44686f2b97",
+                  "updated_at": "2026-09-22T21:05:13.395Z",
+                  "created_at": "2026-09-22T21:05:13.395Z",
+                  "externalId": null,
+                  "message_id": "4dba9030b6c911f18e937fbe2e0dc78e",
+                  "body": "Our engineering team continues to actively work with the vendor to address an issue affecting users joining Microsoft Teams meetings via VIMT. We are continuing to validate service stability before fully restoring traffic routing for the region. During this period, users may experience increased latency or a degraded meeting experience.\n\nWe are monitoring the situation closely and will provide a follow-up update within 24 hours, or sooner if there is significant progress.",
+                  "status": "monitoring"
+                },
+                {
+                  "incident_id": "3d2595f0b07d11f1b8d75d44686f2b97",
+                  "updated_at": "2026-09-21T20:44:59.631Z",
+                  "created_at": "2026-09-21T20:44:59.631Z",
+                  "externalId": null,
+                  "message_id": "4fdb1ff0b5fd11f1bf47f3e2c2e736de",
+                  "body": "Our engineering team continues to actively work with the vendor to address an issue affecting users joining Microsoft Teams meetings via VIMT. We are continuing to validate service stability before fully restoring traffic routing for the region. During this period, users may experience increased latency or a degraded meeting experience.\n\nWe are monitoring the situation closely and will provide a follow-up update within 24 hours, or sooner if there is significant progress.",
+                  "status": "monitoring"
+                },
+                {
+                  "incident_id": "3d2595f0b07d11f1b8d75d44686f2b97",
+                  "updated_at": "2026-09-20T20:29:26.487Z",
+                  "created_at": "2026-09-20T20:29:26.487Z",
+                  "externalId": null,
+                  "message_id": "f93ee670b53111f1834c5317e7c1d52e",
+                  "body": "Our engineering team continues to actively work with the vendor to address an issue affecting users joining Microsoft Teams meetings via VIMT. We are continuing to validate service stability before fully restoring traffic routing for the region. During this period, users may experience increased latency or a degraded meeting experience.\n\nWe are monitoring the situation closely and will provide a follow-up update within 24 hours, or sooner if there is significant progress.",
+                  "status": "monitoring"
+                },
+                {
+                  "incident_id": "3d2595f0b07d11f1b8d75d44686f2b97",
+                  "updated_at": "2026-09-19T20:35:30.813Z",
+                  "created_at": "2026-09-19T20:35:30.813Z",
+                  "externalId": null,
+                  "message_id": "a7fce2d0b46911f1b8d75d44686f2b97",
+                  "body": "Our engineering team continues to actively work with the vendor to address an issue affecting users joining Microsoft Teams meetings via VIMT. We are continuing to validate service stability before fully restoring traffic routing for the region. During this period, users may experience increased latency or a degraded meeting experience.\n\nWe are monitoring the situation closely and will provide a follow-up update within 24 hours, or sooner if there is significant progress.",
+                  "status": "monitoring"
+                },
+                {
+                  "incident_id": "3d2595f0b07d11f1b8d75d44686f2b97",
+                  "updated_at": "2026-09-18T20:15:06.000Z",
+                  "created_at": "2026-09-18T20:15:06.000Z",
+                  "externalId": null,
+                  "message_id": "a3878100b39d11f19c3993046b985b88",
+                  "body": "Our engineering team is actively working with the vendor to address an issue affecting users joining Microsoft Teams meetings via VIMT. We are currently validating service stability before fully restoring traffic routing for the region. During this period, users may experience increased latency or a degraded meeting experience.\n\nWe are monitoring the situation closely and will provide a follow-up update within 24 hours, or sooner if there is significant progress.",
+                  "status": "monitoring"
+                },
+                {
+                  "incident_id": "3d2595f0b07d11f1b8d75d44686f2b97",
+                  "updated_at": "2026-09-17T20:22:33.282Z",
+                  "created_at": "2026-09-17T20:22:33.282Z",
+                  "externalId": null,
+                  "message_id": "83b79220b2d511f1834c5317e7c1d52e",
+                  "body": "Engineering continues to monitor the issue affecting some users joining Microsoft Teams meetings via VIMT.\n\nCisco teams are working with the vendor toward full resolution and are validating service stability before restoring normal traffic routing for the affected region. During this time, some users may experience increased latency or a reduced meeting experience.\n\nWe will provide the next update within 24 hours, or sooner if there is a significant change in status.\n\nThank you for your patience while we work to address this service incident.",
+                  "status": "monitoring"
+                },
+                {
+                  "incident_id": "3d2595f0b07d11f1b8d75d44686f2b97",
+                  "updated_at": "2026-09-16T20:17:21.334Z",
+                  "created_at": "2026-09-16T20:17:21.334Z",
+                  "externalId": null,
+                  "message_id": "9f5e5560b20b11f1b8d75d44686f2b97",
+                  "body": "Engineering continues to monitor the issue affecting some users joining Microsoft Teams meetings via VIMT.\n \nThe vendor continues to work on mitigation, and Cisco teams are performing controlled validation before restoring normal traffic routing for the affected region. During this validation period, traffic may continue to route through alternate regions, which can result in increased latency or a reduced meeting experience for some users.\n \nWe will provide the next update within 24 hours, or sooner if there is a significant change in status.\n \nThank you for your patience while we work to address this service incident.",
+                  "status": "monitoring"
+                },
+                {
+                  "incident_id": "3d2595f0b07d11f1b8d75d44686f2b97",
+                  "updated_at": "2026-09-15T20:21:30.936Z",
+                  "created_at": "2026-09-15T20:21:30.936Z",
+                  "externalId": null,
+                  "message_id": "09bad380b14311f1be3dcb367ccf780a",
+                  "body": "Engineering continues to monitor the issue causing some users joining Microsoft Teams meetings via VIMT to experience intermittent degraded audio or video quality.\n \nOur teams remain actively engaged with the vendor on the underlying network issue. A vendor-side mitigation is still in progress, and Cisco teams are continuing to monitor traffic routing and service performance while we await confirmation that the issue has been fully resolved.\n \nUntil resolution is confirmed and validated, customers may continue to experience intermittent media quality degradation and regional call routing changes during peak usage periods.\n \nWe will provide the next update within 24 hours, or sooner if there is a significant change in status.\n \nThank you for your patience while we work to address this service incident.",
+                  "status": "monitoring"
+                },
+                {
+                  "incident_id": "3d2595f0b07d11f1b8d75d44686f2b97",
+                  "updated_at": "2026-09-14T20:45:36.884Z",
+                  "affect_components": [
+                    {
+                      "componentId": "fac6cf70e2b311edafb4e799ce19309d",
+                      "deleted": false,
+                      "discription": null,
+                      "lastModifiedTime": null,
+                      "createTime": "2026-09-14T20:45:36.905Z",
+                      "currentStatus": "degraded_performance",
+                      "affectId": "3d2e4880b07d11f1b8d75d44686f2b97",
+                      "messageId": "3d2b3b40b07d11f1b8d75d44686f2b97",
+                      "componentName": " Video Integration for Microsoft Teams (VIMT) ",
+                      "region": "N. America (East)",
+                      "status": "degraded_performance"
+                    },
+                    {
+                      "componentId": "fac6cf70e2b311edafb4e799ce19309d",
+                      "deleted": false,
+                      "discription": null,
+                      "lastModifiedTime": null,
+                      "createTime": "2026-09-14T20:45:36.904Z",
+                      "currentStatus": "degraded_performance",
+                      "affectId": "3d2e2170b07d11f1b8d75d44686f2b97",
+                      "messageId": "3d2b3b40b07d11f1b8d75d44686f2b97",
+                      "componentName": " Video Integration for Microsoft Teams (VIMT) ",
+                      "region": "N. America (West)",
+                      "status": "degraded_performance"
+                    },
+                    {
+                      "componentId": "334c1400aba911ed93ed5f2993f8c502",
+                      "deleted": false,
+                      "discription": null,
+                      "lastModifiedTime": null,
+                      "createTime": "2026-09-14T20:45:36.903Z",
+                      "currentStatus": "degraded_performance",
+                      "affectId": "3d2dfa60b07d11f1b8d75d44686f2b97",
+                      "messageId": "3d2b3b40b07d11f1b8d75d44686f2b97",
+                      "componentName": "Gateway and Solutions",
+                      "region": "N. America (West)",
+                      "status": "degraded_performance"
+                    },
+                    {
+                      "componentId": "334c1400aba911ed93ed5f2993f8c502",
+                      "deleted": false,
+                      "discription": null,
+                      "lastModifiedTime": null,
+                      "createTime": "2026-09-14T20:45:36.901Z",
+                      "currentStatus": "degraded_performance",
+                      "affectId": "3d2c73c0b07d11f1b8d75d44686f2b97",
+                      "messageId": "3d2b3b40b07d11f1b8d75d44686f2b97",
+                      "componentName": "Gateway and Solutions",
+                      "region": "N. America (East)",
+                      "status": "degraded_performance"
+                    }
+                  ],
+                  "created_at": "2026-09-14T20:45:36.884Z",
+                  "externalId": null,
+                  "message_id": "3d2b3b40b07d11f1b8d75d44686f2b97",
+                  "body": "Engineering is monitoring an issue that may impact some users joining Microsoft Teams meetings via VIMT. Users may experience intermittent degraded audio or video quality, and in some cases, calls may be routed through alternate regions, which can result in increased latency or a reduced meeting experience.\n\nOur teams are actively working with the vendor to investigate and resolve the underlying network issue. Until the vendor provides confirmation of resolution, customers may continue to experience intermittent media quality degradation and regional call routing changes during peak usage periods.\n\nWe will provide the next update within 24 hours, or sooner if there is a significant change in status.\n\nThank you for your patience while we work to address this service incident.",
+                  "status": "monitoring"
+                }
+              ],
+              "locations": null,
+              "publicationId": "PUB0016437",
+              "incidentNumber": "INC0056900",
+              "status": "monitoring"
+            }
+          ]
+        }    
+        ```
 
 ### Audit and compliance
 
-| API area | Use case |
-| --- | --- |
-| Admin Audit Events | Track configuration changes and admin actions |
-| Compliance Events | Monitor messaging and room events as compliance officer |
-| Security Audit Events | Review security-related admin activity |
+When something changes in the organization, Webex keeps a record. There are three APIs for that, and they are not interchangeable: each one answers a different "who did what", and each one needs a different kind of administrator.
+
+| API | What it records | Who can call it in this lab |
+| --- | --- | --- |
+| [Admin Audit Events](https://developer.webex.com/admin/docs/api/v1/admin-audit-events){:target="_blank"} | Control Hub configuration changes (a setting was edited, a user was created) | Full admin |
+| [Security Audit Events](https://developer.webex.com/admin/docs/api/v1/security-audit-events){:target="_blank"} | User sign-in and sign-out | Full admin |
+| [Compliance Events](https://developer.webex.com/compliance/docs/api/v1/events){:target="_blank"} | Messages, files, and space membership | **Compliance Officer** |
+
+You will test the two that a full admin can reach.
+
+#### Admin Audit Events
 
 Admin Audit Events will not accept a bare URL: `orgId`, `from`, and `to` are all mandatory.
 
@@ -567,13 +993,36 @@ Admin Audit Events will not accept a bare URL: `orgId`, `from`, and `to` are all
     | Parameter | Value |
     | --- | --- |
     | `orgId` | `{{orgId}}` |
-    | `from` | `2026-09-15T00:00:00.000Z` |
-    | `to` | `2026-09-22T23:59:59.000Z` |
+    | `from` | `2026-19-15T00:00:00.000Z` |
+    | `to` | `2026-09-23T23:59:59.000Z` |
     | `max` | `10` |
+
+    ![Bruno](./assets/bruno_16.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 3. **Send**, then expand one item in the response.
 
-Look closely at where the useful values are: `actionText`, `actorEmail`, and `eventCategory` sit inside each item's `data` object, not at the top level. Remember this when you build the audit tool in Lab 3.
+#### Security Audit Events
+
+This API records who signed in and who signed out. The query parameters are named differently from Admin Audit: `startTime` and `endTime`, not `from` and `to`.
+
+1. Create a `GET` request called `Security Audit Events` with the URL `https://webexapis.com/v1/admin/securityAudit/events`.
+2. In the **Params** tab, add:
+
+    | Parameter | Value |
+    | --- | --- |
+    | `orgId` | `{{orgId}}` |
+    | `startTime` | `2026-09-15T00:00:00.000Z` |
+    | `endTime` | `2026-09-23T23:59:59.000Z` |
+    | `max` | `10` |
+
+3. **Send**. Each item is a login or logout. `actionText`, `actorEmail`, and `actorIp` sit under `data`, the same nesting you just saw on admin audit.
+
+!!! Note
+    If the list is empty, Control Hub may have **Allow user authentication data** turned off. That toggle lives under organization settings, and the API returns nothing until it is on. See [Log and analyze user sign-ins and sign-outs](https://help.webex.com/article/pf66vg){:target="_blank"}.
+
+#### Compliance Events
+
+Do not build this one. `GET https://webexapis.com/v1/events` is a Compliance Officer API. A full admin token is not enough; the call returns `403`. In production you would assign a separate compliance role, not reuse this administrator.
 
 ### Reports
 
