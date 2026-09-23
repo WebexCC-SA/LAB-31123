@@ -61,6 +61,9 @@ window, regardless of which folder you have open.
 
 1. Open the Command Palette (`Ctrl+Shift+P`).
 2. Run **MCP: Open User Configuration**.
+
+![skill_discovery](./assets/lab4/mcpconfig.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
 3. Add the Webex Meeting server:
 
 ```json
@@ -100,10 +103,6 @@ VS Code automatically scans these project directories for skills
 | `.github/skills/` | GitHub convention                  |
 | `.claude/skills/` | Anthropic convention               |
 
-
-These paths are relative to the folder you opened as your **workspace**. You do
-not need to memorise them: the `/skills` flow in the next step writes the file
-to a supported location for you. **No settings entry is needed.**
 
 
 ## Step 4.2: Create the skill
@@ -300,7 +299,7 @@ You now have two upcoming meetings, both without agendas.
 Ask:
 
 ```text
-What meetings do I have scheduled?
+What webex meetings do I have scheduled?
 ```
 
 The agent lists them — title, time, host. No flags, no readiness check, no
@@ -315,7 +314,7 @@ question." Expand **References** to confirm `meeting-review` was not loaded.
 Now ask for the same data a different way:
 
 ```text
-Help me prepare for my upcoming meetings.
+Help me prepare for my upcoming webex meetings.
 ```
 
 This phrasing matches the description, so a capable model loads the skill on its
@@ -330,7 +329,7 @@ own. Expand **References** to check whether it did.
 
 ```text
 /meeting-review
-Help me prepare for my upcoming meetings.
+Help me prepare for my upcoming webex meetings.
 ```
 
 Typing `/meeting-review` loads the body directly. This is the **deterministic**
@@ -390,7 +389,7 @@ what **not** to do. This exercise adds one new rule and watches behaviour change
 Ask the agent to fix the gaps it just reported:
 
 ```text
-Fix the missing agendas on my upcoming meetings.
+Fix the missing agendas on my upcoming webex meetings.
 ```
 
 Watch what it does. Most agents will **write agenda text they invented** and
@@ -425,7 +424,7 @@ Save the file, then **reload the window**
 Ask exactly the same question again:
 
 ```text
-Fix the missing agendas on my upcoming meetings.
+Fix the missing agendas on my upcoming webex meetings.
 ```
 
 The agent now presents draft agenda text and **waits for your approval** before
