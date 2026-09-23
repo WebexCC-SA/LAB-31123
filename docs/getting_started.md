@@ -11,6 +11,7 @@ Scan the QR code to be added to the Webex space for Q&A and more.
 ## Tools used in this lab
 
 - **Webex Client** — interact with your bot and verify assistant responses
+- **Control Hub** — organization admin portal
 - **Visual Studio Code** — edit code, configure MCP servers, and run the lab assistant
 - **Webex for Developers** — create bots, Webex MCP tokens, service app, and review API documentation
 - **Bruno** — call Webex REST APIs by hand before wrapping them as MCP tools
@@ -34,12 +35,19 @@ To begin, you'll log into your dedicated Webex lab account. This will allow you 
 !!! Note
     You can also log in at [Webex](https://web.webex.com/){:target="_blank"}
 
+## Log into Control Hub
+
+You will use Control Hub during the lab. Sign in now with the same credentials.
+
+1. Open [Control Hub](https://admin.webex.com/){:target="_blank"} in a browser.
+2. Sign in with the **Webex email address and password** provided to you.
+
 ## Log into Webex for Developers
 
 Use the same lab credentials you just used for the Webex Client.
 
 1. Open [Webex for Developers](https://developer.webex.com/){:target="_blank"} in a browser.
-2. Sign in with the **Webex email address and password** from the lab handout.
+2. Sign in with the **Webex email address and password** provided to you.
 
 ## Visual Studio
 
