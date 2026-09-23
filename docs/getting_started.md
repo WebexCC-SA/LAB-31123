@@ -22,7 +22,7 @@ Use the credentials provided by your lab instructor:
 | Item | Value |
 | --- | --- |
 | Username | `podX@webexone-ai-assistant.wbx.ai` (replace X with your pod number) |
-| Password | Provided in the lab handout |
+| Password | `WebexOne2026!` |
 
 ## Webex Client
 
