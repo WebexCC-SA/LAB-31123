@@ -37,11 +37,11 @@ MCP servers are **NOT** enabled by default in your organization; you need to ena
 
 2. To enable them, go to **Collaboration Control Hub** -> **Apps** -> **Agentic Apps** and select the **Webex** tab:
 
-    ![Create_token](./assets/controlhub_1.png){ width="1000" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/controlhub_1.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 3. To enable any of them, click "Allowed for all users" and save:
 
-    ![Create_token](./assets/controlhub_2.png){ width="1000" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/controlhub_2.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 4. You are not done yet. If you try to use an MCP server now, you will see an error similar to this in the terminal:
 
@@ -60,7 +60,7 @@ MCP servers are **NOT** enabled by default in your organization; you need to ena
 
 5. Go to the MCP server, select the **Tools** tab, and enable the ones you want to allow users to use. In this case, all of them will be enabled:
 
-    ![Create_token](./assets/controlhub_3.png){ width="1000" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/controlhub_3.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     After this change, users will be able to use the server.
 
@@ -74,11 +74,11 @@ As a user, the first thing you will need to do is get the token to access the MC
 2. In the top right corner of the page, click your avatar and then select [Manage Webex Agentic MCP App token](https://developer.webex.com/agentic-token){:target="_blank"}.
 3. Under "Generate token", click on "Generate now":
    
-    ![Create_token](./assets/token_1.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/token_1.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 4. You need a separate token per MCP server. In this case, we will start by using **Webex Messaging**:
 
-    ![Create_token](./assets/token_2.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/token_2.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 5. You will now see the token:
 
@@ -138,7 +138,7 @@ As a user, the first thing you will need to do is get the token to access the MC
 
 10. After that, the Output view should open automatically. If not, choose View -> Output.
 
-    ![Create_token](./assets/vscode_5.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_5.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     You should see that tools were discovered. If you see a message like the following in the terminal, you have connected to the MCP successfully:
    
@@ -151,7 +151,7 @@ As a user, the first thing you will need to do is get the token to access the MC
     These are the 20 tools available in this MCP server:
 
     ??? Note "Tools"
-        ![Tools](./assets/tools_2.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        ![Tools](./assets/tools_2.png){ width="300" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ## Step 1.2: Adding the LLM to VS Code
 
@@ -166,22 +166,22 @@ Earlier we opened the Chat, but now we will set up the agent.
 
 2. Select "Add Models..." > "OpenAI":
 
-    ![Create_token](./assets/vscode_8.png){ width="1000" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_8.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 3. Keep "OpenAI" as the Group Name and press Enter.
 
-    ![Create_token](./assets/vscode_9.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_9.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 4. Enter the API Key that was provided to you. You should see it now:
 
-    ![Create_token](./assets/vscode_10.png){ width="1000" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_10.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     !!! Note
         GPT-5 Nano is the only model available.
 
 5. To test it, make sure you select the model in the chat, and say "Hello":
 
-    ![Create_token](./assets/vscode_11.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_11.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     !!! Note
         The LLM generates responses dynamically, so your answer may vary from what you see in the screenshot.
@@ -259,7 +259,7 @@ In this exercise, you need to add the [Meetings MCP](https://developer.webex.com
         These are the tools available in this MCP server:
 
         ??? Note "Tools"
-            ![Tools](./assets/tools_1.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+            ![Tools](./assets/tools_1.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ### Organize a meeting using your AI Assistant
 
@@ -281,7 +281,7 @@ Once the MCP is added, schedule a meeting with the organization admin (`admin@we
 
     You can check your Webex App to verify that the meeting was scheduled:
 
-    ![Meeting](./assets/meeting_3.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Meeting](./assets/meeting_3.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     And confirm the participants:
 
