@@ -23,12 +23,11 @@ This list is frequently updated; you can use the [Webex MCP Server Overview](htt
 
 You will quickly notice in the documentation that every official Webex MCP server includes this requirement:
 
-!!! Note
-    This MCP server must be enabled by your organization's admin in Webex Control Hub before it can be used. See [Provisioning on Control Hub](https://developer.webex.com/mcp/docs/provisioning-on-control-hub){:target="_blank"} for details.
+- This MCP server must be enabled by your organization's admin in Webex Control Hub before it can be used. See [Provisioning on Control Hub](https://developer.webex.com/mcp/docs/provisioning-on-control-hub){:target="_blank"} for details.
 
 MCP servers are **NOT** enabled by default in your organization; you need to enable them to allow your users to use them.
 
-!!! Warning "Important"
+!!! Note "Reference: How to enable MCP servers in your organization"
     These steps have been completed prior to this lab since you are all sharing the same organization, but this information is relevant for your own organizations. The presenters will demonstrate this process.
 
     1. If you try to access MCP for the first time, you will see a message: **No allowed MCP servers found**.
