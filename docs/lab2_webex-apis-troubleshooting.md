@@ -138,7 +138,7 @@ For this lab we skip that process. Everything from here on uses your Personal Ac
 
 ## Step 2.3: Calling Webex APIs
 
-Now that we have our token, we can start making API calls. The [Webex Developer Portal](https://developer.webex.com/docs/api/v1/){:target="_blank"} provides documentation and ready-to-use code snippets for all APIs. You can select your preferred language (cURL, Python, Node.js, etc.) and copy the code directly.
+Now that we have our token, we can start making API calls. The [Webex Developer Portal](https://developer.webex.com/docs/api/v1/){:target="_blank"} provides documentation and ready-to-use code snippets for all APIs. You can select your preferred language (cURL, Python and Node.js) and copy the code directly.
 
 Every Webex API call has the same anatomy: a method, a URL, and an `Authorization` header carrying your token. Once you have seen that, the tool you use is a matter of what you are trying to do:
 
@@ -155,17 +155,267 @@ Start with the smallest possible call: who does this token belong to?
 !!! Warning
     Replace `YOUR_ACCESS_TOKEN` with the token from your `.env` file.
 
-```bash
-curl -s -H "Authorization: Bearer YOUR_ACCESS_TOKEN" "https://webexapis.com/v1/people/me" | python -m json.tool
-```
+1. Run the following command from the **VS Code terminal**:
 
-The response is your own user record. That is the entire API call: a method, a URL, and a header proving who you are. If this returns `401`, your token is wrong or expired, and no call will work.
+    ```bash
+    curl -s -H "Authorization: Bearer YOUR_ACCESS_TOKEN" "https://webexapis.com/v1/people/me" | python -m json.tool
+    ```
 
-Now something only an administrator can ask — what is the organization entitled to?
+    The response is your own user record:
 
-```bash
-curl -s -H "Authorization: Bearer YOUR_ACCESS_TOKEN" "https://webexapis.com/v1/licenses" | python -m json.tool
-```
+    ??? Tip "Full response"
+        ```powershell
+        (webexone)  % curl -s -H "Authorization: Bearer NTczNWUxZDMtNWM5Ni00MWJiLWI2MGMtMmYzNmU3YTYxYmI4ZWYyZGJhNzYtYjhi_P0A1_74983fd5-5c18-45cb-bfcd-507005e05b0f" "https://webexapis.com/v1/people/me" | python -m json.tool
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS9lNmEzMGMyNi1hNTBmLTQxODAtODM4MS0yNDIyZGNhOWYwMjc",
+            "emails": [
+                "admin@webexone-ai-assistant.wbx.ai"
+            ],
+            "sipAddresses": [
+                {
+                    "type": "personal-room",
+                    "value": "26627884171@webexone-ai-assistant-sbx.webex.com",
+                    "primary": false
+                },
+                {
+                    "type": "personal-room",
+                    "value": "admin61@webexone-ai-assistant-sbx.webex.com",
+                    "primary": false
+                },
+                {
+                    "type": "cloud-calling",
+                    "value": "admin@webexone-ai-assistant-sbx.calls.webex.com",
+                    "primary": true
+                }
+            ],
+            "displayName": "admin@webexone-ai-assistant.wbx.ai",
+            "nickName": "admin",
+            "firstName": "admin",
+            "lastName": "admin",
+            "orgId": "Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi83NDk4M2ZkNS01YzE4LTQ1Y2ItYmZjZC01MDcwMDVlMDViMGY",
+            "roles": [
+                "Y2lzY29zcGFyazovL3VzL1JPTEUvaWRfZnVsbF9hZG1pbg"
+            ],
+            "licenses": [
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkNKUFBSTV9kOTJmMDcxNi00MzM1LTRjYzEtOWYyOC1iODJiZmVmMTRmMzM",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkVFXzRkZDBjMWUwLTdhYWUtNDhjZi1iYTQzLTM2M2MxM2RlNDMwYl93ZWJleG9uZS1haS1hc3Npc3RhbnQtc2J4LndlYmV4LmNvbQ",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOk1TX2ZkY2E5ZDBkLTJkZmEtNDM5Yi04MmM4LTUzMDU3MGVjOWY1Yw",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUQ19hMjQ3MzgyOC1hOTgwLTQ3MmYtODE5ZC02YjljY2UwOGU5MmI",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkNGXzQzNWIzZGYxLWI3NDYtNGE2MS04Y2Y5LTc4M2RlOWNjY2ZiZA",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUTV9mNWZkZTM1Zi00NzA0LTQ2MGEtODEwZi00YzVkMzUyNDFlNjk",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZTU18xYjcyOGZmOS03ZGU4LTRjYjctOTU0MC0yOTMyMGI1YTQyY2I",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOlJUVF9lZWVjNGQ2ZC0wNTFhLTRiMjAtODIzNi0xZDM0YWQyYzU3MzQ",
+                "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZNU185ZWNhNzgxNC0zMzEzLTQ2NGYtOTY0Mi0wMjM5ODc1YmM5Zjg"
+            ],
+            "created": "2026-09-14T08:42:42.096Z",
+            "lastModified": "2026-09-23T09:29:05.989Z",
+            "lastActivity": "2026-09-18T11:13:38.261Z",
+            "status": "inactive",
+            "invitePending": false,
+            "loginEnabled": true,
+            "type": "person",
+            "siteUrls": [
+                "webexone-ai-assistant-sbx.webex.com"
+            ]
+        }
+        ```
+
+    !!! Warning
+        If this returns `401`, your token is wrong or expired, and no call will work.
+    
+    2. Now something only an administrator can ask — what is the organization entitled to?
+    
+        ```bash
+        curl -s -H "Authorization: Bearer YOUR_ACCESS_TOKEN" "https://webexapis.com/v1/licenses" | python -m json.tool
+        ```
+
+(webexone) diejimen@DIEJIMEN-M-T47G 03_custom_mcp % curl -s -H "Authorization: Bearer NTczNWUxZDMtNWM5Ni00MWJiLWI2MGMtMmYzNmU3YTYxYmI4ZWYyZGJhNzYtYjhi_P0A1_74983fd5-5c18-45cb-bfcd-507005e05b0f" "https://webexapis.com/v1/licenses" | python -m json.tool 
+{
+    "items": [
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkVQQ19mZDdjNmNkMC0zZWRhLTRkYTUtOWNmZC0yZjVhNGJhMzZlNDk",
+            "name": "Epic Desktop Connector for Webex Contact Center",
+            "totalUnits": 10,
+            "consumedUnits": 0,
+            "consumedByUsers": 0,
+            "consumedByWorkspaces": 0,
+            "subscriptionId": "trialSub.e57285a3-275b-4547-ae16-69d6371cc2c0"
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOk1TX2ZkY2E5ZDBkLTJkZmEtNDM5Yi04MmM4LTUzMDU3MGVjOWY1Yw",
+            "name": "Advanced Messaging",
+            "totalUnits": 100,
+            "consumedUnits": 1,
+            "consumedByUsers": 1,
+            "consumedByWorkspaces": 0,
+            "subscriptionId": "trialSub.e57285a3-275b-4547-ae16-69d6371cc2c0"
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOlNGRFNLX2VhMThiNzZmLTE2MzQtNGM5Ny05NWQwLTg0MjFjODBmYzkxYg",
+            "name": "Salesforce Desktop Connector",
+            "totalUnits": 10,
+            "consumedUnits": 0,
+            "consumedByUsers": 0,
+            "consumedByWorkspaces": 0,
+            "subscriptionId": "trialSub.e57285a3-275b-4547-ae16-69d6371cc2c0"
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkJDUkxDXzRkNTFkZWMxLTU2MDItNDRmZS04ZTgyLWQ1ZDliZTIzOGY0ZQ",
+            "name": "Webex Calling - Route List Calls",
+            "totalUnits": 10,
+            "consumedUnits": 0,
+            "consumedByUsers": null,
+            "consumedByWorkspaces": null,
+            "subscriptionId": "trialSub.e57285a3-275b-4547-ae16-69d6371cc2c0"
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkNKUFBSTV9kOTJmMDcxNi00MzM1LTRjYzEtOWYyOC1iODJiZmVmMTRmMzM",
+            "name": "Contact Center Premium Agent",
+            "totalUnits": 50,
+            "consumedUnits": 3,
+            "consumedByUsers": 3,
+            "consumedByWorkspaces": 0,
+            "subscriptionId": "trialSub.e57285a3-275b-4547-ae16-69d6371cc2c0"
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOlNEX2YwOTk5YTY0LTNiMWEtNDUxOS1iYWNjLTg1OGVlN2U1NjczNA",
+            "name": "Webex Room Kit",
+            "totalUnits": 5,
+            "consumedUnits": 0,
+            "consumedByUsers": 0,
+            "consumedByWorkspaces": 0,
+            "subscriptionId": "trialSub.e57285a3-275b-4547-ae16-69d6371cc2c0"
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkVFXzRkZDBjMWUwLTdhYWUtNDhjZi1iYTQzLTM2M2MxM2RlNDMwYl93ZWJleG9uZS1haS1hc3Npc3RhbnQtc2J4LndlYmV4LmNvbQ",
+            "name": "Webex Meetings Suite",
+            "totalUnits": 100,
+            "consumedUnits": 3,
+            "consumedByUsers": 3,
+            "consumedByWorkspaces": 0,
+            "siteUrl": "webexone-ai-assistant-sbx.webex.com",
+            "siteType": "Control Hub managed site",
+            "subscriptionId": "trialSub.e57285a3-275b-4547-ae16-69d6371cc2c0"
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkJDU1REXzdiNzk3N2QxLTQ2MzQtNDJlZS1iMzIwLWY0NDc4NDFkODdiYg",
+            "name": "Webex Calling - Professional",
+            "totalUnits": 100,
+            "consumedUnits": 3,
+            "consumedByUsers": 2,
+            "consumedByWorkspaces": 1,
+            "subscriptionId": "trialSub.e57285a3-275b-4547-ae16-69d6371cc2c0"
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkJDQ0FfMWNhZWYxNjYtMjExMy00NGQ1LWJlMzUtZWNkMDk3OTgwODAx",
+            "name": "Webex Calling - Workspaces",
+            "totalUnits": 100,
+            "consumedUnits": 0,
+            "consumedByUsers": 0,
+            "consumedByWorkspaces": 0,
+            "subscriptionId": "trialSub.e57285a3-275b-4547-ae16-69d6371cc2c0"
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkNKUFNURF8xN2Y5YTMwOC03OTgyLTRiNmQtYjVlMC0xZTZiM2MyMjMxNzM",
+            "name": "Contact center Standard Agent",
+            "totalUnits": 50,
+            "consumedUnits": 0,
+            "consumedByUsers": 0,
+            "consumedByWorkspaces": 0,
+            "subscriptionId": "trialSub.e57285a3-275b-4547-ae16-69d6371cc2c0"
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOlJUVF9lZWVjNGQ2ZC0wNTFhLTRiMjAtODIzNi0xZDM0YWQyYzU3MzQ",
+            "name": "Real-Time Translations",
+            "totalUnits": 100,
+            "consumedUnits": 3,
+            "consumedByUsers": 3,
+            "consumedByWorkspaces": 0,
+            "subscriptionId": "trialSub.e57285a3-275b-4547-ae16-69d6371cc2c0"
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkNGXzQzNWIzZGYxLWI3NDYtNGE2MS04Y2Y5LTc4M2RlOWNjY2ZiZA",
+            "name": "Advanced Space Meetings",
+            "totalUnits": 100,
+            "consumedUnits": 1,
+            "consumedByUsers": 1,
+            "consumedByWorkspaces": 0,
+            "subscriptionId": "trialSub.e57285a3-275b-4547-ae16-69d6371cc2c0"
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkJDSERPX2ZmNTZmMTcwLThlZDAtMzE2OC04YWMwLWRmMWJjNGViMDA4Mw",
+            "name": "Webex Calling - Hot desk only",
+            "totalUnits": 9,
+            "consumedUnits": 0,
+            "consumedByUsers": 0,
+            "consumedByWorkspaces": 0
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkNFXzEyM2UzNTY2LTVlMDYtNGJmMy04NDQ5LTFhYjUxYTFkMWNlMw",
+            "name": "Hybrid - Exchange Calendar",
+            "totalUnits": 44,
+            "consumedUnits": 0,
+            "consumedByUsers": 0,
+            "consumedByWorkspaces": 0
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkNHXzVkYjcwNjYyLWNmYTItNGFjZC04MTRlLTgwYjNiNWVkZjNlZA",
+            "name": "Hybrid - Google Calendar",
+            "totalUnits": 44,
+            "consumedUnits": 0,
+            "consumedByUsers": 0,
+            "consumedByWorkspaces": 0
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZNU185ZWNhNzgxNC0zMzEzLTQ2NGYtOTY0Mi0wMjM5ODc1YmM5Zjg",
+            "name": "Basic Messaging",
+            "totalUnits": 44,
+            "consumedUnits": 44,
+            "consumedByUsers": 44,
+            "consumedByWorkspaces": 0
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZTU18xYjcyOGZmOS03ZGU4LTRjYjctOTU0MC0yOTMyMGI1YTQyY2I",
+            "name": "Free screen share",
+            "totalUnits": 44,
+            "consumedUnits": 44,
+            "consumedByUsers": 44,
+            "consumedByWorkspaces": 0
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUQ19hMjQ3MzgyOC1hOTgwLTQ3MmYtODE5ZC02YjljY2UwOGU5MmI",
+            "name": "Call on Webex (1:1 call, non-PSTN)",
+            "totalUnits": 44,
+            "consumedUnits": 44,
+            "consumedByUsers": 44,
+            "consumedByWorkspaces": 0
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkZUTV9mNWZkZTM1Zi00NzA0LTQ2MGEtODEwZi00YzVkMzUyNDFlNjk",
+            "name": "Basic Space Meetings",
+            "totalUnits": 44,
+            "consumedUnits": 44,
+            "consumedByUsers": 44,
+            "consumedByWorkspaces": 0
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOkhNXzdjOGMyZGVhLWIwNTUtNDNlNy1hODkyLWNmMmI1MDcyNTAzNg",
+            "name": "Hybrid - Message",
+            "totalUnits": 44,
+            "consumedUnits": 0,
+            "consumedByUsers": 0,
+            "consumedByWorkspaces": 0
+        },
+        {
+            "id": "Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvNzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBmOlVDUFJFTV9jMzMyOWQzMi0xNmVkLTQxNDUtOTUyNS02M2FjYjRiMzFiMjA",
+            "name": "Unified Communication Manager (UCM)",
+            "totalUnits": 44,
+            "consumedUnits": 0,
+            "consumedByUsers": 0,
+            "consumedByWorkspaces": 0
+        }
+    ]
+}
 
 Two commands in, and you have already proved both halves of what you need: the token is valid, and it carries admin rights.
 
