@@ -166,7 +166,7 @@ A skill is a folder containing a `SKILL.md` file — an open standard defined by
     1. <most urgent concrete action>
     2. <next action>
     ======================================
-    ```
+    ````
     
     ## Gotchas
     
