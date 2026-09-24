@@ -45,7 +45,7 @@ Configuring at **user scope** means the tools are available in every VS Code win
 1. Open the Command Palette (`Ctrl+Shift+P`).
 2. Run **MCP: Open User Configuration**.
 
-    ![skill_discovery](./assets/lab2/mcpconfig.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![skill_discovery](./assets/lab4/mcpconfig.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 3. Add the Webex Meeting server:
 
@@ -91,11 +91,11 @@ A skill is a folder containing a `SKILL.md` file — an open standard defined by
 1. In the Chat view, type `/skills` and press Enter to open the **Configure
    Skills** menu.
 
-   ![skill_discovery](./assets/lab2/createskill1.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+   ![skill_discovery](./assets/lab4/createskill1.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-   ![skill_discovery](./assets/lab2/createskill2.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+   ![skill_discovery](./assets/lab4/createskill2.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-   ![skill_discovery](./assets/lab2/createskill3.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+   ![skill_discovery](./assets/lab4/createskill3.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 2. Choose to create a **New Skill**, pick **User** scope, and name it exactly:
 
@@ -103,7 +103,7 @@ A skill is a folder containing a `SKILL.md` file — an open standard defined by
     meeting-review
     ```
     
-    ![skill_discovery](./assets/lab2/createskill4.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![skill_discovery](./assets/lab4/createskill4.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
     
     !!! Warning
         The `name` in the front matter must match the folder name exactly, using only lowercase letters, numbers, and hyphens. A mismatch, or a namespace prefix like `myorg/meeting-review`, makes the skill **silently fail to load** — no error, it simply never appears.
@@ -207,7 +207,7 @@ Do **not** ask the agent "what skills are available?" — a model with no skill 
 
 Type `/` in the chat input. `meeting-review` should appear in the list.
 
-![skill_discovery](./assets/lab2/skill_discovery.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![skill_discovery](./assets/lab4/skill_discovery.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 
 !!! Note "If `meeting-review` does not appear"
@@ -350,7 +350,7 @@ The tool call itself was correct. The problem is that a judgement call was made 
 
 Open your `meeting-review` skill (`/skills` → select it → edit) and add this line to the **Gotchas** section:
 
-![skill_discovery](./assets/lab2/editskill.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![skill_discovery](./assets/lab4/editskill.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ```markdown
 - Never write agenda text you invented. Draft the wording, show it to the user,
