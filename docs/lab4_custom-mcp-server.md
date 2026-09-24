@@ -1241,7 +1241,7 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
             from datetime import datetime, timedelta, timezone
             from dotenv import load_dotenv
             from mcp.server import MCPServer
-        
+            
             logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
             log = logging.getLogger("troubleshooting-mcp")
             
@@ -1253,9 +1253,9 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
                 sys.exit("ACCESS_TOKEN and WEBEX_ORG_ID must be set in your .env file.")
             
             HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
-        
+            
             mcp = MCPServer("webex-troubleshooting-mcp")
-        
+            
             @mcp.tool()
             async def unresolved_incidents() -> dict:
                 """Check Webex for any unresolved platform incidents."""
@@ -1266,7 +1266,7 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
                 
                 incidents = r.json().get("incidents", [])
                 return {"count": len(incidents), "incidents": incidents}
-                
+            
             @mcp.tool()
             async def list_admin_audit_events(days_back: int = 7, max_results: int = 10) -> dict:
                 """List recent admin audit events in the organization."""
@@ -1303,7 +1303,45 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
                         for e in events
                     ]
                 }
+            
+            @mcp.tool()
+            async def list_security_audit_events(days_back: int = 7, max_results: int = 10) -> dict:
+                """List recent security audit events (user sign-ins and sign-outs) in the organization."""
+                now = datetime.now(timezone.utc)
+                past = now - timedelta(days=days_back)
                 
+                params = {
+                    "orgId": ORG_ID,
+                    "startTime": past.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z",
+                    "endTime": now.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z",
+                    "max": max_results
+                }
+                
+                async with httpx.AsyncClient(timeout=15) as http:
+                    r = await http.get(
+                        "https://webexapis.com/v1/admin/securityAudit/events",
+                        headers=HEADERS,
+                        params=params
+                    )
+                if r.status_code != 200:
+                    return {"error": f"HTTP {r.status_code}: {r.text}"}
+                
+                events = r.json().get("items", [])
+                return {
+                    "count": len(events),
+                    "events": [
+                        {
+                            "id": e.get("id"),
+                            "created": e.get("created"),
+                            "actorEmail": e.get("data", {}).get("actorEmail"),
+                            "clientIP": e.get("data", {}).get("clientIP"),
+                            "eventCategory": e.get("data", {}).get("eventCategory"),
+                            "eventDescription": e.get("data", {}).get("eventDescription"),
+                        }
+                        for e in events
+                    ]
+                }
+            
             @mcp.tool()
             async def list_reports() -> dict:
                 """List recent usage and activity reports generated in the organization."""
@@ -1323,7 +1361,7 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
                         for rep in reports
                     ]
                 }
-                
+            
             @mcp.tool()
             async def list_ended_meetings(days_back: int = 7, max_results: int = 10) -> dict:
                 """List meetings that already ended, so their IDs can be used for quality analysis."""
@@ -1355,7 +1393,7 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
                         for m in meetings
                     ]
                 }
-                
+            
             @mcp.tool()
             async def get_meeting_qualities(meeting_id: str) -> dict:
                 """Analytics and diagnostics for an ended meeting. Use the ID from list_ended_meetings."""
@@ -1369,7 +1407,7 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
                     return {"error": f"HTTP {r.status_code}: {r.text}"}
                 
                 return r.json()
-        
+            
             if __name__ == "__main__":
                 log.info("webex-troubleshooting-mcp running on stdio - waiting for a client (Ctrl+C to stop).")
                 try:
@@ -1428,9 +1466,9 @@ In Chat, ask a question that needs **multiple** tools across different servers, 
 
     ![Chat Tools](assets/exercise_5.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-- Ask: "*Check the admin audit events for the last 3 days. Also, list any available reports we have generated.*"
+- Ask: "*Check the last three admin audit events and the last three security audit events for any recent sign-ins, and list any available reports we have generated.*"
 
-    ![Chat Tools](assets/exercise_6.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Chat Tools](assets/exercise_66.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 - Ask: "*Find the most recent meeting that ended and show me its quality data.*"
 
