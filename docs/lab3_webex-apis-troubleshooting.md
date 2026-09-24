@@ -733,7 +733,9 @@ You now know how to call Webex APIs with different methdos (cURL, Bruno, and Pyt
 These are organization-level calls. The official MCP servers you used before act on *a person's* meetings and messages. They do not cover Webex Calling or Control Hub troubleshooting, which is the gap we will fill.
 
 !!! Warning "Important"
-    Your organization also need **[Pro Pack for Control Hub](https://help.webex.com/en-us/article/np3c1rm/Pro-Pack-For-Control-Hub){:target="_blank"}**. That add-on is mandatory for different APIs. Without it, sign-in history, long-range reports, and deep compliance lookback are limited or blocked.
+    Your organization also need **[Pro Pack for Control Hub](https://help.webex.com/en-us/article/np3c1rm/Pro-Pack-For-Control-Hub){:target="_blank"}**. 
+    
+    That add-on is mandatory for different APIs. Without it, sign-in history, long-range reports, and deep compliance lookback are limited or blocked.
 
     Pro-pack is already enabled on this sandbox.
 
@@ -1393,9 +1395,6 @@ This API records who signed in and who signed out **as a user**.
 
     ![Control Hub](./assets/controlhub_4.png){ width="350" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-This lab does not explore this API.
-
-<!--
 1. Create a `GET` request called `Security Audit Events` with the URL `https://webexapis.com/v1/admin/securityAudit/events`.
 2. In the **Params** tab, add and click **Send**:
 
@@ -1406,14 +1405,52 @@ This lab does not explore this API.
     | `endTime` | `2026-09-23T23:59:59.000Z` |
     | `max` | `10` |
 
-    ![Bruno](./assets/bruno_xxx.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Bruno](./assets/bruno_27.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     The useful values sit inside each item's `data` object. To filter, you can add `eventCategories` parameter in your query.
 
     ??? Note "Full response"
         ```json
+        {
+          "items": [
+            {
+              "data": {
+                "actorOrgName": "Troubleshoot and manage your organization with an AI assistant",
+                "targetName": null,
+                "actorManagementRealm": null,
+                "eventDescription": "User Login Attempted",
+                "actorName": "Pod 0",
+                "actorEmail": "pod0@webexone-ai-assistant.wbx.ai",
+                "targetManagementRealm": "collab",
+                "authenticationMethod": "Non-Interactive",
+                "trackingId": "ROUTERGW_23040732-daf6-4a52-8f18-603a555da6ac",
+                "eventStatus": "SUCCESS",
+                "targetType": null,
+                "actorOauthClient": "Ccac0d29c87c41ffd0718bdeb5f01a774c4084739aa4c3fc92181071fa47ce4c0",
+                "targetId": null,
+                "actorUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+                "eventCategory": "LOGINS",
+                "targetTenantUid": "NTVhZDNmYmQtOTU3Ny00MTUxLTkzOWYtZjdhZWNlZjZhZTcy",
+                "actorIp": "2001:420:4919:1300:51fd:d522:b958:88df",
+                "targetOrgId": null,
+                "targetTenantName": "collab-tenant-74983fd5-5c18-45cb-bfcd-507005e05b0f",
+                "actorClientName": "WCIT Client",
+                "actionText": "Pod 0 attempted logging in using client (WCIT Client) and Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36. Login status: SUCCESS.  ",
+                "actorTenantUid": null,
+                "actorTenantName": null,
+                "targetOrgName": null,
+                "failedReason": " "
+              },
+              "created": "2026-09-24T12:25:16.499Z",
+              "actorOrgId": "Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi83NDk4M2ZkNS01YzE4LTQ1Y2ItYmZjZC01MDcwMDVlMDViMGY",
+              "id": "MDNmYmQyMTAtZDM4My00N2Q2LWEzNWMtNThhY2FlMmY3MTRk",
+              "actorId": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS8xOGMyYzQ4OS0yZmVmLTRhMTUtYTRiZC1jYWI3YjY1ZDg0MTY"
+            }
+          ],
+          "totalRecords": 1
+        }
         ```
--->
+
 #### Compliance Events
 
 The compliance API, `GET https://webexapis.com/v1/events` records messages, files, and space membership. It needs a **Compliance officer** role:
