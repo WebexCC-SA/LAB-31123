@@ -1,10 +1,10 @@
-# Lab 2 - Webex APIs
+# Lab 3 - Webex APIs
 
 In the previous section, we enabled our agent to use MCP servers to perform actions on our behalf. The assistant called Webex for you through the official MCP servers, and each of those servers is just a wrapper around Webex API calls.
 
 In this section you will make those API calls yourself. This matters because the official MCP servers cover only a limited set of APIs, and we want to give our agent more tools and possibilities. That is what we will build in the next labs.
 
-## Step 2.1 - Get a Personal Access Token
+## Step 3.1 - Get a Personal Access Token
 
 During the previous lab, you used an **Agentic MCP App token** to perform actions. That is a special token, scoped to execute actions through the MCP servers, and it only works with the official Webex MCP servers. It will not work for the direct API calls in this lab.
 
@@ -24,7 +24,7 @@ For the simplicity of this hands-on lab, we will use your Personal Access Token 
 
     ![Token](./assets/token_7.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-## Step 2.2: Production Architecture (Service Apps & Integrations)
+## Step 3.2: Production Architecture (Service Apps & Integrations)
 
 While a Personal Access Token is perfect for a quick lab, it has a major problem for production: **It expires after 12 hours**. That is not valid for a bot that should keep running forever.
 
@@ -136,7 +136,7 @@ For this lab we skip that process. Everything from here on uses your Personal Ac
         print(response.json()) # Contains the new access_token and refresh_token
         ```
 
-## Step 2.3: Calling Webex APIs
+## Step 3.3: Calling Webex APIs
 
 Now that we have our token, we can start making API calls. The [Webex Developer Portal](https://developer.webex.com/docs/api/v1/){:target="_blank"} provides documentation and ready-to-use code snippets for all APIs. You can select your preferred language (cURL, Python and Node.js) and copy the code directly.
 
@@ -146,7 +146,7 @@ Every Webex API call has the same anatomy: a method, a URL, and an `Authorizatio
 | --- | --- |
 | **cURL** | A quick check from the terminal. No setup, and it is what you paste into a ticket so a colleague can reproduce your result. |
 | **Bruno** | Exploring an API properly: saved requests, the token in an environment variable, and IDs from one response feeding the next. |
-| **Python** | The form an assistant needs. This is the shape your Lab 3 MCP tools take. |
+| **Python** | The form an assistant needs. This is the shape your Lab 4 MCP tools take. |
 
 ### Calling APIs using cURL
 
@@ -484,7 +484,7 @@ First, see where this snippet comes from:
 
     ![Developer](./assets/developer_1.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-3. Navigate to `02_webex_apis/01_list_people.py`. This file contains the request but reading the token from `.env` instead of hardcoding it:
+3. Navigate to `03_webex_apis/01_list_people.py`. This file contains the request but reading the token from `.env` instead of hardcoding it:
 
     ??? Tip "Python Code"
         ```python
@@ -513,7 +513,7 @@ First, see where this snippet comes from:
 
 4. In VS Code, make sure your terminal is in the correct folder:
 
-    * cd 02_webex_apis
+    * cd 03_webex_apis
 
 5. Run the script:
 
@@ -726,7 +726,7 @@ First, see where this snippet comes from:
         }
         ```
 
-## Step 2.4 - Webex APIs for Troubleshooting
+## Step 3.4 - Webex APIs for Troubleshooting
 
 You now know how to call Webex APIs with different methdos (cURL, Bruno, and Python). The rest of this section uses that on the APIs an administrator actually reaches for when something is wrong: platform status, audit events, reports, call history, and meeting quality.
 
@@ -1684,16 +1684,15 @@ Build these in Bruno as new requests in your `WebexOne` collection. If you need 
 
     ??? Solution
 
-        1. Send the `List Ended Meetings` request from Step 2.4 again, with `meetingType=meeting`, `state=ended`, and `max=5`. Copy the `id` of one meeting into your environment as `meetingId`.
+        1. Send the `List Ended Meetings` request from Step 3.4 again, with `meetingType=meeting`, `state=ended`, and `max=5`. Copy the `id` of one meeting into your environment as `meetingId`.
         2. Create a `GET` request called `List Meeting Participants` with the URL `https://webexapis.com/v1/meetingParticipants`, add a `meetingId` parameter of `{{meetingId}}`, and **Send**.
 
         Each entry in `items` is one participant, with their `email`, `displayName`, whether they were the `host`, and their join and leave times. The number of entries is the answer.
 
         Like Meeting Qualities, this API only accepts a meeting that is in progress or already ended, so a scheduled meeting that never ran will fail here too.
-
 -->
 
-## Step 2.5: From API calls to agent tools
+## Step 3.5: From API calls to agent tools
 
 In Bruno you did not answer a troubleshooting question with a single request. You listed locations, copied an `id`, and asked for that location's calling config. You listed ended meetings, then asked for qualities.
 
