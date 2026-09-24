@@ -1,10 +1,10 @@
 # Lab 2 - Agent Skills
 
-In this section, you will use an **Agent Skill** to encode operational expertise — *how* to review Webex meetings thoroughly — separately from MCP tool connectivity,and run it directly inside **VS Code Chat (Agent mode)** with no code.
+In this section, you will use an **Agent Skill** to teach the assistant *how* to review Webex meetings thoroughly. This separates the operational expertise from the MCP tool connectivity, and you can run it directly inside **VS Code Chat (Agent mode)** without writing any code.
 
-Skills aren't just fancy instructions — they're **portable, task-specific workflows** that load only when you need them. Unlike custom instructions, which define coding standards, skills bring scripts, examples, and automation into the mix, making agents truly **action-oriented**.
+Skills aren't just fancy instructions, they're **portable, task-specific workflows** that load only when you need them. Unlike custom instructions that just define coding standards, skills bring scripts, examples, and automation into the mix to make agents truly **action-oriented**.
 
-You will author the skill yourself through the VS Code skills flow rather than copying a file out of the cloned repository. VS Code then writes it to a supported discovery location for you, so the lab works no matter which folder you have open as your workspace.
+Instead of copying a file from the repository, you will create the skill yourself using the VS Code skills flow. VS Code will automatically save it to a supported location, ensuring the lab works regardless of which folder you have open.
 
 ## Skills vs MCP
 
@@ -23,11 +23,11 @@ flowchart TB
     Client --> Webex[Webex Meeting APIs]
 ```
 
-A skill does not add tools. It tells the assistant to **use the tools it already has, more thoroughly** — and tells it what *not* to do.
+A skill doesn't add new tools. Instead, it tells the assistant **how to use the tools it already has more effectively**—and what *not* to do.
 
 ## Skills vs Custom Instructions
 
-If you already use `.github/copilot-instructions.md` or custom instructions in VS Code, you may wonder how skills differ. They serve different purposes:
+If you already use `.github/copilot-instructions.md` or custom instructions in VS Code, you might be wondering how skills are different. They actually serve different purposes:
 
 | Feature      | Custom Instructions                  | Agent Skills                                                                          |
 | ------------ | ------------------------------------ | ------------------------------------------------------------------------------------- |
@@ -36,42 +36,23 @@ If you already use `.github/copilot-instructions.md` or custom instructions in V
 | **Content**  | Instructions only                    | Instructions + scripts + examples + resources                                         |
 | **Standard** | VS Code–specific                     | Open standard ([agentskills.io](https://agentskills.io)) — portable across 30+ agents |
 
-## Step 2.1: Configure the MCP server and enable Agent Skills
+## Step 2.1: Enable Agent Skills
 
-### Configure the Webex Meeting MCP at user scope
-
-Configuring at **user scope** means the tools are available in every VS Code window, regardless of which folder you have open.
-
-1. Open the Command Palette (`Ctrl+Shift+P`).
-2. Run **MCP: Open User Configuration**.
-
-    ![skill_discovery](./assets/lab4/mcpconfig.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-3. Add the Webex Meeting server:
-
-    ```json
-    {
-     "servers": {
-      "webex-meeting": {
-       "type": "stdio",
-       "command": "npx",
-       "args": [
-        "-y",
-        "mcp-remote",
-        "https://mcp.webexapis.com/mcp/webex-meeting",
-        "--header",
-        "Authorization: Bearer WEBEX_MCP_TOKEN"
-       ]
-      }
-     }
-    }
-    ```
+!!! Note "Prerequisite: Webex Meeting MCP"
+    This lab relies on the **Webex Meeting MCP server** you configured before.
+    
+    Before proceeding, make sure it is still present in your `mcp.json` file and running.
 
 ### Enable Agent Skills
 
-1. Open **Settings** (`Ctrl+,`) and search for `chat.useAgentSkills`.
+Skills should be enabled already, but you can check it doing the following:
+
+1. Open **Settings** (`Ctrl+,`) and search for `chat.useAgentSkills`:
+
+    ![Skills](./assets/skill_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
 2. **Enable** the checkbox if it is not already enabled.
-3. Reload the window: `Ctrl+Shift+P` → `Developer: Reload Window`.
+3. If you had to enable them, reload the window: `Ctrl+Shift+P` → `Developer: Reload Window`.
 
 ### Where skills live
 
@@ -83,44 +64,43 @@ VS Code automatically scans these project directories for skills ([VS Code docs]
 | `.github/skills/` | GitHub convention                  |
 | `.claude/skills/` | Anthropic convention               |
 
-## Step 2.2: Create the skill
+## Step 2.2: Create a skill
 
-A skill is a folder containing a `SKILL.md` file — an open standard defined by
-[agentskills.io](https://agentskills.io/home).
+A skill is simply a folder containing a `SKILL.md` file, following an open standard defined by [agentskills.io](https://agentskills.io/home).
 
-1. In the Chat view, type `/skills` and press Enter to open the **Configure
-   Skills** menu.
+1. In the Chat view, type `/skills` and press Enter:
 
-   ![skill_discovery](./assets/lab4/createskill1.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![skill_discovery](./assets/lab2/createskill1.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-   ![skill_discovery](./assets/lab4/createskill2.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+2. Select **+ New Skill...**:
 
-   ![skill_discovery](./assets/lab4/createskill3.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![skill_discovery](./assets/lab2/createskill2.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-2. Choose to create a **New Skill**, pick **User** scope, and name it exactly:
+3. And select the default option **~/.agents/skills (default) Workspace**:
 
-    ```text
-    meeting-review
-    ```
-    
-    ![skill_discovery](./assets/lab4/createskill4.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-    
-    !!! Warning
-        The `name` in the front matter must match the folder name exactly, using only lowercase letters, numbers, and hyphens. A mismatch, or a namespace prefix like `myorg/meeting-review`, makes the skill **silently fail to load** — no error, it simply never appears.
+    ![skill_discovery](./assets/lab2/createskill3.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-3. Replace the generated contents with the skill below, in full.
+4. Name the new skill `meeting-review`:
+
+    ![Skills](./assets/skill_2.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        
+5. This will create a new file for you:
+
+    ![Skills](./assets/skill_3.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+6. Replace the generated contents with the skill below:
 
     ````markdown
     ---
     name: meeting-review
     description: >-
       Use when the user asks to prepare for, get ready for, review readiness of, or
-      check what is missing from their meetings. Triggers on phrasings like "help me
-      prepare", "am I ready for", "what do I need before", "review my meetings",
-      "check my schedule for gaps". Checks each upcoming meeting for agenda,
-      invitees, and conflicts, then produces a preparation checklist. Not for a
-      plain list of meetings with no readiness question.
-    argument-hint: [person or time range]
+      check what is missing from their meetings. Triggers on phrases like 'help me
+      prepare', 'am I ready for', 'what do I need before', 'review my meetings', or
+      'check my schedule for gaps'. This tool evaluates upcoming meetings for agendas,
+      invitees, and conflicts to produce a preparation checklist. Do NOT use this for
+      plain requests to list meetings without a readiness or preparation context.
+    argument-hint: "person or time range"
     ---
     
     # Meeting Review
@@ -139,8 +119,10 @@ A skill is a folder containing a `SKILL.md` file — an open standard defined by
     
     ## Procedure
     
-    1. Call `webex-list-meetings` with `state="scheduled"` and
-       `includeParticipants=true`. Pass `from`/`to` when the user gave a time range.
+    1. Call `webex-list-meetings` with `state="scheduled"` and 
+    `includeParticipants=true`. Pass `from`/`to` when the user gives a time range.
+    If the user does not specify a time frame, default to checking meetings for
+    the next 24 hours.
     2. Check all three dimensions for every meeting:
        - **Agenda** — is the `agenda` field non-empty? A meeting without one wastes
          its own first ten minutes, so this is the highest-value flag.
@@ -153,38 +135,39 @@ A skill is a folder containing a `SKILL.md` file — an open standard defined by
     
     ## Output template
     
-    ```
-    MEETING READINESS -- <person or range>
+    ```text
+    MEETING READINESS -- <person or time range>
     ======================================
     
+    [Repeat the block below for each meeting]
     <title> | <day HH:MM> | <duration>
       Agenda:    <present / NO AGENDA>
       Invitees:  <N invited / NO INVITEES>
       Conflict:  <none / CONFLICT with "<other title>">
+    [End repeat]
     
     PREPARATION CHECKLIST
     1. <most urgent concrete action>
     2. <next action>
     ======================================
-    ````
-    
-    ## Gotchas
-    
-    - `webex-create-meeting` has no `agenda` parameter. Every newly scheduled
-      meeting starts with no agenda. Set one afterwards with `webex-update-meeting`,
-      which does accept `agenda`. If a user asks to schedule a meeting with an
-      agenda, say that agenda cannot be set at creation and propose the follow-up
-      call rather than implying it was set.
-    - `webex-list-meetings` only returns invitees when `includeParticipants=true`.
-      If that field is absent from the response, the data was not requested — report
-      it as unknown and re-query. Do not report `NO INVITEES`.
-    - Report only what the tools return. Never infer an attendee list or agenda
-      content from a meeting title.
-    - Never create, edit, or save a local file. This skill produces chat output
-      only. Meeting data belongs in Webex, not on disk. If a tool cannot store a
-      value the user asked for, report the limitation and stop — do not work around
-      it with a file.
     ```
+    
+    ## Gotchas & Constraints
+    
+    - **Creating Agendas:** The `webex-create-meeting` tool has no `agenda` parameter;
+    newly scheduled meetings start with no agenda. If a user asks to schedule a meeting
+    with an agenda, create the meeting first, then immediately call `webex-update-meeting`
+    to set the agenda. Do not imply the agenda was set during creation.
+    - **Missing Invitee Data:** `webex-list-meetings` only returns invitees when
+    `includeParticipants=true`. If the invitee field is absent from the tool response,
+    the data was not requested. Re-query the tool. Do NOT report `NO INVITEES` unless
+    the field is explicitly present and empty.
+    - **No Hallucination:** Report only what the tools return. Never infer an attendee
+    list or agenda content from a meeting title.
+    - **No Local Storage:** Never create, edit, or save a local file. This skill produces
+    chat output only. Meeting data belongs in Webex, not on disk. If a tool cannot store
+    a value the user asked for, report the limitation and stop.
+    ````
 
 4. **Save** the file.
 5. **Reload the window**: `Ctrl+Shift+P` → `Developer: Reload Window`.
@@ -194,21 +177,20 @@ A skill is a folder containing a `SKILL.md` file — an open standard defined by
 
 ### Reading the front matter
 
-Two rules from the [agentskills.io specification](https://agentskills.io/specification):
+Here are two important rules from the [agentskills.io specification](https://agentskills.io/specification):
 
 - `name` must be lowercase letters, numbers, and hyphens, and **match the folder name**.
 - `description` says what the skill does **and when to use it** — this is the only part the agent sees until the skill activates, so it is what decides whether the skill loads at all.
 
-Notice that the description leads with the phrasings *you* would actually type ("help me prepare", "am I ready for") and ends with a narrow exclusion. That is deliberate, and Step 2.6 shows why.
+Notice how the description starts with phrases *you* would actually type (like "help me prepare" or "am I ready for") and ends with a specific exclusion. This is deliberate, and you'll see why in Step 2.6.
 
 ## Step 2.3: Verify discovery
 
-Do **not** ask the agent "what skills are available?" — a model with no skill loaded will answer that question plausibly anyway. Check observable state instead.
+Do **not** ask the agent "what skills are available?", a model without any skills loaded might just make up a plausible answer. Instead, check the observable state.
 
 Type `/` in the chat input. `meeting-review` should appear in the list.
 
-![skill_discovery](./assets/lab4/skill_discovery.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
+![skill_discovery](./assets/lab2/skill_discovery.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 !!! Note "If `meeting-review` does not appear"
     - Confirm `chat.useAgentSkills` is enabled (Step 2.1).
@@ -218,64 +200,55 @@ Type `/` in the chat input. `meeting-review` should appear in the list.
 
 ## Step 2.4: Progressive disclosure
 
-Agent Skills load in three stages so many skills can be available cheaply:
+Agent Skills load in three stages, allowing many skills to be available without consuming too many resources:
 
-1. **Discovery** — at startup, the agent loads only each skill's name and description (~100 tokens).
-2. **Activation** — when the task matches the description, or when you type `/meeting-review`, it reads the full `SKILL.md` body.
-3. **Execution** — it follows the procedure, calling MCP tools as instructed.
+1. **Discovery**: At startup, the agent loads only each skill's name and description (~100 tokens).
+2. **Activation**: When the task matches the description, or when you type `/meeting-review`, it reads the full `SKILL.md` body.
+3. **Execution**: It follows the procedure, and calling MCP tools as instructed.
 
-Full instructions load only when needed. This is why the `description` field matters so much: it is the only part competing for the model's attention in every other conversation.
+!!! Warning "Important"
+    The full instructions only load when needed. This is why the `description` field is so important: it's the only part the model sees when deciding whether to use the skill in a conversation.
 
-## Step 2.5: Schedule meetings (data setup)
+## Step 2.5: Schedule meetings
 
-Schedule two meetings so there is data to review. Neither will have an agenda — `webex-create-meeting` does not expose an agenda parameter. That limitation is intentional for this exercise: the skill will flag the gap.
+Let's schedule two meetings so we have some data to review. Neither meeting will have an agenda because `webex-create-meeting` doesn't have an agenda parameter. This limitation is intentional for this exercise, as the skill will flag this missing information.
 
-1. Open **Chat** (`Ctrl+Shift+P` → `Chat: Open Chat (Agent)`).
-2. Ensure the **Webex Meeting MCP** is started.
-3. Schedule the first meeting:
+1. Schedule the first meeting:
 
-    ```text
-    Schedule a meeting with admin@webexone-ai-assistant.wbx.ai tomorrow at 10am.
-    Title: Planning Session.
-    ```
+- Ask: *"Schedule a meeting with admin@webexone-ai-assistant.wbx.ai tomorrow at 10am. Title: Planning Session."*
 
-4. Schedule the second meeting:
+    ![Skills](./assets/skill_3.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-    ```text
-    Schedule a meeting with admin@webexone-ai-assistant.wbx.ai tomorrow at 2pm.
-    Title: Architecture Review.
-    ```
+2. Schedule the second meeting:
+
+- Ask: *"Schedule a meeting with admin@webexone-ai-assistant.wbx.ai tomorrow at 2pm. Title: Architecture Review."*
+
+    ![Skills](./assets/skill_4.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 You now have two upcoming meetings, both without agendas.
 
 ## Step 2.6: With and without the skill
 
-### 2.6a — A plain listing question
+### A plain listing question
 
-Ask:
-
-```text
-What webex meetings do I have scheduled?
-```
+- Ask: *"What webex meetings do I have scheduled."*
 
 The agent lists them — title, time, host. No flags, no readiness check, no actions.
 
 The skill should **not** activate here, and that is by design: the last line of its description says it is "not for a plain list of meetings with no readiness question." Expand **References** to confirm `meeting-review` was not loaded.
 
-### 2.6b — A readiness question
+### A readiness question
 
-Now ask for the same data a different way:
+Now, try it  for the same data a different way:
 
-```text
-Help me prepare for my upcoming webex meetings.
-```
+- Ask: *"Help me prepare for my upcoming webex meetings."*
 
 This phrasing matches the description, so a capable model loads the skill on its own. Expand **References** to check whether it did.
 
 !!! Note "If the skill did not load"
     Automatic activation is a judgment call the model makes — it is not a rule VS Code enforces. Smaller models rarely load skills proactively, especially when a direct tool call would also answer the question. This is normal.
 
-### 2.6c — Force it
+### Force it
 
 ```text
 /meeting-review
@@ -335,9 +308,7 @@ A skill can tell the agent what to do, how to do it, and — just as importantly
 
 Ask the agent to fix the gaps it just reported:
 
-```text
-Fix the missing agendas on my upcoming webex meetings.
-```
+- Ask: *"Fix the missing agendas on my upcoming webex meetings."*
 
 Watch what it does. Most agents will **write agenda text they invented** and apply it immediately with `webex-update-meeting`, without showing you the text first. Your meetings are now updated with wording you never approved.
 
@@ -363,9 +334,7 @@ Save the file, then **reload the window** (`Ctrl+Shift+P` → `Developer: Reload
 
 Ask exactly the same question again:
 
-```text
-Fix the missing agendas on my upcoming webex meetings.
-```
+- Ask: *"Fix the missing agendas on my upcoming webex meetings."*
 
 The agent now presents draft agenda text and **waits for your approval** before touching Webex. Approve it, and confirm the agenda is set.
 
@@ -375,10 +344,7 @@ You just changed agent behaviour with one line of markdown. No code.
 
 The skill's Gotchas already record that `webex-create-meeting` has no agenda parameter. Test it:
 
-```text
-Schedule a meeting tomorrow at 4pm titled Budget Review,
-with the agenda: review Q4 spend.
-```
+- Ask: *"Schedule a meeting tomorrow at 4pm titled Budget Review, with the agenda: review Q4 spend."*
 
 The agent should tell you the agenda cannot be set at creation time and propose the `webex-update-meeting` follow-up — rather than quietly implying it was set. Without that gotcha, agents routinely paper over this kind of API gap.
 
