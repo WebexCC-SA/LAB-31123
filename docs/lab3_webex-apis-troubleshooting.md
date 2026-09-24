@@ -988,7 +988,7 @@ When something changes in the organization, Webex keeps a record. There are thre
 | [Security Audit Events](https://developer.webex.com/admin/docs/api/v1/security-audit-events){:target="_blank"} | User sign-in and sign-out | Full admin |
 | [Compliance Events](https://developer.webex.com/compliance/docs/api/v1/events){:target="_blank"} | Messages, files, and space membership | **Compliance Officer** |
 
-In this lab, we will be using the Admin Audit Events API.
+In this lab, we will be using both the Admin Audit Events and Security Audit Events APIs.
 
 #### Admin Audit Events
 
