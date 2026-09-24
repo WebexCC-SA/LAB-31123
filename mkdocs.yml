@@ -84,9 +84,9 @@ nav:
       - Overview: overview.md
       - Getting Started: getting_started.md
       - Lab 1 - Webex MCP Servers in Your IDE: lab1_webex-mcp-in-ide.md
-      - Lab 2 - Webex APIs: lab2_webex-apis-troubleshooting.md
-      - Lab 3 - Build MCP Server: lab3_custom-mcp-server.md
-      - Lab 4 - Agent Skills: lab4_agent-skills.md
+      - Lab 2 - Agent Skills: lab2_agent-skills.md
+      - Lab 3 - Webex APIs: lab3_webex-apis-troubleshooting.md
+      - Lab 4 - Build MCP Server: lab4_custom-mcp-server.md
       - Lab 5 - Integrate an AI Assistant with a Webex Bot: lab5_bot-integration.md
       - Lab 6 - MCP Servers in AI Assistant: lab6_mcp.md
       - Lab 7 - Skills in AI Assistant: lab7_skills.md
