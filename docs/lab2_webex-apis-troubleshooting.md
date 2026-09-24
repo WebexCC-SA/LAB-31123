@@ -728,9 +728,14 @@ First, see where this snippet comes from:
 
 ## Step 2.4 - Webex APIs for Troubleshooting
 
-You now know how to call Webex APIs with different methdos (cURL, Bruno, and Python). The rest of this section uses that on the APIs an administrator actually reaches for when something is wrong: platform status, audit events, reports, devices, and meeting quality.
+You now know how to call Webex APIs with different methdos (cURL, Bruno, and Python). The rest of this section uses that on the APIs an administrator actually reaches for when something is wrong: platform status, audit events, reports, call history, and meeting quality.
 
 These are organization-level calls. The official MCP servers you used before act on *a person's* meetings and messages. They do not cover Webex Calling or Control Hub troubleshooting, which is the gap we will fill.
+
+!!! Warning "Important"
+    Your organization also need **[Pro Pack for Control Hub](https://help.webex.com/en-us/article/np3c1rm/Pro-Pack-For-Control-Hub){:target="_blank"}**. That add-on is mandatory for different APIs. Without it, sign-in history, long-range reports, and deep compliance lookback are limited or blocked.
+
+    Pro-pack is already enabled on this sandbox.
 
 From here on we work in Bruno, adding each call to your `WebexOne` collection so you can keep the requests and reuse the IDs they return.
 
@@ -977,18 +982,18 @@ When something changes in the organization, Webex keeps a record. There are thre
 
 | API | What it records | Who can call it in this lab |
 | --- | --- | --- |
-| [Admin Audit Events](https://developer.webex.com/admin/docs/api/v1/admin-audit-events){:target="_blank"} | Control Hub configuration changes (a setting was edited, a user was created) | Full admin |
+| [Admin Audit Events](https://developer.webex.com/admin/docs/api/v1/admin-audit-events){:target="_blank"} | Control Hub configuration changes | Full admin |
 | [Security Audit Events](https://developer.webex.com/admin/docs/api/v1/security-audit-events){:target="_blank"} | User sign-in and sign-out | Full admin |
 | [Compliance Events](https://developer.webex.com/compliance/docs/api/v1/events){:target="_blank"} | Messages, files, and space membership | **Compliance Officer** |
 
-You will test the two that a full admin can reach.
+In this lab, we will be using the Admin Audit Events API.
 
 #### Admin Audit Events
 
 Admin Audit Events will not accept a bare URL: `orgId`, `from`, and `to` are all mandatory.
 
 1. Create a `GET` request called `Admin Audit Events` with the URL `https://webexapis.com/v1/adminAudit/events`.
-2. In the **Params** tab, add:
+2. In the **Params** tab, add and click **Send**:
 
     | Parameter | Value |
     | --- | --- |
@@ -999,14 +1004,400 @@ Admin Audit Events will not accept a bare URL: `orgId`, `from`, and `to` are all
 
     ![Bruno](./assets/bruno_16.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-3. **Send**, then expand one item in the response.
+    The useful values sit inside each item's `data` object. To filter, you can add `eventCategories` parameter in your query.
+
+    ??? Note "Full response"
+        ```json
+        {
+          "items": [
+            {
+              "data": {
+                "actorOrgName": "Troubleshoot and manage your organization with an AI assistant",
+                "isInternal": null,
+                "targetName": "Events",
+                "configData": null,
+                "eventDescription": "Service App authorization is changed by an admin",
+                "actorName": "Pod 0",
+                "actorEmail": "pod0@webexone-ai-assistant.wbx.ai",
+                "configType": null,
+                "trackingId": "ATLAS_0519fd38-acad-475d-b60a-137d397fbd8e_4",
+                "serviceAppScopes": [
+                  "spark:kms",
+                  "audit:events_read"
+                ],
+                "serviceAppSites": [
+                  "No sites configured"
+                ],
+                "configOperationType": null,
+                "targetType": "INTEGRATION",
+                "targetId": "Y2lzY29zcGFyazovL3VzL0FQUExJQ0FUSU9OL0M5MGZhYjUzYTdhOGMwZGZhZWY1OTViZGIwNjI3YzdlNzAwYmI1NTI4NjY0YTVhYWMxMmM3YTYwYjIwNDNiMjg4",
+                "actorUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+                "eventCategory": "INTEGRATION",
+                "displayName": null,
+                "actorIp": "173.38.220.36",
+                "targetOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+                "authorizedStatus": "AUTHORIZED",
+                "actionText": "The admin Pod 0 with email pod0@webexone-ai-assistant.wbx.ai AUTHORIZED the Service App Events: Y2lzY29zcGFyazovL3VzL0FQUExJQ0FUSU9OL0M5MGZhYjUzYTdhOGMwZGZhZWY1OTViZGIwNjI3YzdlNzAwYmI1NTI4NjY0YTVhYWMxMmM3YTYwYjIwNDNiMjg4 with the scopes [spark:kms, audit:events_read] and sites [No sites configured] on 2026-09-23T13:03:31.431675854Z[UTC]",
+                "configId": null,
+                "targetOrgName": "Troubleshoot and manage your organization with an AI assistant"
+              },
+              "created": "2026-09-23T13:03:31.431Z",
+              "actorOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+              "id": "MjEzOWM1YTItMzE4ZS00MjllLWJhZGMtYWMxNWRjYTdhM2Zh",
+              "actorId": "MThjMmM0ODktMmZlZi00YTE1LWE0YmQtY2FiN2I2NWQ4NDE2"
+            },
+            {
+              "data": {
+                "actorOrgName": "Troubleshoot and manage your organization with an AI assistant",
+                "isInternal": null,
+                "targetName": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+                "configData": null,
+                "actorManagementRealm": null,
+                "eventDescription": "An Admin logged in",
+                "actorName": "Pod 0",
+                "actorEmail": "pod0@webexone-ai-assistant.wbx.ai",
+                "targetManagementRealm": null,
+                "adminRoles": [
+                  "User",
+                  "Full_Admin",
+                  "id_full_admin"
+                ],
+                "configType": null,
+                "trackingId": "ATLAS_fdfcb73e-2be4-4b93-b7f3-76c73e4799ff_4",
+                "configOperationType": null,
+                "targetType": "ORG",
+                "targetId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+                "actorUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+                "eventCategory": "LOGINS",
+                "displayName": null,
+                "targetTenantUid": null,
+                "actorIp": "173.38.220.36",
+                "targetOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+                "targetTenantName": null,
+                "actionText": "Pod 0 logged into organization 74983fd5-5c18-45cb-bfcd-507005e05b0f.",
+                "actorTenantUid": null,
+                "actorTenantName": null,
+                "configId": null,
+                "targetOrgName": "Troubleshoot and manage your organization with an AI assistant"
+              },
+              "created": "2026-09-23T12:13:50.759Z",
+              "actorOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+              "id": "ZDUyMTI3NjgtYzRjYy00NDM0LWJhNDItYzZkNjE1ZmM1Njli",
+              "actorId": "MThjMmM0ODktMmZlZi00YTE1LWE0YmQtY2FiN2I2NWQ4NDE2"
+            },
+            {
+              "data": {
+                "isInternal": null,
+                "configData": null,
+                "actorName": "pod0@webexone-ai-assistant.wbx.ai",
+                "targetManagementRealm": null,
+                "configType": null,
+                "eventStatus": "SUCCESS",
+                "configOperationType": null,
+                "actorUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+                "displayName": null,
+                "actionClientId": "C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec",
+                "actorIp": "2001:420:4919:1300:51fd:d522:b958:88df",
+                "targetOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+                "actorTenantUid": null,
+                "configId": null,
+                "actorOrgName": "Troubleshoot and manage your organization with an AI assistant",
+                "targetName": "Troubleshoot and manage your organization with an AI assistant",
+                "actorManagementRealm": null,
+                "eventDescription": "User Logout Attempted",
+                "actorEmail": "pod0@webexone-ai-assistant.wbx.ai",
+                "trackingId": "ATLAS_57caf018-4a70-4a5f-93ff-34591fc83d9b_162",
+                "actionClientName": "Webex Admin Portal",
+                "targetType": "PERSON",
+                "targetId": "MThjMmM0ODktMmZlZi00YTE1LWE0YmQtY2FiN2I2NWQ4NDE2",
+                "eventCategory": "LOGOUT",
+                "targetTenantUid": null,
+                "targetTenantName": null,
+                "actionText": "pod0@webexone-ai-assistant.wbx.ai attempted to log out from Webex Admin Portal. Logout status: SUCCESS.  ",
+                "actorTenantName": null,
+                "targetOrgName": "Troubleshoot and manage your organization with an AI assistant",
+                "failedReason": " "
+              },
+              "actorOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+              "actorId": "MThjMmM0ODktMmZlZi00YTE1LWE0YmQtY2FiN2I2NWQ4NDE2",
+              "created": "2026-09-23T12:13:31.229Z",
+              "id": "Mjc2NmRiMDAtNzk4ZS00MTQ3LWFmZDgtNWNlYWQ3YzVhNmJh"
+            },
+            {
+              "data": {
+                "isInternal": null,
+                "configData": null,
+                "operationType": "CREATE",
+                "actorName": "Pod 0",
+                "targetManagementRealm": null,
+                "configType": null,
+                "configOperationType": null,
+                "actorUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+                "displayName": null,
+                "actorIp": "2001:420:4919:1300:51fd:d522:b958:88df",
+                "targetOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+                "actorTenantUid": null,
+                "configId": null,
+                "actorOrgName": "Troubleshoot and manage your organization with an AI assistant",
+                "targetName": "Troubleshoot and manage your organization with an AI assistant",
+                "actorManagementRealm": null,
+                "eventDescription": "An org setting was created or updated.",
+                "actorEmail": "pod0@webexone-ai-assistant.wbx.ai",
+                "settingKey": "sign-in-audit",
+                "settingName": "Sign In Audit Setting",
+                "settingValue": "true",
+                "trackingId": "ATLAS_57caf018-4a70-4a5f-93ff-34591fc83d9b_158",
+                "previousValue": "Null",
+                "targetType": "ORG",
+                "targetId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+                "eventCategory": "ORG_SETTINGS",
+                "targetTenantUid": null,
+                "targetTenantName": null,
+                "actionText": "Pod 0 has modified the value of setting Sign In Audit Setting for ORG \"Troubleshoot and manage your organization with an AI assistant\". New value = true, Previous value = Null.",
+                "entityType": "ORG",
+                "actorTenantName": null,
+                "targetOrgName": "Troubleshoot and manage your organization with an AI assistant"
+              },
+              "actorOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+              "actorId": "MThjMmM0ODktMmZlZi00YTE1LWE0YmQtY2FiN2I2NWQ4NDE2",
+              "created": "2026-09-23T12:09:39.867Z",
+              "id": "ODQ0ZGQ5ZTQtMmEyZi00YzU1LWFhZDktMzFhNzJhMzY3ZWI5"
+            },
+            {
+              "data": {
+                "actorOrgName": "Troubleshoot and manage your organization with an AI assistant",
+                "isInternal": null,
+                "targetName": "Using Admin Name: Pod 0",
+                "configData": null,
+                "eventDescription": "User's token was revoked by an Admin.",
+                "actorName": "Pod 0",
+                "actorEmail": "pod0@webexone-ai-assistant.wbx.ai",
+                "clientId": "No Client Id",
+                "tokenId": "Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL0FVVEhPUklaQVRJT04vYTZlNzk3MDUtNzg2My00MTZjLWE0ZDYtY2U5Y2E1NzE0Yzkz",
+                "configType": null,
+                "trackingId": "ROUTERGW_9563aade-8852-48d7-ad01-9d168ebe5077_0",
+                "configOperationType": null,
+                "targetType": "PERSON",
+                "targetId": "Using Admin Id: 18c2c489-2fef-4a15-a4bd-cab7b65d8416",
+                "actorUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+                "eventCategory": "USERS",
+                "displayName": null,
+                "actorIp": "170.72.250.110",
+                "targetOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+                "actionText": "Pod 0 revoked Using Admin Id: 18c2c489-2fef-4a15-a4bd-cab7b65d8416's Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL0FVVEhPUklaQVRJT04vYTZlNzk3MDUtNzg2My00MTZjLWE0ZDYtY2U5Y2E1NzE0Yzkz token belonging to 74983fd5-5c18-45cb-bfcd-507005e05b0f org with client_id No Client Id",
+                "configId": null,
+                "targetOrgName": "Troubleshoot and manage your organization with an AI assistant"
+              },
+              "created": "2026-09-23T11:51:09.026Z",
+              "actorOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+              "id": "OTMzNmFhZWEtMDMwYi00MWUxLTg5MDEtMmYwYTljMGRiZDhh",
+              "actorId": "MThjMmM0ODktMmZlZi00YTE1LWE0YmQtY2FiN2I2NWQ4NDE2"
+            },
+            {
+              "data": {
+                "isInternal": null,
+                "configData": null,
+                "actorName": "Pod 0",
+                "targetManagementRealm": "collab",
+                "changedAttributes": [
+                  "userPreferences"
+                ],
+                "configType": null,
+                "configOperationType": null,
+                "actorUserAgent": "NoUserAgentAvailableBot/0.1 (+http://www.cisco.com)",
+                "displayName": null,
+                "actorClientId": "C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec",
+                "actorIp": "2001:420:4919:1300:51fd:d522:b958:88df",
+                "targetOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+                "actorTenantUid": null,
+                "configId": null,
+                "actorOrgName": "Troubleshoot and manage your organization with an AI assistant",
+                "targetName": "Pod 0",
+                "actorManagementRealm": null,
+                "changeDetailId": "297079186",
+                "eventDescription": "User was updated",
+                "actorEmail": "pod0@webexone-ai-assistant.wbx.ai",
+                "trackingId": "ATLAS_359f8596-582f-49ec-8735-55351dbd6265_41",
+                "targetType": "PERSON",
+                "targetId": "MThjMmM0ODktMmZlZi00YTE1LWE0YmQtY2FiN2I2NWQ4NDE2",
+                "eventCategory": "WEBEX_IDENTITY",
+                "targetTenantUid": null,
+                "targetTenantName": null,
+                "actorClientName": "Webex Admin Portal",
+                "actionText": "Pod 0 changed user Pod 0, the changed attributes are [userPreferences]. The change source is Webex Admin Portal. The change detail ID 297079186.",
+                "actorTenantName": null,
+                "targetOrgName": "Troubleshoot and manage your organization with an AI assistant"
+              },
+              "actorOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+              "actorId": "MThjMmM0ODktMmZlZi00YTE1LWE0YmQtY2FiN2I2NWQ4NDE2",
+              "created": "2026-09-23T11:48:10.200Z",
+              "id": "NjU5OTRhZTItMDIxNC00NTYyLWFkZWQtOTM1ZmQzN2Q3YTgy"
+            },
+            {
+              "data": {
+                "isInternal": null,
+                "configData": null,
+                "operationType": "CREATE",
+                "actorName": "Pod 0",
+                "targetManagementRealm": null,
+                "configType": null,
+                "configOperationType": null,
+                "actorUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+                "displayName": null,
+                "actorIp": "2001:420:4919:1300:51fd:d522:b958:88df",
+                "targetOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+                "actorTenantUid": null,
+                "configId": null,
+                "actorOrgName": "Troubleshoot and manage your organization with an AI assistant",
+                "targetName": "Pod 0",
+                "actorManagementRealm": null,
+                "eventDescription": "An org setting was created or updated.",
+                "actorEmail": "pod0@webexone-ai-assistant.wbx.ai",
+                "settingKey": "terms-of-service-user-info",
+                "settingName": "terms-of-service-user-info",
+                "settingValue": "{\"acceptedDateTimestamp\":\"2026-09-23 13\\u003A48\\u003A07\",\"tosVersion\":\"0.0.0\"}",
+                "trackingId": "ATLAS_359f8596-582f-49ec-8735-55351dbd6265_40",
+                "previousValue": "Null",
+                "targetType": "PERSON",
+                "targetId": "MThjMmM0ODktMmZlZi00YTE1LWE0YmQtY2FiN2I2NWQ4NDE2",
+                "eventCategory": "ORG_SETTINGS",
+                "targetTenantUid": null,
+                "targetTenantName": null,
+                "actionText": "Pod 0 has modified the value of setting terms-of-service-user-info for USER \"Pod 0\". New value = {\"acceptedDateTimestamp\":\"2026-09-23 13\\u003A48\\u003A07\",\"tosVersion\":\"0.0.0\"}, Previous value = Null.",
+                "entityType": "USER",
+                "actorTenantName": null,
+                "targetOrgName": "Troubleshoot and manage your organization with an AI assistant"
+              },
+              "actorOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+              "actorId": "MThjMmM0ODktMmZlZi00YTE1LWE0YmQtY2FiN2I2NWQ4NDE2",
+              "created": "2026-09-23T11:48:08.319Z",
+              "id": "MTBhNzEzYTYtYzAzZS00NzU1LWI1NDMtZWJiYjI3NDdiOGVh"
+            },
+            {
+              "data": {
+                "actorOrgName": "Troubleshoot and manage your organization with an AI assistant",
+                "isInternal": null,
+                "targetName": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+                "configData": null,
+                "actorManagementRealm": null,
+                "eventDescription": "An Admin logged in",
+                "actorName": "Pod 0",
+                "actorEmail": "pod0@webexone-ai-assistant.wbx.ai",
+                "targetManagementRealm": null,
+                "adminRoles": [
+                  "User",
+                  "Full_Admin",
+                  "id_full_admin"
+                ],
+                "configType": null,
+                "trackingId": "ATLAS_d84eac32-24b4-42c7-87b1-6650e775e47a_4",
+                "configOperationType": null,
+                "targetType": "ORG",
+                "targetId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+                "actorUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+                "eventCategory": "LOGINS",
+                "displayName": null,
+                "targetTenantUid": null,
+                "actorIp": "2001:420:4919:1300:51fd:d522:b958:88df",
+                "targetOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+                "targetTenantName": null,
+                "actionText": "Pod 0 logged into organization 74983fd5-5c18-45cb-bfcd-507005e05b0f.",
+                "actorTenantUid": null,
+                "actorTenantName": null,
+                "configId": null,
+                "targetOrgName": "Troubleshoot and manage your organization with an AI assistant"
+              },
+              "created": "2026-09-23T11:47:58.533Z",
+              "actorOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+              "id": "ZGYwMjBiYWYtM2I1YS00MjFlLWJmMDQtYThhZDUxMWMwZmNl",
+              "actorId": "MThjMmM0ODktMmZlZi00YTE1LWE0YmQtY2FiN2I2NWQ4NDE2"
+            },
+            {
+              "data": {
+                "isInternal": null,
+                "configData": null,
+                "actorName": "admin@webexone-ai-assistant.wbx.ai",
+                "targetManagementRealm": null,
+                "configType": null,
+                "eventStatus": "SUCCESS",
+                "configOperationType": null,
+                "actorUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+                "displayName": null,
+                "actionClientId": "C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec",
+                "actorIp": "2001:420:4919:1300:51fd:d522:b958:88df",
+                "targetOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+                "actorTenantUid": null,
+                "configId": null,
+                "actorOrgName": "Troubleshoot and manage your organization with an AI assistant",
+                "targetName": "Troubleshoot and manage your organization with an AI assistant",
+                "actorManagementRealm": null,
+                "eventDescription": "User Logout Attempted",
+                "actorEmail": "admin@webexone-ai-assistant.wbx.ai",
+                "trackingId": "ATLAS_f5125c82-7523-4352-b066-148d77a04797_99",
+                "actionClientName": "Webex Admin Portal",
+                "targetType": "PERSON",
+                "targetId": "ZTZhMzBjMjYtYTUwZi00MTgwLTgzODEtMjQyMmRjYTlmMDI3",
+                "eventCategory": "LOGOUT",
+                "targetTenantUid": null,
+                "targetTenantName": null,
+                "actionText": "admin@webexone-ai-assistant.wbx.ai attempted to log out from Webex Admin Portal. Logout status: SUCCESS.  ",
+                "actorTenantName": null,
+                "targetOrgName": "Troubleshoot and manage your organization with an AI assistant",
+                "failedReason": " "
+              },
+              "actorOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+              "actorId": "ZTZhMzBjMjYtYTUwZi00MTgwLTgzODEtMjQyMmRjYTlmMDI3",
+              "created": "2026-09-23T11:47:16.732Z",
+              "id": "YmE4NzdhZmEtMTU5OC00OTkxLTkxMDctYTgwYWY0MzNhOTNj"
+            },
+            {
+              "data": {
+                "actorOrgName": "Troubleshoot and manage your organization with an AI assistant",
+                "isInternal": null,
+                "targetName": "Using Admin Name: Pod 40",
+                "configData": null,
+                "eventDescription": "User's token was revoked by an Admin.",
+                "actorName": "Pod 40",
+                "actorEmail": "pod40@webexone-ai-assistant.wbx.ai",
+                "clientId": "No Client Id",
+                "tokenId": "Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL0FVVEhPUklaQVRJT04vZjc3YmI4YjEtOGIxMi00ODc3LWEzYTItOTE2NjQwZDcyZTlj",
+                "configType": null,
+                "trackingId": "ROUTERGW_957ca3f2-7417-4be5-82f7-7dd64d500b2c_0",
+                "configOperationType": null,
+                "targetType": "PERSON",
+                "targetId": "Using Admin Id: e2ad5d62-8879-4d7c-8a9c-17733f4db1e4",
+                "actorUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+                "eventCategory": "USERS",
+                "displayName": null,
+                "actorIp": "170.72.250.167",
+                "targetOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+                "actionText": "Pod 40 revoked Using Admin Id: e2ad5d62-8879-4d7c-8a9c-17733f4db1e4's Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL0FVVEhPUklaQVRJT04vZjc3YmI4YjEtOGIxMi00ODc3LWEzYTItOTE2NjQwZDcyZTlj token belonging to 74983fd5-5c18-45cb-bfcd-507005e05b0f org with client_id No Client Id",
+                "configId": null,
+                "targetOrgName": "Troubleshoot and manage your organization with an AI assistant"
+              },
+              "created": "2026-09-23T10:08:50.656Z",
+              "actorOrgId": "NzQ5ODNmZDUtNWMxOC00NWNiLWJmY2QtNTA3MDA1ZTA1YjBm",
+              "id": "MmNhZTdlNTUtNDcyYi00OWU1LWEwYTUtOGRiZmZiOGE2ZmI0",
+              "actorId": "ZTJhZDVkNjItODg3OS00ZDdjLThhOWMtMTc3MzNmNGRiMWU0"
+            }
+          ]
+        }
+        ```
 
 #### Security Audit Events
 
-This API records who signed in and who signed out. The query parameters are named differently from Admin Audit: `startTime` and `endTime`, not `from` and `to`.
+This API records who signed in and who signed out **as a user**.
 
+!!! Warning
+    Control Hub needs to have **Allow user authentication data** turned on. That toggle lives under **Organization settings** > **Security**, and the API returns nothing until it is on. See [Log and analyze user sign-ins and sign-outs](https://help.webex.com/article/pf66vg){:target="_blank"}:
+
+    ![Control Hub](./assets/controlhub_4.png){ width="350" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+This lab does not explore this API.
+
+<!--
 1. Create a `GET` request called `Security Audit Events` with the URL `https://webexapis.com/v1/admin/securityAudit/events`.
-2. In the **Params** tab, add:
+2. In the **Params** tab, add and click **Send**:
 
     | Parameter | Value |
     | --- | --- |
@@ -1015,22 +1406,32 @@ This API records who signed in and who signed out. The query parameters are name
     | `endTime` | `2026-09-23T23:59:59.000Z` |
     | `max` | `10` |
 
-3. **Send**. Each item is a login or logout. `actionText`, `actorEmail`, and `actorIp` sit under `data`, the same nesting you just saw on admin audit.
+    ![Bruno](./assets/bruno_xxx.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-!!! Note
-    If the list is empty, Control Hub may have **Allow user authentication data** turned off. That toggle lives under organization settings, and the API returns nothing until it is on. See [Log and analyze user sign-ins and sign-outs](https://help.webex.com/article/pf66vg){:target="_blank"}.
+    The useful values sit inside each item's `data` object. To filter, you can add `eventCategories` parameter in your query.
 
+    ??? Note "Full response"
+        ```json
+        ```
+-->
 #### Compliance Events
 
-Do not build this one. `GET https://webexapis.com/v1/events` is a Compliance Officer API. A full admin token is not enough; the call returns `403`. In production you would assign a separate compliance role, not reuse this administrator.
+The compliance API, `GET https://webexapis.com/v1/events` records messages, files, and space membership. It needs a **Compliance officer** role:
+
+![Control Hub](./assets/controlhub_5.png){ width="350" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+This lab does not explore this API.
 
 ### Reports
 
-Reports are not generated automatically. You create one from a template, then list it.
+Reports are not generated automatically. You need to create one from **template** (the kind of report), you **create** a job, and Webex generates a file. That job has its own `id`. That value is the `reportId` you need for every later call.
 
-Org-level templates (`identifier` is `org`) need only `templateId`, `startDate`, and `endDate`. Meetings templates also need `siteList`. Lab accounts are Meetings site admins, so those work if you pass the site URL (`webexone-ai-assistant-sbx.webex.com`).
+1. Create a `GET` request called `List Report Templates` with the URL `https://webexapis.com/v1/report/templates` and **Send**.
 
-1. Create a `GET` request called `List Report Templates` with the URL `https://webexapis.com/v1/report/templates` and **Send**. Find *User Activity Summary* in the response and note its `Id` (`115`) and its `identifier` (`org`).
+    ![Bruno](./assets/bruno_17.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+    Find *User Activity Summary*. Note two fields on that item: `Id` is `115` (this is the **template** id, not a report yet) and `identifier` is `org` (the report covers the whole organization, so you will not need a meetings site URL).
+
 2. Create a `POST` request called `Create Report` with the URL `https://webexapis.com/v1/reports`. Open the **Body** tab, choose **JSON**, and paste:
 
     ```json
@@ -1041,34 +1442,189 @@ Org-level templates (`identifier` is `org`) need only `templateId`, `startDate`,
     }
     ```
 
-3. **Send**. The response returns the new report `Id`.
-4. Create a `GET` request called `List Reports` with the URL `https://webexapis.com/v1/reports` and **Send**. Your report appears with a status of `waiting` at first, then `done` once Webex has generated it.
+3. **Send**.
+
+    ![Bruno](./assets/bruno_18.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+4. Copy the `id` from the response into your Bruno environment as `reportId` and **Save**. That is the identifier of **this** generated report.
+
+    ![Bruno](./assets/bruno_19.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+5. Create a `GET` request called `Get Report` with the URL `https://webexapis.com/v1/reports/{{reportId}}` and **Send**.
+
+    ![Bruno](./assets/bruno_21.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+6. If report is done, you will get a `downloadURL` that you can use to get the report. You can also download it from Bruno:
+
+    ![Bruno](./assets/bruno_20.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+You can also list every report you have created through the API with `GET https://webexapis.com/v1/reports`.
 
 ### Calling and meetings troubleshooting
 
-| Scenario | API starting point |
-| --- | --- |
-| Call quality investigation | Detailed Call History, Meeting Qualities |
-| Agent / queue issues | Calling Service Settings, Call Routing APIs |
-| Meeting attendance / stats | Meetings, Meeting Participants |
+When a user reports that a phone call failed or a meeting had poor audio, you need data to investigate. The APIs for this are different from the ones we've used so far: they live on a **different host** (`analytics-calling.webexapis.com` or `analytics.webexapis.com`), and they return deep diagnostic records.
 
-A device that "does not work" is a good example of why one call is rarely enough.
+We will look at two of them: **Detailed Call History** for Webex Calling records (CDRs), and **Meeting Qualities** for per-participant meeting diagnostics.
 
-1. Create a `GET` request called `List Devices` with the URL `https://webexapis.com/v1/devices` and **Send**.
+#### Detailed Call History
 
-If that comes back empty even though a phone exists in Control Hub, the phone has not registered to the cloud yet. Webex Calling devices assigned to a workspace are visible through the calling configuration instead:
+See [Understanding the Webex Calling CDR APIs](https://developer.webex.com/blog/understanding-the-webex-calling-cdr-apis){:target="_blank"} and [Detailed Call History](https://developer.webex.com/calling/docs/api/v1/reports-detailed-call-history){:target="_blank"}.
 
-2. Create a `GET` request called `List Workspaces` with the URL `https://webexapis.com/v1/workspaces`, add a `max` parameter of `5`, and **Send**. Copy the `id` of a workspace into your environment as `workspaceId`.
-3. Create a `GET` request called `Get Workspace Devices` with the URL `https://webexapis.com/v1/telephony/config/workspaces/{{workspaceId}}/devices` and **Send**.
+!!! Warning "Do not test this one in the Developer Portal"
+    The CDR endpoints are **not compatible with the portal's Try It feature**. It fails with *failed to fetch*, which is not an authorization problem. Use Bruno, cURL, or Python.
 
-The response shows the device model and its `activationState`. A phone whose activation code has never been redeemed sits in `ACTIVATING`, which explains the empty list in step 1.
+??? Note "Reference: Webex Calling Detailed Call History API access"
+    To get access to this API, you need a specific role assigned to your user. Until now, there was a specific role called **Webex Calling Detailed Call History API access** that you could assign to a user, but this is getting deprecated by the end of the year:
 
-!!! Note "Detailed Call History needs more than an admin token"
-    The CDR APIs require the dedicated `spark-admin:calling_cdr_read` scope, so they are not reachable with the Personal Access Token used in this lab. In production this is one of the cases where you would use a Service App with that scope explicitly granted.
+    ![Control Hub](./assets/controlhub_6.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-Meeting Qualities has two constraints worth remembering, because both return a `404` that looks like a bad meeting ID. It lives on a **different host**, and it only accepts the ID of a meeting that already ended (the instance ID with `_I_` in the middle). So you list the ended meetings first:
+    Now, you need to create a new custom role. For that, in **Collaboration Control Hub**, go to **Users** > **Admin roles** > **Create new role**. Make sure you add **Webex Calling Detailed Call History API access**:
 
-4. Create a `GET` request called `List Ended Meetings` with the URL `https://webexapis.com/v1/meetings` and these parameters:
+    ![Control Hub](./assets/controlhub_7.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+    This role has been pre-assigned to you as part of a group:
+
+    ![Control Hub](./assets/controlhub_9.png){ width="350" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+!!! Tip "Live Stream Detailed Call History"
+
+    There is another CDR API intended to be used when a process pulls CDRs continuously into another store:
+    
+    - [Live Stream Detailed Call History](https://developer.webex.com/calling/docs/api/v1/reports-live-stream-detailed-call-history){:target="_blank"} 
+    
+    Its `startTime` / `endTime` are when the **record was written**, not when the call started. Records appear about one minute after a call ends, are kept for only **12 hours**, and each request can cover at most **2 hours**.
+
+1. Create a `GET` request called `Detailed Call History` with the URL `https://analytics-calling.webexapis.com/v1/cdr_feed`.
+2. In the **Params** tab, add:
+
+    | Parameter | Value |
+    | --- | --- |
+    | `startTime` | `2026-09-24T05:00:00.000Z` |
+    | `endTime` | `2026-09-24T08:30:00.000Z` |
+    | `max` | `10` |
+
+    The window cannot be longer than 12 hours and `endTime` must be at least five minutes in the past.
+
+3. **Send**. Each item is one call.
+
+    ![Bruno](./assets/bruno_22.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    
+    !!! Note
+        If you get `451`, your organization's data lives in another region. The response body names the host to use instead (`analytics-calling-eu`, `-in`, or `-au`). The older host `https://analytics.webexapis.com/v1/cdr_feed` also still answers.
+
+    ??? Note "Example response"
+        ```json
+        {
+          "items": [
+            {
+              "Answer time": "",
+              "Answered": "false",
+              "Direction": "TERMINATING",
+              "Called line ID": "NA",
+              "Call ID": "",
+              "Calling line ID": "Agent-80945336",
+              "Start time": "2026-09-24T07:49:10.939Z",
+              "Call type": "SIP_INBOUND",
+              "Client type": "SIP",
+              "Client version": "",
+              "Correlation ID": "cf30fa26-7c1a-4099-8ada-b8e57acca6ce",
+              "International country": "",
+              "Device MAC": "",
+              "Duration": 0,
+              "Inbound trunk": "",
+              "Org UUID": "74983fd5-5c18-45cb-bfcd-507005e05b0f",
+              "Original reason": "",
+              "OS type": "na",
+              "Outbound trunk": "",
+              "Redirect reason": "",
+              "Related reason": "",
+              "Report ID": "ea9cd4c2-b4e8-3e0f-b518-b14906a6d01a",
+              "Report time": "2026-09-24T07:49:10.941Z",
+              "Route group": "",
+              "Site main number": "+16693043560",
+              "Site timezone": "-420",
+              "Sub client type": "",
+              "User UUID": "18c2c489-2fef-4a15-a4bd-cab7b65d8416",
+              "User type": "User",
+              "User": "Pod 0",
+              "Called number": "+12542121223",
+              "Calling number": "+48123210049",
+              "Location": "Site1",
+              "Dialed digits": "",
+              "Releasing party": "Local",
+              "Redirecting number": "",
+              "Site UUID": "a0ac79b3-d37c-4cae-8ab0-5d4ec85adde8",
+              "Department ID": "",
+              "Transfer related call ID": "",
+              "Authorization code": "",
+              "Model": "",
+              "Local SessionID": "",
+              "Remote SessionID": "",
+              "Call transfer time": "",
+              "Local call ID": "29741232:0",
+              "Remote call ID": "",
+              "Network call ID": "SDen4q701-ef16d7f23c3fb49bcb04e56284058c03-aoh8mj1050",
+              "Related call ID": "",
+              "User number": "+12542121223",
+              "Call outcome": "Refusal",
+              "Call outcome reason": "TemporarilyUnavailable",
+              "Ring duration": "0",
+              "Answer indicator": "No",
+              "Release time": "2026-09-24T07:49:10.941Z",
+              "Final local SessionID": "",
+              "Final remote SessionID": "",
+              "PSTN legal entity": "Broadsoft Adaption LLC",
+              "PSTN vendor org ID": "0b43a1a8-2efd-4892-b301-e7a5a6d2c884",
+              "PSTN vendor name": "Cisco Calling Plans",
+              "PSTN provider ID": "3fac3e13-f8de-43b4-ad85-c2862ae3afe8",
+              "External customer ID": "",
+              "Redirecting party UUID": "",
+              "Public Calling IP Address": "NA",
+              "Public Called IP Address": "NA",
+              "Caller ID number": "+48123210049",
+              "External caller ID number": "+12542121223",
+              "Device owner UUID": "",
+              "Call Recording Platform Name": "",
+              "Call Recording Result": "",
+              "Call Recording Trigger": "",
+              "Original called party UUID": "",
+              "Recall type": "",
+              "Auto Attendant Key Pressed": "NA",
+              "Queue type": "",
+              "Answered elsewhere": "",
+              "Hold duration": 0,
+              "Route list calls overage": "",
+              "Caller Reputation Score": "",
+              "Caller Reputation Service Result": "",
+              "Caller Reputation Score Reason": "",
+              "Interaction ID": "815baa45-a282-4b4a-af87-bdd5ebd5358c",
+              "WxCC consult merge status": "",
+              "ELIN": "",
+              "Emergency number source": "",
+              "Transfer type": "",
+              "Transfer type context": "",
+              "Answer reason": ""
+            }
+          ]
+        }
+        ```
+
+        `Call outcome` and `Call outcome reason` are where a "the call failed" ticket gets answered. This one was never answered, and the reason was `TemporarilyUnavailable`.
+
+    The full field reference is in [Reports for Your Cloud Collaboration Portfolio](https://help.webex.com/en-us/article/nmug598/Reports-for-Your-Cloud-Collaboration-Portfolio){:target="_blank"}, under **Report templates** > **Calling Detailed Call History Report**.
+
+    !!! Warning
+        This API is rate limited to **one request per minute** per token, so do not keep hitting **Send**. A second immediate request returns `429 Request rate exceeds threshold`.
+
+        ![Bruno](./assets/bruno_23.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+#### Meeting Qualities
+
+While CDRs give you the outcome of a phone call, Meeting Qualities give you the technical telemetry of a Webex meeting. You can see exactly when a participant joined, what client they used, and their network type.
+
+To get the qualities of a meeting, you first need the meeting's ID.
+
+1. Create a `GET` request called `List Ended Meetings` with the URL `https://webexapis.com/v1/meetings` and these parameters, and click **Send**:
 
     | Parameter | Value |
     | --- | --- |
@@ -1076,11 +1632,19 @@ Meeting Qualities has two constraints worth remembering, because both return a `
     | `state` | `ended` |
     | `max` | `5` |
 
-5. **Send**, then copy the `id` of one meeting into your environment as `meetingId`.
-6. Create a `GET` request called `Get Meeting Qualities` with the URL `https://analytics.webexapis.com/v1/meeting/qualities`, add a `meetingId` parameter of `{{meetingId}}`, and **Send**.
+    ![Bruno](./assets/bruno_24.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-You get one entry per participant, with client type, operating system, network type, and join time. That is the data you would use to answer "why was that call bad?".
+2. Copy the `id` of one meeting into your environment as `meetingId`:
 
+    ![Bruno](./assets/bruno_25.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+3. Create a `GET` request called `Get Meeting Qualities` with the URL `https://analytics.webexapis.com/v1/meeting/qualities`, add a `meetingId` parameter of `{{meetingId}}`, and **Send**:
+
+    ![Bruno](./assets/bruno_26.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+    You get one entry per participant, with client type, operating system, network type, join time and much more.
+
+<!--
 ## Exercises
 
 Build these in Bruno as new requests in your `WebexOne` collection. If you need help, you can check the solution.
@@ -1127,9 +1691,11 @@ Build these in Bruno as new requests in your `WebexOne` collection. If you need 
 
         Like Meeting Qualities, this API only accepts a meeting that is in progress or already ended, so a scheduled meeting that never ran will fail here too.
 
+-->
+
 ## Step 2.5: From API calls to agent tools
 
-In Bruno you did not answer a troubleshooting question with a single request. You listed locations, copied an `id`, and asked for that location's calling config. You listed ended meetings, then asked for qualities. You listed workspaces, then asked one of them for its devices.
+In Bruno you did not answer a troubleshooting question with a single request. You listed locations, copied an `id`, and asked for that location's calling config. You listed ended meetings, then asked for qualities.
 
 That chain is the real work: one call produces the identifier the next call needs. You were the one concatenating them. Later in the lab, the agent will do that concatenation for you. You will ask a question in natural language, and the model will choose *list locations*, read the ID from the result, and call *get location* on its own. Same APIs, same order, no copy-paste.
 
