@@ -9,8 +9,9 @@ In this hands-on session, participants will learn how to build an AI assistant u
 This session covers:
 
 - Understanding and utilizing MCP servers within your IDE
-- Integrating an AI Assistant with a Webex Bot
+- Calling Webex APIs
 - Developing a custom MCP server to unlock new functionalities
+- Integrating an AI Assistant with a Webex Bot
 
 ## Architecture at a Glance
 
@@ -38,10 +39,10 @@ Upon completion of this lab, you will be able to:
 
 - Explain the difference between a web chat interface, an IDE-embedded assistant, and an operational AI agent
 - Configure official Webex MCP servers in Visual Studio Code and drive the assistant with OpenAI models
-- Use MCP tools, resources, and prompts to manage and troubleshoot Webex organization data
-- Connect a Webex Bot to an AI assistant for interactive troubleshooting workflows
 - Apply Agent Skills to encode operational runbooks and best practices
+- Understand and call Webex REST APIs
 - Build a custom MCP server that exposes Webex API operations as tools
+- Connect a Webex Bot to an AI assistant for interactive troubleshooting workflows
 - Execute an end-to-end troubleshooting scenario (status check, audit review, reporting)
 
 ## Disclaimer
