@@ -1,4 +1,4 @@
-# Lab 4 - Agent Skills
+# Lab 2 - Agent Skills
 
 In this section, you will use an **Agent Skill** to encode operational expertise —
 *how* to review Webex meetings thoroughly — separately from MCP tool connectivity,
@@ -52,7 +52,7 @@ VS Code, you may wonder how skills differ. They serve different purposes:
 | **Standard** | VS Code–specific                     | Open standard ([agentskills.io](https://agentskills.io)) — portable across 30+ agents |
 
 
-## Step 4.1: Configure the MCP server and enable Agent Skills
+## Step 2.1: Configure the MCP server and enable Agent Skills
 
 ### Configure the Webex Meeting MCP at user scope
 
@@ -62,7 +62,7 @@ window, regardless of which folder you have open.
 1. Open the Command Palette (`Ctrl+Shift+P`).
 2. Run **MCP: Open User Configuration**.
 
-![skill_discovery](./assets/lab4/mcpconfig.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![skill_discovery](./assets/lab2/mcpconfig.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 3. Add the Webex Meeting server:
 
@@ -75,7 +75,7 @@ window, regardless of which folder you have open.
    "args": [
     "-y",
     "mcp-remote",
-    "https://mcp.webexapis.com/mcp/webex-messaging",
+    "https://mcp.webexapis.com/mcp/webex-meeting",
     "--header",
     "Authorization: Bearer WEBEX_MCP_TOKEN"
    ]
@@ -105,7 +105,7 @@ VS Code automatically scans these project directories for skills
 
 
 
-## Step 4.2: Create the skill
+## Step 2.2: Create the skill
 
 A skill is a folder containing a `SKILL.md` file — an open standard defined by
 [agentskills.io](https://agentskills.io/home).
@@ -113,11 +113,11 @@ A skill is a folder containing a `SKILL.md` file — an open standard defined by
 1. In the Chat view, type `/skills` and press Enter to open the **Configure
    Skills** menu.
 
-   ![skill_discovery](./assets/lab4/createskill1.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+   ![skill_discovery](./assets/lab2/createskill1.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-   ![skill_discovery](./assets/lab4/createskill2.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+   ![skill_discovery](./assets/lab2/createskill2.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-   ![skill_discovery](./assets/lab4/createskill3.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+   ![skill_discovery](./assets/lab2/createskill3.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 2. Choose to create a **New Skill**, pick **User** scope, and
    name it exactly:
@@ -126,7 +126,7 @@ A skill is a folder containing a `SKILL.md` file — an open standard defined by
 meeting-review
 ```
 
-![skill_discovery](./assets/lab4/createskill4.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![skill_discovery](./assets/lab2/createskill4.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 
 !!! Warning
@@ -232,9 +232,9 @@ Two rules from the [agentskills.io specification](https://agentskills.io/specifi
 
 Notice that the description leads with the phrasings *you* would actually type
 ("help me prepare", "am I ready for") and ends with a narrow exclusion. That is
-deliberate, and Step 4.6 shows why.
+deliberate, and Step 2.6 shows why.
 
-## Step 4.3: Verify discovery
+## Step 2.3: Verify discovery
 
 Do **not** ask the agent "what skills are available?" — a model with no skill
 loaded will answer that question plausibly anyway. Check observable state
@@ -242,11 +242,11 @@ instead.
 
 Type `/` in the chat input. `meeting-review` should appear in the list.
 
-![skill_discovery](./assets/lab4/skill_discovery.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![skill_discovery](./assets/lab2/skill_discovery.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 
 !!! Note "If `meeting-review` does not appear"
-    - Confirm `chat.useAgentSkills` is enabled (Step 4.1).
+    - Confirm `chat.useAgentSkills` is enabled (Step 2.1).
     - Confirm the `name` in the front matter is exactly `meeting-review` and
       matches the folder name.
     - Reload the window again (`Developer: Reload Window`).
@@ -254,7 +254,7 @@ Type `/` in the chat input. `meeting-review` should appear in the list.
       a directory VS Code does not scan. Delete it and create it again with
       `/skills`.
 
-## Step 4.4: Progressive disclosure
+## Step 2.4: Progressive disclosure
 
 Agent Skills load in three stages so many skills can be available cheaply:
 
@@ -268,7 +268,7 @@ Full instructions load only when needed. This is why the `description` field
 matters so much: it is the only part competing for the model's attention in
 every other conversation.
 
-## Step 4.5: Schedule meetings (data setup)
+## Step 2.5: Schedule meetings (data setup)
 
 Schedule two meetings so there is data to review. Neither will have an agenda —
 `webex-create-meeting` does not expose an agenda parameter. That limitation is
@@ -292,9 +292,9 @@ Title: Architecture Review.
 
 You now have two upcoming meetings, both without agendas.
 
-## Step 4.6: With and without the skill
+## Step 2.6: With and without the skill
 
-### 4.6a — A plain listing question
+### 2.6a — A plain listing question
 
 Ask:
 
@@ -309,7 +309,7 @@ The skill should **not** activate here, and that is by design: the last line of
 its description says it is "not for a plain list of meetings with no readiness
 question." Expand **References** to confirm `meeting-review` was not loaded.
 
-### 4.6b — A readiness question
+### 2.6b — A readiness question
 
 Now ask for the same data a different way:
 
@@ -325,7 +325,7 @@ own. Expand **References** to check whether it did.
     VS Code enforces. Smaller models rarely load skills proactively, especially
     when a direct tool call would also answer the question. This is normal.
 
-### 4.6c — Force it
+### 2.6c — Force it
 
 ```text
 /meeting-review
@@ -360,7 +360,7 @@ PREPARATION CHECKLIST
 Note that the passing checks are reported too, not just the failures. A silent
 check is indistinguishable from a skipped one.
 
-The difference between 4.6a and 4.6c is the skill's value: the same tools, the
+The difference between 2.6a and 2.6c is the skill's value: the same tools, the
 same data, but the skill added judgment.
 
 ```
@@ -409,7 +409,7 @@ on your behalf, silently.
 Open your `meeting-review` skill (`/skills` → select it → edit) and add this
 line to the **Gotchas** section:
 
-![skill_discovery](./assets/lab4/editskill.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![skill_discovery](./assets/lab2/editskill.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ```markdown
 - Never write agenda text you invented. Draft the wording, show it to the user,
@@ -473,8 +473,8 @@ Each practice maps to a concrete section of the file you pasted:
 Two of those practices are things you just *did*, not just read:
 
 - **"If the agent already handles the task well without the skill, the skill may
-  not be adding value."** Step 4.6a versus 4.6c is exactly that test. If your
-  model produced a full readiness checklist in 4.6a without the skill, then the
+  not be adding value."** Step 2.6a versus 2.6c is exactly that test. If your
+  model produced a full readiness checklist in 2.6a without the skill, then the
   skill's remaining value is its guardrails rather than its checks — and that is
   a legitimate finding, not a failure.
 - **"When an agent makes a mistake you have to correct, add the correction to
