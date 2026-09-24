@@ -90,87 +90,92 @@ A skill is simply a folder containing a `SKILL.md` file, following an open stand
 
 6. Replace the generated contents with the skill below:
 
-    ````markdown
-    ---
-    name: meeting-review
-    description: >-
-      Use when the user asks to prepare for, get ready for, review readiness of, or
-      check what is missing from their meetings. Triggers on phrases like 'help me
-      prepare', 'am I ready for', 'what do I need before', 'review my meetings', or
-      'check my schedule for gaps'. This tool evaluates upcoming meetings for agendas,
-      invitees, and conflicts to produce a preparation checklist. Do NOT use this for
-      plain requests to list meetings without a readiness or preparation context.
-    argument-hint: "person or time range"
-    ---
-    
-    # Meeting Review
-    
-    ## Tools
-    
-    Use the Webex Meeting MCP server only.
-    
-    | Need | Tool |
-    |---|---|
-    | Find upcoming meetings | `webex-list-meetings` |
-    | Set agenda, title, time, or invitees | `webex-update-meeting` |
-    
-    If no Webex Meeting tool is available, output
-    `WEBEX MEETING TOOLS NOT AVAILABLE` and stop. Do not answer from memory.
-    
-    ## Procedure
-    
-    1. Call `webex-list-meetings` with `state="scheduled"` and 
-    `includeParticipants=true`. Pass `from`/`to` when the user gives a time range.
-    If the user does not specify a time frame, default to checking meetings for
-    the next 24 hours.
-    2. Check all three dimensions for every meeting:
-       - **Agenda** — is the `agenda` field non-empty? A meeting without one wastes
-         its own first ten minutes, so this is the highest-value flag.
-       - **Invitees** — is anyone listed besides the host?
-       - **Conflicts** — compare each meeting's start and end against every other
-         meeting in the result set. Flag both sides of any overlap.
-    3. Report every check, including the ones that pass. A silent check reads as a
-       skipped check.
-    4. Produce the checklist using the template below.
-    
-    ## Output template
-    
-    ```text
-    MEETING READINESS -- <person or time range>
-    ======================================
-    
-    [Repeat the block below for each meeting]
-    <title> | <day HH:MM> | <duration>
-      Agenda:    <present / NO AGENDA>
-      Invitees:  <N invited / NO INVITEES>
-      Conflict:  <none / CONFLICT with "<other title>">
-    [End repeat]
-    
-    PREPARATION CHECKLIST
-    1. <most urgent concrete action>
-    2. <next action>
-    ======================================
-    ```
-    
-    ## Gotchas & Constraints
-    
-    - **Creating Agendas:** The `webex-create-meeting` tool has no `agenda` parameter;
-    newly scheduled meetings start with no agenda. If a user asks to schedule a meeting
-    with an agenda, create the meeting first, then immediately call `webex-update-meeting`
-    to set the agenda. Do not imply the agenda was set during creation.
-    - **Missing Invitee Data:** `webex-list-meetings` only returns invitees when
-    `includeParticipants=true`. If the invitee field is absent from the tool response,
-    the data was not requested. Re-query the tool. Do NOT report `NO INVITEES` unless
-    the field is explicitly present and empty.
-    - **No Hallucination:** Report only what the tools return. Never infer an attendee
-    list or agenda content from a meeting title.
-    - **No Local Storage:** Never create, edit, or save a local file. This skill produces
-    chat output only. Meeting data belongs in Webex, not on disk. If a tool cannot store
-    a value the user asked for, report the limitation and stop.
-    ````
+    ??? Tip "SKILL.md"
+        ````markdown
+        ---
+        name: meeting-review
+        description: >-
+          Use when the user asks to prepare for, get ready for, review readiness of, or
+          check what is missing from their meetings. Triggers on phrases like 'help me
+          prepare', 'am I ready for', 'what do I need before', 'review my meetings', or
+          'check my schedule for gaps'. This tool evaluates upcoming meetings for agendas,
+          invitees, and conflicts to produce a preparation checklist. Do NOT use this for
+          plain requests to list meetings without a readiness or preparation context.
+        argument-hint: "person or time range"
+        ---
+        
+        # Meeting Review
+        
+        ## Tools
+        
+        Use the Webex Meeting MCP server only.
+        
+        | Need | Tool |
+        |---|---|
+        | Find upcoming meetings | `webex-list-meetings` |
+        | Set agenda, title, time, or invitees | `webex-update-meeting` |
+        
+        If no Webex Meeting tool is available, output
+        `WEBEX MEETING TOOLS NOT AVAILABLE` and stop. Do not answer from memory.
+        
+        ## Procedure
+        
+        1. Call `webex-list-meetings` with `state="scheduled"` and 
+        `includeParticipants=true`. Pass `from`/`to` when the user gives a time range.
+        If the user does not specify a time frame, default to checking meetings for
+        the next 24 hours.
+        2. Check all three dimensions for every meeting:
+           - **Agenda** — is the `agenda` field non-empty? A meeting without one wastes
+             its own first ten minutes, so this is the highest-value flag.
+           - **Invitees** — is anyone listed besides the host?
+           - **Conflicts** — compare each meeting's start and end against every other
+             meeting in the result set. Flag both sides of any overlap.
+        3. Report every check, including the ones that pass. A silent check reads as a
+           skipped check.
+        4. Produce the checklist using the template below.
+        
+        ## Output template
+        
+        ```text
+        MEETING READINESS -- <person or time range>
+        ======================================
+        
+        [Repeat the block below for each meeting]
+        <title> | <day HH:MM> | <duration>
+          Agenda:    <present / NO AGENDA>
+          Invitees:  <N invited / NO INVITEES>
+          Conflict:  <none / CONFLICT with "<other title>">
+        [End repeat]
+        
+        PREPARATION CHECKLIST
+        1. <most urgent concrete action>
+        2. <next action>
+        ======================================
+        ```
+        
+        ## Gotchas & Constraints
+        
+        - **Creating Agendas:** The `webex-create-meeting` tool has no `agenda` parameter;
+        newly scheduled meetings start with no agenda. If a user asks to schedule a meeting
+        with an agenda, create the meeting first, then immediately call `webex-update-meeting`
+        to set the agenda. Do not imply the agenda was set during creation.
+        - **Missing Invitee Data:** `webex-list-meetings` only returns invitees when
+        `includeParticipants=true`. If the invitee field is absent from the tool response,
+        the data was not requested. Re-query the tool. Do NOT report `NO INVITEES` unless
+        the field is explicitly present and empty.
+        - **No Hallucination:** Report only what the tools return. Never infer an attendee
+        list or agenda content from a meeting title.
+        - **No Local Storage:** Never create, edit, or save a local file. This skill produces
+        chat output only. Meeting data belongs in Webex, not on disk. If a tool cannot store
+        a value the user asked for, report the limitation and stop.
+         ````
 
-4. **Save** the file.
-5. **Reload the window**: `Ctrl+Shift+P` → `Developer: Reload Window`.
+    ??? "Explanation"
+
+      TBC - Explanantion of the file section
+
+8. **Save** the file.
+9. **Reload the window**: `Ctrl+Shift+P` → `Developer: Reload Window`.
 
 !!! Warning
     Reload after every edit to `SKILL.md` in this lab. You will edit the skill again in the Exercise, and the reload is what makes the change take effect before you re-run.
@@ -215,15 +220,15 @@ Let's schedule two meetings so we have some data to review. Neither meeting will
 
 1. Schedule the first meeting:
 
-- Ask: *"Schedule a meeting with admin@webexone-ai-assistant.wbx.ai tomorrow at 10am. Title: Planning Session."*
+- Ask: *"Schedule a meeting with admin@webexone-ai-assistant.wbx.ai tomorrow at 10am CET. Title: Planning Session."*
 
-    ![Skills](./assets/skill_3.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Skills](./assets/skill_5.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 2. Schedule the second meeting:
 
-- Ask: *"Schedule a meeting with admin@webexone-ai-assistant.wbx.ai tomorrow at 2pm. Title: Architecture Review."*
+- Ask: *"Schedule a meeting with admin@webexone-ai-assistant.wbx.ai tomorrow at 2pm CET. Title: Architecture Review."*
 
-    ![Skills](./assets/skill_4.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Skills](./assets/skill_6.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 You now have two upcoming meetings, both without agendas.
 
@@ -231,11 +236,17 @@ You now have two upcoming meetings, both without agendas.
 
 ### A plain listing question
 
-- Ask: *"What webex meetings do I have scheduled."*
+- Ask: *"What webex meetings do I have scheduled?"*
 
-The agent lists them — title, time, host. No flags, no readiness check, no actions.
+    ![Skills](./assets/skill_7.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-The skill should **not** activate here, and that is by design: the last line of its description says it is "not for a plain list of meetings with no readiness question." Expand **References** to confirm `meeting-review` was not loaded.
+The agent will simply list them with their title, time, and host. There are no flags, no readiness checks, and no actions suggested.
+
+The skill should **not** activate here, which is by design. The last line of its description specifically says it's "not for a plain list of meetings with no readiness question." 
+
+You can expand **References** to confirm that `meeting-review` wasn't loaded.
+
+![Skills](./assets/skill_8.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ### A readiness question
 
@@ -243,7 +254,13 @@ Now, try it  for the same data a different way:
 
 - Ask: *"Help me prepare for my upcoming webex meetings."*
 
-This phrasing matches the description, so a capable model loads the skill on its own. Expand **References** to check whether it did.
+    ![Skills](./assets/skill_9.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+This phrasing matches the description, so a capable model loads the skill on its own. 
+
+Expand **References** to check whether it did.
+
+![Skills](./assets/skill_9.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 !!! Note "If the skill did not load"
     Automatic activation is a judgment call the model makes — it is not a rule VS Code enforces. Smaller models rarely load skills proactively, especially when a direct tool call would also answer the question. This is normal.
