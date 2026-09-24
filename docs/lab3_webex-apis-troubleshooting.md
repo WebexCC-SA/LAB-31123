@@ -1401,11 +1401,11 @@ This API records who signed in and who signed out **as a user**.
     | Parameter | Value |
     | --- | --- |
     | `orgId` | `{{orgId}}` |
-    | `startTime` | `2026-09-15T00:00:00.000Z` |
-    | `endTime` | `2026-09-23T23:59:59.000Z` |
+    | `startTime` | `2026-09-24T00:00:00.000Z` |
+    | `endTime` | `2026-09-24T23:59:59.000Z` |
     | `max` | `10` |
 
-    ![Bruno](./assets/bruno_27.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Bruno](./assets/bruno_28.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     The useful values sit inside each item's `data` object. To filter, you can add `eventCategories` parameter in your query.
 
