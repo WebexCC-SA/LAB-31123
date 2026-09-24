@@ -1,8 +1,8 @@
-# Lab 3 - Build a Custom MCP Server
+# Lab 4 - Build a Custom MCP Server
 
 In this chapter you will build an MCP server that lets an AI assistant manage Webex Contact Center address books.
 
-## Step 3.1: Building an MCP Server
+## Step 4.1: Building an MCP Server
 
 Before we write our first line of code, let's talk about how an MCP client (like VS Code) actually talks to an MCP server. The Model Context Protocol supports two primary transport methods: **stdio** and **SSE (Server-Sent Events) over HTTP**.
 
@@ -18,13 +18,13 @@ In previous labs, your **VS Code** was connected to the official Webex MCP serve
 
 For this lab, we will build our custom MCP servers using **stdio**. This is the standard approach for local development and allows us to test our tools instantly using the MCP Inspector and VS Code.
 
-### Step 3.1.1: Simple MCP Server
+### Step 4.1.1: Simple MCP Server
 
 In this section, we are going to start with the simplest MCP server that does real work: one tool, no network, no token. It takes a messy phone number and returns it in E.164 format.
 
 We will use the official `mcp` Python SDK to create our server. The SDK makes it incredibly easy to define tools and their execution logic using decorators.
 
-1. Navigate to `03_custom_mcp/01_hello_mcp.py` and review the code.
+1. Navigate to `04_custom_mcp/01_hello_mcp.py` and review the code.
 
     ??? Tip "Python Code"
         ```python
@@ -66,7 +66,7 @@ We will use the official `mcp` Python SDK to create our server. The SDK makes it
 
 2. In VS Code, make sure your terminal is in the correct folder:
 
-    * cd ../03_custom_mcp
+    * cd ../04_custom_mcp
 
 3. To test our MCP server, we will be using a tool called **MCP Inspector**. It is the official, interactive debugging tool for MCP servers. It runs a local web interface where you can list tools, resources, and prompts, and execute them directly without needing an LLM in the loop.
     
@@ -115,7 +115,7 @@ We will use the official `mcp` Python SDK to create our server. The SDK makes it
 
     This confirms your server works perfectly in isolation! You can stop the MCP in your terminal with `Ctrl+C`, we will still use the MCP inspector in the next exercise.
 
-### Step 3.1.2: Tools, Resources and Prompts
+### Step 4.1.2: Tools, Resources and Prompts
 
 Next, we are going to build a single script that demonstrates the entire MCP architecture, which consists of three distinct primitives:
 
@@ -123,7 +123,7 @@ Next, we are going to build a single script that demonstrates the entire MCP arc
 - **A resource** is context the client attaches, like handing the model a rulebook. 
 - **A prompt** is the one primitive a human triggers directly — from a slash command or menu.
 </br>
-1. Navigate to `03_custom_mcp/02_hello_resource_prompt.py` and review the code:
+1. Navigate to `04_custom_mcp/02_hello_resource_prompt.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -192,7 +192,7 @@ Next, we are going to build a single script that demonstrates the entire MCP arc
     ??? Note "Tools"
         ![MCP Inspector Tool Run](assets/tools.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-### Step 3.1.3: Reading from Webex Contact Center API
+### Step 4.1.3: Reading from Webex Contact Center API
 
 ####  Understand Webex Contact Center Address Book APIs
 
@@ -217,7 +217,7 @@ We will be using the [List Address Book(s) API](https://developer.webex.com/webe
 
 ![Control Hub](assets/addressbooks_2.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-You can test directly in the UI, using the **Service App** token:
+You can test directly in the UI:
 
 ![Control Hub](assets/addressbooks_3.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
@@ -307,7 +307,7 @@ We are going to build now an MCP server that talks to the Webex Contact Center A
 We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC_CONFIG_API_BASE`.
 
 ??? Tip "ACCESS_TOKEN, WEBEX_ORG_ID & WXCC_CONFIG_API_BASE"
-    - **`ACCESS_TOKEN`**: This is going to be the Service App token created in the previous task.
+    - **`ACCESS_TOKEN`**: This is your Personal Access Token copied from the Webex Developer Portal.
     - **`WEBEX_ORG_ID`** and **`WXCC_CONFIG_API_BASE`**: These are related to the sandbox and will be set up in advance for you, but here is how you could find them:
     
         For `WEBEX_ORG_ID`, you need to go in Collaboration Control Hub to Account:
@@ -344,7 +344,7 @@ We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC
         If you have logged in to the Webex for Developers portal with an account from that organization, you should also be able to find this information in the Code Snippets examples:
         ![Org ID](assets/api_1.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-1. Navigate to `03_custom_mcp/03_read_books.py` and review the code:
+1. Navigate to `04_custom_mcp/03_read_books.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -441,10 +441,6 @@ We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC
 2. Go to the MCP Inspector. Click on **Disconnect**.
 3. Change **Arguments** to `03_read_books.py` and click **Connect**.
 4. Click on **Tools** and then **List Tools**. You will see both `list_address_books` and `list_entries`. Now, we will test them.
-
-    !!! Warning
-        For these API calls to work, you need to have `cjp:config_read` scope added to your Service App. If you didn't do it before, you need to add it, re-authorize your Service App and generate a new access token!
-
 5. Run the `list_address_books` tool:
 
     ![List Address Books](assets/tools_4.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
@@ -493,11 +489,11 @@ We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC
         }
         ```
 
-### Step 3.1.4: Create and Fill an Address Book
+### Step 4.1.4: Create and Fill an Address Book
 
 Now, we are going to include the tools that perform writing actions. We are going to build two tools, `create_address_book` and `add_entry`. 
 
-1. Navigate to `03_custom_mcp/04_write_books.py` and review the code:
+1. Navigate to `04_custom_mcp/04_write_books.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -606,7 +602,7 @@ Now, we are going to include the tools that perform writing actions. We are goin
 4. Click on **Tools** and then **List Tools**. You will see both `create_address_book` and `add_entry`. You will be testing both now.
 
    !!! Warning
-       For these API calls to work, you need to have `cjp:config_read` and `cjp:config_write` scope added to your Service App. If you didn't do it before, you need to add it, re-authorize your Service App and generate a new access token!
+       For these API calls to work, your user needs Contact Center admin rights with write access (the PAT inherits them). If you get a `403`, copy a fresh Developer Token into `ACCESS_TOKEN`.
 
 5. Create an Address Book with name "WebexOne - Username":
 
@@ -634,7 +630,7 @@ Now, we are going to include the tools that perform writing actions. We are goin
 
 7. You could verify it was added using the tools in the previous exercise.
 
-## Step 3.2: Register in your IDE
+## Step 4.2: Register in your IDE
 
 In this section, you will add and test your custom MCP servers directly in VS Code.
 
@@ -645,7 +641,7 @@ In this section, you will add and test your custom MCP servers directly in VS Co
       "servers": {
         "webex-mcp-lab": {
           "command": "${workspaceFolder}/webexone/bin/python",
-          "args": ["03_custom_mcp/01_hello_mcp.py"],
+          "args": ["04_custom_mcp/01_hello_mcp.py"],
           "cwd": "${workspaceFolder}"
         }
       }
@@ -660,22 +656,22 @@ In this section, you will add and test your custom MCP servers directly in VS Co
           "servers": {
             "hello-mcp": {
               "command": "${workspaceFolder}/webexone/bin/python",
-              "args": ["03_custom_mcp/01_hello_mcp.py"],
+              "args": ["04_custom_mcp/01_hello_mcp.py"],
               "cwd": "${workspaceFolder}"
             },
             "hello-resource-prompt": {
               "command": "${workspaceFolder}/webexone/bin/python",
-              "args": ["03_custom_mcp/02_hello_resource_prompt.py"],
+              "args": ["04_custom_mcp/02_hello_resource_prompt.py"],
               "cwd": "${workspaceFolder}"
             },
             "read-books": {
               "command": "${workspaceFolder}/webexone/bin/python",
-              "args": ["03_custom_mcp/03_read_books.py"],
+              "args": ["04_custom_mcp/03_read_books.py"],
               "cwd": "${workspaceFolder}"
             },
             "write-books": {
               "command": "${workspaceFolder}/webexone/bin/python",
-              "args": ["03_custom_mcp/04_write_books.py"],
+              "args": ["04_custom_mcp/04_write_books.py"],
               "cwd": "${workspaceFolder}"
             }
           }
@@ -782,7 +778,7 @@ The MCP protocol calls this **elicitation**: the server pauses, sends a form to 
 
 Now, we will add to the server two destructive tools: `delete_address_book` and `delete_entry`. 
 
-1. Navigate to `03_custom_mcp/05_delete_books.py` and review the code:
+1. Navigate to `04_custom_mcp/05_delete_books.py` and review the code:
 
     ??? Tip "Python Code"
         ```python
@@ -911,7 +907,7 @@ Now, we will add to the server two destructive tools: `delete_address_book` and 
       "servers": {
         "delete-books": {
           "command": "${workspaceFolder}/webexone/bin/python",
-          "args": ["03_custom_mcp/05_delete_books.py"],
+          "args": ["04_custom_mcp/05_delete_books.py"],
           "cwd": "${workspaceFolder}"
         }
       }
@@ -957,9 +953,9 @@ Now, we will add to the server two destructive tools: `delete_address_book` and 
 
 In this section, you can test your knowledge of what we have covered so far. If you need help, you can check the solution.
 
-There is no official **Webex Calling** or **Control Hub troubleshooting** MCP server today. That is the gap a custom MCP server fills: you wrap the REST APIs you already used in Lab 2, register the server in VS Code (same as Lab 1), and ask the assistant in Chat.
+There is no official **Webex Calling**, **Control Hub troubleshooting** or **Troubleshooting** MCP server today. That is the gap a custom MCP server fills: you wrap the REST APIs you need, register the server in VS Code, and ask the assistant in Chat.
 
-Use the Service App token (`ACCESS_TOKEN`) from Lab 2. Follow the same pattern as `03_custom_mcp/03_read_books.py`: one tool per API, a short description, and a small JSON result the model can read.
+Follow the same pattern as `04_custom_mcp/03_read_books.py`: one tool per API, a short description, and a small JSON result the model can read.
 
 ### Relevant APIs
 
@@ -998,9 +994,9 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
 
 - Create three new files, one for each domain:
     
-    1. `03_custom_mcp/06_calling_mcp.py`
-    2. `03_custom_mcp/07_control_hub_mcp.py`
-    3. `03_custom_mcp/08_troubleshooting_mcp.py`
+    1. `04_custom_mcp/06_calling_mcp.py`
+    2. `04_custom_mcp/07_control_hub_mcp.py`
+    3. `04_custom_mcp/08_troubleshooting_mcp.py`
 
     Keep each tool small: call one endpoint, return a short JSON list (id, name, status), not the full raw payload.
 
@@ -1011,7 +1007,7 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
 
 ??? Solution
 
-    1. Create `03_custom_mcp/06_calling_mcp.py` and paste this code:
+    1. Create `04_custom_mcp/06_calling_mcp.py` and paste this code:
 
         ??? Tip "Python Code"
             ```python
@@ -1119,7 +1115,7 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
                     log.info("Stopped.")
             ```
 
-    2. Create `03_custom_mcp/07_control_hub_mcp.py` and paste this code:
+    2. Create `04_custom_mcp/07_control_hub_mcp.py` and paste this code:
 
         ??? Tip "Python Code"
             ```python
@@ -1234,7 +1230,7 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
                     log.info("Stopped.")
             ```
 
-    3. Create `03_custom_mcp/08_troubleshooting_mcp.py` and paste this code:
+    3. Create `04_custom_mcp/08_troubleshooting_mcp.py` and paste this code:
 
         ??? Tip "Python Code"
             ```python
@@ -1384,7 +1380,7 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
 
 ### Register the servers in your IDE
 
-- Add your new servers to `.vscode/mcp.json` the same way you did in Step 3.2, start them, and confirm tools are discovered in the Output view.
+- Add your new servers to `.vscode/mcp.json` the same way you did in Step 4.2, start them, and confirm tools are discovered in the Output view.
 
 ??? Solution
 
@@ -1395,17 +1391,17 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
           "servers": {
             "calling-mcp": {
               "command": "${workspaceFolder}/webexone/bin/python",
-              "args": ["03_custom_mcp/06_calling_mcp.py"],
+              "args": ["04_custom_mcp/06_calling_mcp.py"],
               "cwd": "${workspaceFolder}"
             },
             "control-hub-mcp": {
               "command": "${workspaceFolder}/webexone/bin/python",
-              "args": ["03_custom_mcp/07_control_hub_mcp.py"],
+              "args": ["04_custom_mcp/07_control_hub_mcp.py"],
               "cwd": "${workspaceFolder}"
             },
             "troubleshooting-mcp": {
               "command": "${workspaceFolder}/webexone/bin/python",
-              "args": ["03_custom_mcp/08_troubleshooting_mcp.py"],
+              "args": ["04_custom_mcp/08_troubleshooting_mcp.py"],
               "cwd": "${workspaceFolder}"
             }
           }
