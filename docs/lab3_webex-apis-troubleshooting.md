@@ -1000,7 +1000,7 @@ Admin Audit Events will not accept a bare URL: `orgId`, `from`, and `to` are all
     | Parameter | Value |
     | --- | --- |
     | `orgId` | `{{orgId}}` |
-    | `from` | `2026-19-15T00:00:00.000Z` |
+    | `from` | `2026-09-15T00:00:00.000Z` |
     | `to` | `2026-09-23T23:59:59.000Z` |
     | `max` | `10` |
 
