@@ -706,7 +706,7 @@ In this section, you will add and test your custom MCP servers directly in VS Co
 
     1. **Testing 01_hello_mcp.py:**
 
-        - Ask: *"Clean the number (415) 555-0101"*. 
+        - Ask: *"Clean the number (415) 555-0101."*
     
             ![Chat Format](assets/test1.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
             ![Chat Format](assets/test2.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
