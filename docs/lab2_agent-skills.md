@@ -168,7 +168,7 @@ A skill is simply a folder containing a `SKILL.md` file, following an open stand
         - **No Local Storage:** Never create, edit, or save a local file. This skill produces
         chat output only. Meeting data belongs in Webex, not on disk. If a tool cannot store
         a value the user asked for, report the limitation and stop.
-         ````
+        ````
 
     ??? "Explanation"
 
