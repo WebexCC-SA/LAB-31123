@@ -179,7 +179,8 @@ Earlier we opened the Chat, but now we will set up the agent.
     !!! Note
         GPT-5 Nano is the only model available.
 
-5. Configure the **utility model**. Your model comes from your own API key, which VS Code calls a **BYOK** (bring your own key) model. Because you are not signed in to GitHub Copilot, VS Code has no model available for its own internal flows, one of which decides whether a request should be routed to a skill.
+<!--
+5. Check the **utility model** setting. Open **Settings** (`Ctrl+,`), search for `chat.byokUtilityModelDefault`, and confirm it is set to **mainAgent**.
 
     - Open **Settings** (`Ctrl+,`) and search for `chat.byokUtilityModelDefault`.
     - Change it from **GitHub Copilot** to **mainAgent**.
@@ -187,7 +188,7 @@ Earlier we opened the Chat, but now we will set up the agent.
         ![VS Code](./assets/vscode_19.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
         
     - Reload the window: `Ctrl+Shift+P` → `Developer: Reload Window`.
-
+-->
 6. To test it, make sure you select the model in the chat, and say "Hello":
 
     ![Create_token](./assets/vscode_11.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
