@@ -195,7 +195,7 @@ Do **not** ask the agent "what skills are available?", a model without any skill
 
 Type `/` in the chat input. `meeting-review` should appear in the list.
 
-![skill_discovery](./assets/lab2/skill_discovery.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![skill_discovery](./assets/lab4/skill_discovery.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 !!! Note "If `meeting-review` does not appear"
     - Confirm `chat.useAgentSkills` is enabled (Step 2.1).
