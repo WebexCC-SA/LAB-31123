@@ -70,15 +70,15 @@ A skill is simply a folder containing a `SKILL.md` file, following an open stand
 
 1. In the Chat view, type `/skills` and press Enter:
 
-    ![skill_discovery](./assets/lab2/createskill1.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![skill_discovery](./assets/lab4/createskill1.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 2. Select **+ New Skill...**:
 
-    ![skill_discovery](./assets/lab2/createskill2.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![skill_discovery](./assets/lab4/createskill2.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 3. And select the default option **~/.agents/skills (default) Workspace**:
 
-    ![skill_discovery](./assets/lab2/createskill3.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![skill_discovery](./assets/lab4/createskill3.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 4. Name the new skill `meeting-review`:
 
