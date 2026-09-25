@@ -179,23 +179,32 @@ Earlier we opened the Chat, but now we will set up the agent.
     !!! Note
         GPT-5 Nano is the only model available.
 
-5. To test it, make sure you select the model in the chat, and say "Hello":
+5. Configure the **utility model**. Your model comes from your own API key, which VS Code calls a **BYOK** (bring your own key) model. Because you are not signed in to GitHub Copilot, VS Code has no model available for its own internal flows, one of which decides whether a request should be routed to a skill.
+
+    - Open **Settings** (`Ctrl+,`) and search for `chat.byokUtilityModelDefault`.
+    - Change it from **GitHub Copilot** to **mainAgent**.
+
+        ![VS Code](./assets/vscode_19.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        
+    - Reload the window: `Ctrl+Shift+P` → `Developer: Reload Window`.
+
+6. To test it, make sure you select the model in the chat, and say "Hello":
 
     ![Create_token](./assets/vscode_11.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     !!! Note
         The LLM generates responses dynamically, so your answer may vary from what you see in the screenshot.
 
-6. You can ask the agent to list the tools available:
+7. You can ask the agent to list the tools available:
 
     ??? Note "Tools"
         ![Create_token](./assets/vscode_13.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-7. Now, ask it to create a space for you. In this case, I will ask the following: `Create a Webex Space, with title "WebexOne - Diejimen"`:
+8. Now, ask it to create a space for you. In this case, I will ask the following: `Create a Webex Space, with title "WebexOne - Diejimen"`:
 
     ![Create_token](./assets/vscode_14.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-8. You will get a confirmation prompt; click on "Allow in this Session". After a few seconds, you will get the success confirmation:
+9. You will get a confirmation prompt; click on "Allow in this Session". After a few seconds, you will get the success confirmation:
 
     ![Create_token](./assets/vscode_15.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
