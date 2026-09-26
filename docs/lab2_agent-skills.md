@@ -27,7 +27,7 @@ A skill doesn't add new tools. Instead, it tells the assistant **how to use the 
 
 ## Skills vs Custom Instructions
 
-If you already use custom instructions in VS Code, you might be wondering how skills are different. They actually serve different purposes. They actually serve different purposes:
+If you already use custom instructions in VS Code, you might be wondering how skills are different. They actually serve different purposes:
 
 | Feature      | Custom Instructions                  | Agent Skills                                                                          |
 | ------------ | ------------------------------------ | ------------------------------------------------------------------------------------- |
@@ -45,7 +45,7 @@ If you already use custom instructions in VS Code, you might be wondering how sk
 
 ### Enable Agent Skills
 
-Skills should be enabled already, but you can check it doing the following:
+Skills should be enabled already, but you can check it by doing the following:
 
 1. Open **Settings** (`Ctrl+,`) and search for `chat.useAgentSkills`:
 
@@ -118,7 +118,7 @@ A skill is simply a folder containing a `SKILL.md` file, following an open stand
         `WEBEX MEETING TOOLS NOT AVAILABLE` and stop. Do not answer from memory.
         
         ## Procedure
-        
+
         1. Call `webex-list-meetings` with `includeParticipants=true` as the only parameter.
         Add `from`/`to` only if the user gave an explicit date range.
         If the user asked to add or change an agenda, stop here and do only this:
@@ -134,9 +134,6 @@ A skill is simply a folder containing a `SKILL.md` file, following an open stand
         3. Report every check, including the ones that pass. A silent check reads as a
             skipped check.
         4. Produce the checklist using the template below.
-        5. If the user asks to add or change an agenda, call `webex-update-meeting` once
-        per meeting, using the meeting ID from step 1. Never create or delete a meeting.
-        Report whether each update succeeded.
         
         ## Output template
         
@@ -153,7 +150,7 @@ A skill is simply a folder containing a `SKILL.md` file, following an open stand
         ```
         
         ## Gotchas & Constraints
-        
+
         - **Creating Agendas:** `webex-create-meeting` has no `agenda` parameter, so a newly
         scheduled meeting needs a follow-up `webex-update-meeting` call to set one. Do not
         imply the agenda was set during creation.
@@ -262,8 +259,6 @@ That is not a broken skill or a broken MCP server. It is a tool-selection proble
 
 ### The fix: a project instructions file
 
-To fix this, you need to create a project instructions file.
-
 A project instructions file is prepended to every request you send in this workspace. It is where you state, once, what kind of assistant the agent is and in what order it should reach for things.
 
 1. Create a new file named `AGENTS.md` at the root of your workspace.
@@ -330,7 +325,7 @@ The general rule: the weaker the model, the more your instructions have to read 
 
 `AGENTS.md` is a [cross-agent standard](https://agents.md/){:target="_blank"}, so the same file also works in Copilot CLI, Codex, and other hosts. This is the "always applied" column of the table you read earlier: unlike a skill, it is prepended to every request, because it is guidance that should never be optional.
 
-## Step 2.6: Three ways to ask the same question
+## Step 2.7: Three ways to ask the same question
 
 Two meetings, one MCP server, three phrasings. What changes between them is whether the skill loads at all, and what the answer is worth once it does.
 
@@ -342,7 +337,7 @@ Two meetings, one MCP server, three phrasings. What changes between them is whet
 
 You get titles, times, attendees, links, ... but nothing else: no gaps called out, no checks run, nothing to act on.
 
-The skill should stay out of this one, and that is deliberate. The last line of its description rules out "a plain list of meetings with no readiness question", which is precisely what you asked for. 
+The skill should stay out of this one, and that is deliberate. The last line of its description says "Do NOT use it for plain requests to list meetings", which is precisely what you asked for.
 
 You can expand the references to confirm that `meeting-review` wasn't loaded.
 
@@ -358,11 +353,11 @@ Now, try it  for the same data a different way:
 
 This phrasing matches the description, so the model should load the skill without being told. Check the steps at the top of the reply: you are looking for **Read skill · meeting-review**, followed by one or more calls to the Webex Meeting MCP server.
 
-This is the interesting part of the lab, so run it two or three times in fresh chats and compare what you get. Because `AGENTS.md` tells the model to check for a skill before doing anything else, the skill should load on most runs — but as that step warned, it is guidance and not a guarantee.
+This is the interesting part of the lab, so run it two or three times in fresh chats and compare what you get. Because `AGENTS.md` tells the model to check for a skill before doing anything else, the skill should load on most runs. It is still guidance and not a guarantee, so a small model can skip it now and then.
 
 ### 3 - Name the skill yourself
 
-One solution to make the skill take efect, it is too force it as context. for that, first write the `/meeting-review` in the chat:
+To make sure the skill takes effect, you can force it into the context. To do that, first type `/meeting-review` in the chat:
 
 ![Skills](./assets/skill_12.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
@@ -377,7 +372,7 @@ Naming the skill removes all doubt about *loading*, but it does not guarantee *o
 The template shows every check, whether it passes or fails. This makes it clear that the agent checked the agenda, invitees, and conflicts instead of accidentally skipping one.
 
 !!! Note
-    Even when you name the skill, a small model may not follow it to the letter. The layout can drift, or a check can be summarised in prose rather than listed. Compare your output against the block above; noticing that gap is part of the point.
+    Even when you name the skill, a small model may not follow it to the letter. The layout can drift, or a check can be summarised in prose rather than listed. Compare your output against the screenshot above; noticing that gap is part of the point.
 
 ### What the skill actually added
 
@@ -396,7 +391,7 @@ No new tools, no new API access. Just judgment applied to data the agent could a
 
 !!! Tip "Try the conflict flag"
     Schedule a third meeting that overlaps one of the first two, then re-run.
-    The skill flags `CONFLICT` on **both** sides of the overlap.
+    The skill flags **overlaps with**, followed by the other meeting's title, on **both** meetings.
 
 ## Exercise: Teach the skill a new rule
 
