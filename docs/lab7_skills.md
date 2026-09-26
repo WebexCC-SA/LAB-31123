@@ -31,7 +31,6 @@ sequenceDiagram
     participant L as SkillLoader
     participant C as MCP Client
 
-    Note over L,A: Startup: only name and description go into the system prompt
     U->>B: Help me prepare for upcoming meetings
     B->>A: Message plus skill summaries
     A->>L: read_skill_runbook meeting-review
