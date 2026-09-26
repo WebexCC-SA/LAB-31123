@@ -90,7 +90,7 @@ A skill is simply a folder containing a `SKILL.md` file, following an open stand
 
 6. Replace the generated contents with the skill below:
 
-    ??? Tip "SKILL.md"
+    !!! Tip "SKILL.md"
         ````markdown
         ---
         name: meeting-review
