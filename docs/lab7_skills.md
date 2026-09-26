@@ -117,9 +117,17 @@ One class, one parser, shared by every script below. If the skills directory is 
 
 ## Step 7.2: Discover skills
 
+To see the Skill Loader in action, we will first run a script that scans the directory and prints the discovered skills. This simulates the startup phase where the system prompt is populated with skill summaries.
+
 1. Run the script:
 
     * python 01_list_skills.py
+
+2. You should see that there is one skill already, the one we created previously:
+
+    ```terminal
+    meeting-review: Use when the user asks to prepare for, review readiness of, check what is missing from, or fix readiness gaps in their meetings. Triggers on phrases like 'help me prepare', 'am I ready for', 'checkmy schedule for gaps', or 'add an agenda to my meetings'. This skill evaluates agendas, invitees, and conflicts, and can update missing meeting details. Do NOT use it for plain requests to list meetings.
+    ```
 
 The script creates a `SkillLoader`, points it at `skills/`, and prints the `name` and `description` of every skill it finds. You should see `meeting-review`.
 
@@ -127,30 +135,79 @@ This is the **Discovery** stage: the only thing the agent knows about each skill
 
 ## Step 7.3: Progressive disclosure
 
+Skills can be quite long, and loading all of them into the system prompt would consume too many tokens. The progressive disclosure pattern solves this by only loading the full instructions when the model requests them. Let's see the size difference between the discovery and activation stages.
+
 1. Run the script:
 
     * python 02_skill_size.py
 
-The script prints how big the description is, how big the full body is, and the same comparison for every skill in the folder:
+2. You will see the following in the terminal:
 
-```terminal
-Skills discovered: 1
-Discovery, one skill (meeting-review description): ~100 tokens
-Activation, one skill (meeting-review body):       ~744 tokens
-The body is 7x the description.
-Every description together: ~112 tokens
-Every full body together:   ~744 tokens
-```
+    ```terminal
+    Skills discovered: 1
+    Discovery, one skill (meeting-review description): ~100 tokens
+    Activation, one skill (meeting-review body):       ~744 tokens
+    The body is 7x the description.
+    Every description together: ~112 tokens
+    Every full body together:   ~744 tokens
+    ```
+
+The script prints how big the description is, how big the full body is, and the same comparison for every skill in the folder:
 
 Startup should send the descriptions. The body is loaded only when the agent decides that skill is relevant. Ten skills the size of `meeting-review` would be about 1,000 tokens of descriptions, or about 7,400 tokens if every body were loaded up front.
 
 ## Step 7.4: Compare the same question with and without the skill
 
+Now let's see how the skill actually changes the LLM's behavior. We will ask the exact same question twice: once with the standard system prompt, and once with the `meeting-review` runbook injected.
+
 1. Run the script:
 
     * python 03_llm.py
 
-The script asks the same question twice, first with the skill off and then with it on, and prints both answers.
+    !!! Tip
+        For this script, logging has been disabled for clean output.
+        If you want to see the detailed logs of the tool calls, you can run the script with the `-v` flag: `python 03_llm.py -v`.
+
+2. You will see the following:
+
+    ```terminal
+    WITHOUT skill
+    -------------
+    Here’s what I found for your next Webex meeting:
+    
+    - Budget Review
+    - When: 2026-09-27, 16:00–17:00 UTC
+    - Link: https://webexone-ai-assistant-sbx.webex.com/webexone-ai-assistant-sbx/j.php?MTID=mdf108c380b230a7999254e7ab52b0f2e
+    - Host: Pod 0
+    - Meeting type: scheduledMeeting
+    - Invitees: not set (empty)
+    
+    Quick prep plan (pick any you want me to do):
+    - Draft a concise agenda (objectives, topics, timeboxes)
+    - Attach or share pre-read docs (budget spreadsheet, prior period reports)
+    - Confirm attendees and assign roles (chair, note-taker, timekeeper, co-host)
+    - Add calendar reminders (e.g., 24 hours and 30 minutes prior)
+    - Prepare materials for share-out and screen-sharing order
+    - Run through tech check (join link works, audio/video, screen sharing)
+    
+    Would you like me to:
+    - Create and share an agenda?
+    - Invite attendees? If yes, please provide emails.
+    - Add pre-read documents?
+    - Set reminders or add this to your calendar?
+    
+    WITH skill
+    ----------
+    ### Meeting readiness
+    
+    > **Budget Review** · Sunday 18:00–19:00
+    > Agenda · missing
+    > Invitees · none
+    > Conflict · none
+    
+    **To do**
+    1. Approve the proposed agenda draft for Budget Review (Proposed agenda: 1) Budget status and variances, 2) Decisions needed, 3) Action items and owners, 4) Next steps and deadlines). If approved, I will update the meeting agenda in Webex.
+    ```
 
 | | Without the skill | With the skill |
 | --- | --- | --- |
@@ -165,11 +222,13 @@ It is the same class you used in the first two scripts. No new tool is involved.
 
 ## Step 7.5: Run the full bot
 
+Finally, let's put it all together. We will run the Webex bot with the Skill Loader and the MCP client connected. This allows you to interact with the assistant in Webex and see it dynamically load and execute the skill.
+
 1. Run the bot:
 
     * python 04_bot.py
 
-This is the bot we did in the previous section, connected to the messaging, meeting, and custom MCP servers, with `SkillLoader` wired in. On startup it does three things:
+This is the bot we built in the previous section, connected to the messaging, meeting, and custom MCP servers, with `SkillLoader` wired in. On startup it does three things:
 
 1. Discovers the skills.
 2. Injects the summaries into the system prompt with `get_all_skills_summary()`.
@@ -179,7 +238,37 @@ The model decides when to load a skill. That is the same progressive disclosure 
 
 2. In Webex, ask:
 
-    * Help me prepare for the upcoming Webex meetings for admin@webexone-ai-assistant.wbx.ai. Check agendas, invitees, and overlaps.
+    * Help me prepare for the upcoming Webex meetings for podX@webexone-ai-assistant.wbx.ai. Check agendas, invitees, and overlaps.
+
+    !!! Warning
+        Replace podX for your user.
+
+3. The bot will reply with the information:
+
+    ![Skill](assets/skill_21.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+4. And the following in the terminal:
+
+    ```terminal
+    2026-09-26 17:44:27,954 INFO Loaded 1 skill(s): meeting-review
+    2026-09-26 17:44:30,383 INFO Listening as webexone-diejimen1@webex.bot via WebSocket... (Ctrl+C to stop)
+    2026-09-26 17:45:35,935 INFO Received from pod0@webexone-ai-assistant.wbx.ai: Help me prepare for the upcoming Webex meetings for pod0@webexone-ai-assistant.wbx.ai. Check agendas, invitees, and overlaps.
+    ...
+    2026-09-26 17:45:41,596 INFO read-books running on stdio - waiting for a client (Ctrl+C to stop).
+    2026-09-26 17:45:41,661 INFO Offering 11 tool(s) to gpt-5-nano
+    2026-09-26 17:45:48,473 INFO LLM asked for read_skill_runbook {'skill_name': 'meeting-review'}
+    2026-09-26 17:45:48,473 INFO LLM reading skill: meeting-review
+    ...
+    2026-09-26 17:46:18,531 INFO Sent to pod0@webexone-ai-assistant.wbx.ai: ### Meeting readiness
+    
+    > **Budget Review** · Sunday 18:00–19:00
+    > Agenda · missing
+    > Invitees · none
+    > Conflict · none
+    
+    **To do**
+    1. Provide agenda topics to include in Budget Review so I can add them to the meeting after your approval.
+    ```
 
 The model sees `meeting-review` in the summary, calls `read_skill_runbook`, reads the runbook, and follows it.
 
@@ -313,14 +402,27 @@ Adding a skill does not change `skill_loader.py` or the bot. You add a folder wh
 
     * python 01_list_skills.py
 
-You should see `meeting-review` and `troubleshoot-address-books`.
+2. You should see `meeting-review` and `troubleshoot-address-books`:
+
+    ```terminal
+    meeting-review: Use when the user asks to prepare for, review readiness of, check what is missing from, orfix readiness gaps in their meetings. Triggers on phrases like 'help me prepare', 'am I ready for', 'checkmy schedule for gaps', or 'add an agenda to my meetings'. This skill evaluates agendas, invitees, and conflicts, and can update missing meeting details. Do NOT use it for plain requests to list meetings.
+    troubleshoot-address-books: Use when a contact-center agent reports a problem with address books or contacts on the Webex Contact Center desktop — contacts missing, wrong address book showing, empty contact list, or address book not assigned. Investigates the agent's desktop profile, its address book assignment, and the book's entries. Can fix a misassigned or missing address book by updating the desktop profile. Combines alocal platform-status check with MCP tools from the address-book server (06) and the desktop-profile server (07).
+    ```
 
 ### 3. Ask the bot to use it
 
 1. Restart `04_bot.py`. The loader scans `skills/` at startup, so the new skill is offered with no Python change.
+    
+    ```terminal
+    2026-09-26 18:03:12,329 INFO Loaded 2 skill(s): meeting-review, troubleshoot-address-books
+    2026-09-26 18:03:13,940 INFO Listening as webexone-diejimen1@webex.bot via WebSocket... (Ctrl+C to stop)
+    ```
 
 2. In Webex, ask:
 
     * An agent says they cannot see any contacts in their address book on the desktop. Can you investigate?
 
     The model loads `troubleshoot-address-books` and follows that runbook.
+
+    ![Skill](assets/skill_22.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
