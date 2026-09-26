@@ -1,0 +1,1683 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="LAB-31123: Building an AI Assistant to Manage and Troubleshoot Your Organization">
+      
+      
+        <meta name="author" content="Diego Manuel Jimenez Moreno">
+      
+      
+      
+        <link rel="prev" href="../lab1_webex-mcp-in-ide/">
+      
+      
+        <link rel="next" href="../lab3_webex-apis-troubleshooting/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../template_assets/webex75.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Lab 2 - Agent Skills - LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-2-agent-skills" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" class="md-header__button md-logo" aria-label="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" data-md-component="logo">
+      
+  <img src="../template_assets/webexLogo91.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 2 - Agent Skills
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../overview/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Lab
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" class="md-nav__button md-logo" aria-label="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" data-md-component="logo">
+      
+  <img src="../template_assets/webexLogo91.png" alt="logo">
+
+    </a>
+    LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab1_webex-mcp-in-ide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 1 - Webex MCP Servers in Your IDE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2 - Agent Skills
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2 - Agent Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#skills-vs-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skills vs MCP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#skills-vs-custom-instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skills vs Custom Instructions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-21-enable-agent-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2.1: Enable Agent Skills
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2.1: Enable Agent Skills">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-agent-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable Agent Skills
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-skills-live" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where skills live
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-22-create-a-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2.2: Create a skill
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2.2: Create a skill">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reading-the-front-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading the front matter
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-23-verify-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2.3: Verify discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-24-progressive-disclosure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2.4: Progressive disclosure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-25-schedule-meetings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2.5: Schedule meetings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-26-configure-project-instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2.6: Configure project instructions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2.6: Configure project instructions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-the-agent-might-fail-to-use-the-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the agent might fail to use the skill
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-fix-a-project-instructions-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The fix: a project instructions file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-the-wording-matters-more-than-the-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the wording matters more than the content
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-27-three-ways-to-ask-the-same-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2.7: Three ways to ask the same question
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2.7: Three ways to ask the same question">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-ask-for-a-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1 - Ask for a list
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-ask-readiness-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2 - Ask readiness question
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-name-the-skill-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3 - Name the skill yourself
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-skill-actually-added" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the skill actually added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-teach-the-skill-a-new-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise: Teach the skill a new rule
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercise: Teach the skill a new rule">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-let-it-act" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1 - Let it act
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-add-a-guardrail-to-the-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2 — Add a guardrail to the skill
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-re-run-and-compare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3 — Re-run and compare
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-schedule-a-meeting-with-an-agenda" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional: schedule a meeting with an agenda
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab3_webex-apis-troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 3 - Webex APIs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab4_custom-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 4 - Build MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab5_bot-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 5 - Integrate an AI Assistant with a Webex Bot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab6_mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 6 - MCP Servers in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab7_skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 7 - Skills in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab8_use-cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 8 - Use Cases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conclusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-2-agent-skills">Lab 2 - Agent Skills</h1>
+<p>In this section, you will use an <strong>Agent Skill</strong> to teach the assistant <em>how</em> to review Webex meetings thoroughly. This separates the operational expertise from the MCP tool connectivity, and you can run it directly inside <strong>VS Code Chat (Agent mode)</strong> without writing any code.</p>
+<p>Skills aren't just fancy instructions, they're <strong>portable, task-specific workflows</strong> that load only when you need them. Unlike custom instructions that just define coding standards, skills bring scripts, examples, and automation into the mix to make agents truly <strong>action-oriented</strong>.</p>
+<p>Instead of copying a file from the repository, you will create the skill yourself using the VS Code skills flow. VS Code will automatically save it to a supported location, ensuring the lab works regardless of which folder you have open.</p>
+<h2 id="skills-vs-mcp">Skills vs MCP</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Responsibility</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MCP server</strong></td>
+<td>What the assistant <em>can do</em> — governed API access</td>
+<td>Webex Meeting tools (list meetings, participants, summaries, recordings)</td>
+</tr>
+<tr>
+<td><strong>Agent Skills</strong></td>
+<td><em>How</em> to use those tools — runbooks and judgment</td>
+<td>"For every meeting, also check participants, summary, recording, transcript, then triage"</td>
+</tr>
+</tbody>
+</table>
+<pre class="mermaid"><code>flowchart TB
+    Skills[Agent Skill - HOW]
+    MCP[Webex Meeting MCP - WHAT]
+    Client[VS Code Chat - Agent mode]
+    Skills --&gt; Client
+    MCP --&gt; Client
+    Client --&gt; Webex[Webex Meeting APIs]</code></pre>
+<p>A skill doesn't add new tools. Instead, it tells the assistant <strong>how to use the tools it already has more effectively</strong>—and what <em>not</em> to do.</p>
+<h2 id="skills-vs-custom-instructions">Skills vs Custom Instructions</h2>
+<p>If you already use custom instructions in VS Code, you might be wondering how skills are different. They actually serve different purposes:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Custom Instructions</th>
+<th>Agent Skills</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Purpose</strong></td>
+<td>Project-wide conventions and guardrails</td>
+<td>Task-specific workflows and runbooks</td>
+</tr>
+<tr>
+<td><strong>Scope</strong></td>
+<td>Always applied to every conversation</td>
+<td>Loaded on demand when the task matches</td>
+</tr>
+<tr>
+<td><strong>Content</strong></td>
+<td>Instructions only</td>
+<td>Instructions + scripts + examples + resources</td>
+</tr>
+<tr>
+<td><strong>Size</strong></td>
+<td>Kept short, since it is always sent</td>
+<td>Can be long, since it is only sent when relevant</td>
+</tr>
+</tbody>
+</table>
+<h2 id="step-21-enable-agent-skills">Step 2.1: Enable Agent Skills</h2>
+<div class="admonition note">
+<p class="admonition-title">Prerequisite: Webex Meeting MCP</p>
+<p>This lab relies on the <strong>Webex Meeting MCP server</strong> you configured before.</p>
+<p>Before proceeding, make sure it is still present in your <code>mcp.json</code> file and running.</p>
+</div>
+<h3 id="enable-agent-skills">Enable Agent Skills</h3>
+<p>Skills should be enabled already, but you can check it by doing the following:</p>
+<ol>
+<li>
+<p>Open <strong>Settings</strong> (<code>Ctrl+,</code>) and search for <code>chat.useAgentSkills</code>:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/skill_1.png" data-title="Skills" data-desc-position="top"><img alt="Skills" src="../assets/skill_1.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="850"></a></p>
+</li>
+<li>
+<p><strong>Enable</strong> the checkbox if it is not already enabled.</p>
+</li>
+<li>If you had to enable them, reload the window: <code>Ctrl+Shift+P</code> → <code>Developer: Reload Window</code>.</li>
+</ol>
+<h3 id="where-skills-live">Where skills live</h3>
+<p>VS Code automatically scans these project directories for skills (<a href="https://code.visualstudio.com/docs/agent-customization/agent-skills">VS Code docs</a>):</p>
+<table>
+<thead>
+<tr>
+<th>Location</th>
+<th>Convention</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.agents/skills/</code></td>
+<td>agentskills.io cross-host standard</td>
+</tr>
+<tr>
+<td><code>.github/skills/</code></td>
+<td>GitHub convention</td>
+</tr>
+<tr>
+<td><code>.claude/skills/</code></td>
+<td>Anthropic convention</td>
+</tr>
+</tbody>
+</table>
+<h2 id="step-22-create-a-skill">Step 2.2: Create a skill</h2>
+<p>A skill is simply a folder containing a <code>SKILL.md</code> file, following an open standard defined by <a href="https://agentskills.io/home">agentskills.io</a>.</p>
+<ol>
+<li>
+<p>In the Chat view, type <code>/skills</code> and press Enter:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/lab4/createskill1.png" data-title="skill_discovery" data-desc-position="top"><img alt="skill_discovery" src="../assets/lab4/createskill1.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+</li>
+<li>
+<p>Select <strong>+ New Skill...</strong>:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/lab4/createskill2.png" data-title="skill_discovery" data-desc-position="top"><img alt="skill_discovery" src="../assets/lab4/createskill2.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+</li>
+<li>
+<p>And select the default option <strong>~/.agents/skills (default) Workspace</strong>:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/lab4/createskill3.png" data-title="skill_discovery" data-desc-position="top"><img alt="skill_discovery" src="../assets/lab4/createskill3.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+</li>
+<li>
+<p>Name the new skill <code>meeting-review</code>:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/skill_2.png" data-title="Skills" data-desc-position="top"><img alt="Skills" src="../assets/skill_2.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="850"></a></p>
+</li>
+<li>
+<p>This will create a new file for you:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/skill_3.png" data-title="Skills" data-desc-position="top"><img alt="Skills" src="../assets/skill_3.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="850"></a></p>
+</li>
+<li>
+<p>Replace the generated contents with the skill below:</p>
+<div class="admonition tip">
+<p class="admonition-title">SKILL.md</p>
+<div class="highlight"><pre><span></span><code>---
+name: meeting-review
+description: &gt;-
+  Use when the user asks to prepare for, review readiness of, check what is missing
+  from, or fix readiness gaps in their meetings. Triggers on phrases like 'help me
+  prepare', 'am I ready for', 'check my schedule for gaps', or 'add an agenda to
+  my meetings'. This skill evaluates agendas, invitees, and conflicts, and can
+  update missing meeting details. Do NOT use it for plain requests to list meetings.
+<span class="gu">argument-hint: "person or time range"</span>
+<span class="gu">---</span>
+
+<span class="gh"># Meeting Review</span>
+
+<span class="gu">## Tools</span>
+
+Use the Webex Meeting MCP server only.
+
+| Need | Tool |
+|---|---|
+| Find upcoming meetings | <span class="sb">`webex-list-meetings`</span> |
+| Set agenda, title, time, or invitees | <span class="sb">`webex-update-meeting`</span> |
+
+If no Webex Meeting tool is available, output
+<span class="sb">`WEBEX MEETING TOOLS NOT AVAILABLE`</span> and stop. Do not answer from memory.
+
+<span class="gu">## Procedure</span>
+
+<span class="k">1.</span> Call <span class="sb">`webex-list-meetings`</span> with <span class="sb">`includeParticipants=true`</span> as the only parameter.
+Add <span class="sb">`from`</span>/<span class="sb">`to`</span> only if the user gave an explicit date range.
+If the user asked to add or change an agenda, stop here and do only this:
+call <span class="sb">`webex-update-meeting`</span> once per meeting, using the meeting ID from this
+list and no other meeting tool, then report whether each update succeeded.
+Do not produce the readiness template.
+<span class="k">2.</span> Check all three dimensions for every meeting:
+<span class="w">    </span><span class="k">-</span><span class="w"> </span><span class="gs">**Agenda**</span> — is the <span class="sb">`agenda`</span> field non-empty? A meeting without one wastes
+      its own first ten minutes, so this is the highest-value flag.
+<span class="w">    </span><span class="k">-</span><span class="w"> </span><span class="gs">**Invitees**</span> — is anyone listed besides the host?
+<span class="w">    </span><span class="k">-</span><span class="w"> </span><span class="gs">**Conflicts**</span> — compare each meeting's start and end against every other
+      meeting in the result set. Flag both sides of any overlap.
+<span class="k">3.</span> Report every check, including the ones that pass. A silent check reads as a
+    skipped check.
+<span class="k">4.</span> Produce the checklist using the template below.
+
+<span class="gu">## Output template</span>
+
+<span class="sb">```markdown</span>
+<span class="gu">### Meeting readiness</span>
+
+<span class="k">&gt; </span><span class="ge">**&lt;title&gt;** · &lt;weekday&gt; &lt;HH:MM&gt;–&lt;HH:MM&gt;</span>
+<span class="k">&gt; </span><span class="ge">Agenda · present or **missing**</span>
+<span class="k">&gt; </span><span class="ge">Invitees · &lt;invitee names, comma-separated, or **none**&gt;</span>
+<span class="k">&gt; </span><span class="ge">Conflict · none, or **overlaps with &lt;other title&gt;**</span>
+
+<span class="gs">**To do**</span>
+<span class="k">1.</span> &lt;one action per gap, most urgent first&gt;
+<span class="sb">```</span>
+
+<span class="gu">## Gotchas &amp; Constraints</span>
+
+<span class="k">-</span><span class="w"> </span><span class="gs">**Creating Agendas:**</span> <span class="sb">`webex-create-meeting`</span> has no <span class="sb">`agenda`</span> parameter, so a newly
+scheduled meeting needs a follow-up <span class="sb">`webex-update-meeting`</span> call to set one. Do not
+imply the agenda was set during creation.
+<span class="k">-</span><span class="w"> </span><span class="gs">**Missing Invitee Data:**</span> <span class="sb">`webex-list-meetings`</span> only returns invitees when
+<span class="sb">`includeParticipants=true`</span>. If the invitee field is absent from the tool response,
+the data was not requested. Re-query the tool. Do NOT report invitees as <span class="gs">**none**</span>
+unless the field is explicitly present and empty. Use each invitee's display name,
+or their email address if no name is returned.
+<span class="k">-</span><span class="w"> </span><span class="gs">**Times:**</span> The tool returns UTC. User is on "Central European time": add 2 hours from the
+last Sunday of March to the last Sunday of October, and 1 hour otherwise. Never
+print the UTC value, and never ask the user to confirm a timezone.
+<span class="k">-</span><span class="w"> </span><span class="gs">**No Hallucination:**</span> Report only what the tools return. Never infer an attendee
+list or agenda content from a meeting title.
+<span class="k">-</span><span class="w"> </span><span class="gs">**No Local Storage:**</span> Never create, edit, or save a local file. This skill produces
+chat output only. Meeting data belongs in Webex, not on disk. If a tool cannot store
+a value the user asked for, report the limitation and stop.
+</code></pre></div>
+</div>
+<details class="note">
+<summary>Best practices</summary>
+<p>The file you just pasted is a worked example of how to write a skill. Each part is there because a vaguer version of it failed.</p>
+<p><strong>Say when, not just what:</strong> The <code>description</code> is written as phrases a person would actually type — "help me prepare", "am I ready for", "add an agenda to my meetings" — and it ends by saying when <em>not</em> to load the skill. Until the skill activates, that text is the only part the agent sees, so it is what decides whether the file is read at all.</p>
+<ul>
+<li>
+<p><strong>Give one tool per need:</strong> The table names a single tool for finding meetings and a single tool for changing one. Offering a choice ("you could use X or Y") hands the decision back to the model, which is the decision the skill exists to make. The line under the table matters just as much: if those tools are missing, stop and say so. Do not improvise.</p>
+</li>
+<li>
+<p><strong>Write the steps, not the goal:</strong> "Check for conflicts" is a wish. "Compare each meeting's start and end against every other meeting" is a procedure, and a small model can follow the second one. Step 1 is the same idea applied to the call itself: <code>includeParticipants=true</code>, and no other parameter unless the user asked for one.</p>
+</li>
+<li>
+<p><strong>Show the output instead of describing it:</strong> The template is a block the model can copy, which is why it is fenced rather than explained in prose. Keep instructions <em>about</em> the template outside that block.</p>
+</li>
+<li>
+<p><strong>Record corrections as gotchas, and keep them to one point each:</strong> Every bullet in that section is a failure already seen. Creating a meeting cannot set an agenda. Invitees come back only when the call asks for them. Times come back in UTC, so the skill states the conversion instead of letting the model guess or ask. When a run goes wrong, add the correction here. Do not grow the procedure with the story of how you found it.</p>
+</li>
+<li>
+<p><strong>Leave out what the model already does:</strong> Nothing in the file explains what a meeting is, and nothing tells the model to sort a list. A skill earns its place by adding the judgment the model lacks — the order of checks, the API constraints, the shape of the answer. This one is about 70 lines. If a skill needs a preamble, it is usually explaining the wrong thing.</p>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<p><strong>Save</strong> the file.</p>
+</li>
+<li><strong>Reload the window</strong>: <code>Ctrl+Shift+P</code> → <code>Developer: Reload Window</code>.</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Reload after every edit to <code>SKILL.md</code> in this lab. You will edit the skill again in the Exercise, and the reload is what makes the change take effect before you re-run.</p>
+</div>
+<h3 id="reading-the-front-matter">Reading the front matter</h3>
+<p>Here are two important rules from the <a href="https://agentskills.io/specification">agentskills.io specification</a>:</p>
+<ul>
+<li><code>name</code> must be lowercase letters, numbers, and hyphens, and <strong>match the folder name</strong>.</li>
+<li><code>description</code> says what the skill does <strong>and when to use it</strong> — this is the only part the agent sees until the skill activates, so it is what decides whether the skill loads at all.</li>
+</ul>
+<p>Notice how the description starts with phrases <em>you</em> would actually type (like "help me prepare" or "am I ready for") and ends with a specific exclusion. This is deliberate, and you'll see why later in this section.</p>
+<h2 id="step-23-verify-discovery">Step 2.3: Verify discovery</h2>
+<p>Do <strong>not</strong> ask the agent "what skills are available?", a model without any skills loaded might just make up a plausible answer. Instead, check the observable state.</p>
+<p>Type <code>/</code> in the chat input. <code>meeting-review</code> should appear in the list.</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/lab4/skill_discovery.png" data-title="skill_discovery" data-desc-position="top"><img alt="skill_discovery" src="../assets/lab4/skill_discovery.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+<div class="admonition note">
+<p class="admonition-title">If <code>meeting-review</code> does not appear</p>
+<ul>
+<li>Confirm <code>chat.useAgentSkills</code> is enabled (Step 2.1).</li>
+<li>Confirm the <code>name</code> in the front matter is exactly <code>meeting-review</code> and matches the folder name.</li>
+<li>Reload the window again (<code>Developer: Reload Window</code>).</li>
+<li>If you created the file by hand instead of using <code>/skills</code>, it may be in a directory VS Code does not scan. Delete it and create it again with <code>/skills</code>.</li>
+</ul>
+</div>
+<h2 id="step-24-progressive-disclosure">Step 2.4: Progressive disclosure</h2>
+<p>Agent Skills load in three stages, allowing many skills to be available without consuming too many resources:</p>
+<ol>
+<li><strong>Discovery</strong> — at startup, the agent reads only each skill's name and description (~100 tokens). That is everything it knows about <code>meeting-review</code> until it has a reason to know more.</li>
+<li><strong>Activation</strong> — when your request matches the description, or when you type <code>/meeting-review</code>, the full <code>SKILL.md</code> body is pulled into the conversation.</li>
+<li><strong>Execution</strong> — the agent now works through the procedure in order, calls the MCP tools the skill told it to use, and shapes the answer to match the skill's output template.</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Important</p>
+<p>The full instructions only load when needed. This is why the <code>description</code> field is so important: it's the only part the model sees when deciding whether to use the skill in a conversation.</p>
+</div>
+<h2 id="step-25-schedule-meetings">Step 2.5: Schedule meetings</h2>
+<p>Let's schedule two meetings so we have some data to review. Neither meeting will have an agenda because <code>webex-create-meeting</code> doesn't have an agenda parameter. This limitation is intentional for this exercise, as the skill will flag this missing information.</p>
+<ol>
+<li>
+<p>Schedule the first meeting:</p>
+</li>
+<li>
+<p>Ask: <em>"Schedule a meeting with admin@webexone-ai-assistant.wbx.ai tomorrow at 10am CET. Title: Planning Session."</em></p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/skill_5.png" data-title="Skills" data-desc-position="top"><img alt="Skills" src="../assets/skill_5.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+</li>
+<li>
+<p>Schedule the second meeting:</p>
+</li>
+<li>
+<p>Ask: <em>"Schedule a meeting with admin@webexone-ai-assistant.wbx.ai tomorrow at 2pm CET. Title: Architecture Review."</em></p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/skill_6.png" data-title="Skills" data-desc-position="top"><img alt="Skills" src="../assets/skill_6.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+</li>
+</ol>
+<p>You now have two upcoming meetings, both without agendas.</p>
+<h2 id="step-26-configure-project-instructions">Step 2.6: Configure project instructions</h2>
+<p>Before we test the skill, we need to ensure the agent acts as an operational assistant rather than a coding assistant. Otherwise, the rest of the lab becomes unpredictable: the agent will sometimes load your skill and sometimes read the lab's Python files instead, sometimes call the Webex tools and sometimes write its own notes to disk.</p>
+<h3 id="why-the-agent-might-fail-to-use-the-skill">Why the agent might fail to use the skill</h3>
+<p>VS Code Chat was built first and foremost as a <strong>coding</strong> assistant. In Agent mode, it hands the model <em>every</em> tool it has: reading files, searching the codebase, editing files, running terminal commands, saving notes, plus whatever your MCP servers contribute. Then it lets the model choose.</p>
+<p>That choice is easier for the model in some situations than others. When you asked it to <em>create</em> meetings before, the conversation already contained successful Webex tool calls, so a follow-up question about your meetings is straightforward — it has just seen which tools work. Start a fresh chat, or ask something more open-ended like "help me prepare", and that advantage disappears. In a workspace full of Python, with a couple of dozen tools on offer, a small model, like the one we are using, will sometimes go and read the lab's source code, or save its own notes to a file, instead of loading the skill that was written for exactly this question:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/skill_9.png" data-title="Skills" data-desc-position="top"><img alt="Skills" src="../assets/skill_9.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+<p>That is not a broken skill or a broken MCP server. It is a tool-selection problem: the model has too many plausible options and no stated order to try them in, and it is choosing its file-editing tools over the Webex tools.</p>
+<h3 id="the-fix-a-project-instructions-file">The fix: a project instructions file</h3>
+<p>A project instructions file is prepended to every request you send in this workspace. It is where you state, once, what kind of assistant the agent is and in what order it should reach for things.</p>
+<ol>
+<li>Create a new file named <code>AGENTS.md</code> at the root of your workspace.</li>
+<li>
+<p>Paste the following content into it and save:</p>
+<div class="admonition note">
+<p class="admonition-title">AGENTS.md</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># Project instructions</span>
+
+You are an operational assistant, not a coding assistant. This repository is lab
+material. It is never the data the user is asking about.
+
+Follow these three rules on every request, in this order.
+
+<span class="gu">## Rule 1 - Load a matching skill before you do anything else</span>
+
+Your first action on every request is to check the available Agent Skills.
+
+<span class="k">1.</span> Read the list of available skills and their descriptions.
+<span class="k">2.</span> If a skill description matches what the user asked for, load that skill now.
+<span class="k">3.</span> Follow the loaded skill exactly: its procedure, its tool choices, and its
+   output format.
+
+Do not call an MCP tool, read a file, or begin your answer until you have done
+this check. Loading the skill comes first, then the tools the skill tells you to
+call. A skill exists because the default behaviour was not good enough.
+
+If the skill defines an output template, follow its structure. Emit it as chat
+text so it renders. Do not wrap the answer in a code block. Do not add sections
+the template does not have. The format is part of the answer.
+
+<span class="gu">## Rule 2 - Use tools, never this repository</span>
+
+<span class="k">-</span><span class="w"> </span>Answer questions about live systems by calling an MCP tool.
+<span class="k">-</span><span class="w"> </span>Never read, search, or list the files in this repository to answer a question
+  about a live system. The answer is not in these files.
+<span class="k">-</span><span class="w"> </span>If no tool can answer the question, say so and name the tool you are missing.
+  Never answer from memory, and never ask the user to paste in data that a tool
+  could have returned.
+<span class="k">-</span><span class="w"> </span>If a tool returns an error, report the tool name and the error text. Do not
+  work around a failing tool by another route.
+
+<span class="gu">## Rule 3 - Do not write anything to disk</span>
+
+Do not create, edit, rename, or delete a file unless the user explicitly asks you
+to change a file. Do not save notes, memories, or summaries as files. Writing a
+file is never a substitute for calling a tool.
+
+Return your answer as chat text.
+</code></pre></div>
+</div>
+</li>
+</ol>
+<p>Notice what it does <em>not</em> say. It never mentions Webex, and it never names a specific MCP server or tool. It only tells the model what kind of assistant it is in this workspace: check for a skill before acting, reach for MCP tools rather than the files, and leave the disk alone. That keeps it valid for every lab that follows, and for any MCP server you add later.</p>
+<h3 id="why-the-wording-matters-more-than-the-content">Why the wording matters more than the content</h3>
+<p>An instruction can be correct and still be ignored. A strong reasoning model fills in what you meant; a small one takes what you wrote, and any room you leave it becomes room to do something else. The file above is written to leave as little room as possible. Four habits do most of the work, and you can apply them to any instructions file you write:</p>
+<ul>
+<li><strong>State an order, not a preference:</strong> <em>"Prefer a skill"</em> never says when to check. <em>"Your first action on every request is to check the available Agent Skills"</em> does. Put the rule that matters most first, because position is itself a signal.</li>
+<li><strong>Pair the instruction with a prohibition:</strong> Saying what to do is not enough when something easier is available. Name the shortcut and forbid it: <em>"Do not call an MCP tool, read a file, or begin your answer until you have done this check."</em></li>
+<li><strong>Write commands, not descriptions:</strong> <em>"You are an operational assistant"</em> is shorter than <em>"you are acting as an operational assistant rather than a coding assistant"</em>, and leaves nothing to weigh up.</li>
+<li><strong>Leave out the rationale:</strong> Explaining <em>why</em> each rule exists invites a small model to reason about the rule instead of following it. State what to do and stop.</li>
+</ul>
+<p>The general rule: the weaker the model, the more your instructions have to read like a procedure and the less they can read like advice. Hedged verbs — <em>prefer</em>, <em>consider</em>, <em>try to</em>, <em>where appropriate</em> — are read as genuine permission to do otherwise. If you would be annoyed to see the opposite behaviour, do not write the instruction as a preference.</p>
+<p><code>AGENTS.md</code> is a <a href="https://agents.md/" target="_blank">cross-agent standard</a>, so the same file also works in Copilot CLI, Codex, and other hosts. This is the "always applied" column of the table you read earlier: unlike a skill, it is prepended to every request, because it is guidance that should never be optional.</p>
+<h2 id="step-27-three-ways-to-ask-the-same-question">Step 2.7: Three ways to ask the same question</h2>
+<p>Two meetings, one MCP server, three phrasings. What changes between them is whether the skill loads at all, and what the answer is worth once it does.</p>
+<h3 id="1-ask-for-a-list">1 - Ask for a list</h3>
+<ul>
+<li>
+<p>Ask: <em>"What webex meetings do I have scheduled?"</em></p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/skill_7.png" data-title="Skills" data-desc-position="top"><img alt="Skills" src="../assets/skill_7.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+</li>
+</ul>
+<p>You get titles, times, attendees, links, ... but nothing else: no gaps called out, no checks run, nothing to act on.</p>
+<p>The skill should stay out of this one, and that is deliberate. The last line of its description says "Do NOT use it for plain requests to list meetings", which is precisely what you asked for.</p>
+<p>You can expand the references to confirm that <code>meeting-review</code> wasn't loaded.</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/skill_8.png" data-title="Skills" data-desc-position="top"><img alt="Skills" src="../assets/skill_8.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+<h3 id="2-ask-readiness-question">2 - Ask readiness question</h3>
+<p>Now, try it  for the same data a different way:</p>
+<ul>
+<li>
+<p>Ask: <em>"Help me prepare for my upcoming webex meetings."</em></p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/skill_11.png" data-title="Skills" data-desc-position="top"><img alt="Skills" src="../assets/skill_11.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+</li>
+</ul>
+<p>This phrasing matches the description, so the model should load the skill without being told. Check the steps at the top of the reply: you are looking for <strong>Read skill · meeting-review</strong>, followed by one or more calls to the Webex Meeting MCP server.</p>
+<p>This is the interesting part of the lab, so run it two or three times in fresh chats and compare what you get. Because <code>AGENTS.md</code> tells the model to check for a skill before doing anything else, the skill should load on most runs. It is still guidance and not a guarantee, so a small model can skip it now and then.</p>
+<h3 id="3-name-the-skill-yourself">3 - Name the skill yourself</h3>
+<p>To make sure the skill takes effect, you can force it into the context. To do that, first type <code>/meeting-review</code> in the chat:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/skill_12.png" data-title="Skills" data-desc-position="top"><img alt="Skills" src="../assets/skill_12.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+<p>The leading <code>/meeting-review</code> loads the skill body into the request before the model ever sees your question, so activation stops being the model's decision. It no longer has to <em>recognise</em> that the skill applies, only follow it. </p>
+<p>Naming the skill removes all doubt about <em>loading</em>, but it does not guarantee <em>obedience</em>. What the skill asks for looks like this (your day and times will match whenever you scheduled the meetings):</p>
+<ul>
+<li>
+<p>Now, ask: <em>"Help me prepare for my upcoming webex meetings."</em></p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/skill_13.png" data-title="Skills" data-desc-position="top"><img alt="Skills" src="../assets/skill_13.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+</li>
+</ul>
+<p>The template shows every check, whether it passes or fails. This makes it clear that the agent checked the agenda, invitees, and conflicts instead of accidentally skipping one.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Even when you name the skill, a small model may not follow it to the letter. The layout can drift, or a check can be summarised in prose rather than listed. Compare your output against the screenshot above; noticing that gap is part of the point.</p>
+</div>
+<h3 id="what-the-skill-actually-added">What the skill actually added</h3>
+<p>The two approaches ran on identical data: the same <code>webex-list-meetings</code> call, the same two meetings. Everything that differs came from the skill.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: center;">Ask for a list</th>
+<th style="text-align: center;">Name the skill</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lists your meetings</td>
+<td style="text-align: center;">yes</td>
+<td style="text-align: center;">yes</td>
+</tr>
+<tr>
+<td>Checks each one for an agenda</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">yes</td>
+</tr>
+<tr>
+<td>Checks who was invited</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">yes</td>
+</tr>
+<tr>
+<td>Compares meetings for overlaps</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">yes</td>
+</tr>
+<tr>
+<td>Reports what passed, not only what failed</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">yes</td>
+</tr>
+<tr>
+<td>Ends with something you can act on</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">yes</td>
+</tr>
+</tbody>
+</table>
+<p>No new tools, no new API access. Just judgment applied to data the agent could already reach.</p>
+<div class="admonition tip">
+<p class="admonition-title">Try the conflict flag</p>
+<p>Schedule a third meeting that overlaps one of the first two, then re-run.
+The skill flags <strong>overlaps with</strong>, followed by the other meeting's title, on <strong>both</strong> meetings.</p>
+</div>
+<h2 id="exercise-teach-the-skill-a-new-rule">Exercise: Teach the skill a new rule</h2>
+<p>So far the skill has only <em>reported</em> things. Now you will let it make changes in Webex, watch it go further than you wanted, and pull it back by adding one sentence to <code>SKILL.md</code>.</p>
+<h3 id="1-let-it-act">1 - Let it act</h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This exercise tests what the skill tells the agent to do, not whether the agent loads the skill on its own. That is why you name the skill explicitly: it avoids random results.</p>
+</div>
+<p>Type <code>/meeting-review</code> so the skill is loaded, then ask it to add the missing agendas:</p>
+<ul>
+<li>
+<p>Ask: <em>"/meeting-review Add an agenda to my upcoming Webex meetings."</em></p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/skill_16.png" data-title="Skills" data-desc-position="top"><img alt="Skills" src="../assets/skill_16.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+</li>
+</ul>
+<p>Watch what it does. The skill tells it how to update an agenda, but not who writes it. So the agent <strong>writes agenda text it invented</strong> and applies it straight away with <code>webex-update-meeting</code>, without showing you the text first. Your meetings are now updated with wording you never approved.</p>
+<p>The tool call itself was correct. The problem is that a judgement call was made on your behalf, silently.</p>
+<h3 id="2-add-a-guardrail-to-the-skill">2 — Add a guardrail to the skill</h3>
+<p>Open your <code>meeting-review</code> skill (<code>/skills</code> → select it → edit) and add this line to the <strong>Gotchas</strong> section:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/lab4/editskill.png" data-title="skill_discovery" data-desc-position="top"><img alt="skill_discovery" src="../assets/lab4/editskill.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+<div class="highlight"><pre><span></span><code><span class="k">-</span><span class="w"> </span><span class="gs">**Approval:**</span> Never write agenda text you invented. Draft the wording, show it to
+the user, and wait for explicit approval before calling <span class="sb">`webex-update-meeting`</span>.
+</code></pre></div>
+<p>Save the file, then <strong>reload the window</strong> (<code>Ctrl+Shift+P</code> → <code>Developer: Reload Window</code>).</p>
+<h3 id="3-re-run-and-compare">3 — Re-run and compare</h3>
+<p>Ask exactly the same question again, in a new chat window:</p>
+<ul>
+<li>
+<p>Ask: <em>"/meeting-review Add an agenda to my upcoming Webex meetings."</em></p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/skill_15.png" data-title="Skills" data-desc-position="top"><img alt="Skills" src="../assets/skill_15.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="750"></a></p>
+</li>
+</ul>
+<p>The agent now presents draft agenda text and <strong>waits for your approval</strong> before touching Webex. Approve it, and confirm the agenda is set.</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/skill_17.png" data-title="Skills" data-desc-position="top"><img alt="Skills" src="../assets/skill_17.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a></p>
+<p>You just changed agent behaviour with one line of markdown. No code.</p>
+<h3 id="optional-schedule-a-meeting-with-an-agenda">Optional: schedule a meeting with an agenda</h3>
+<p>The skill's Gotchas record that <code>webex-create-meeting</code> has no agenda parameter, so a new meeting always starts without one. Test how the agent handles that:</p>
+<ul>
+<li>Ask: <em>"Schedule a meeting tomorrow at 4pm titled Budget Review, with the agenda: review Q4 spend."</em></li>
+</ul>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/skill_18.png" data-title="Skills" data-desc-position="top"><img alt="Skills" src="../assets/skill_18.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="850"></a></p>
+<p>The agent creates the meeting first, then calls <code>webex-update-meeting</code> to add the agenda, because one tool cannot do both. Without that gotcha, an agent can create the meeting, drop the agenda, and still report the request as done.</p>
+<div class="admonition tip">
+<p class="admonition-title">Key takeaway</p>
+<p>Guardrails are simple lines of text in <code>SKILL.md</code>, not a separate feature. The most useful ones come from mistakes you have watched an agent make.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../lab1_webex-mcp-in-ide/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Lab 1 - Webex MCP Servers in Your IDE">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Lab 1 - Webex MCP Servers in Your IDE
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../lab3_webex-apis-troubleshooting/" class="md-footer__link md-footer__link--next" aria-label="Next: Lab 3 - Webex APIs">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Lab 3 - Webex APIs
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2026 Cisco
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.instant", "navigation.top", "navigation.footer", "search.suggest", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../template_assets/js/newLoad.js"></script>
+      
+        <script src="../template_assets/js/setInfo.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": false, "openEffect": "fade", "closeEffect": "fade", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

@@ -1,0 +1,1384 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="LAB-31123: Building an AI Assistant to Manage and Troubleshoot Your Organization">
+      
+      
+        <meta name="author" content="Diego Manuel Jimenez Moreno">
+      
+      
+      
+        <link rel="prev" href="../lab7_skills/">
+      
+      
+        <link rel="next" href="../conclusion/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../template_assets/webex75.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Lab 8 - Use Cases - LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-8-use-cases" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" class="md-header__button md-logo" aria-label="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" data-md-component="logo">
+      
+  <img src="../template_assets/webexLogo91.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 8 - Use Cases
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../overview/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Lab
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" class="md-nav__button md-logo" aria-label="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" data-md-component="logo">
+      
+  <img src="../template_assets/webexLogo91.png" alt="logo">
+
+    </a>
+    LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab1_webex-mcp-in-ide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 1 - Webex MCP Servers in Your IDE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab2_agent-skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2 - Agent Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab3_webex-apis-troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 3 - Webex APIs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab4_custom-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 4 - Build MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab5_bot-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 5 - Integrate an AI Assistant with a Webex Bot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab6_mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 6 - MCP Servers in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab7_skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 7 - Skills in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 8 - Use Cases
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 8 - Use Cases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-you-are-composing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What you are composing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-81-compose-what-you-built" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.1: Compose what you built
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-82-try-a-write" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.2: Try a write
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-83-understand-why" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.3: Understand why
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 8.3: Understand why">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gap-1-no-card-tap-channel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gap 1: No card-tap channel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gap-2-no-elicitation-callback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gap 2: No elicitation callback
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-84-switch-to-upgraded-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.4: Switch to upgraded modules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-85-skill-guided-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.5: Skill-guided troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercises">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-a-second-use-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a second use case
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conclusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-8-use-cases">Lab 8 - Use Cases</h1>
+<p>You have built a <strong>Webex bot</strong> (Lab 5), an <strong>MCP client and hub</strong> (Lab 6), a <strong>skill loader</strong> (Lab 7), and <strong>custom MCP servers</strong> (Labs 3-4). In this lab you compose those modules into a real troubleshooting use case for <strong>Webex Contact Center address books</strong> — and discover where they hit their limits.</p>
+<p>The use case: a Contact Center manager reports that an agent's address book is wrong. Your bot investigates across two MCP servers, diagnoses the misconfiguration, and <strong>fixes it with a confirmation card</strong> — all by importing the modules you already built.</p>
+<h2 id="architecture">Architecture</h2>
+<pre class="mermaid"><code>flowchart LR
+    User[Webex User] &lt;--&gt;|Messages + Cards| Bot[Webex Bot]
+    Bot &lt;--&gt;|Prompts &amp; Responses| LLM[LLM]
+    LLM &lt;--&gt;|Tool Calls| Hub[MCP Client Hub]
+    Hub &lt;--&gt;|stdio| S06[Server 06\nAddress Books]
+    Hub &lt;--&gt;|stdio| S07[Server 07\nDesktop Profiles]
+    S06 &lt;--&gt;|REST| CC[Webex CC API]
+    S07 &lt;--&gt;|REST| CC
+    LLM &lt;--&gt;|Local Call| Status[check_webex_status]
+    Status &lt;--&gt;|HTTP| WS[status.webex.com]</code></pre>
+<h3 id="what-you-are-composing">What you are composing</h3>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Built in</th>
+<th>Import path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>WebSocketClient</code></td>
+<td>Lab 5</td>
+<td><code>05_bot/websocket_client.py</code></td>
+</tr>
+<tr>
+<td><code>McpClient</code> / <code>McpHub</code></td>
+<td>Lab 6</td>
+<td><code>06_mcp_bot/mcp_client.py</code>, <code>mcp_hub.py</code></td>
+</tr>
+<tr>
+<td><code>run_turn</code> / <code>as_openai_tools</code></td>
+<td>Lab 6</td>
+<td><code>06_mcp_bot/llm.py</code></td>
+</tr>
+<tr>
+<td><code>SkillLoader</code></td>
+<td>Lab 7</td>
+<td><code>07_skills_bot/skill_loader.py</code></td>
+</tr>
+<tr>
+<td><code>WebSocketClientCards</code></td>
+<td>Agent Bot</td>
+<td><code>agent_bot/utils/websocket.py</code></td>
+</tr>
+<tr>
+<td>Persistent <code>mcp_client</code></td>
+<td>Agent Bot</td>
+<td><code>agent_bot/utils/mcp_client.py</code></td>
+</tr>
+<tr>
+<td><code>elicit</code> (card bridge)</td>
+<td>Agent Bot</td>
+<td><code>agent_bot/utils/elicit.py</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="setup">Setup</h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>08_use_cases
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>../webex-mcp-lab/agent_bot/requirements.txt
+cp<span class="w"> </span>.env.example<span class="w"> </span>.env<span class="w">    </span><span class="c1"># then edit .env</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code>.env</code> file needs <code>BOT_TOKEN</code>, <code>OPENAI_API_KEY</code>, <code>MODEL</code>, plus the Contact Center credentials (<code>WEBEX_ACCESS_TOKEN</code>, <code>WEBEX_ORG_ID</code>, <code>WXCC_CONFIG_API_BASE</code>) that were configured during the lab setup.</p>
+</div>
+<h2 id="step-81-compose-what-you-built">Step 8.1: Compose what you built</h2>
+<p>In this first step, you will compose the modules from Labs 5, 6, and 7 into a single bot that connects to the Contact Center MCP servers. No new code is written — everything is imported.</p>
+<ol>
+<li>
+<p>Navigate to <code>08_use_cases/01_naive_bot.py</code> and review the code:</p>
+<details class="tip">
+<summary>Python Code</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+
+<span class="n">LAB_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
+
+<span class="c1"># Import modules built in earlier labs — no rewriting.</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">LAB_ROOT</span> <span class="o">/</span> <span class="s2">"05_bot"</span><span class="p">))</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">LAB_ROOT</span> <span class="o">/</span> <span class="s2">"06_mcp_bot"</span><span class="p">))</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">LAB_ROOT</span> <span class="o">/</span> <span class="s2">"07_skills_bot"</span><span class="p">))</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">websocket_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebSocketClient</span>          <span class="c1"># Lab 5</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">McpClient</span>                      <span class="c1"># Lab 6</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp_hub</span><span class="w"> </span><span class="kn">import</span> <span class="n">McpHub</span>                            <span class="c1"># Lab 6</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">as_openai_tools</span><span class="p">,</span> <span class="n">run_turn</span>             <span class="c1"># Lab 6</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skill_loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">SkillLoader</span>                  <span class="c1"># Lab 7</span>
+</code></pre></div>
+</details>
+<p>Notice: <strong>zero code is rewritten</strong>. The bot imports the WebSocket client from Lab 5, the MCP client/hub and LLM loop from Lab 6, and the skill loader from Lab 7. It connects to the two Contact Center MCP servers (address books and desktop profiles) over stdio, and adds a local <code>check_webex_status</code> tool via the <code>extra</code> dispatch parameter that <code>run_turn</code> already supports.</p>
+</li>
+<li>
+<p>Run the bot:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>01_naive_bot.py
+</code></pre></div>
+</li>
+<li>
+<p>In your Webex space, ask:</p>
+<ul>
+<li>List my address books</li>
+</ul>
+</li>
+<li>
+<p>You should see the bot successfully call <code>list_address_books</code> and reply with the results:</p>
+<div class="highlight"><pre><span></span><code>INFO Offering 12 tool(s) to gpt-5-nano
+INFO LLM asked for list_address_books {'limit': 50}
+INFO Sent to user@example.com: Here are your address books: ...
+</code></pre></div>
+</li>
+<li>
+<p>Try another read across both servers:</p>
+<ul>
+<li>List agents and their desktop profiles</li>
+</ul>
+<p>The bot calls tools on <strong>both</strong> MCP servers and combines the results. Everything works.</p>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">All read operations succeed</p>
+<p>The Lab 5/6/7 modules compose cleanly for read-only operations. The <code>McpHub</code> routes tool calls to the right server, and <code>run_turn</code> handles the agentic loop. The skill loader discovers the troubleshoot skill. This is the power of building reusable modules.</p>
+</div>
+<h2 id="step-82-try-a-write">Step 8.2: Try a write</h2>
+<p>Now ask the bot to <strong>fix</strong> a misconfiguration — this triggers a write tool (<code>update_desktop_profile</code>) that uses server-side elicitation.</p>
+<ol>
+<li>
+<p>In Webex, ask:</p>
+<ul>
+<li>Fix Ana's desktop profile to use the Sales-EMEA address book</li>
+</ul>
+</li>
+<li>
+<p>Watch the terminal. The LLM will call <code>update_desktop_profile</code>, but something unexpected happens:</p>
+<div class="highlight"><pre><span></span><code>INFO LLM asked for update_desktop_profile {'id': '...', 'addressBookId': '...'}
+INFO Sent to user@example.com: The update was not performed.
+       The confirmation was declined or dismissed.
+</code></pre></div>
+<p><strong>No card appeared in Webex.</strong> The tool returned <code>{"updated": false, "reason": "Confirmation was declined or dismissed."}</code> — but you never saw a confirmation prompt.</p>
+</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">The server tried to ask 'are you sure?' but nobody was listening</p>
+<p>The <code>update_desktop_profile</code> tool uses <strong>server-side elicitation</strong> — it sends a confirmation request back through the MCP session. But Lab 6's <code>McpClient</code> has no way to handle that request, so it was silently declined.</p>
+</div>
+<h2 id="step-83-understand-why">Step 8.3: Understand why</h2>
+<p>There are exactly <strong>two gaps</strong> between the Lab 5/6 modules and what this use case needs.</p>
+<h3 id="gap-1-no-card-tap-channel">Gap 1: No card-tap channel</h3>
+<p>Lab 5's <code>WebSocketClient</code> only processes messages (<code>verb == "post"</code>). When the user taps a button on an Adaptive Card, the Mercury WebSocket delivers <code>verb == "cardAction"</code> — and Lab 5 silently drops it.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Lab 5 <code>WebSocketClient</code></th>
+<th>Agent Bot <code>WebSocketClientCards</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Messages (<code>verb == "post"</code>)</td>
+<td>Handled</td>
+<td>Handled</td>
+</tr>
+<tr>
+<td>Card taps (<code>verb == "cardAction"</code>)</td>
+<td><strong>Dropped</strong> (filtered out)</td>
+<td>Handled via <code>on_card</code> callback</td>
+</tr>
+<tr>
+<td>Card input decryption</td>
+<td>Not implemented</td>
+<td><code>get_card_inputs()</code> method</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gap-2-no-elicitation-callback">Gap 2: No elicitation callback</h3>
+<p>Lab 6's <code>McpClient</code> creates <code>ClientSession(read, write)</code> with <strong>no <code>elicitation_callback</code></strong>. When the MCP server tries to elicit confirmation, the SDK has no handler — the elicitation is automatically declined.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Lab 6 <code>McpClient</code></th>
+<th>Agent Bot <code>MCPConnection</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Session lifecycle</td>
+<td>One-shot (open per call)</td>
+<td>Persistent (background thread)</td>
+</tr>
+<tr>
+<td><code>elicitation_callback</code></td>
+<td><strong>Not set</strong></td>
+<td>Set to <code>_on_elicit</code></td>
+</tr>
+<tr>
+<td>Card bridge</td>
+<td>None</td>
+<td><code>elicit.py</code> posts card, waits for tap</td>
+</tr>
+<tr>
+<td>Resources / Prompts</td>
+<td>Not read</td>
+<td>Discovered and merged</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Two gaps to bridge</p>
+<ol>
+<li><strong>Transport</strong>: The WebSocket client needs to hear card button taps, not just messages.</li>
+<li><strong>MCP client</strong>: The MCP session needs an elicitation callback that can post an Adaptive Card and wait for the user's response.</li>
+</ol>
+<p>The Lab 5/6 modules were designed for simpler scenarios. The agent bot's upgraded modules solve both gaps.</p>
+</div>
+<h2 id="step-84-switch-to-upgraded-modules">Step 8.4: Switch to upgraded modules</h2>
+<p>Now switch to the full bot that imports the upgraded modules from <code>agent_bot/utils</code>. These provide persistent MCP sessions with elicitation callbacks and a WebSocket client that handles both messages and card taps.</p>
+<ol>
+<li>
+<p>Stop the naive bot (<code>Ctrl+C</code>) and review <code>08_use_cases/02_full_bot.py</code>:</p>
+<details class="tip">
+<summary>Python Code</summary>
+<div class="highlight"><pre><span></span><code><span class="n">LAB_ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
+<span class="n">AGENT_BOT_DIR</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">LAB_ROOT</span> <span class="o">/</span> <span class="s2">"webex-mcp-lab"</span> <span class="o">/</span> <span class="s2">"agent_bot"</span><span class="p">)</span>
+
+<span class="c1"># Import the upgraded modules from agent_bot/utils</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">AGENT_BOT_DIR</span><span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">mcp_client</span><span class="p">,</span> <span class="n">elicit</span><span class="p">,</span> <span class="n">skills</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utils.websocket</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebSocketClientCards</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">local_agent_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">webex_status</span>
+</code></pre></div>
+</details>
+<p>Key differences from the naive bot:</p>
+<ul>
+<li><strong><code>WebSocketClientCards</code></strong> replaces <code>WebSocketClient</code> — handles <code>on_card</code> taps</li>
+<li><strong><code>mcp_client.connect_all</code></strong> keeps persistent sessions with <code>elicitation_callback</code></li>
+<li><strong><code>elicit.init</code> + <code>mcp_client.set_elicit_bridge</code></strong> wires the card bridge</li>
+<li><strong><code>on_card</code> handler</strong> routes card taps to <code>elicit.resolve</code></li>
+</ul>
+</li>
+<li>
+<p>Run the full bot:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>02_full_bot.py
+</code></pre></div>
+</li>
+<li>
+<p>In Webex, ask the same question:</p>
+<ul>
+<li>Fix Ana's desktop profile to use the Sales-EMEA address book</li>
+</ul>
+</li>
+<li>
+<p>This time, an <strong>Adaptive Card</strong> appears in the Webex space:</p>
+<p>The card shows the action ("Update desktop profile X to use address book Y? This affects ALL agents assigned to this profile.") with <strong>Confirm</strong> and <strong>Decline</strong> buttons.</p>
+</li>
+<li>
+<p>Tap <strong>Confirm</strong>. The terminal shows:</p>
+<div class="highlight"><pre><span></span><code>INFO Card tap: confirmed
+INFO Sent to user@example.com: Done! Ana's desktop profile now uses Sales-EMEA.
+</code></pre></div>
+<p>The profile is updated. If you tap <strong>Decline</strong> instead, the tool returns <code>{"updated": false}</code> and the bot reports no change was made.</p>
+</li>
+</ol>
+<h2 id="step-85-skill-guided-troubleshooting">Step 8.5: Skill-guided troubleshooting</h2>
+<p>The full bot also loads the <code>troubleshoot-address-books</code> skill, which orchestrates the complete diagnostic flow across both MCP servers and the local status check.</p>
+<ol>
+<li>
+<p>Review the skill file at <code>08_use_cases/skills/troubleshoot-address-books/SKILL.md</code>:</p>
+<details class="tip">
+<summary>SKILL.md</summary>
+<p>The skill defines a 9-step workflow:</p>
+<ol>
+<li>Ask for the symptom</li>
+<li>Check platform status (<code>check_webex_status</code> — local tool)</li>
+<li>Find the agent (<code>list_agents</code> — server 07)</li>
+<li>Get their desktop profile (<code>get_desktop_profile</code> — server 07)</li>
+<li>Find the desired address book (<code>list_address_books</code> — server 06)</li>
+<li>Check the book has entries (<code>list_entries</code> — server 06)</li>
+<li>Compare profile's <code>addressBookId</code> with the desired book's <code>id</code></li>
+<li>Fix with approval (<code>update_desktop_profile</code> — server 07, with confirmation card)</li>
+<li>Summarize findings</li>
+</ol>
+</details>
+</li>
+<li>
+<p>In Webex, describe a symptom:</p>
+<ul>
+<li>Agent Ana says she can't see the Sales-EMEA contacts on her desktop. The address book looks wrong. Can you investigate?</li>
+</ul>
+</li>
+<li>
+<p>Watch the terminal as the bot follows the skill's steps, calling tools across all three sources (local, server 06, server 07), and posting a confirmation card before making any changes.</p>
+</li>
+</ol>
+<h2 id="exercises">Exercises</h2>
+<h3 id="add-a-second-use-case">Add a second use case</h3>
+<p>The <code>08_use_cases/</code> directory already contains two MCP servers: <code>troubleshooting_mcp.py</code> and <code>controlhub_mcp.py</code>. These expose tools for security audit events, call history, reports, and workspace management.</p>
+<p>Add a third MCP server to the full bot's <code>_configs</code> list and write a new skill that uses its tools alongside the existing ones.</p>
+<details class="solution">
+<summary>Solution</summary>
+<ol>
+<li>
+<p>Add a new entry to the <code>_configs</code> list in <code>02_full_bot.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">_configs</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"address-books"</span><span class="p">,</span>
+        <span class="s2">"command"</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
+        <span class="s2">"args"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"06_manage_address_books.py"</span><span class="p">],</span>
+        <span class="s2">"cwd"</span><span class="p">:</span> <span class="n">MCP_SERVERS_DIR</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"desktop-profiles"</span><span class="p">,</span>
+        <span class="s2">"command"</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
+        <span class="s2">"args"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"07_verify_desktop_profiles.py"</span><span class="p">],</span>
+        <span class="s2">"cwd"</span><span class="p">:</span> <span class="n">MCP_SERVERS_DIR</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"troubleshooting"</span><span class="p">,</span>
+        <span class="s2">"command"</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
+        <span class="s2">"args"</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">LAB_ROOT</span> <span class="o">/</span> <span class="s2">"08_use_cases"</span> <span class="o">/</span> <span class="s2">"troubleshooting_mcp.py"</span><span class="p">)],</span>
+        <span class="s2">"cwd"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">LAB_ROOT</span> <span class="o">/</span> <span class="s2">"08_use_cases"</span><span class="p">),</span>
+    <span class="p">},</span>
+<span class="p">]</span>
+</code></pre></div>
+</li>
+<li>
+<p>Create a new skill at <code>08_use_cases/skills/investigate-audit/SKILL.md</code> with frontmatter and steps that call <code>list_admin_audit_events</code> and <code>list_security_audit_events</code>.</p>
+</li>
+<li>
+<p>Restart the bot. The skill loader discovers the new skill, and the LLM can now call tools from three servers.</p>
+</li>
+</ol>
+</details>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../lab7_skills/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Lab 7 - Skills in AI Assistant">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Lab 7 - Skills in AI Assistant
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../conclusion/" class="md-footer__link md-footer__link--next" aria-label="Next: Conclusion">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Conclusion
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2026 Cisco
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.instant", "navigation.top", "navigation.footer", "search.suggest", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../template_assets/js/newLoad.js"></script>
+      
+        <script src="../template_assets/js/setInfo.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": false, "openEffect": "fade", "closeEffect": "fade", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
