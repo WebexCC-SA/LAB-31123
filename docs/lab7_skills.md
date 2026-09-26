@@ -8,6 +8,7 @@ Same skill file. Same format. The host is what changed.
 
 ## Architecture
 
+```mermaid
 flowchart LR
     User[Webex User] <-->|Messages| Bot[Webex Bot]
     Bot <-->|Prompts and responses| Agent[LLM]
@@ -16,11 +17,13 @@ flowchart LR
     Servers <-->|REST| API[Webex APIs]
     Agent <-->|read_skill_runbook| Loader[SkillLoader]
     Loader --> File["SKILL.md"]
+```
 
 ### The Request Flow
 
 Here is how a single question travels through that architecture:
 
+```mermaid
 sequenceDiagram
     participant U as Webex User
     participant B as Webex Bot
@@ -37,6 +40,7 @@ sequenceDiagram
     C-->>A: Tool results
     A->>B: What passed, what is missing, what to do next
     B->>U: Reply in the space
+```
 
 ## Step 7.1: The SkillLoader class
 
