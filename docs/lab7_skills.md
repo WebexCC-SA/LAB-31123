@@ -6,6 +6,38 @@ A bot you write in Python does not do that. The model only sees the system promp
 
 Same skill file. Same format. The host is what changed.
 
+## Architecture
+
+flowchart LR
+    User[Webex User] <-->|Messages| Bot[Webex Bot]
+    Bot <-->|Prompts and responses| Agent[LLM]
+    Agent <-->|Tool calls| MCP[MCP Client]
+    MCP <-->|MCP protocol| Servers[Webex MCP Servers]
+    Servers <-->|REST| API[Webex APIs]
+    Agent <-->|read_skill_runbook| Loader[SkillLoader]
+    Loader --> File["SKILL.md"]
+
+### The Request Flow
+
+Here is how a single question travels through that architecture:
+
+sequenceDiagram
+    participant U as Webex User
+    participant B as Webex Bot
+    participant A as LLM
+    participant L as SkillLoader
+    participant C as MCP Client
+
+    Note over L,A: Startup: only name and description go into the system prompt
+    U->>B: Help me prepare for upcoming meetings
+    B->>A: Message plus skill summaries
+    A->>L: read_skill_runbook meeting-review
+    L-->>A: Full runbook
+    A->>C: List meetings, then check agenda, invitees, overlaps
+    C-->>A: Tool results
+    A->>B: What passed, what is missing, what to do next
+    B->>U: Reply in the space
+
 ## Step 7.1: The SkillLoader class
 
 Every script in this folder imports the same class. Read it before you run anything.
