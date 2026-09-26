@@ -151,9 +151,9 @@ The model decides when to load a skill. That is the same progressive disclosure 
 
 The model sees `meeting-review` in the summary, calls `read_skill_runbook`, reads the runbook, and follows it.
 
-## Exercise: Add new skill
+## Exercise: Add a new skill
 
-Adding a skill does not change `skill_loader.py` or the bot. You add a folder whose name matches the `name` in the front matter, with a single `SKILL.md` inside. Create both skills below yourself.
+Adding a skill does not change `skill_loader.py` or the bot. You add a folder whose name matches the `name` in the front matter, with a single `SKILL.md` inside.
 
 ### 1. Add troubleshoot-address-books
 
@@ -275,7 +275,7 @@ Adding a skill does not change `skill_loader.py` or the bot. You add a folder wh
           a tool response.
         ```
 
-### 2. Confirm the loader sees them
+### 2. Confirm the loader sees it
 
 1. Run discovery again:
 
@@ -283,9 +283,9 @@ Adding a skill does not change `skill_loader.py` or the bot. You add a folder wh
 
 You should see `meeting-review` and `troubleshoot-address-books`.
 
-### 3. Ask the bot to use them
+### 3. Ask the bot to use it
 
-1. Restart `04_bot.py`. The loader scans `skills/` at startup, so both new skills are offered with no Python change.
+1. Restart `04_bot.py`. The loader scans `skills/` at startup, so the new skill is offered with no Python change.
 
 2. In Webex, ask:
 
