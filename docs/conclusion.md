@@ -12,7 +12,7 @@ In this session you learned how to:
 
 ## Share your experience! 
 
-Scan the QR code for the post-session survey
+Scan the QR code for the post-session survey:
 
 ![Feedback](./assets/feedback.png){ width="150" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
