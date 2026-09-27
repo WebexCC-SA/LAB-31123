@@ -1,269 +1,262 @@
 # Lab 8 - Use Cases
 
-You have built a **Webex bot** (Lab 5), an **MCP client and hub** (Lab 6), a **skill loader** (Lab 7), and **custom MCP servers** (Labs 3-4). In this lab you compose those modules into a real troubleshooting use case for **Webex Contact Center address books** — and discover where they hit their limits.
+You have built a **Webex bot** (Lab 5), an **MCP client and hub** (Lab 6), a **skill loader** 
+(Lab 7), and **custom MCP servers** (Labs 3-4). In this lab you compose those modules into a 
+real troubleshooting use case for **Webex Contact Center address books** — and discover where 
+they hit their limits.
 
-The use case: a Contact Center manager reports that an agent's address book is wrong. Your bot investigates across two MCP servers, diagnoses the misconfiguration, and **fixes it with a confirmation card** — all by importing the modules you already built.
+In Chapter 7 you built an **agent bot engine** — an agentic loop, a multi-server MCP client, an elicitation-to-card bridge, a skills loader, and a WebSocket that carries both messages and card taps. That engine is generic on purpose.
 
-## Architecture
+In this lab you meet the engine as **complete, self-contained use cases**. Each use case is a single folder that carries *everything* it needs — its own `utils/`, `local_agent_tools/`, `skills/`, `mcp_servers/`, persona, and `agentbot.py`. Open one folder and you see every moving part. Copy the folder and you have a template for the next agent.
+
+This lab has three use cases. We document the **Webex Contact Center agent** in full here; the **Calling** and **Meeting** agents ship as drafts and will be documented later.
+
+```
+08_use_cases/
+    01_webex_cc_agent/        <-- documented in this lab (fully built)
+    02_webex_calling_agent/   <-- draft (coming soon)
+    03_webex_meeting_agent/   <-- draft (coming soon)
+```
+
+!!! Note "Self-contained by design"
+    There is no shared library. Each use-case folder has its **own copy** of the engine. The trade-off — the same `utils/` appears in more than one folder — is deliberate: every use case is a complete, runnable, copy-paste-able example with **no imports from other labs** and nothing to wire up across directories.
+
+---
+
+## Section 1 — Webex Contact Center Agent
+
+The scenario: a Contact Center manager reports that an agent's address book is wrong on their desktop. This agent investigates across two MCP servers, diagnoses the misconfiguration, and — with your approval on an Adaptive Card — fixes it.
+
+### Architecture
 
 ```mermaid
 flowchart LR
-    User[Webex User] <-->|Messages + Cards| Bot[Webex Bot]
+    User[Webex User] <-->|Messages + Cards| Bot[01_webex_cc_agent]
     Bot <-->|Prompts & Responses| LLM[LLM]
-    LLM <-->|Tool Calls| Hub[MCP Client Hub]
-    Hub <-->|stdio| S06[Server 06\nAddress Books]
-    Hub <-->|stdio| S07[Server 07\nDesktop Profiles]
-    S06 <-->|REST| CC[Webex CC API]
+    LLM <-->|Tool Calls| Loop[agentic loop]
+    Loop <-->|stdio| S06[mcp_servers/06\nAddress Books]
+    Loop <-->|stdio| S07[mcp_servers/07\nDesktop Profiles]
+    S06 <-->|REST| CC[Webex CC Config API]
     S07 <-->|REST| CC
-    LLM <-->|Local Call| Status[check_webex_status]
-    Status <-->|HTTP| WS[status.webex.com]
+    Loop <-->|local call| Status[check_webex_status]
 ```
 
-### What you are composing
+### Step 1.1: Anatomy of a self-contained use case
 
-| Module | Built in | Import path |
+Open `08_use_cases/01_webex_cc_agent/`. Everything the agent needs is here:
+
+```
+01_webex_cc_agent/
+    agentbot.py              # entrypoint: config, wiring, message/card routing
+    system_prompt.txt        # the persona (domain-specific)
+    utils/                   # the engine (from Chapter 7)
+        mcp_client.py        #   agentic loop + multi-server routing + elicitation
+        websocket.py         #   Mercury: messages + card taps, one socket
+        elicit.py            #   MCP elicitation -> Adaptive Card bridge
+        skills.py            #   progressive skill discovery
+        commands.py          #   optional /keyword -> MCP prompt
+    local_agent_tools/
+        webex_status.py      # a local tool (not from any MCP server)
+    skills/
+        troubleshoot-address-books/
+            SKILL.md         # the cross-server troubleshooting runbook
+    mcp_servers/
+        06_manage_address_books.py     # address book CRUD
+        07_verify_desktop_profiles.py  # agent/profile verification + update
+```
+
+| Piece | What it is | Who built it |
 | --- | --- | --- |
-| `WebSocketClient` | Lab 5 | `05_bot/websocket_client.py` |
-| `McpClient` / `McpHub` | Lab 6 | `06_mcp_bot/mcp_client.py`, `mcp_hub.py` |
-| `run_turn` / `as_openai_tools` | Lab 6 | `06_mcp_bot/llm.py` |
-| `SkillLoader` | Lab 7 | `07_skills_bot/skill_loader.py` |
-| `WebSocketClientCards` | Agent Bot | `agent_bot/utils/websocket.py` |
-| Persistent `mcp_client` | Agent Bot | `agent_bot/utils/mcp_client.py` |
-| `elicit` (card bridge) | Agent Bot | `agent_bot/utils/elicit.py` |
+| `utils/` | The engine — agentic loop, MCP client, elicitation, skills, websocket | **Chapter 7** |
+| `local_agent_tools/webex_status.py` | A plain HTTP status check, offered to the LLM as a tool | Chapter 7 |
+| `mcp_servers/06`, `07` | The two Contact Center servers | Chapters 6 & 7 |
+| `skills/troubleshoot-address-books/` | The runbook the LLM follows | Chapter 7 |
+| `system_prompt.txt` | The domain persona | **this lab** |
+| `agentbot.py` | The thin wiring that connects it all | **this lab** |
 
-### Setup
+!!! Note "No setup step"
+    There is no `.env` or `requirements.txt` inside the use-case folder. You already created your `.env` and installed dependencies earlier in the lab — this agent reuses them.
 
-```bash
-cd 08_use_cases
-pip install -r ../webex-mcp-lab/agent_bot/requirements.txt
-cp .env.example .env    # then edit .env
+### Step 1.2: The persona
+
+The bot's system prompt is built from **three layers**, each from a different source:
+
+```python
+SYSTEM_PROMPT = (
+    load_persona()                       # Layer 1: system_prompt.txt (tone + rules)
+    + skills.catalog_prompt(catalog)     # Layer 2: one line per available skill
+    + "\n\n"
+    + mcp_client.get_resources_text()    # Layer 3: the servers' own resources
+)
 ```
 
-!!! Note
-    The `.env` file needs `BOT_TOKEN`, `OPENAI_API_KEY`, `MODEL`, plus the Contact Center credentials (`WEBEX_ACCESS_TOKEN`, `WEBEX_ORG_ID`, `WXCC_CONFIG_API_BASE`) that were configured during the lab setup.
+Open `system_prompt.txt`. Notice it sets **tone and rules** — "look things up with a tool, confirm before writing, check status first" — but leaves the *domain facts* (what `addressBookId` means, address-book naming conventions) to Layer 3, the server resources.
 
-## Step 8.1: Compose what you built
+!!! Tip "Design choice — persona sets behavior, resources carry knowledge"
+    Keep the persona domain-light. The moment domain facts live in the servers' resources instead of the prompt, the same engine can front a different domain by swapping servers — which is exactly how the Calling and Meeting agents reuse this folder.
 
-In this first step, you will compose the modules from Labs 5, 6, and 7 into a single bot that connects to the Contact Center MCP servers. No new code is written — everything is imported.
+### Step 1.3: The troubleshooting skill
 
-1. Navigate to `08_use_cases/01_naive_bot.py` and review the code:
+Open `skills/troubleshoot-address-books/SKILL.md`. Its frontmatter (`name`, `description`) is all that loads at startup; the LLM pulls the full body only when a request matches — that's **progressive disclosure** (see Chapter 7, §7.3.3).
 
-    ??? Tip "Python Code"
-        ```python
-        import asyncio
-        import logging
-        import os
-        import sys
-        from datetime import datetime, timezone
-        from pathlib import Path
+The skill chains tools from **three sources** in one flow:
 
-        import requests
-        from dotenv import load_dotenv
+| Step | Tool | Source |
+| --- | --- | --- |
+| Rule out an outage | `check_webex_status` | local tool |
+| Find the agent | `list_agents` | server 07 |
+| Read their profile | `get_desktop_profile` | server 07 |
+| Find the desired book | `list_address_books` | server 06 |
+| Verify it has contacts | `list_entries` | server 06 |
+| Compare & fix (with approval) | `update_desktop_profile` | server 07 |
 
-        LAB_ROOT = Path(__file__).resolve().parent.parent
+!!! Note "Why a skill, not an MCP prompt?"
+    An MCP prompt lives inside one server and can only reference that server's tools. This workflow spans a local tool **and** two different servers — only a client-side skill can wire them together. MCP provides the *tools*; the skill provides the *judgment*. (Chapter 7, §7.6.4.)
 
-        # Import modules built in earlier labs — no rewriting.
-        sys.path.insert(0, str(LAB_ROOT / "05_bot"))
-        sys.path.insert(0, str(LAB_ROOT / "06_mcp_bot"))
-        sys.path.insert(0, str(LAB_ROOT / "07_skills_bot"))
+### Step 1.4: The wiring
 
-        from websocket_client import WebSocketClient          # Lab 5
-        from mcp_client import McpClient                      # Lab 6
-        from mcp_hub import McpHub                            # Lab 6
-        from llm import as_openai_tools, run_turn             # Lab 6
-        from skill_loader import SkillLoader                  # Lab 7
-        ```
+Open `agentbot.py`. It is short — because the hard parts are already in `utils/`.
 
-    Notice: **zero code is rewritten**. The bot imports the WebSocket client from Lab 5, the MCP client/hub and LLM loop from Lab 6, and the skill loader from Lab 7. It connects to the two Contact Center MCP servers (address books and desktop profiles) over stdio, and adds a local `check_webex_status` tool via the `extra` dispatch parameter that `run_turn` already supports.
+??? Tip "Python Code — the wiring that makes it a Contact Center agent"
+    ```python
+    # Own-folder imports — this folder is the import root.
+    from utils import mcp_client, skills, elicit
+    from utils.websocket import WebSocketClientCards
+    from local_agent_tools import webex_status
 
-2. Run the bot:
+    # Connect to THIS agent's own two servers (address books + desktop profiles).
+    _configs = [
+        {"name": "address-books",   "command": sys.executable,
+         "args": ["06_manage_address_books.py"],    "cwd": MCP_SERVERS_DIR},
+        {"name": "desktop-profiles","command": sys.executable,
+         "args": ["07_verify_desktop_profiles.py"], "cwd": MCP_SERVERS_DIR},
+    ]
+    mcp_client.connect_all(_configs, interactive=False)
 
-    ```bash
-    python 01_naive_bot.py
+    # Wire the Adaptive Card elicitation bridge.
+    elicit.init(bot_token)
+    mcp_client.set_elicit_bridge(elicit)
+
+    # Discover this folder's skills + offer the local status tool.
+    skills_catalog = skills.discover(SKILLS_DIR)
+    extra_tools = [skills.tool_spec(skills_catalog), webex_status.status_tool_spec()]
+    dispatch = {
+        "load_skill": lambda a: skills.load_skill(skills_catalog, a.get("name", "")),
+        **webex_status.status_dispatch(),
+    }
     ```
 
-3. In your Webex space, ask:
+!!! Note "What you are NOT writing"
+    No agentic loop. No MCP session handling. No elicitation logic. No WebSocket. No card decoding. All of that lives in `utils/`, built in Chapter 7. This file only **names the servers, loads the skill, and routes messages and card taps**.
+
+### Step 1.5: Run the agent
+
+1. Change into the use-case folder:
+
+    * cd 08_use_cases/01_webex_cc_agent
+
+2. Run it:
+
+    * python agentbot.py
+
+3. Confirm both servers connect. You should see two "MCP ready" lines — one per server:
+
+    ```terminal
+    MCP ready — 6 tool(s), ... resource text, 1 prompt(s)
+    MCP ready — 4 tool(s), ... resource text, 0 prompt(s)
+    Listening as WebexOne-... via Mercury (messages + cards)...
+    ```
+
+4. In the Webex space, start with a read:
 
     * List my address books
 
-4. You should see the bot successfully call `list_address_books` and reply with the results:
+5. Now describe the problem and let the skill drive:
 
-    ```terminal
-    INFO Offering 12 tool(s) to gpt-5-nano
-    INFO LLM asked for list_address_books {'limit': 50}
-    INFO Sent to user@example.com: Here are your address books: ...
-    ```
+    * Agent Ana can't see the Sales-EMEA contacts on her desktop. Investigate and fix it.
 
-5. Try another read across both servers:
-
-    * List agents and their desktop profiles
-
-    The bot calls tools on **both** MCP servers and combines the results. Everything works.
-
-!!! Note "All read operations succeed"
-    The Lab 5/6/7 modules compose cleanly for read-only operations. The `McpHub` routes tool calls to the right server, and `run_turn` handles the agentic loop. The skill loader discovers the troubleshoot skill. This is the power of building reusable modules.
-
-## Step 8.2: Try a write
-
-Now ask the bot to **fix** a misconfiguration — this triggers a write tool (`update_desktop_profile`) that uses server-side elicitation.
-
-1. In Webex, ask:
-
-    * Fix Ana's desktop profile to use the Sales-EMEA address book
-
-2. Watch the terminal. The LLM will call `update_desktop_profile`, but something unexpected happens:
-
-    ```terminal
-    INFO LLM asked for update_desktop_profile {'id': '...', 'addressBookId': '...'}
-    INFO Sent to user@example.com: The update was not performed.
-           The confirmation was declined or dismissed.
-    ```
-
-    **No card appeared in Webex.** The tool returned `{"updated": false, "reason": "Confirmation was declined or dismissed."}` — but you never saw a confirmation prompt.
-
-!!! Warning "The server tried to ask 'are you sure?' but nobody was listening"
-    The `update_desktop_profile` tool uses **server-side elicitation** — it sends a confirmation request back through the MCP session. But Lab 6's `McpClient` has no way to handle that request, so it was silently declined.
-
-## Step 8.3: Understand why
-
-There are exactly **two gaps** between the Lab 5/6 modules and what this use case needs.
-
-### Gap 1: No card-tap channel
-
-Lab 5's `WebSocketClient` only processes messages (`verb == "post"`). When the user taps a button on an Adaptive Card, the Mercury WebSocket delivers `verb == "cardAction"` — and Lab 5 silently drops it.
-
-| | Lab 5 `WebSocketClient` | Agent Bot `WebSocketClientCards` |
-| --- | --- | --- |
-| Messages (`verb == "post"`) | Handled | Handled |
-| Card taps (`verb == "cardAction"`) | **Dropped** (filtered out) | Handled via `on_card` callback |
-| Card input decryption | Not implemented | `get_card_inputs()` method |
-
-### Gap 2: No elicitation callback
-
-Lab 6's `McpClient` creates `ClientSession(read, write)` with **no `elicitation_callback`**. When the MCP server tries to elicit confirmation, the SDK has no handler — the elicitation is automatically declined.
-
-| | Lab 6 `McpClient` | Agent Bot `MCPConnection` |
-| --- | --- | --- |
-| Session lifecycle | One-shot (open per call) | Persistent (background thread) |
-| `elicitation_callback` | **Not set** | Set to `_on_elicit` |
-| Card bridge | None | `elicit.py` posts card, waits for tap |
-| Resources / Prompts | Not read | Discovered and merged |
-
-!!! Note "Two gaps to bridge"
-    1. **Transport**: The WebSocket client needs to hear card button taps, not just messages.
-    2. **MCP client**: The MCP session needs an elicitation callback that can post an Adaptive Card and wait for the user's response.
-
-    The Lab 5/6 modules were designed for simpler scenarios. The agent bot's upgraded modules solve both gaps.
-
-## Step 8.4: Switch to upgraded modules
-
-Now switch to the full bot that imports the upgraded modules from `agent_bot/utils`. These provide persistent MCP sessions with elicitation callbacks and a WebSocket client that handles both messages and card taps.
-
-1. Stop the naive bot (`Ctrl+C`) and review `08_use_cases/02_full_bot.py`:
-
-    ??? Tip "Python Code"
-        ```python
-        LAB_ROOT = Path(__file__).resolve().parent.parent
-        AGENT_BOT_DIR = str(LAB_ROOT / "webex-mcp-lab" / "agent_bot")
-
-        # Import the upgraded modules from agent_bot/utils
-        sys.path.insert(0, AGENT_BOT_DIR)
-
-        from utils import mcp_client, elicit, skills
-        from utils.websocket import WebSocketClientCards
-        from local_agent_tools import webex_status
-        ```
-
-    Key differences from the naive bot:
-
-    - **`WebSocketClientCards`** replaces `WebSocketClient` — handles `on_card` taps
-    - **`mcp_client.connect_all`** keeps persistent sessions with `elicitation_callback`
-    - **`elicit.init` + `mcp_client.set_elicit_bridge`** wires the card bridge
-    - **`on_card` handler** routes card taps to `elicit.resolve`
-
-2. Run the full bot:
-
-    ```bash
-    python 02_full_bot.py
-    ```
-
-3. In Webex, ask the same question:
-
-    * Fix Ana's desktop profile to use the Sales-EMEA address book
-
-4. This time, an **Adaptive Card** appears in the Webex space:
-
-    The card shows the action ("Update desktop profile X to use address book Y? This affects ALL agents assigned to this profile.") with **Confirm** and **Decline** buttons.
-
-5. Tap **Confirm**. The terminal shows:
+6. The agent works through the skill, and when it reaches the fix it posts an **Adaptive Card** asking you to confirm — because `update_desktop_profile` affects **all** agents on that profile. Tap **Confirm**:
 
     ```terminal
     INFO Card tap: confirmed
-    INFO Sent to user@example.com: Done! Ana's desktop profile now uses Sales-EMEA.
+    INFO Sent to ...: Done — Ana's desktop profile now points at Sales-EMEA.
     ```
 
-    The profile is updated. If you tap **Decline** instead, the tool returns `{"updated": false}` and the bot reports no change was made.
+    Tap **Decline** and nothing changes.
 
-## Step 8.5: Skill-guided troubleshooting
+### Step 1.6: Design lessons
 
-The full bot also loads the `troubleshoot-address-books` skill, which orchestrates the complete diagnostic flow across both MCP servers and the local status check.
+The servers and skill in this folder look the way they do because of real lessons learned while building them. Each callout is the *principle*; the full stories live in Chapter 7, §7.7.
 
-1. Review the skill file at `08_use_cases/skills/troubleshoot-address-books/SKILL.md`:
+!!! Note "Lesson 1 — surface the data your consumers need"
+    `get_desktop_profile` returns `addressBookId`, not just `name` and `id`. If the tool dropped that field, the skill could never compare "assigned book" against "desired book". A tool must return the fields its consumers reason over.
 
-    ??? Tip "SKILL.md"
-        The skill defines a 9-step workflow:
+!!! Note "Lesson 2 — write to the right resource"
+    To reassign an agent's address book, the agent updates the **desktop profile**, not the user record. Updating the user returns `400` and wouldn't fix the profile anyway. When a write fails, check you're calling the API that actually owns the change.
 
-        1. Ask for the symptom
-        2. Check platform status (`check_webex_status` — local tool)
-        3. Find the agent (`list_agents` — server 07)
-        4. Get their desktop profile (`get_desktop_profile` — server 07)
-        5. Find the desired address book (`list_address_books` — server 06)
-        6. Check the book has entries (`list_entries` — server 06)
-        7. Compare profile's `addressBookId` with the desired book's `id`
-        8. Fix with approval (`update_desktop_profile` — server 07, with confirmation card)
-        9. Summarize findings
+!!! Tip "Lesson 3 — speak the API's language"
+    `update_desktop_profile(id, addressBookId)` uses the API's exact field names, not `profile_id` or `book_id`. The LLM pipes each tool's output straight into the next tool's input — so if `get_desktop_profile` returns `addressBookId`, the model passes `addressBookId`. Match the API's names, or the call bounces.
 
-2. In Webex, describe a symptom:
+!!! Tip "Lesson 4 — tell the model what to wait for"
+    An LLM can fire several tool calls at once — fast, until call B needs call A's result. The skill spells out the wiring: *"use the `id` from step 4"*, *"don't call this until step 4 returns"*, *"this one can run alongside step 3"*. Without those markers the model guesses — and calls `list_entries` before it has a book ID.
 
-    * Agent Ana says she can't see the Sales-EMEA contacts on her desktop. The address book looks wrong. Can you investigate?
+!!! Note "Lesson 5 — never hardcode the model"
+    `MODEL` is read from the environment and the bot exits with a clear message if it's unset. Hardcoding a model name breaks the moment someone's project lacks access to it. Externalizing it makes the same code work across OpenAI, Azure, or any compatible provider.
 
-3. Watch the terminal as the bot follows the skill's steps, calling tools across all three sources (local, server 06, server 07), and posting a confirmation card before making any changes.
+??? Note "How this skill matured (v1 → v2)"
+    | What | v1 | v2 |
+    | --- | --- | --- |
+    | Description | one narrow trigger phrase | many trigger keywords |
+    | "Why a skill?" | missing | explained |
+    | Data flow | none | explicit bullet chain |
+    | Field names | `desktop_profile_id` (snake_case) | `agentProfileId` (API-aligned) |
+    | Comparison logic | "does it have the right books?" | "compare `addressBookId` with book `id`" |
+    | Dependencies | implicit | explicit ("don't call until…") |
+    | Edge cases | none | agent-not-found, null book, empty book, shared profile |
+    | Write tool | `reassign_desktop_profile` (wrong API) | `update_desktop_profile` (correct API) |
 
-## Exercises
+    A skill is not just a list of tools to call in order. It is orchestration logic: cross-server wiring, reasoning instructions, edge-case handling, and dependency markers. MCP provides the tools; the skill provides the judgment.
 
-### Add a second use case
+### Step 1.7: This folder is a template
 
-The `08_use_cases/` directory already contains two MCP servers: `troubleshooting_mcp.py` and `controlhub_mcp.py`. These expose tools for security audit events, call history, reports, and workspace management.
+To build a new agent, you don't start from scratch — you copy this folder and swap three things:
 
-Add a third MCP server to the full bot's `_configs` list and write a new skill that uses its tools alongside the existing ones.
+```
+copy 01_webex_cc_agent/  ->  0N_new_agent/
+    swap  system_prompt.txt   (new persona)
+    swap  skills/             (new runbook)
+    swap  mcp_servers/ + _configs in agentbot.py   (new servers)
+    keep  utils/ + local_agent_tools/              (the engine — unchanged)
+```
+
+That is exactly how the next two use cases are set up.
+
+### Exercises
+
+#### Exercise 1 — a report-only persona
+
+Change the Contact Center agent so it *diagnoses but never writes* — it should explain what to fix, but not call `update_desktop_profile`.
 
 ??? Solution
+    Edit `system_prompt.txt` to add a rule: "You are read-only. Never call write tools such as `update_desktop_profile`. Instead, report the exact change an admin should make." The skill still guides the diagnosis; the persona stops the write.
 
-    1. Add a new entry to the `_configs` list in `02_full_bot.py`:
+#### Exercise 2 — add a third tool source
 
-        ```python
-        _configs = [
-            {
-                "name": "address-books",
-                "command": sys.executable,
-                "args": ["06_manage_address_books.py"],
-                "cwd": MCP_SERVERS_DIR,
-            },
-            {
-                "name": "desktop-profiles",
-                "command": sys.executable,
-                "args": ["07_verify_desktop_profiles.py"],
-                "cwd": MCP_SERVERS_DIR,
-            },
-            {
-                "name": "troubleshooting",
-                "command": sys.executable,
-                "args": [str(LAB_ROOT / "08_use_cases" / "troubleshooting_mcp.py")],
-                "cwd": str(LAB_ROOT / "08_use_cases"),
-            },
-        ]
-        ```
+Give the agent the `check_webex_status` local tool a bigger role: make the skill's first step always report platform status, even when everything is healthy.
 
-    2. Create a new skill at `08_use_cases/skills/investigate-audit/SKILL.md` with frontmatter and steps that call `list_admin_audit_events` and `list_security_audit_events`.
+??? Solution
+    In `SKILL.md`, change step 1 to: "Always call `check_webex_status` and include the platform state in your summary, healthy or not." Restart the agent — no code change needed, because `webex_status` is already offered via `extra_tools`.
 
-    3. Restart the bot. The skill loader discovers the new skill, and the LLM can now call tools from three servers.
+---
+
+## Section 2 — Webex Calling Agent
+
+!!! Note "Coming soon"
+    The Webex Calling agent ships as a **draft** in `08_use_cases/02_webex_calling_agent/`. It follows the same self-contained pattern as the Contact Center agent, with its own `mcp_servers/` (`calling_mcp.py`, `controlhub_mcp.py`, `troubleshooting_mcp.py`) and the `troubleshoot-status` skill (check platform incidents, then verify the user). A full walkthrough will be added here later. See that folder's `README.md` for how to finish it.
+
+---
+
+## Section 3 — Webex Meeting Agent
+
+!!! Note "Coming soon"
+    The Webex Meeting agent ships as a **draft** in `08_use_cases/03_webex_meeting_agent/`, with the `meeting-review` skill (review each meeting across schedule, participants, summary, recording, and transcript). Unlike the other two agents, it targets the **remote hosted Webex Meetings MCP** over HTTP, so its engine needs HTTP transport added to `utils/mcp_client.py`. A full walkthrough will be added here later. See that folder's `README.md` for details.
