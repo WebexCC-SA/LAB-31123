@@ -5,8 +5,7 @@ You have built a **Webex bot** (Lab 5), an **MCP client and hub** (Lab 6), a **s
 real troubleshooting use case for **Webex Contact Center address books**.
 
 This is a capstone: you **read and run** a finished agent rather than build one. Nothing here
-asks you to write code. What it does ask is that you recognise your own work in it — so
-Step 1.0 starts by mapping every file back to the lab it came from.
+asks you to write code. What it does ask is that you recognise your own work in it.
 
 In this lab you meet the engine as **complete, self-contained use cases**. Each use case is a single folder that carries *everything* it needs — its own `utils/`, `local_agent_tools/`, `skills/`, `mcp_servers/`, persona, and `agentbot.py`. Open one folder and you see every moving part. Copy the folder and you have a template for the next agent.
 
@@ -21,7 +20,6 @@ This lab has three use cases. We document the **Webex Contact Center agent** in 
 
 !!! Note "Self-contained by design"
     There is no shared library. Each use-case folder has its **own copy** of the engine. The trade-off — the same `utils/` appears in more than one folder — is deliberate: every use case is a complete, runnable, copy-paste-able example with **no imports from other labs** and nothing to wire up across directories.
-
 
 ---
 
@@ -43,94 +41,21 @@ flowchart LR
     Loop <-->|local call| Status[check_webex_status]
 ```
 
-### Step 1.0: Where this came from
 
-Nothing in this folder is new. It is the code you already wrote across Labs 4 to 7,
-reorganised so one folder holds a complete agent. The names changed, which is the
-only reason it looks unfamiliar:
-
-| You built it in | As | It is now |
-| --- | --- | --- |
-| Lab 5 | `05_bot/websocket_client.py` | `utils/websocket.py` — same Mercury socket, now also delivers card taps |
-| Lab 6 | `06_mcp_bot/mcp_client.py` | `utils/mcp_client.py` — the `MCPConnection` class |
-| Lab 6 | `06_mcp_bot/mcp_hub.py` | folded into `connect_all()` in the same file |
-| Lab 6 | `06_mcp_bot/llm.py` | folded into `agentic_loop()` in the same file |
-| Lab 6 | `06_mcp_bot/07_card.py` | the Adaptive Card pattern, now generalised in `utils/elicit.py` |
-| Lab 7 | `07_skills_bot/skill_loader.py` | `utils/skills.py` |
-| Lab 4 | `04_custom_mcp/03,04,05_*books.py` | `mcp_servers/06_manage_address_books.py` |
-
-!!! Warning "Two renames worth knowing before you read the code"
-    * The skill-loading tool the model calls was `read_skill_runbook` in Lab 7. Here it is **`load_skill`**. Same job, shorter name.
-    * Lab 6 kept the client and the hub in two files. Here one file does both: `MCPConnection` is a single server, `connect_all()` is the hub.
-
-One module has no ancestor in the earlier labs:
-
-* **`utils/elicit.py` is new to this use case.** Lab 4 taught you elicitation on the *server* side — the server asks "are you sure?". Lab 6 taught you Adaptive Cards. Neither connected the two. This module is the bridge, and Step 1.4 walks through it.
-
-### Step 1.1: Anatomy of a self-contained use case
-
-Open `08_use_cases/01_webex_cc_agent/`. Everything the agent needs is here:
-
-```
-01_webex_cc_agent/
-    agentbot.py              # entrypoint: config, wiring, message/card routing
-    system_prompt.txt        # the persona (tone + rules)
-    utils/                   # the engine (see Step 1.0)
-        mcp_client.py        #   agentic loop + multi-server routing + elicitation
-        websocket.py         #   Mercury: messages + card taps, one socket
-        elicit.py            #   MCP elicitation -> Adaptive Card bridge
-        skills.py            #   progressive skill discovery
-    local_agent_tools/
-        webex_status.py      # a local tool (not from any MCP server)
-    skills/
-        troubleshoot-address-books/
-            SKILL.md         # the cross-server troubleshooting runbook
-    mcp_servers/
-        06_manage_address_books.py     # address book CRUD + resource + prompt
-        07_verify_desktop_profiles.py  # agent/profile verification + update
-```
-
-| Piece | What it is | Where it came from |
-| --- | --- | --- |
-| `utils/` | The engine — agentic loop, MCP client, elicitation, skills, websocket | **Labs 5, 6, 7** (see Step 1.0) |
-| `local_agent_tools/webex_status.py` | A plain HTTP status check, offered to the LLM as a tool | Lab 6, *Extra: Local Tool + Adaptive Card* |
-| `mcp_servers/06_manage_address_books.py` | Address book CRUD | **Lab 4** (see Step 1.2) |
-| `mcp_servers/07_verify_desktop_profiles.py` | Agent and desktop-profile verification | **new — introduced in Step 1.2** |
-| `skills/troubleshoot-address-books/` | The runbook the LLM follows | Lab 7, *Exercise: Add a new skill* |
-| `system_prompt.txt` | The persona | **this lab** |
-| `agentbot.py` | The thin wiring that connects it all | **this lab** |
-
-### Step 1.2: The two MCP servers
+### Step 8.1.1: The two MCP servers
 
 The agent connects to two servers. One you have already built; one is new.
 
-#### Server 06 — you already wrote every tool in it
+#### Adress Book Server — you already wrote every tool in it
 
-`06_manage_address_books.py` is not new code. It is the three address-book
+`manage_address_books.py` is not new code. It is the three address-book
 servers from Lab 4 merged into one file:
 
-| Tool | You built it in |
-| --- | --- |
-| `list_address_books` | `04_custom_mcp/03_read_books.py` |
-| `list_entries` | `04_custom_mcp/03_read_books.py` |
-| `create_address_book` | `04_custom_mcp/04_write_books.py` |
-| `add_entry` | `04_custom_mcp/04_write_books.py` |
-| `delete_address_book` | `04_custom_mcp/05_delete_books.py` (with elicitation) |
-| `delete_entry` | `04_custom_mcp/05_delete_books.py` (with elicitation) |
 
-Two things were added on top, and you met both concepts in Lab 4 Step 4.1.2:
 
-* a resource, `lab://address-books` — the house style for naming books and formatting numbers
-* a prompt, `set_up_address_book` — the guided "create a book and fill it" workflow
+####  Desktop profile Server — the one genuinely new server
 
-!!! Warning "The numbers do not mean what they meant in Lab 4"
-    In `04_custom_mcp/` the numbers are a *lesson order*, and `06`, `07`, `08` are the Calling, Control Hub, and Troubleshooting servers from the Lab 4 exercises.
-
-    In this use case the numbers are a *server inventory*, and `06` and `07` are Address Books and Desktop Profiles. **Same digits, different servers.** When the skill says "server 06" it always means the address-book server in this folder.
-
-#### Server 07 — the one genuinely new server
-
-`07_verify_desktop_profiles.py` is the only file here you have not seen before. It
+`verify_desktop_profiles.py` is the only file here you have not seen before. It
 answers one question: *which address book is this agent actually configured to see?*
 
 | Tool | What it does |
@@ -145,7 +70,7 @@ It also exposes one resource, `lab://desktop-profile-reference`.
 ??? Note "What the resource says — and what it deliberately does not"
     The resource is a **field glossary**, not a runbook. It explains what a desktop profile is, that each agent is assigned exactly one, and that the profile's `addressBookId` determines which contacts appear on the Agent Desktop.
 
-    It does **not** say "Step 1: do this. Step 2: do that." That is the skill's job, and Step 1.3 explains why the split matters.
+    It does **not** say "Step 1: do this. Step 2: do that." That is the skill's job, and Step 8.1.2 explains why the split matters.
 
     | Concern | Where it lives |
     | --- | --- |
@@ -154,9 +79,9 @@ It also exposes one resource, `lab://desktop-profile-reference`.
     | "Agent can't see contacts — do X then Y" | client-side skill |
 
 !!! Note "Server 07 ships no prompt — on purpose"
-    Server 06 has a prompt. Server 07 has none. The troubleshooting workflow needs tools from *both* servers plus a local one, and a prompt cannot reach outside its own server. So that logic lives in a skill instead. Step 1.3 makes the rule general.
+    Server 06 has a prompt. Server 07 has none. The troubleshooting workflow needs tools from *both* servers plus a local one, and a prompt cannot reach outside its own server. So that logic lives in a skill instead. Step 8.1.2 makes the rule general.
 
-### Step 1.3: Four places knowledge can live
+### Step 8.1.2: Four places knowledge can live
 
 This agent knows things. That knowledge sits in four different places, and
 choosing the right one is the main design decision in the whole folder.
@@ -233,17 +158,14 @@ is the skill.
     dispatch = {..., **mcp_client.get_prompt_dispatch()}
     ```
 
-    So server 06's prompt reaches the model as `prompt__set_up_address_book`, and the model may invoke it when someone asks to set up a new book. What this agent has **no** mechanism for is a user typing `/setup` — there is no slash-command router in this folder.
-
-### Step 1.4: Inside the engine
+### Step 8.1.3: Inside the engine
 
 You can run this agent without reading this step. Open it when you want to know
 *how* the folder works rather than *what* it does.
 
 #### The agentic loop
 
-Everything else plugs into one function in `utils/mcp_client.py`. It is about
-twenty lines:
+Everything else plugs into one function in `utils/mcp_client.py`.
 
 ??? Tip "Python Code" 
 
@@ -287,7 +209,10 @@ The loop never asks where a tool came from — it just calls it.
 
 #### A concrete run
 
-Ask *"Does agent Jane have the Sales address book?"* and the loop turns over
+Nothing to type here. This traces what the loop *already does* when a user
+asks the agent something in Step 1.6.
+
+Someone asks *"Can Ana see the Sales-EMEA contacts?"*. The loop turns over
 three times:
 
 ```terminal
@@ -310,10 +235,10 @@ Round 3
 
 Loop exits. 3 rounds, 2 tool calls, 1 answer.
 ```
+#### Reaching the servers
 
-#### The support modules
-
-Four files, one job each. Expand whichever you are curious about.
+The loop lives in `mcp_client.py`. So does everything about *reaching* the
+servers — the same file's other half.
 
 ??? Note "mcp_client.py — one connection per server, one flat tool list"
     **`MCPConnection`** wraps a single server: its session, its tools, its resources, its prompts. Each instance runs its own asyncio event loop on a background thread, so a slow server 06 never blocks server 07.
@@ -333,6 +258,20 @@ Four files, one job each. Expand whichever you are curious about.
     `call_tool(name, args)` looks the name up and forwards the call. If two servers registered the same tool name the first config wins — these two have no overlap.
 
     The single-server `connect()` from Lab 6 still works; it just builds a one-entry version of the same state.
+
+#### The support modules
+
+The loop is deliberately ignorant: it calls tools and appends results, nothing
+more. Every harder job lives in its own module beside it in `utils/`, and the
+loop just calls in. Three modules, one concern each:
+
+| Module | The concern it owns |
+| --- | --- |
+| `elicit.py` | turn a server's "are you sure?" into a Webex card |
+| `skills.py` | load a playbook only when it is needed |
+| `websocket.py` | carry messages and card taps to and from Webex |
+
+Expand whichever you are curious about.
 
 ??? Note "elicit.py — approval without a webhook"
     When a server calls `elicit()` — before deleting a book, or before updating a profile — the user is in Webex, not at a terminal. This module bridges that gap:
@@ -385,7 +324,7 @@ Four files, one job each. Expand whichever you are curious about.
 !!! Tip "This page works the way the agent does"
     Those collapsed blocks are the same idea as `skills.py`: one line up front so you know what is there, the full body only when you ask for it. Progressive disclosure is a documentation pattern before it is a model one.
 
-### Step 1.5: The wiring
+### Step 8.1.4: The wiring
 
 Open `agentbot.py`. It is short — because the hard parts are already in `utils/`.
 
@@ -399,9 +338,9 @@ Open `agentbot.py`. It is short — because the hard parts are already in `utils
     # Connect to THIS agent's own two servers (address books + desktop profiles).
     _configs = [
         {"name": "address-books",   "command": sys.executable,
-         "args": ["06_manage_address_books.py"],    "cwd": MCP_SERVERS_DIR},
+         "args": ["manage_address_books.py"],    "cwd": MCP_SERVERS_DIR},
         {"name": "desktop-profiles","command": sys.executable,
-         "args": ["07_verify_desktop_profiles.py"], "cwd": MCP_SERVERS_DIR},
+         "args": ["verify_desktop_profiles.py"], "cwd": MCP_SERVERS_DIR},
     ]
     mcp_client.connect_all(_configs, interactive=False)
 
@@ -425,22 +364,15 @@ Open `agentbot.py`. It is short — because the hard parts are already in `utils
 !!! Note "What you are NOT writing"
     No agentic loop. No MCP session handling. No elicitation logic. No WebSocket. No card decoding. All of that lives in `utils/` — see Step 1.0 for where each module came from. This file only **names the servers, loads the skill, and routes messages and card taps**.
 
-### Step 1.6: Run the agent
+### Step 8.1.5: Run the agent
 
-!!! Warning "Before you start — what the agent reads from `.env`"
-    `agentbot.py` and both MCP servers load a local `.env`. These are the variables they read:
+!!! Prerequisite "Before you start 
+    Copy the environment template under 08_use_cases\01_webex_cc_agent and fill in your values:
 
-    | Variable | Read by | What it is |
-    | --- | --- | --- |
-    | `BOT_TOKEN` | `agentbot.py` | Your Webex bot token — the bot exits without it |
-    | `MODEL` | `agentbot.py` | The model your OpenAI project can access, e.g. `gpt-5-nano`. There is **no default** — the bot exits with instructions if it is unset (see Lesson 5) |
-    | `OPENAI_API_KEY` | the OpenAI client | Your API key |
-    | `WEBEX_ACCESS_TOKEN` | servers 06 and 07 | Contact Center access token |
-    | `WEBEX_ORG_ID` | servers 06 and 07 | Your Contact Center organization id |
-    | `WXCC_CONFIG_API_BASE` | servers 06 and 07 | Config API base, e.g. `https://api.wxcc-us1.cisco.com` |
-    | `MAX_HISTORY` | `agentbot.py` | Optional — conversation turns to keep, default `20` |
-
-    Note that the servers here read **`WEBEX_ACCESS_TOKEN`**, while the Lab 4 servers read `ACCESS_TOKEN`. If you set up `.env` during Lab 4, add the new name before running.
+    ```bash
+    cp .env.example .env
+    ```
+  
 
 1. Change into the use-case folder:
 
@@ -478,7 +410,7 @@ Open `agentbot.py`. It is short — because the hard parts are already in `utils
 
     Tap **Decline** and nothing changes.
 
-### Step 1.7: Design lessons
+### Step 8.1.6: Design lessons
 
 Every server and every line of the skill in this folder looks the way it does
 because something went wrong first. These are the five that shaped it — each one
@@ -723,7 +655,7 @@ is what happened, why, the fix, and the rule you can carry to your own MCP work.
 
     MCP provides the **tools**. Skills provide the **judgment**.
 
-### Step 1.8: Architecture at a glance
+### Step 8.1.7: Architecture at a glance
 
 Everything from Steps 1.1 to 1.7, on one page:
 
@@ -773,7 +705,7 @@ flowchart TB
     S07 <-->|REST| CC
 ```
 
-### Step 1.9: This folder is a template
+### Step 8.1.8: This folder is a template
 
 
 To build a new agent, you don't start from scratch — you copy this folder and swap three things:
@@ -811,9 +743,12 @@ Give the agent the `check_webex_status` local tool a bigger role: make the skill
 !!! Note "Coming soon"
     The Webex Calling agent ships as a **draft** in `08_use_cases/02_webex_calling_agent/`. It follows the same self-contained pattern as the Contact Center agent, with its own `mcp_servers/` (`calling_mcp.py`, `controlhub_mcp.py`, `troubleshooting_mcp.py`) and the `troubleshoot-status` skill (check platform incidents, then verify the user). A full walkthrough will be added here later. See that folder's `README.md` for how to finish it.
 
+### Step 8.2.1: TBD
 ---
 
 ## Section 3 — Webex Meeting Agent
+
+### Step 8.3.1: TBD
 
 !!! Note "Coming soon"
     The Webex Meeting agent ships as a **draft** in `08_use_cases/03_webex_meeting_agent/`, with the `meeting-review` skill (review each meeting across schedule, participants, summary, recording, and transcript). Unlike the other two agents, it targets the **remote hosted Webex Meetings MCP** over HTTP, so its engine needs HTTP transport added to `utils/mcp_client.py`. A full walkthrough will be added here later. See that folder's `README.md` for details.
