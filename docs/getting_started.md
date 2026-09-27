@@ -10,15 +10,15 @@ Scan the QR code to be added to the Webex space for Q&A and more.
 
 ## Tools used in this lab
 
-- **Webex Client** — interact with your bot and verify assistant responses
-- **Control Hub** — organization admin portal
-- **Visual Studio Code** — edit code, configure MCP servers, and run the lab assistant
-- **Webex for Developers** — create bots, Webex MCP tokens, service app, and review API documentation
-- **Bruno** — call Webex REST APIs by hand before wrapping them as MCP tools
+- **Webex Client** — Interact with your bot and verify assistant responses.
+- **Control Hub** — Organization admin portal.
+- **Visual Studio Code** — Edit code, configure MCP servers, and run the lab assistant.
+- **Webex for Developers** — Create bots, Webex MCP tokens, service apps, and review API documentation.
+- **Bruno** — Call Webex REST APIs by hand before wrapping them as MCP tools.
 
 ## Webex lab credentials
 
-Use the credentials provided by your lab instructor:
+These are your Webex credentials for this lab:
 
 | Item | Value |
 | --- | --- |
@@ -49,7 +49,7 @@ Use the same lab credentials you just used for the Webex Client.
 1. Open [Webex for Developers](https://developer.webex.com/){:target="_blank"} in a browser.
 2. Sign in with the **Webex email address and password** provided to you.
 
-## Visual Studio
+## Visual Studio Code
 
 Visual Studio Code will be used for Python-based bot development, the agentic app, and the MCP server exercises.
 
@@ -59,22 +59,22 @@ Visual Studio Code will be used for Python-based bot development, the agentic ap
 
 ### Clone the lab repository
 
-2. Go to the **Source Control** tab and click **Clone Repository**:
+1. Go to the **Source Control** tab and click **Clone Repository**:
 
     ![vsc_clone](./assets/docx-image-005.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-3. Type the following URL:
+2. Enter the following URL:
 
-    - https://github.com/diegomjimenez/WebexOne2026.git
+    `https://github.com/diegomjimenez/WebexOne2026.git`
 
     ![vsc_repo](./assets/github_1.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-4. Select a directory to save the project.
-5. Click on **Yes, I trust the authors** if a pop-up appears.
+3. Select a directory to save the project.
+4. Click **Yes, I trust the authors** if a pop-up appears.
 
 ### Virtual Environment
 
-1. From the top bar, click on Terminal > New terminal.
+1. Click **Terminal > New Terminal** from the top menu bar.
 2. Create a virtual environment and install dependencies:
 
     ```bash
