@@ -247,7 +247,7 @@ twenty lines:
 
 ??? Tip "Python Code" 
     ```python
-def agentic_loop(messages, model, max_iter=10,
+    def agentic_loop(messages, model, max_iter=10,
                  extra_tools=None, dispatch=None):
     all_tools = list(_tools) + (extra_tools or [])
     msgs = list(messages)
