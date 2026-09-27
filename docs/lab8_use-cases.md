@@ -245,7 +245,8 @@ You can run this agent without reading this step. Open it when you want to know
 Everything else plugs into one function in `utils/mcp_client.py`. It is about
 twenty lines:
 
-```python
+??? Tip "Python Code" 
+    ```python
 def agentic_loop(messages, model, max_iter=10,
                  extra_tools=None, dispatch=None):
     all_tools = list(_tools) + (extra_tools or [])
@@ -268,7 +269,8 @@ def agentic_loop(messages, model, max_iter=10,
                 result = call_tool(tc.function.name, args)
             msgs.append({"role": "tool", "tool_call_id": tc.id,
                          "content": result})
-```
+    ```
+
 
 Read it as five steps:
 
