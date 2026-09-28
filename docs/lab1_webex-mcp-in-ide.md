@@ -33,7 +33,7 @@ MCP servers are **NOT** enabled by default in your organization; you need to ena
 
     1. If you try to access MCP for the first time, you will see a message: **No allowed MCP servers found**.
     
-        ![Create_token](./assets/token_4.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        ![Create_token](./assets/token_4.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
     
     2. To enable them, go to **Collaboration Control Hub** -> **Apps** -> **Agentic Apps** and select the **Webex** tab:
     
@@ -78,7 +78,7 @@ As a user, the first thing you will need to do is get the token to access the MC
 
 4. You need a separate token per MCP server. In this case, we will start by using **Webex Messaging**:
 
-    ![Create_token](./assets/token_2.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/token_2.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 5. You will now see the token:
 
@@ -191,7 +191,7 @@ Earlier we opened the Chat, but now we will set up the agent.
 -->
 6. To test it, make sure you select the model in the chat, and say "Hello":
 
-    ![Create_token](./assets/vscode_11.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Create_token](./assets/vscode_11.png){ width="350" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     !!! Note
         The LLM generates responses dynamically, so your answer may vary from what you see in the screenshot.
@@ -227,7 +227,7 @@ In this exercise, you need to add the [Meetings MCP](https://developer.webex.com
 
     1. To add the new MCP server, you will first need to create a new token.
 
-        ![Create_token](./assets/token_5.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        ![Create_token](./assets/token_5.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     2. Once you have the token, add the server to the `mcp.json` file:
 
@@ -269,7 +269,7 @@ In this exercise, you need to add the [Meetings MCP](https://developer.webex.com
         These are the tools available in this MCP server:
 
         ??? Note "Tools"
-            ![Tools](./assets/tools_1.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+            ![Tools](./assets/tools_1.png){ width="350" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ### Organize a meeting using your AI Assistant
 
@@ -283,11 +283,11 @@ Once the MCP is added, schedule a meeting with the organization admin (`admin@we
 
     It may ask you for confirmation:
 
-    ![Meeting](./assets/meeting_1.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Meeting](./assets/meeting_1.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     Once done, it will provide you with the meeting details:
 
-    ![Meeting](./assets/meeting_2.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Meeting](./assets/meeting_2.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     You can check your Webex App to verify that the meeting was scheduled:
 
