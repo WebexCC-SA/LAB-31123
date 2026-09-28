@@ -46,14 +46,14 @@ flowchart LR
 
 The agent connects to two servers. One you have already built; one is new.
 
-#### Adress Book Server — you already wrote every tool in it
+#### Address Book Server — you already wrote every tool in it
 
 `manage_address_books.py` is not new code. It is the three address-book
 servers from Lab 4 merged into one file:
 
 
 
-####  Desktop profile Server — the one genuinely new server
+#### Desktop Profile Server — the one genuinely new server
 
 `verify_desktop_profiles.py` is the only file here you have not seen before. It
 answers one question: *which address book is this agent actually configured to see?*
