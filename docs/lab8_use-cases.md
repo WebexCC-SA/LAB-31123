@@ -758,9 +758,8 @@ skill, and a persona that reads freely but gates every write.
 
 !!! Tip "Same engine, different agent"
     You are not writing an agentic loop, an MCP client, or a WebSocket again.
-    `utils/` and `local_agent_tools/` are copied unchanged from
-    `01_webex_cc_agent/`. This section is about **wiring** — which is the whole
-    point of the template.
+    `utils/` is copied unchanged from `01_webex_cc_agent/`. This section is
+    about **wiring** — which is the whole point of the template.
 
 ### Scenario
 
@@ -780,29 +779,27 @@ flowchart LR
     Loop <-->|stdio| CH["mcp_servers/<br/>controlhub_mcp"]
     Loop <-->|stdio| CA["mcp_servers/<br/>calling_mcp"]
     Loop <-->|stdio| TR["mcp_servers/<br/>troubleshooting_mcp"]
-    Loop <-->|local call| Status[check_webex_status]
     CH <-->|REST| API[Webex APIs]
     CA <-->|REST| API
     TR <-->|REST + Analytics| API
 ```
 
-### Step 8.2.1: The three servers and one local tool
+### Step 8.2.1: The three servers
 
 This agent connects to three MCP servers — all of them ones you already have
-from Lab 4 — plus the same local status tool as Section 1.
+from Lab 4.
 
 | Server | Tools it exposes | Role here |
 | --- | --- | --- |
 | `controlhub_mcp.py` | `list_people`, `list_licenses`, `list_roles`, `list_workspaces`, `create_workspace`, `delete_workspace` | Who the user is and what they are entitled to |
 | `calling_mcp.py` | `list_numbers`, `list_locations`, `get_location_call_settings`, `list_devices`, `list_dial_plans`, `create_location`, `delete_device` | How the user is provisioned to call |
 | `troubleshooting_mcp.py` | `unresolved_incidents`, `get_detailed_call_history` (CDRs), audit events, reports, meeting quality | Platform health and the call evidence |
-| *local tool* | `check_webex_status` | Rule out an outage with no server at all |
 
-!!! Note "Two ways to check status — on purpose"
-    You now have **two** status checks: the local `check_webex_status` tool and
-    the MCP `unresolved_incidents` tool. That is not a mistake — it shows the
-    same guardrail ("rule out an outage before blaming config") expressed both
-    as a local function and as a server tool. The skill can use either.
+!!! Note "Rule out an outage first"
+    The skill's first move is `unresolved_incidents` (troubleshooting server) —
+    check for a known Webex incident before blaming a user's configuration. It
+    is the same guardrail as the Contact Center agent, expressed here as a
+    server tool rather than a local one.
 
 ### Step 8.2.2: Read freely, write with approval
 
@@ -828,7 +825,7 @@ but its logic is diagnostic rather than corrective:
 
 | Step | Tool | Owned by |
 | --- | --- | --- |
-| Rule out an outage | `check_webex_status` | local tool |
+| Rule out an outage | `unresolved_incidents` | troubleshooting server |
 | Pull the call records | `get_detailed_call_history` | troubleshooting server |
 | Flag the failures | *(reasoning over CDR fields)* | — |
 | Is the user active / licensed? | `list_people`, `list_licenses` | control-hub server |
@@ -850,7 +847,6 @@ wire the engine to them — exactly the three swaps from Step 8.1.8.
     ```bash
     cd 08_use_cases/02_webex_calling_agent
     cp -R ../01_webex_cc_agent/utils .
-    cp -R ../01_webex_cc_agent/local_agent_tools .
     cp ../01_webex_cc_agent/agentbot.py .
     ```
 
@@ -998,7 +994,6 @@ flowchart LR
     Bot <-->|Prompts & Responses| LLM[LLM]
     LLM <-->|Tool Calls| Loop[agentic loop]
     Loop <-->|stdio| TR["mcp_servers/<br/>troubleshooting_mcp"]
-    Loop <-->|local call| Status[check_webex_status]
     TR <-->|REST + Analytics| API[Webex Meetings + Analytics APIs]
 ```
 
@@ -1047,7 +1042,6 @@ this time only **one** server.
     ```bash
     cd 08_use_cases/03_webex_meeting_agent
     cp -R ../01_webex_cc_agent/utils .
-    cp -R ../01_webex_cc_agent/local_agent_tools .
     cp ../01_webex_cc_agent/agentbot.py .
     ```
 
@@ -1140,7 +1134,8 @@ participants had problems.
 Have the agent rule out a platform incident before blaming a participant.
 
 ??? Solution
-    The local `check_webex_status` tool is already offered via `extra_tools`.
-    Add a first line to the skill's steps: *"Call `check_webex_status`; if an
+    The troubleshooting server already exposes `unresolved_incidents`. Add a
+    first line to the skill's steps: *"Call `unresolved_incidents`; if an
     incident overlapped the meeting time, note it as a possible cause before
-    analyzing individual participants."* No code change needed.
+    analyzing individual participants."* No code change needed — the tool is
+    already offered by the connected server.
