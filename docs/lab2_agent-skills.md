@@ -49,7 +49,7 @@ Skills should be enabled already, but you can check it by doing the following:
 
 1. Open **Settings** (`Ctrl+,`) and search for `chat.useAgentSkills`:
 
-    ![Skills](./assets/skill_1.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Skills](./assets/skill_1.png){ width="1000" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 2. **Enable** the checkbox if it is not already enabled.
 3. If you had to enable them, reload the window: `Ctrl+Shift+P` → `Developer: Reload Window`.
@@ -70,23 +70,23 @@ A skill is simply a folder containing a `SKILL.md` file, following an open stand
 
 1. In the Chat view, type `/skills` and press Enter:
 
-    ![skill_discovery](./assets/lab4/createskill1.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![skill_discovery](./assets/lab4/createskill1.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 2. Select **+ New Skill...**:
 
-    ![skill_discovery](./assets/lab4/createskill2.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![skill_discovery](./assets/lab4/createskill2.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 3. And select the default option **~/.agents/skills (default) Workspace**:
 
-    ![skill_discovery](./assets/lab4/createskill3.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![skill_discovery](./assets/lab4/createskill3.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 4. Name the new skill `meeting-review`:
 
-    ![Skills](./assets/skill_2.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Skills](./assets/skill_2.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
         
 5. This will create a new file for you:
 
-    ![Skills](./assets/skill_3.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Skills](./assets/skill_3.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 6. Replace the generated contents with the skill below:
 
@@ -206,7 +206,7 @@ Do **not** ask the agent "what skills are available?", a model without any skill
 
 Type `/` in the chat input. `meeting-review` should appear in the list.
 
-![skill_discovery](./assets/lab4/skill_discovery.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![skill_discovery](./assets/lab4/skill_discovery.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 !!! Note "If `meeting-review` does not appear"
     - Confirm `chat.useAgentSkills` is enabled (Step 2.1).
@@ -253,7 +253,7 @@ VS Code Chat was built first and foremost as a **coding** assistant. In Agent mo
 
 That choice is easier for the model in some situations than others. When you asked it to *create* meetings before, the conversation already contained successful Webex tool calls, so a follow-up question about your meetings is straightforward — it has just seen which tools work. Start a fresh chat, or ask something more open-ended like "help me prepare", and that advantage disappears. In a workspace full of Python, with a couple of dozen tools on offer, a small model, like the one we are using, will sometimes go and read the lab's source code, or save its own notes to a file, instead of loading the skill that was written for exactly this question:
 
-![Skills](./assets/skill_9.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![Skills](./assets/skill_9.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 That is not a broken skill or a broken MCP server. It is a tool-selection problem: the model has too many plausible options and no stated order to try them in, and it is choosing its file-editing tools over the Webex tools.
 
@@ -341,7 +341,7 @@ The skill should stay out of this one, and that is deliberate. The last line of 
 
 You can expand the references to confirm that `meeting-review` wasn't loaded.
 
-![Skills](./assets/skill_8.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![Skills](./assets/skill_8.png){ width="350" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ### 2 - Ask readiness question
 
@@ -349,7 +349,7 @@ Now, try it  for the same data a different way:
 
 - Ask: *"Help me prepare for my upcoming webex meetings."*
 
-    ![Skills](./assets/skill_11.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Skills](./assets/skill_11.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 This phrasing matches the description, so the model should load the skill without being told. Check the steps at the top of the reply: you are looking for **Read skill · meeting-review**, followed by one or more calls to the Webex Meeting MCP server.
 
@@ -359,7 +359,7 @@ This is the interesting part of the lab, so run it two or three times in fresh c
 
 To make sure the skill takes effect, you can force it into the context. To do that, first type `/meeting-review` in the chat:
 
-![Skills](./assets/skill_12.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![Skills](./assets/skill_12.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 The leading `/meeting-review` loads the skill body into the request before the model ever sees your question, so activation stops being the model's decision. It no longer has to *recognise* that the skill applies, only follow it. 
 
@@ -367,7 +367,7 @@ Naming the skill removes all doubt about *loading*, but it does not guarantee *o
 
 - Now, ask: *"Help me prepare for my upcoming webex meetings."*
 
-    ![Skills](./assets/skill_13.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Skills](./assets/skill_13.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 The template shows every check, whether it passes or fails. This makes it clear that the agent checked the agenda, invitees, and conflicts instead of accidentally skipping one.
 
@@ -406,7 +406,7 @@ Type `/meeting-review` so the skill is loaded, then ask it to add the missing ag
 
 - Ask: *"/meeting-review Add an agenda to my upcoming Webex meetings."*
 
-    ![Skills](./assets/skill_16.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Skills](./assets/skill_16.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 Watch what it does. The skill tells it how to update an agenda, but not who writes it. So the agent **writes agenda text it invented** and applies it straight away with `webex-update-meeting`, without showing you the text first. Your meetings are now updated with wording you never approved.
 
@@ -416,7 +416,7 @@ The tool call itself was correct. The problem is that a judgement call was made 
 
 Open your `meeting-review` skill (`/skills` → select it → edit) and add this line to the **Gotchas** section:
 
-![skill_discovery](./assets/lab4/editskill.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![skill_discovery](./assets/lab4/editskill.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ```markdown
 - **Approval:** Never write agenda text you invented. Draft the wording, show it to
@@ -431,11 +431,11 @@ Ask exactly the same question again, in a new chat window:
 
 - Ask: *"/meeting-review Add an agenda to my upcoming Webex meetings."*
 
-    ![Skills](./assets/skill_15.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![Skills](./assets/skill_15.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 The agent now presents draft agenda text and **waits for your approval** before touching Webex. Approve it, and confirm the agenda is set.
 
-![Skills](./assets/skill_17.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![Skills](./assets/skill_17.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 You just changed agent behaviour with one line of markdown. No code.
 
@@ -445,7 +445,7 @@ The skill's Gotchas record that `webex-create-meeting` has no agenda parameter, 
 
 - Ask: *"Schedule a meeting tomorrow at 4pm titled Budget Review, with the agenda: review Q4 spend."*
 
-![Skills](./assets/skill_18.png){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![Skills](./assets/skill_18.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 The agent creates the meeting first, then calls `webex-update-meeting` to add the agenda, because one tool cannot do both. Without that gotcha, an agent can create the meeting, drop the agenda, and still report the request as done.
 
