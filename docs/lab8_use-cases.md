@@ -758,8 +758,9 @@ skill, and a persona that reads freely but gates every write.
 
 !!! Tip "Same engine, different agent"
     You are not writing an agentic loop, an MCP client, or a WebSocket again.
-    `utils/` is copied unchanged from `01_webex_cc_agent/`. This section is
-    about **wiring** — which is the whole point of the template.
+    `utils/` is the same engine you built up across the earlier sections of the
+    lab. This section is about **wiring** — which is the whole point of the
+    template.
 
 ### Scenario
 
@@ -887,15 +888,6 @@ wire the engine to them — exactly the three swaps from Step 8.1.8.
     template working as designed — new domain, same engine.
 
 ### Step 8.2.5: Run the agent
-
-!!! Prerequisite "Before you start"
-    Copy the environment template under `08_use_cases/02_webex_calling_agent`
-    and fill in your values. It needs `BOT_TOKEN`, `OPENAI_API_KEY`, `MODEL`,
-    and the same Service App `ACCESS_TOKEN` + `WEBEX_ORG_ID` from the earlier labs.
-
-    ```bash
-    cp .env.example .env
-    ```
 
 1. Change into the folder and run it:
 
@@ -1072,15 +1064,6 @@ this time only **one** server.
     The full reference persona is already in the folder's `system_prompt.txt`.
 
 ### Step 8.3.4: Run the agent
-
-!!! Prerequisite "Before you start"
-    Copy the environment template under `08_use_cases/03_webex_meeting_agent`
-    and fill in your values. It needs `BOT_TOKEN`, `OPENAI_API_KEY`, `MODEL`,
-    and the same **admin** `ACCESS_TOKEN` + `WEBEX_ORG_ID` from the earlier labs.
-
-    ```bash
-    cp .env.example .env
-    ```
 
 1. Change into the folder and run it:
 
