@@ -1,10 +1,10 @@
 # Lab 6 - MCP Servers in AI Assistant
 
-You already used MCP in Visual Studio Code (Lab 1) and built a custom MCP server (Lab 3). The IDE was the host: it hid the client, the tool loop, and the HTTP session.
+You already used MCP in Visual Studio Code (Lab 1) and built a custom MCP server (Lab 4). The IDE was the host: it hid the client, the tool loop, and the HTTP session.
 
 In Lab 5 you built a Webex bot with an LLM, but it still has no tools. In this section you write the **MCP client** in Python and plug it into that bot, so people in Webex can call the same tools you used in the IDE.
 
-The bot will use **tools** (the same primitive as in Lab 3). VS Code can attach resources and prompts for you; a bot has to choose tools from the user's message.
+The bot will use **tools** (the same primitive as in Lab 4). VS Code can attach resources and prompts for you; a bot has to choose tools from the user's message.
 
 ## Architecture
 
@@ -139,7 +139,7 @@ To integrate the Webex MCP Servers into your Assistant, you need an MCP Client.
                     return None
         ```
 
-   This MCP client can talk to a remote Webex MCP server (URL + token) or a local custom server (`command` + `args`, stdio). The next exercises use HTTP. The last exercise adds the Lab 3 server over stdio.
+   This MCP client can talk to a remote Webex MCP server (URL + token) or a local custom server (`command` + `args`, stdio). The next exercises use HTTP. The last exercise adds the Lab 4 server over stdio.
 
 ## Step 6.2: List tools
 
@@ -762,18 +762,18 @@ Now, as we did in the previous section, we will combine what we have done to pro
 
 Now you have a bot that can access the Webex MCP servers. Let's add now our custom MCP server.
 
-Official Webex MCP servers are remote: the client uses Streamable HTTP and a Bearer token. The server you built in Lab 3 is **local**. VS Code started it with `command` and `args` over **stdio**. The bot has to do the same: spawn `03_custom_mcp/03_read_books.py` and add that client to the hub.
+Official Webex MCP servers are remote: the client uses Streamable HTTP and a Bearer token. The server you built in Lab 4 is **local**. VS Code started it with `command` and `args` over **stdio**. The bot has to do the same: spawn `04_custom_mcp/03_read_books.py` and add that client to the hub.
 
 The LLM still sees one list of tools. It does not know which server a tool came from.
 
-The Service App `ACCESS_TOKEN` is not sent on the MCP transport. The custom server reads it from `.env` when it starts, the same as in Lab 3.
+The Service App `ACCESS_TOKEN` is not sent on the MCP transport. The custom server reads it from `.env` when it starts, the same as in Lab 4.
 
 1. Navigate to `06_mcp_bot/06_custom.py` and review the code. The only new part is the stdio client passed into `McpHub`:
 
     ??? Tip "Python Code"
         ```python
         LAB_ROOT = Path(__file__).resolve().parent.parent
-        CUSTOM_SERVER = LAB_ROOT / "03_custom_mcp" / "03_read_books.py"
+        CUSTOM_SERVER = LAB_ROOT / "04_custom_mcp" / "03_read_books.py"
 
         custom = McpClient(
             command=sys.executable,
