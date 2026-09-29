@@ -970,6 +970,7 @@ Use these as the starting catalog. You do not need to wrap all of them; pick a s
 | **Location Call Settings** | Manage specific calling settings for a location | [Location Call Settings](https://developer.webex.com/calling/docs/api/v1/location-call-settings){:target="_blank"} |
 | **Devices** | Phones and room devices registered in the org | [Devices](https://developer.webex.com/docs/api/v1/devices){:target="_blank"} |
 | **Call Routing** | Dial plans, route groups, and routing choices | [Call Routing](https://developer.webex.com/calling/docs/api/v1/call-routing){:target="_blank"} |
+| **User Call Settings** | Per-user calling features such as call forwarding | [User Call Settings](https://developer.webex.com/calling/docs/api/v1/user-call-settings){:target="_blank"} |
 
 #### Control Hub management
 
