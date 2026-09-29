@@ -234,6 +234,41 @@ Round 3
 
 Loop exits. 3 rounds, 2 tool calls, 1 answer.
 ```
+
+#### Memory across messages
+
+The loop above is memory *within one question*: a scratch list of tool calls and results that is built up, used for the answer, and then thrown away. But a chat is many questions, so the agent also needs to remember what was said *between* them. That longer-lived memory lives in `agentbot.py`, not in the loop.
+
+`agentbot.py` keeps one running history per user, keyed by their email:
+
+```python
+# Per-user conversation history.
+conversations: dict[str, list] = {}
+
+def _run_agent(uid, text, room_id):
+    if uid not in conversations:
+        conversations[uid] = [{"role": "system", "content": SYSTEM_PROMPT}]
+    conversations[uid].append({"role": "user", "content": text})
+    reply = mcp_client.agentic_loop(conversations[uid], ...)
+    conversations[uid].append({"role": "assistant", "content": reply})
+    while len(conversations[uid]) > 1 + MAX_HISTORY * 2:
+        conversations[uid].pop(1); conversations[uid].pop(1)
+    return reply
+```
+
+So each user gets their own thread — a `system` prompt at index 0, then the back-and-forth of `user` and `assistant` turns. That is why you can ask a follow-up like *"and their devices?"* and the agent still knows who "their" refers to.
+
+Three things keep it from growing forever:
+
+- **A rolling window.** `MAX_HISTORY` (default `20`, set in `.env`) caps the history at the last 20 exchanges. Past that, the oldest user+assistant pair is dropped — the system prompt at index 0 always stays.
+- **A reset command.** Texting `/reset` clears that user's history and starts a fresh thread.
+- **Restart.** `conversations` is an in-memory dict. Stop the bot and every thread is gone — nothing is written to disk.
+
+!!! Note "Two kinds of memory, one clean history"
+    The tool-call scaffolding from the loop never enters the stored history.
+    
+    `agentic_loop` works on a *copy* (`msgs = list(messages)`) and only the final text reply is appended back. So the per-user thread stays a clean sequence of system, user, and assistant messages — which is also why trimming a pair at a time (`pop(1); pop(1)`) never splits a tool call from its result.
+
 #### Reaching the servers
 
 The loop lives in `mcp_client.py`. So does everything about *reaching* the
@@ -853,10 +888,17 @@ The `investigate-calls` skill tells the agent how to pull call records, report t
 
     ## Steps
 
-    1. Clarify scope only if it is missing: which user or number, and roughly
-       when (CDRs cover the last few hours).
-    2. Pull the records with `get_detailed_call_history`. Widen `hours_back` if
-       the request is about an older window.
+    1. Clarify scope only if it is missing: which user or number, and the time
+       window — a recent span, or a specific past date/time.
+    2. Pull the records with `get_detailed_call_history`. For a recent window,
+       widen `hours_back` (max 12). When the user names a date or time, translate
+       it into `start_time`/`end_time` (UTC — a date like `2026-09-24` or an ISO
+       8601 timestamp like `2026-09-24T05:00:00Z`) and call the tool with that
+       **absolute** window. Do not fall back to the most recent 12 hours, and do
+       not decide the window is unreachable — it need not be near now; the window
+       is only capped at a 12-hour span and must end at least ~5 minutes in the
+       past. Then report exactly what the feed returns: the calls, an empty
+       window, or the API's error.
     3. Report the calls that match the user or number in question — who called
        whom, when, how long, and the outcome. This alone answers most requests.
     4. If every call succeeded, say so plainly and stop; there is nothing to fix.
@@ -914,21 +956,34 @@ When a call did not succeed, the skill joins its `user` and `callingNumber` to `
 
         For the license list, the agent resolves each license ID to its name and returns a concise list of active users with their calling licenses — directly, and with no incident check, since nothing was reported as broken.
     
-    * Show me the call history for XXXX
+    * Show me the call history for Pod 0
 
         ![Use Cases](assets/use_case_2.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
+        By default this returns the **last 12 hours**, so a quiet window can come back empty. To look further back, name a window and the agent passes it straight through to the CDR feed.
+
+    !!! Note
+        Webex caps any single request at a 12-hour span and needs the end to be at least ~5 minutes in the past, and CDRs older than the feed's retention are simply gone.
+
+    * Show me the call history for Pod 0 on 2026-09-24 between 05:00 and 08:30 UTC
+
+        ![Use Cases](assets/use_case_8.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
 4. Now let the skill drive a deeper look:
 
-    * Summarize XXX's recent calls — flag anything that did not connect
+    * Summarize Pod 0's calls on 2026-09-24 between 05:00 and 08:30 UTC and flag anything that did not connect
 
         ![Use Cases](assets/use_case_3.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     
-    * Did XXX have any failed calls, and if so why?
+    * Did Pod 0 have any failed calls, and if so why?
 
         ![Use Cases](assets/use_case_4.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }    
 
     The agent pulls the CDRs and reports them. If a call did not succeed, it flags those and correlates each with the user's license, number, and device to explain the likely cause — quoting the `outcomeReason` back to you. If every call succeeded, it simply says so.
+
+    * Investigate possible causes
+
+        ![Use Cases](assets/use_case_9.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }    
 
 ### Exercises
 
@@ -941,18 +996,6 @@ Ask the agent about the calls to or from a specific phone number instead of a us
     Ask: *"Show me the recent calls involving +1..., and who owns that
     number."* The skill reports the matching calls and joins `callingNumber`
     to `list_numbers`; if any did not connect, it flags them too.
-
-#### Exercise 2 — a read-only variant
-
-Make the agent refuse every management write, even when asked. To test it, ask it to delete a device and confirm it declines.
-
-??? Solution
-    Add a line to `system_prompt.txt`: *"You are strictly read-only. Never call
-    `create_*` or `delete_*` tools; instead describe the change an admin should
-    make in Control Hub."* The investigation skill is unaffected because it only
-    reads.
-
----
 
 ## Section 3 — Webex Meeting Quality Agent
 
