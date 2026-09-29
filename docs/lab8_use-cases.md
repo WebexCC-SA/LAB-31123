@@ -309,7 +309,7 @@ Expand whichever you are curious about.
     Ten skills at 100 lines each would cost 1,000 lines of context on every single message. This costs ten lines, and the full body arrives only when the model decides it is relevant.
 
 ??? Note "websocket.py — messages and card taps on one socket"
-    The bot needs two things from Webex: text messages and Adaptive Card button taps. A webhook would need a public URL, a tunnel, and certificates. Mercury is an **outbound** WebSocket, so it works behind NAT, firewalls, and VPNs with no inbound connection at all.
+    The bot needs two things from Webex: text messages and Adaptive Card button taps. A webhook would need a public URL, a tunnel, and certificates. Websockets is an **outbound** connection, so it works behind NAT, firewalls, and VPNs with no inbound connection at all.
 
     `WebSocketClientCards` opens one socket and sorts frames by verb — `cardAction` goes to `on_card`, `post` goes to `on_message`.
 
@@ -393,7 +393,7 @@ Open `agentbot.py`. It is short — because the hard parts are already in `utils
     MCP ready — 6 tool(s), ... resource text, 1 prompt(s)
     MCP ready — 4 tool(s), ... resource text, 0 prompt(s)
     Skills: 1 — ['troubleshoot-address-books']
-    Listening as WebexOne-... via Mercury (messages + cards)...
+    Listening as WebexOne-... via Webex Websockets (messages + cards)...
     ```
 
     That is Step 1.2 in one screen: six tools and a prompt from server 06, four tools and no prompt from server 07.
@@ -904,7 +904,7 @@ wire the engine to them — exactly the three swaps from Step 8.1.8.
     MCP ready — ... tool(s) ...   (calling)
     MCP ready — ... tool(s) ...   (troubleshooting)
     Skills: 2 — ['troubleshoot-status', 'investigate-calls']
-    Listening as WebexOne-... via Mercury (messages + cards)...
+    Listening as WebexOne-... via Webex Websockets (messages + cards)...
     ```
 
 3. In the Webex space, start with a plain investigation:
@@ -1077,7 +1077,7 @@ this time only **one** server.
     ```terminal
     MCP ready — ... tool(s) ...   (troubleshooting)
     Skills: 1 — ['meeting-quality']
-    Listening as WebexOne-... via Mercury (messages + cards)...
+    Listening as WebexOne-... via Webex Websockets (messages + cards)...
     ```
 
 3. In the Webex space, ask a review question:
