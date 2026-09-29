@@ -1,20 +1,14 @@
 # Lab 8 - Use Cases
 
-You have built a **Webex bot** (Lab 5), an **MCP client and hub** (Lab 6), a **skill loader**
-(Lab 7), and **custom MCP servers** (Lab 4). In this lab you compose those modules into
-three real troubleshooting agents.
+Now, you will compose the modules that you have been building into three real troubleshooting agents.
 
-This is the capstone. The first use case you **read and run** as a finished agent — the goal
-is to recognise your own work in it. The next two you **finish yourself**: you copy the engine
-and wire it to new servers, following the same template. Every use case ships a complete,
-working reference solution, so you can check your wiring or just run it as-is.
+In this lab you meet the engine as **complete, self-contained use cases**. Each use case is a single folder that carries *everything* it needs — its own `utils/`, `local_agent_tools/`, `skills/`, `mcp_servers/`, persona, and `agentbot.py`. Open one folder and you see every moving part.
 
-In this lab you meet the engine as **complete, self-contained use cases**. Each use case is a single folder that carries *everything* it needs — its own `utils/`, `local_agent_tools/`, `skills/`, `mcp_servers/`, persona, and `agentbot.py`. Open one folder and you see every moving part. Copy the folder and you have a template for the next agent.
+This lab has three use cases, each a self-contained agent built from the same engine: 
 
-This lab has three use cases, each a self-contained agent built from the same
-engine: a **Contact Center** agent that fixes a misconfiguration, a **Calling /
-Control Hub** agent that investigates a user's calls, and a **Meeting Quality**
-agent that explains why a meeting looked and sounded bad.
+- **Contact Center** agent that fixes a misconfiguration
+- **Calling / Control Hub** agent that investigates a user's calls 
+- **Meeting Quality** agent that explains why a meeting looked and sounded bad.
 
 ```
 08_use_cases/
@@ -24,7 +18,7 @@ agent that explains why a meeting looked and sounded bad.
 ```
 
 !!! Note "Self-contained by design"
-    There is no shared library. Each use-case folder has its **own copy** of the engine. The trade-off — the same `utils/` appears in more than one folder — is deliberate: every use case is a complete, runnable, copy-paste-able example with **no imports from other labs** and nothing to wire up across directories.
+    There is no shared library. Each use-case folder has its **own copy** of the engine. The trade-off — the same `utils/` appears in more than one folder — is deliberate: every use case is a complete, runnable, copy-paste-able example with **no imports from other labs** and nothing to wire up across directories. Only `.env` file is shared for simplicity.
 
 ---
 
@@ -745,14 +739,13 @@ Give the agent the `check_webex_status` local tool a bigger role: make the skill
 
 ## Section 2 — Webex Calling & Control Hub Agent
 
-The Contact Center agent in Section 1 *fixed* a misconfiguration. This second use case does something you will reach for far more often in practice: it **reports and investigates**. An administrator asks *"show me this user's calls"* — or *"did any of them fail, and why?"* — and the agent pulls the evidence, reports what happened, and, when a call did not succeed, explains the cause.
+The Contact Center agent *fixed* a misconfiguration. This second use case does something you will reach for far more often in practice: it **reports and investigates**. An administrator asks *"show me this user's calls"* — or *"did any of them fail, and why?"* — and the agent pulls the evidence, reports what happened, and, when a call did not succeed, explains the cause.
 
-This is a deliberate contrast with Section 1. The engine is identical. What changes is **three servers instead of two**, an investigation skill instead of a fix skill, and a persona that reads freely but gates every write.
+This is a deliberate contrast. The engine is identical. What changes is the MCP servers used, an investigation skill instead of a fix skill, and a persona that reads freely but gates every write.
 
 !!! Tip "Same engine, different agent"
     You are not writing an agentic loop, an MCP client, or a WebSocket again.
     
-    `utils/` is the same engine you built up across the earlier sections of the lab. 
     This section is about **wiring** — which is the whole point of the template.
 
 ### Scenario
@@ -774,9 +767,9 @@ flowchart LR
     TR <-->|REST + Analytics| API
 ```
 
-### Step 8.2.1: The three servers
+### Step 8.2.1: MCP servers
 
-This agent connects to three MCP servers — all of them ones you already have from Lab 4.
+This agent connects to three MCP servers — all of them ones you already have previous labs.
 
 | Server | Tools it exposes | Role here |
 | --- | --- | --- |
@@ -784,15 +777,15 @@ This agent connects to three MCP servers — all of them ones you already have f
 | `calling_mcp.py` | `list_numbers`, `list_locations`, `get_location_call_settings`, `list_devices`, `list_dial_plans`, `create_location`, `delete_device` | How the user is provisioned to call |
 | `troubleshooting_mcp.py` | `unresolved_incidents`, `get_detailed_call_history` (CDRs), `audit events`, `reports`, `meeting quality` | Platform health and the call evidence |
 
-!!! Note "Rule out an outage first"
-    The skill's first move is `unresolved_incidents` (troubleshooting server) — check for a known Webex incident before blaming a user's configuration. It is the same guardrail as the Contact Center agent.
+!!! Note "Rule out an outage — only when something failed"
+    When a call actually failed, the `investigate-calls` skill rules out a known Webex incident (`unresolved_incidents`) before blaming a user's configuration — the same guardrail as the Contact Center agent. Plain listing and reporting requests skip the incident check entirely; it only runs when there is a problem to explain.
 
 ### Step 8.2.2: Read freely, write with approval
 
 Section 1 taught elicitation with a single write (`update_desktop_profile`). This agent keeps that lesson but frames it as a rule for the whole domain:
 
 - **Investigation is always safe.** Listing people, licenses, numbers and devices, and pulling CDRs, changes nothing — the agent does it without asking.
-- **Management is gated.** The write tools here (`create_workspace`, `delete_workspace`, `create_location`, `delete_device`) change the organization. Each `delete_*` tool elicits, so the server posts an Adaptive Card and waits for **Confirm** — the same bridge you saw in Section 1.
+- **Management is gated.** The write tools here (`create_workspace`, `delete_workspace`, `create_location`, `delete_device`) change the organization. Each `delete_*` tool elicits, so the server posts an Adaptive Card and waits for **Confirm**.
 
 The persona (`system_prompt.txt`) states this split explicitly, so the model never "fixes" something it was only asked to investigate.
 
@@ -853,7 +846,8 @@ The `investigate-calls` skill tells the agent how to pull call records, report t
       (CDRs) for a recent window.
     - `unresolved_incidents` (troubleshooting server) — is there a live outage?
     - `list_people`, `list_licenses` (control-hub server) — who the user is and
-      what they are entitled to.
+      what they are entitled to. Licenses appear on a person as IDs; join them to
+      `list_licenses` (`id` -> `name`) and report the names, not the IDs.
     - `list_numbers`, `list_devices` (calling server) — how the user is
       provisioned to call.
 
@@ -895,47 +889,52 @@ When a call did not succeed, the skill joins its `user` and `callingNumber` to `
 
 1. Change into the folder and run it:
 
-    - cd 08_use_cases/02_webex_calling_agent
+    - cd ../02_webex_calling_agent
     - python agentbot.py
 
 2. Confirm all three servers connect — you should see three "MCP ready" lines and both skills discovered:
 
     ```terminal
-    MCP ready — ... tool(s) ...   (control-hub)
-    MCP ready — ... tool(s) ...   (calling)
-    MCP ready — ... tool(s) ...   (troubleshooting)
-    Skills: 2 — ['troubleshoot-status', 'investigate-calls']
-    Listening as WebexOne-... via Webex Websockets (messages + cards)...
+    webex-control-hub-complex running on stdio - waiting for a client (Ctrl+C to stop).
+    MCP ready — 6 tool(s), 0 chars of resource text, 0 prompt(s), elicitation=auto-accept
+    webex-calling-complex running on stdio - waiting for a client (Ctrl+C to stop).
+    MCP ready — 7 tool(s), 0 chars of resource text, 0 prompt(s), elicitation=auto-accept
+    webex-troubleshooting-complex running on stdio - waiting for a client (Ctrl+C to stop).
+    MCP ready — 10 tool(s), 0 chars of resource text, 0 prompt(s), elicitation=auto-accept
+    Skills: 2 — ['investigate-calls', 'troubleshoot-status']
+    Listening as webexone-...@webex.bot via Webex Websockets (messages + cards)... (Ctrl+C to stop)
+    WebSocket connected — listening for messages and cards
     ```
 
 3. In the Webex space, start with plain reporting:
 
     * List the users and their calling licenses
-    * Show me the call history for the last 12 hours
+
+        ![Use Cases](assets/use_case_1.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+        For the license list, the agent resolves each license ID to its name and returns a concise list of active users with their calling licenses — directly, and with no incident check, since nothing was reported as broken.
+    
+    * Show me the call history for XXXX
+
+        ![Use Cases](assets/use_case_2.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 4. Now let the skill drive a deeper look:
 
-    * Summarize <user>'s recent calls — flag anything that did not connect
-    * Did <user> have any failed calls, and if so why?
+    * Summarize XXX's recent calls — flag anything that did not connect
 
-    The agent pulls the CDRs and reports them. If a call did not succeed, it
-    flags those and correlates each with the user's license, number, and
-    device to explain the likely cause — quoting the `outcomeReason` back to
-    you. If every call succeeded, it simply says so.
+        ![Use Cases](assets/use_case_3.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    
+    * Did XXX have any failed calls, and if so why?
 
-!!! Warning "Analytics needs the right token"
-    `get_detailed_call_history` calls a Webex **analytics** API. As Lab 3
-    noted, analytics and reporting APIs can require **user context** and may
-    reject a Service App with a `403`. If a CDR call returns `403`, that is a
-    token scope/context problem, not "the user has no calls".
+        ![Use Cases](assets/use_case_4.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }    
+
+    The agent pulls the CDRs and reports them. If a call did not succeed, it flags those and correlates each with the user's license, number, and device to explain the likely cause — quoting the `outcomeReason` back to you. If every call succeeded, it simply says so.
 
 ### Exercises
 
 #### Exercise 1 — report a specific number's calls
 
-Ask the agent about the calls to or from a specific phone number instead of a
-user. This works on a healthy tenant — you are reporting, not hunting a
-failure.
+Ask the agent about the calls to or from a specific phone number instead of a user. This works on a healthy tenant — you are reporting, not hunting a failure.
 
 ??? Solution
     No code change — CDRs already carry `callingNumber` and `calledNumber`.
@@ -945,8 +944,7 @@ failure.
 
 #### Exercise 2 — a read-only variant
 
-Make the agent refuse every management write, even when asked. To test it,
-ask it to delete a device and confirm it declines.
+Make the agent refuse every management write, even when asked. To test it, ask it to delete a device and confirm it declines.
 
 ??? Solution
     Add a line to `system_prompt.txt`: *"You are strictly read-only. Never call
@@ -959,11 +957,6 @@ ask it to delete a device and confirm it declines.
 ## Section 3 — Webex Meeting Quality Agent
 
 The first two agents answered *"is it configured correctly?"* This third one answers a different kind of question: *"how did that meeting look and sound?"* An administrator or host names a meeting, and the agent pulls its **quality analytics** and reports — per participant — how the audio and video held up. When the numbers show trouble, it explains what degraded and who was affected.
-
-It is the simplest agent to wire (one server) and the best illustration of the template's promise: same engine, a single new server, a new skill, done.
-
-!!! Note "Local stdio — no special transport"
-    Meeting **quality** data comes from a Webex analytics REST API, which the troubleshooting server already wraps. So this agent runs the same local **stdio** MCP servers as the other two — there is nothing new to learn about transport. It reuses the *general* `troubleshooting_mcp.py` (the same server the Calling agent uses); the persona and skill focus the model on its two meeting tools.
 
 ### Scenario
 
@@ -1004,22 +997,31 @@ The `meeting-quality` skill (`skills/meeting-quality/SKILL.md`) is the whole poi
     Be concise and accurate.
 
     Working principles:
-    - Investigate with the tools. Never guess at meeting IDs, participants, or
-      quality numbers — list the meetings first, then pull the quality data for
-      the specific meeting, then reason over what the tool returned.
-    - Do not stop at listing meetings — pull the quality data and report it per
-      participant. When media was poor, add the analysis: which participants, on
-      audio or video, and how bad it was.
-    - Identify the pattern. If one participant is bad while everyone else is fine,
-      it is likely that participant's network or device. If everyone degrades at
-      the same time, it points at the meeting or a wider issue.
-    - This agent is read-only. You review and explain quality; you do not change
-      any configuration.
-    - Report results plainly, including any errors the tools return. A 403 usually
-      means the token lacks the scope or user context the analytics API requires;
-      an empty result may just mean the time window held no ended meetings.
-    - If the request is ambiguous — which meeting, which day, whose meetings — ask
-      one brief clarifying question.
+    - Investigate with the tools. Never guess at IDs, licenses, numbers, or call
+      outcomes — always look them up with a tool first, then reason over the
+      results the tool returned.
+    - Only check platform status (incidents) when the user reports something is
+      not working — a failed or failing call, or a service that is down or slow.
+      In that case, if there is an active Webex incident, say so and stop before
+      digging into a user's setup. Plain listing or reporting requests never need
+      an incident check.
+    - When asked to list or report data, present a concise, readable result
+      yourself — do not ask the user to choose a format. Default to active users
+      and their calling-related licenses.
+    - Show human-readable license names, not IDs. A person's `licenses` come back
+      as IDs; resolve them by joining `list_people` with `list_licenses`
+      (`id` -> `name`) before presenting.
+    - Read before you write. Investigation (listing and pulling data) is always
+      safe. A management action that changes the organization — creating or
+      deleting a workspace, location, or device — must be confirmed. Call the
+      tool directly; the server presents a confirmation card and handles approval.
+      Do not ask the user to confirm in plain text.
+    - When a skill matches the reported problem, load it and follow its steps in
+      order.
+    - Report results plainly, including any errors the tools return (for example,
+      a 403 usually means the token lacks the required scope or user context).
+    - If a request is ambiguous — which user, which time window, which location —
+      ask one brief clarifying question.
 
     When the meeting-quality skill matches the request, load it and follow its
     steps in order.
@@ -1085,30 +1087,36 @@ The skill defines what "poor" means (packet loss, latency, jitter, collapsed vid
 
 1. Change into the folder and run it:
 
-    - cd 08_use_cases/03_webex_meeting_agent
+    - cd ../03_webex_meeting_agent
     - python agentbot.py
 
 2. Confirm the server connects and the skill is discovered:
 
     ```terminal
-    MCP ready — ... tool(s) ...   (troubleshooting)
+    webex-troubleshooting-complex running on stdio - waiting for a client (Ctrl+C to stop).
+    MCP ready — 10 tool(s), 0 chars of resource text, 0 prompt(s), elicitation=auto-accept
     Skills: 1 — ['meeting-quality']
-    Listening as WebexOne-... via Webex Websockets (messages + cards)...
+    Listening as webexone-...@webex.bot via Webex Websockets (messages + cards)... (Ctrl+C to stop)
+    WebSocket connected — listening for messages and cards
     ```
 
 3. In the Webex space, start with plain reporting:
 
     * List the meetings that ended in the last 7 days
+
+         ![Use Cases](assets/use_case_5.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }    
+    
     * Show me the quality for <meeting title>
+
+         ![Use Cases](assets/use_case_6.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }    
 
 4. Then let the skill add the analysis:
 
     * How did <meeting title> look and sound — any audio or video problems, and who was affected?
 
-    The agent lists the ended meetings, pulls `get_meeting_qualities` for the one you named, and reports the per-participant audio and video with the actual numbers. If a participant's media was poor, it flags them, decides whether it is one person or the whole meeting, and leads with the worst-affected. If everyone was fine, it says so.
+         ![Use Cases](assets/use_case_7.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }    
 
-!!! Warning "Meeting analytics needs an admin token"
-    `get_meeting_qualities` calls a Webex **analytics** API, which requires an **admin / user-context** token — the same admin `ACCESS_TOKEN` you have used throughout. A Service App token is rejected here (Lab 3 explains why). A `403` means the token, not the meeting, is the problem.
+    The agent lists the ended meetings, pulls `get_meeting_qualities` for the one you named, and reports the per-participant audio and video with the actual numbers. If a participant's media was poor, it flags them, decides whether it is one person or the whole meeting, and leads with the worst-affected. If everyone was fine, it says so.
 
 ### Exercises
 
