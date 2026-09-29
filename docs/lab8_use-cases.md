@@ -809,7 +809,7 @@ This agent connects to three MCP servers — all of them ones you already have p
 | Server | Tools it exposes | Role here |
 | --- | --- | --- |
 | `controlhub_mcp.py` | `list_people`, `list_licenses`, `list_roles`, `list_workspaces`, `create_workspace`, `delete_workspace` | Who the user is and what they are entitled to |
-| `calling_mcp.py` | `list_numbers`, `list_locations`, `get_location_call_settings`, `list_devices`, `list_dial_plans`, `create_location`, `delete_device` | How the user is provisioned to call |
+| `calling_mcp.py` | `list_numbers`, `list_locations`, `get_location_call_settings`, `list_devices`, `list_dial_plans`, `create_location`, `delete_device`, `get_call_forwarding`, `update_call_forwarding` | How the user is provisioned to call |
 | `troubleshooting_mcp.py` | `unresolved_incidents`, `get_detailed_call_history` (CDRs), `audit events`, `reports`, `meeting quality` | Platform health and the call evidence |
 
 !!! Note "Rule out an outage — only when something failed"
@@ -820,7 +820,7 @@ This agent connects to three MCP servers — all of them ones you already have p
 Section 1 taught elicitation with a single write (`update_desktop_profile`). This agent keeps that lesson but frames it as a rule for the whole domain:
 
 - **Investigation is always safe.** Listing people, licenses, numbers and devices, and pulling CDRs, changes nothing — the agent does it without asking.
-- **Management is gated.** The write tools here (`create_workspace`, `delete_workspace`, `create_location`, `delete_device`) change the organization. Each `delete_*` tool elicits, so the server posts an Adaptive Card and waits for **Confirm**.
+- **Management is gated.** The write tools here (`create_workspace`, `delete_workspace`, `create_location`, `delete_device`, `update_call_forwarding`) change the organization. The `delete_*` tools and `update_call_forwarding` elicit, so the server posts an Adaptive Card and waits for **Confirm**.
 
 The persona (`system_prompt.txt`) states this split explicitly, so the model never "fixes" something it was only asked to investigate.
 
@@ -838,19 +838,38 @@ The `investigate-calls` skill tells the agent how to pull call records, report t
     - Investigate with the tools. Never guess at IDs, licenses, numbers, or call
       outcomes — always look them up with a tool first, then reason over the
       results the tool returned.
-    - Check platform status before blaming configuration. If there is an active
-      Webex incident, say so and stop before digging into a user's setup.
+    - Only check platform status (incidents) when the user reports something is
+      not working — a failed or failing call, or a service that is down or slow.
+      In that case, if there is an active Webex incident, say so and stop before
+      digging into a user's setup. Plain listing or reporting requests never need
+      an incident check.
+    - When asked to list or report data, present a concise, readable result
+      yourself — do not ask the user to choose a format. Default to active users
+      and their calling-related licenses.
+    - Show human-readable license names, not IDs. A person's `licenses` come back
+      as IDs; resolve them by joining `list_people` with `list_licenses`
+      (`id` -> `name`) before presenting.
     - Read before you write. Investigation (listing and pulling data) is always
       safe. A management action that changes the organization — creating or
-      deleting a workspace, location, or device — must be confirmed. Call the
-      tool directly; the server presents a confirmation card and handles approval.
-      Do not ask the user to confirm in plain text.
+      deleting a workspace, location, or device, or changing a user's call
+      forwarding — must be confirmed. Call the tool directly; the server presents
+      a confirmation card and handles approval. Do not ask the user to confirm in
+      plain text.
     - When a skill matches the reported problem, load it and follow its steps in
       order.
     - Report results plainly, including any errors the tools return (for example,
       a 403 usually means the token lacks the required scope or user context).
-    - If a request is ambiguous — which user, which time window, which location —
-      ask one brief clarifying question.
+    - When a call did not succeed, keep the diagnosis short and evidence-based.
+      Name the one or two most likely causes, tied to the actual `outcomeReason`,
+      and give a couple of concrete next actions. Do not re-list calls you already
+      showed, do not produce a long generic checklist of possible causes, and skip
+      incidental tool noise that is not the cause.
+    - If a request truly identifies no subject and no window, ask one brief
+      clarifying question. A named person or a phone number is not ambiguous — 
+      look it up with `list_people` or `list_numbers` rather than asking whether
+      it is a user, location, or device. When the user gives a time window, pass
+      those exact times to the call-history tool and report what it returns — 
+      never assume only the most recent data is available.
     
     Domain facts (what a CDR outcome means, which analytics need user context)
     come from the connected servers' resources — read them before acting.
@@ -885,11 +904,19 @@ The `investigate-calls` skill tells the agent how to pull call records, report t
       `list_licenses` (`id` -> `name`) and report the names, not the IDs.
     - `list_numbers`, `list_devices` (calling server) — how the user is
       provisioned to call.
+    - `get_call_forwarding` (calling server) — a user's call forwarding. If their
+      inbound calls are not arriving, forwarding may be sending them elsewhere.
 
     ## Steps
 
-    1. Clarify scope only if it is missing: which user or number, and the time
-       window — a recent span, or a specific past date/time.
+    1. Identify the subject. A named subject is a person or a phone number — not a
+       location or device. Resolve a name like "Pod 0" with `list_people` (match on
+       display name or email) and a number with `list_numbers`; CDRs also carry a
+       `user` display name (e.g. "Pod 0") you can match directly. Do not ask whether
+       the subject is a user, location, or device. Only ask a clarifying question
+       when the request names no subject at all — and even then, offer to summarize
+       all calls in the window. The window itself is either a recent span or a
+       specific past date/time.
     2. Pull the records with `get_detailed_call_history`. For a recent window,
        widen `hours_back` (max 12). When the user names a date or time, translate
        it into `start_time`/`end_time` (UTC — a date like `2026-09-24` or an ISO
@@ -900,18 +927,35 @@ The `investigate-calls` skill tells the agent how to pull call records, report t
        past. Then report exactly what the feed returns: the calls, an empty
        window, or the API's error.
     3. Report the calls that match the user or number in question — who called
-       whom, when, how long, and the outcome. This alone answers most requests.
+       whom, when, how long, and the outcome. This alone answers most requests. If
+       you could not resolve the named subject, report all calls in the window and
+       say you could not narrow to that subject — do not block.
     4. If every call succeeded, say so plainly and stop; there is nothing to fix.
     5. If one or more calls did not succeed, flag them and find out why:
        - `unresolved_incidents` — rule out a platform outage first.
        - `list_people` / `list_licenses` — is the user active and licensed to call?
        - `list_numbers` / `list_devices` — do they own the number and have a
          registered device?
+       - `get_call_forwarding` — if inbound calls are not arriving, is forwarding
+         sending them elsewhere?
        Correlate: no license or no number explains a user who cannot call; a
        routing `outcomeReason` on otherwise healthy provisioning points at dial
        plans or the destination, not the user.
     6. For any non-successful call, quote its `outcomeReason` — it is the API's
        own explanation and the single most useful field.
+
+    ## Reporting a diagnosis
+
+    Keep it short and evidence-based. Anchor every conclusion to the specific
+    `outcomeReason` and the pattern you actually saw — for example, repeated
+    `TemporarilyUnavailable` refusals within a few seconds usually means retries
+    to an endpoint that was unregistered or unavailable; `CallRejected` on an
+    international destination points at the outbound dial plan or the location's
+    calling permission for that prefix, not the user. Name only the one or two
+    most likely causes and offer at most two or three concrete next actions. Do
+    not re-list the calls you already showed, do not hedge with a long list of
+    "could be" possibilities, and skip incidental tool noise (for example, an
+    unrelated 404) that is not the cause.
     ```
 
 The skill reports first and diagnoses second. Its steps, in short:
@@ -940,7 +984,7 @@ When a call did not succeed, the skill joins its `user` and `callingNumber` to `
     webex-control-hub-complex running on stdio - waiting for a client (Ctrl+C to stop).
     MCP ready — 6 tool(s), 0 chars of resource text, 0 prompt(s), elicitation=auto-accept
     webex-calling-complex running on stdio - waiting for a client (Ctrl+C to stop).
-    MCP ready — 7 tool(s), 0 chars of resource text, 0 prompt(s), elicitation=auto-accept
+    MCP ready — 9 tool(s), 0 chars of resource text, 0 prompt(s), elicitation=auto-accept
     webex-troubleshooting-complex running on stdio - waiting for a client (Ctrl+C to stop).
     MCP ready — 10 tool(s), 0 chars of resource text, 0 prompt(s), elicitation=auto-accept
     Skills: 2 — ['investigate-calls', 'troubleshoot-status']
@@ -960,10 +1004,7 @@ When a call did not succeed, the skill joins its `user` and `callingNumber` to `
 
         ![Use Cases](assets/use_case_2.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-        By default this returns the **last 12 hours**, so a quiet window can come back empty. To look further back, name a window and the agent passes it straight through to the CDR feed.
-
-    !!! Note
-        Webex caps any single request at a 12-hour span and needs the end to be at least ~5 minutes in the past, and CDRs older than the feed's retention are simply gone.
+        By default this returns the **last 12 hours**, so a quiet window can come back empty. To look further back, name a window and the agent passes it straight through to the CDR feed — for example *"Show me the call history on 2026-09-24 between 05:00 and 08:30 UTC"*. Webex caps any single request at a 12-hour span and needs the end to be at least ~5 minutes in the past, and CDRs older than the feed's retention are simply gone.
 
     * Show me the call history for Pod 0 on 2026-09-24 between 05:00 and 08:30 UTC
 
@@ -981,10 +1022,10 @@ When a call did not succeed, the skill joins its `user` and `callingNumber` to `
 
     The agent pulls the CDRs and reports them. If a call did not succeed, it flags those and correlates each with the user's license, number, and device to explain the likely cause — quoting the `outcomeReason` back to you. If every call succeeded, it simply says so.
 
-    * Investigate possible causes
+    - Investigate possible causes
 
-        ![Use Cases](assets/use_case_9.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }    
-
+    ![Use Cases](assets/use_case_9.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" } 
+    
 ### Exercises
 
 #### Exercise 1 — report a specific number's calls
@@ -996,6 +1037,42 @@ Ask the agent about the calls to or from a specific phone number instead of a us
     Ask: *"Show me the recent calls involving +1..., and who owns that
     number."* The skill reports the matching calls and joins `callingNumber`
     to `list_numbers`; if any did not connect, it flags them too.
+
+#### Exercise 2 — a Control Hub configuration round-trip
+
+So far you have only read from Control Hub. Now make a change and take it back, so you see both a direct write and the confirmation card. Ask the agent to create a workspace, list workspaces to confirm it exists, then delete it.
+
+* Create a workspace called "WebexOne Demo Room" with capacity 4
+* List my workspaces
+* Delete the workspace "WebexOne Demo Room"
+
+The create goes straight through (`create_workspace` does not elicit). The delete calls `delete_workspace`, which **does** elicit — the server posts an Adaptive Card and waits for you to tap **Confirm**. Open **Control Hub → Workspaces** to watch it appear and then disappear. The round-trip leaves the tenant exactly as you found it.
+
+??? Solution
+    No code change — the tools already exist. `create_workspace(name, capacity)`
+    writes directly; `delete_workspace(workspace_id, confirm)` is gated by the
+    same elicitation bridge as Section 1's `update_desktop_profile`. The agent
+    resolves the workspace name to its id from `list_workspaces` before deleting.
+
+#### Exercise 3 — a change the user can verify themselves
+
+Configuration is more convincing when the person affected can see it. Call forwarding is a per-user setting that shows up in the user's **own Webex app**, so you do not need Control Hub to check it. Name your own Webex user so you can verify it on your own screen.
+
+* Forward all of my calls (my.email@example.com) to +1 555 0100
+* (approve the confirmation card)
+
+Then open your Webex app → **Settings → Calling → Call forwarding** and confirm "Forward all calls" is on and pointing at the number you gave. (As an admin you can also check **Control Hub → Users →** *your user* **→ Calling**.) When you are done, reset it:
+
+* Turn off call forwarding for my.email@example.com
+
+??? Solution
+    This uses the `update_call_forwarding` tool on the calling server, gated by
+    a confirmation card like the delete tools. The agent resolves your email to
+    a `personId` with `list_people`, then sets `always.enabled` on/off with the
+    destination you named. `get_call_forwarding` reads the same setting back if
+    you ask *"what is my call forwarding?"*.
+
+---
 
 ## Section 3 — Webex Meeting Quality Agent
 
