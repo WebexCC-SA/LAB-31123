@@ -912,7 +912,7 @@ The `investigate-calls` skill tells the agent how to pull call records, report t
     1. Identify the subject. A named subject is a person or a phone number — not a
        location or device. Resolve a name like "Pod 0" with `list_people` (match on
        display name or email) and a number with `list_numbers`; CDRs also carry a
-       `user` display name (e.g. "Pod 0") you can match directly. Do not ask whether
+       `user` display name you can match directly. Do not ask whether
        the subject is a user, location, or device. Only ask a clarifying question
        when the request names no subject at all — and even then, offer to summarize
        all calls in the window. The window itself is either a recent span or a
