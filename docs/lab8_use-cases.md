@@ -148,11 +148,22 @@ Two servers, plus a reasoning step that belongs to no one. So where does this wo
 You can run this agent without reading this step. Open it when you want to know
 *how* the folder works rather than *what* it does.
 
-#### The agentic loop
+#### How a question becomes an answer
 
-Everything else plugs into one function in `utils/mcp_client.py`.
+Everything plugs into one function in `utils/mcp_client.py` — the agentic loop.
+It works in five steps:
 
-??? Tip "Python Code" 
+1. Send the conversation to the LLM along with every available tool.
+2. If the LLM replies with text, return it — done.
+3. If it replies with tool calls, execute each one.
+4. Append the results to the conversation and go back to step 1.
+5. After `max_iter` rounds, stop.
+
+The `dispatch` dictionary is what makes it flexible. MCP tools, `load_skill`,
+and the prompt meta-tools all sit in one flat namespace.
+The loop never asks where a tool came from — it just calls it.
+
+??? Tip "The agentic loop — the 20 lines that drive every agent"
 
     def agentic_loop(messages, model, max_iter=10,
                  extra_tools=None, dispatch=None):
@@ -177,28 +188,10 @@ Everything else plugs into one function in `utils/mcp_client.py`.
             msgs.append({"role": "tool", "tool_call_id": tc.id,
                          "content": result})
 
-Read it as five steps:
-
-1. Send the conversation to the LLM along with every available tool.
-2. If the LLM replies with text, return it — done.
-3. If it replies with tool calls, execute each one.
-4. Append the results to the conversation and go back to step 1.
-5. After `max_iter` rounds, stop.
-
-The `dispatch` dictionary is what makes it flexible. MCP tools, `load_skill`,
-and the prompt meta-tools all sit in one flat namespace.
-The loop never asks where a tool came from — it just calls it.
-
 !!! Tip "The conversation is the memory"
     The loop keeps no state of its own. Every tool call and every result is appended to `msgs`, so when the next round is sent the model sees its own history. That is why step 4 exists — drop it and the model repeats itself forever.
 
-#### A concrete run
-
-Nothing to type here. This traces what the loop *already does* when a user
-asks the agent something in Step 1.6.
-
-Someone asks *"Can Ana see the Sales-EMEA contacts?"*. The loop turns over
-three times:
+Here is what the loop actually does when someone asks *"Can Ana see the Sales-EMEA contacts?"* — three rounds:
 
 ```terminal
 Round 1
@@ -255,10 +248,20 @@ Three things keep it from growing forever:
     
     `agentic_loop` works on a *copy* (`msgs = list(messages)`) and only the final text reply is appended back. So the per-user thread stays a clean sequence of system, user, and assistant messages — which is also why trimming a pair at a time (`pop(1); pop(1)`) never splits a tool call from its result.
 
-#### Reaching the servers
+#### How the pieces connect
 
-The loop lives in `mcp_client.py`. So does everything about *reaching* the
-servers — the same file's other half.
+The loop is deliberately ignorant: it calls tools and appends results, nothing
+more. The rest of `mcp_client.py` handles reaching the servers, and three
+companion modules in `utils/` handle everything else — one concern each:
+
+| Module | The concern it owns |
+| --- | --- |
+| `mcp_client.py` (connections) | one connection per server, one flat tool list |
+| `elicit.py` | turn a server's "are you sure?" into a Webex card |
+| `skills.py` | load a playbook only when it is needed |
+| `websocket.py` | carry messages and card taps to and from Webex |
+
+Expand whichever you are curious about.
 
 ??? Note "mcp_client.py — one connection per server, one flat tool list"
     **`MCPConnection`** wraps a single server: its session, its tools, its resources, its prompts. Each instance runs its own asyncio event loop on a background thread, so a slow address-books server never blocks desktop-profiles.
@@ -279,22 +282,24 @@ servers — the same file's other half.
 
     The single-server `connect()` from Lab 6 still works; it just builds a one-entry version of the same state.
 
-#### The support modules
-
-The loop is deliberately ignorant: it calls tools and appends results, nothing
-more. Every harder job lives in its own module beside it in `utils/`, and the
-loop just calls in. Three modules, one concern each:
-
-| Module | The concern it owns |
-| --- | --- |
-| `elicit.py` | turn a server's "are you sure?" into a Webex card |
-| `skills.py` | load a playbook only when it is needed |
-| `websocket.py` | carry messages and card taps to and from Webex |
-
-Expand whichever you are curious about.
-
 ??? Note "elicit.py — approval without a webhook"
     When a server calls `elicit()` — before deleting a book, or before updating a profile — the user is in Webex, not at a terminal. This module bridges that gap:
+
+    ```
+    Server          mcp_client       elicit.py          Webex          websocket.py
+      |                 |                |                 |                 |
+      |-- elicit() ---->|                |                 |                 |
+      |                 |-- request() -->|                 |                 |
+      |                 |                |-- POST card --->|                 |
+      |                 |                |   (blocks...)   |                 |
+      |                 |                |                 |<-- user taps ---|
+      |                 |                |                 |--- cardAction ->|
+      |                 |                |<-- resolve() ---|                 |
+      |                 |<-- True/False -|                 |                 |
+      |<- accept/decline|                |                 |                 |
+    ```
+
+    Step by step:
 
     1. The server elicits during a tool call.
     2. `mcp_client`'s `_on_elicit` callback fires on the background thread.
@@ -379,7 +384,7 @@ Open `agentbot.py`. It is short — because the hard parts are already in `utils
     ```
 
 !!! Note "What you are NOT writing"
-    No agentic loop. No MCP session handling. No elicitation logic. No WebSocket. No card decoding. All of that lives in `utils/` — see Step 1.0 for where each module came from. This file only **names the servers, loads the skill, and routes messages and card taps**.
+    No agentic loop. No MCP session handling. No elicitation logic. No WebSocket. No card decoding. All of that lives in `utils/`. This file only **names the servers, loads the skill, and routes messages and card taps**.
 
 ### Step 8.1.5: Run the agent
 
@@ -403,7 +408,7 @@ Open `agentbot.py`. It is short — because the hard parts are already in `utils
     Listening as WebexOne-... via Webex Websockets (messages + cards)...
     ```
 
-    That is Step 1.2 in one screen: six tools from the address-books server, four tools and no prompt from the desktop-profiles server.
+    That is the two servers in one screen: six tools from the address-books server, four tools and no prompt from the desktop-profiles server.
 
 4. In the Webex space, start with a read:
 
@@ -628,7 +633,7 @@ is what happened, why, the fix, and the rule you can carry to your own MCP work.
         )
     ```
 
-    That is the code you will find at the top of `agentbot.py` today, and it is why Step 1.6 lists `OPENAI_MODEL` as required with no default.
+    That is the code you will find at the top of `agentbot.py` today, and it is why `OPENAI_MODEL` is required with no default.
 
     > **Principle.** The `OpenAI()` client already reads `OPENAI_API_KEY` and `OPENAI_BASE_URL` from the environment. Externalise `OPENAI_MODEL` too and the same code runs against OpenAI, Azure, Ollama, or any compatible provider with zero edits.
 
