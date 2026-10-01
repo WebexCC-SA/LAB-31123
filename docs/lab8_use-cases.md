@@ -385,10 +385,8 @@ Open `agentbot.py`. It is short — because the hard parts are already in `utils
 
 ### Step 8.1.5: Run the agent
 
-!!! Prerequisite "Before you start 
-    Copy the environment template under 08_use_cases\01_webex_cc_agent and fill in your values:
-
-    - cp .env.example .env
+!!! Prerequisite "Before you start"
+    Make sure you have already filled in the shared `WebexOne2026/.env` from the environment template at the top of the lab folder — all three use cases read the same file.
 
 1. Change into the use-case folder:
 
@@ -609,7 +607,7 @@ is what happened, why, the fix, and the rule you can carry to your own MCP work.
     **What happened.** A harmless-looking default:
 
     ```python
-    MODEL = os.getenv("MODEL", "gpt-4o-mini")
+    MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
     ```
 
     Then a teammate ran the bot against an OpenAI project without access to that model:
@@ -623,18 +621,18 @@ is what happened, why, the fix, and the rule you can carry to your own MCP work.
     **The fix.** Require it, and fail with instructions rather than a stack trace:
 
     ```python
-    MODEL = os.getenv("MODEL", "").strip()
+    MODEL = os.getenv("OPENAI_MODEL", "").strip()
     if not MODEL:
         sys.exit(
-            "ERROR: MODEL is not set in .env. Set it to the model your OpenAI "
-            "project has access to, e.g.:\n"
-            "  MODEL=gpt-5-nano\n"
+            "ERROR: OPENAI_MODEL is not set in .env. Set it to the model your "
+            "OpenAI project has access to, e.g.:\n"
+            "  OPENAI_MODEL=gpt-5-nano\n"
         )
     ```
 
-    That is the code you will find at the top of `agentbot.py` today, and it is why Step 1.6 lists `MODEL` as required with no default.
+    That is the code you will find at the top of `agentbot.py` today, and it is why Step 1.6 lists `OPENAI_MODEL` as required with no default.
 
-    > **Principle.** The `OpenAI()` client already reads `OPENAI_API_KEY` and `OPENAI_BASE_URL` from the environment. Externalise `MODEL` too and the same code runs against OpenAI, Azure, Ollama, or any compatible provider with zero edits.
+    > **Principle.** The `OpenAI()` client already reads `OPENAI_API_KEY` and `OPENAI_BASE_URL` from the environment. Externalise `OPENAI_MODEL` too and the same code runs against OpenAI, Azure, Ollama, or any compatible provider with zero edits.
 
 !!! Tip "The five in one line each"
     | # | Lesson | One-liner |
