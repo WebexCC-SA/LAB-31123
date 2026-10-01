@@ -33,8 +33,8 @@ flowchart LR
     User[Webex User] <-->|Messages + Cards| Bot[01_webex_cc_agent]
     Bot <-->|Prompts & Responses| LLM[LLM]
     LLM <-->|Tool Calls| Loop[agentic loop]
-    Loop <-->|stdio| S06["mcp_servers/06<br/>Address Books"]
-    Loop <-->|stdio| S07["mcp_servers/07<br/>Desktop Profiles"]
+    Loop <-->|stdio| S06["Address Books<br/>manage_address_books"]
+    Loop <-->|stdio| S07["Desktop Profiles<br/>verify_desktop_profiles"]
     S06 <-->|REST| CC[Webex CC Config API]
     S07 <-->|REST| CC
 ```
@@ -126,12 +126,12 @@ Look at what the workflow actually touches:
 
 | Step | Tool | Owned by |
 | --- | --- | --- |
-| Find the agent | `list_agents` | server 07 |
-| Read their profile | `get_desktop_profile` | server 07 |
-| Find the desired book | `list_address_books` | server 06 |
-| Verify it has contacts | `list_entries` | server 06 |
+| Find the agent | `list_agents` | desktop-profiles server |
+| Read their profile | `get_desktop_profile` | desktop-profiles server |
+| Find the desired book | `list_address_books` | address-books server |
+| Verify it has contacts | `list_entries` | address-books server |
 | Compare the two IDs | *(reasoning — no tool)* | — |
-| Fix, with approval | `update_desktop_profile` | server 07 |
+| Fix, with approval | `update_desktop_profile` | desktop-profiles server |
 
 Two servers, plus a reasoning step that belongs to no one. Now read that back
 against the grid: a resource describes one server's data and cannot sequence
@@ -139,7 +139,7 @@ anything. A prompt can sequence, but only over its own server's tools. The
 persona is always loaded, so putting a multi-step runbook there would spend the
 context budget on every "what time is it?" message.
 
-Only the client-owned, on-demand cell can reference server 06 and server 07 in
+Only the client-owned, on-demand cell can reference the address-books and desktop-profiles servers in
 one flow — and load itself only when the problem matches. That is the skill.
 
 !!! Note "MCP provides the tools; the skill provides the judgment"
@@ -263,7 +263,7 @@ The loop lives in `mcp_client.py`. So does everything about *reaching* the
 servers — the same file's other half.
 
 ??? Note "mcp_client.py — one connection per server, one flat tool list"
-    **`MCPConnection`** wraps a single server: its session, its tools, its resources, its prompts. Each instance runs its own asyncio event loop on a background thread, so a slow server 06 never blocks server 07.
+    **`MCPConnection`** wraps a single server: its session, its tools, its resources, its prompts. Each instance runs its own asyncio event loop on a background thread, so a slow address-books server never blocks desktop-profiles.
 
     **`connect_all(configs)`** creates one `MCPConnection` per entry, connects each, then merges their tools into module-level state. This is Lab 6's `McpHub`, moved inside the client.
 
@@ -405,7 +405,7 @@ Open `agentbot.py`. It is short — because the hard parts are already in `utils
     Listening as WebexOne-... via Webex Websockets (messages + cards)...
     ```
 
-    That is Step 1.2 in one screen: six tools from server 06, four tools and no prompt from server 07.
+    That is Step 1.2 in one screen: six tools from the address-books server, four tools and no prompt from the desktop-profiles server.
 
 4. In the Webex space, start with a read:
 
@@ -537,7 +537,7 @@ is what happened, why, the fix, and the rule you can carry to your own MCP work.
          └──> Tool B input:  (id="abc", addressBookId="xyz")
     ```
 
-    This applies **across** servers too. Server 06 returns a book as `{"id": "9ba275fa..."}`; server 07 refers to the same thing as `{"addressBookId": "9ba275fa..."}`; the skill has to state that those are the same value. Same concept, same name, everywhere — or document the join explicitly.
+    This applies **across** servers too. The address-books server returns a book as `{"id": "9ba275fa..."}`; the desktop-profiles server refers to the same thing as `{"addressBookId": "9ba275fa..."}`; the skill has to state that those are the same value. Same concept, same name, everywhere — or document the join explicitly.
 
     | # | Checklist for MCP tool authors |
     | --- | --- |
@@ -660,7 +660,7 @@ is what happened, why, the fix, and the rule you can carry to your own MCP work.
 
     A skill is not a list of tools to call in order. It is orchestration logic, and it provides five things MCP tools cannot:
 
-    1. **Cross-server wiring** — "the `agentProfileId` from server 07 becomes the `id` for `get_desktop_profile`"
+    1. **Cross-server wiring** — "the `agentProfileId` from the desktop-profiles server becomes the `id` for `get_desktop_profile`"
     2. **Reasoning instructions** — "compare field X with field Y"
     3. **Edge-case handling** — "if null, it was never assigned, not just wrong"
     4. **Dependency markers** — "don't call this until step 5 returns"
@@ -689,13 +689,13 @@ flowchart TB
         end
     end
 
-    subgraph S06["server 06 — Address Books"]
+    subgraph S06["Address Books — manage_address_books"]
         direction TB
         T06["list_address_books · list_entries<br/>create_address_book · add_entry<br/>delete_address_book · delete_entry"]
         R06["resource: lab://address-books"]
     end
 
-    subgraph S07["server 07 — Desktop Profiles"]
+    subgraph S07["Desktop Profiles — verify_desktop_profiles"]
         direction TB
         T07["list_agents · list_desktop_profiles<br/>get_desktop_profile · update_desktop_profile"]
         R07["resource: lab://desktop-profile-reference"]
