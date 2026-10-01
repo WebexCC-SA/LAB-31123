@@ -200,28 +200,29 @@ The loop never asks where a tool came from — it just calls it.
 !!! Tip "The conversation is the memory"
     The loop keeps no state of its own. Every tool call and every result is appended to `msgs`, so when the next round is sent the model sees its own history. That is why step 4 exists — drop it and the model repeats itself forever.
 
-Here is what the loop actually does when someone asks *"Can Ana see the Sales-EMEA contacts?"* — three rounds:
+???+ Tip "A concrete run — 3 rounds, 2 tool calls, 1 answer"
+    Someone asks *"Can Ana see the Sales-EMEA contacts?"*
 
-```terminal
-Round 1
-  LLM sees : system prompt, the question, 10 tools
-  LLM wants: list_agents({})
-  Bot runs : -> {"count":1, "agents":[{"name":"Ana Ruiz", "desktop_profile_id":"323cffeb..."}]}
-  Appended to the conversation
+    ```terminal
+    Round 1
+      LLM sees : system prompt, the question, 10 tools
+      LLM wants: list_agents({})
+      Bot runs : -> {"count":1, "agents":[{"name":"Ana Ruiz", "desktop_profile_id":"323cffeb..."}]}
+      Appended to the conversation
 
-Round 2
-  LLM sees : everything above, including Ana's desktop_profile_id
-  LLM wants: get_desktop_profile({"id": "323cffeb..."})
-  Bot runs : -> {"name": "Sales Desktop", "addressBookId": null}
-  Appended to the conversation
+    Round 2
+      LLM sees : everything above, including Ana's desktop_profile_id
+      LLM wants: get_desktop_profile({"id": "323cffeb..."})
+      Bot runs : -> {"name": "Sales Desktop", "addressBookId": null}
+      Appended to the conversation
 
-Round 3
-  LLM sees : everything above, including addressBookId = null
-  LLM wants: nothing — it replies with text
-  -> "Ana's Sales Desktop profile has no address book assigned."
+    Round 3
+      LLM sees : everything above, including addressBookId = null
+      LLM wants: nothing — it replies with text
+      -> "Ana's Sales Desktop profile has no address book assigned."
 
-Loop exits. 3 rounds, 2 tool calls, 1 answer.
-```
+    Loop exits. 3 rounds, 2 tool calls, 1 answer.
+    ```
 
 #### Memory across messages
 
