@@ -164,7 +164,7 @@ The `dispatch` dictionary is what makes it flexible. MCP tools, `load_skill`,
 and the prompt meta-tools all sit in one flat namespace.
 The loop never asks where a tool came from — it just calls it.
 
-??? Tip "The agentic loop — the 20 lines that drive every agent"
+    ??? Tip "The agentic loop — the 20 lines that drive every agent"
         ```python
         def agentic_loop(messages, model, max_iter=10,
                          extra_tools=None, dispatch=None):
