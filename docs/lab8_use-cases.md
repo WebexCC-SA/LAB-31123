@@ -392,6 +392,16 @@ Open `agentbot.py`. It is short — because the hard parts are already in `utils
 !!! Note "What you are NOT writing"
     No agentic loop. No MCP session handling. No elicitation logic. No WebSocket. No card decoding. All of that lives in `utils/`. This file only **names the servers, loads the skill, and routes messages and card taps**.
 
+```mermaid
+flowchart TB
+    WS["websocket.py"] -->|"message arrives"| Bot["agentbot.py"]
+    WS -->|"card tap arrives"| Bot
+    Bot -->|"agentic_loop()"| MC["mcp_client.py"]
+    Bot -->|"resolve()"| EL["elicit.py"]
+    MC -.->|"load_skill()"| SK["skills.py"]
+    MC -.->|"request() — blocks"| EL
+```
+
 ### Step 8.1.5: Run the agent
 
 !!! Prerequisite "Before you start"
