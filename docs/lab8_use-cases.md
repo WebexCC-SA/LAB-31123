@@ -1085,11 +1085,10 @@ The target is **1-800-444-4444**, a free, always-on toll-free test number that r
 
     - Block toll-free (1-800) calls for Pod 0
 
-    ![Use Cases](assets/use_case_18.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-    ![Use Cases](assets/use_case_19.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" } 
+        ![Use Cases](assets/use_case_18.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![Use Cases](assets/use_case_19.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" } 
 
 4. Dial **1-800-444-4444** again. This time it is rejected. 
-
 
     !!! Warning
         Wait about five minutes so the failed call lands in the CDR feed (which reports calls a few minutes in the past).
@@ -1098,13 +1097,18 @@ The target is **1-800-444-4444**, a free, always-on toll-free test number that r
 
     - Why did Pod 0 call to 1-800-444-4444 fail?
 
+        ![Use Cases](assets/use_case_20.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
     The `investigate-calls` skill pulls your recent CDRs, flags the failed toll-free call and quotes its `outcomeReason`, confirms your license, number, and device are healthy, then reads `get_outgoing_permission` and finds `TOLL_FREE` set to `BLOCK` — the cause. It reports that in a short diagnosis and recommends allowing toll-free again.
 
 5. Have the agent undo the change:
 
-    - Allow toll-free calls for my.email@example.com again
+    - Allow toll-free calls for Pod 0
 
-6. Dial **1-800-444-4444 once more. It connects again, and the tenant is exactly as you found it.
+        ![Use Cases](assets/use_case_21.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![Use Cases](assets/use_case_22.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+6. Dial **1-800-444-4444 once more. It connects again, and the tenant is exactly as you found it:
 
 ---
 
