@@ -805,7 +805,7 @@ This agent connects to three MCP servers — all of them ones you already have p
 | Server | Tools it exposes | Role here |
 | --- | --- | --- |
 | `controlhub_mcp.py` | `list_people`, `list_licenses`, `list_roles`, `list_workspaces`, `create_workspace`, `delete_workspace` | Who the user is and what they are entitled to |
-| `calling_mcp.py` | `list_numbers`, `list_locations`, `get_location_call_settings`, `list_devices`, `list_dial_plans`, `create_location`, `delete_device`, `get_call_forwarding`, `update_call_forwarding`, `get_outgoing_permission`, `update_outgoing_permission` | How the user is provisioned to call |
+| `calling_mcp.py` | `list_numbers`, `list_locations`, `get_location_call_settings`, `list_devices`, `list_dial_plans`, `create_location`, `delete_device`, `get_call_forwarding`, `update_call_forwarding`, `list_blocked_numbers`, `block_number`, `unblock_number`, `get_calling_permissions`, `block_toll_free`, `unblock_toll_free` | How the user is provisioned to call |
 | `troubleshooting_mcp.py` | `unresolved_incidents`, `get_detailed_call_history` (CDRs), `audit events`, `reports`, `meeting quality` | Platform health and the call evidence |
 
 !!! Note "Rule out an outage — only when something failed"
@@ -816,7 +816,7 @@ This agent connects to three MCP servers — all of them ones you already have p
 Section 1 taught elicitation with a single write (`update_desktop_profile`). This agent keeps that lesson but frames it as a rule for the whole domain:
 
 - **Investigation is always safe.** Listing people, licenses, numbers and devices, and pulling CDRs, changes nothing — the agent does it without asking.
-- **Management is gated.** The write tools here (`create_workspace`, `delete_workspace`, `create_location`, `delete_device`, `update_call_forwarding`, `update_outgoing_permission`) change the organization. The `delete_*` tools, `update_call_forwarding`, and `update_outgoing_permission` elicit, so the server posts an Adaptive Card and waits for **Confirm**.
+- **Management is gated.** The write tools here (`create_workspace`, `delete_workspace`, `create_location`, `delete_device`, `update_call_forwarding`, `block_number`, `unblock_number`, `block_toll_free`, `unblock_toll_free`) change the organization. The `delete_*` tools, `update_call_forwarding`, `block_number`, `unblock_number`, `block_toll_free`, and `unblock_toll_free` elicit, so the server posts an Adaptive Card and waits for **Confirm**.
 
 The persona (`system_prompt.txt`) states this split explicitly, so the model never "fixes" something it was only asked to investigate.
 
@@ -923,10 +923,13 @@ The `investigate-calls` skill tells the agent how to pull call records, report t
       provisioned to call.
     - `get_call_forwarding` (calling server) — a user's call forwarding. If their
       inbound calls are not arriving, forwarding may be sending them elsewhere.
-    - `get_outgoing_permission` (calling server) — which call types (TOLL_FREE,
-      NATIONAL, INTERNATIONAL, …) a user may dial. If a user cannot reach a
-      specific number and their provisioning is healthy, that number's call type
-      may be set to BLOCK here.
+    - `list_blocked_numbers` (calling server) — the specific numbers a user is
+      blocked from dialing (outgoing-permission digit patterns). If a user cannot
+      reach one particular number while other calls work, that number may have a
+      BLOCK pattern here.
+    - `get_calling_permissions` (calling server) — a user's outgoing permissions by
+      call type. If a user cannot reach a whole category of numbers while other
+      calls work, check whether that call type is set to BLOCK here.
 
     ## Steps
 
@@ -971,15 +974,17 @@ The `investigate-calls` skill tells the agent how to pull call records, report t
          registered device?
        - `get_call_forwarding` — if inbound calls are not arriving, is forwarding
          sending them elsewhere?
-       - `get_outgoing_permission` — if the user cannot dial one specific number or
-         kind of number (for example a 1-800 toll-free number) while other calls
-         work, check whether that call type (TOLL_FREE, NATIONAL, INTERNATIONAL, …)
-         is set to BLOCK.
+       - `list_blocked_numbers` — if the user cannot dial one specific number (for
+         example 1-800-444-4444) while other calls work, check whether that number
+         has a BLOCK digit pattern.
+       - `get_calling_permissions` — if the user cannot dial a number, check whether
+         that calls or call type (e.g. TOLL_FREE) is set to BLOCK.
        Correlate: no license or no number explains a user who cannot call; a call
-       that is rejected for one number type while others succeed on healthy
-       provisioning points at outgoing calling permissions; a routing
-       `outcomeReason` on otherwise healthy provisioning points at dial plans or the
-       destination, not the user.
+       rejected for one specific number while others succeed on healthy provisioning
+       points at a blocked digit pattern; a whole call type failing (e.g. all
+       toll-free) points at a blocked call-type permission; a routing `outcomeReason`
+       on otherwise healthy provisioning points at dial plans or the destination, not
+       the user.
     6. For any non-successful call, quote its `outcomeReason` — it is the API's
        own explanation and the single most useful field.
 
@@ -1026,7 +1031,7 @@ When a call did not succeed, the skill joins its `user` and `callingNumber` to `
     webex-control-hub-complex running on stdio - waiting for a client (Ctrl+C to stop).
     MCP ready — 6 tool(s), 0 chars of resource text, 0 prompt(s), elicitation=auto-accept
     webex-calling-complex running on stdio - waiting for a client (Ctrl+C to stop).
-    MCP ready — 9 tool(s), 0 chars of resource text, 0 prompt(s), elicitation=auto-accept
+    MCP ready — 15 tool(s), 0 chars of resource text, 0 prompt(s), elicitation=auto-accept
     webex-troubleshooting-complex running on stdio - waiting for a client (Ctrl+C to stop).
     MCP ready — 10 tool(s), 0 chars of resource text, 0 prompt(s), elicitation=auto-accept
     Skills: 2 — ['investigate-calls', 'troubleshoot-status']
@@ -1075,7 +1080,12 @@ When a call did not succeed, the skill joins its `user` and `callingNumber` to `
 
 This is the full loop the agent was built for: you make a configuration change that breaks a real call, let the call fail, ask the agent to investigate, and then have the agent put the configuration back. It exercises **both** sides of this section — a gated write and a real investigation — on one live call you place yourself.
 
-The target is **1-800-444-4444**, a free, always-on toll-free test number that reads your caller ID back to you. Because it is *toll-free*, you can block it for a single user without touching anything else: set that user's `TOLL_FREE` outgoing calling permission to `BLOCK`, and only 1-800 calls fail while every other call keeps working. Use your own Webex user so you can place the call and hear the result yourself.
+The target is **1-800-444-4444**, a free, always-on toll-free test number that reads your caller ID back to you. You block it for a single user without touching anything else, and the agent offers two ways to do it:
+
+- **Block the exact number** (`block_number` / `unblock_number`) — adds a per-user **outgoing-permission digit pattern** for that exact number with action `BLOCK`, so only calls to 1-800-444-4444 fail while every other call keeps working.
+- **Block the whole toll-free call type** (`block_toll_free` / `unblock_toll_free`) — sets the user's **outgoing-permission call type** `TOLL_FREE` to `BLOCK`, so every toll-free call fails while other calls keep working.
+
+Either mechanism breaks the call to 1-800-444-4444; the steps below use the exact-number block, but you can swap in the toll-free call-type block the same way. Use your own Webex user so you can place the call and hear the result yourself.
 
 1. From your Webex app or desk phone, dial **1-800-444-4444**. It should connect and read your number back:
 
@@ -1088,12 +1098,12 @@ The target is **1-800-444-4444**, a free, always-on toll-free test number that r
         ![Use Cases](assets/use_case_18.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
         ![Use Cases](assets/use_case_19.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" } 
 
-4. Dial **1-800-444-4444** again. This time it is rejected. 
+3. Dial **1-800-444-4444** again. This time it is rejected. 
 
     !!! Warning
         Wait about five minutes so the failed call lands in the CDR feed (which reports calls a few minutes in the past).
 
-5. Ask the agent, as an admin would:
+4. Ask the agent, as an admin would:
 
     - Why did Pod 0 call to 1-800-444-4444 fail?
 
@@ -1108,7 +1118,7 @@ The target is **1-800-444-4444**, a free, always-on toll-free test number that r
         ![Use Cases](assets/use_case_21.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
         ![Use Cases](assets/use_case_22.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-6. Dial **1-800-444-4444 once more. It connects again, and the tenant is exactly as you found it:
+6. Dial **1-800-444-4444 once more. It connects again, and the tenant is exactly as you found it
 
 ---
 
