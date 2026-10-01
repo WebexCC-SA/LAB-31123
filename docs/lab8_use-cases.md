@@ -225,32 +225,28 @@ Loop exits. 3 rounds, 2 tool calls, 1 answer.
 
 #### Memory across messages
 
-The loop above is memory *within one question*: a scratch list of tool calls and results that is built up, used for the answer, and then thrown away. But a chat is many questions, so the agent also needs to remember what was said *between* them. That longer-lived memory lives in `agentbot.py`, not in the loop.
+The loop remembers tool calls within a single question; `agentbot.py` remembers the conversation *across* questions. It keeps one history list per user, keyed by email and capped by `MAX_HISTORY`.
 
-`agentbot.py` keeps one running history per user, keyed by their email:
+??? Tip "The per-user history — 10 lines in agentbot.py"
+    ```python
+    # Per-user conversation history.
+    conversations: dict[str, list] = {}
 
-```python
-# Per-user conversation history.
-conversations: dict[str, list] = {}
+    def _run_agent(uid, text, room_id):
+        if uid not in conversations:
+            conversations[uid] = [{"role": "system", "content": SYSTEM_PROMPT}]
+        conversations[uid].append({"role": "user", "content": text})
+        reply = mcp_client.agentic_loop(conversations[uid], ...)
+        conversations[uid].append({"role": "assistant", "content": reply})
+        while len(conversations[uid]) > 1 + MAX_HISTORY * 2:
+            conversations[uid].pop(1); conversations[uid].pop(1)
+        return reply
+    ```
 
-def _run_agent(uid, text, room_id):
-    if uid not in conversations:
-        conversations[uid] = [{"role": "system", "content": SYSTEM_PROMPT}]
-    conversations[uid].append({"role": "user", "content": text})
-    reply = mcp_client.agentic_loop(conversations[uid], ...)
-    conversations[uid].append({"role": "assistant", "content": reply})
-    while len(conversations[uid]) > 1 + MAX_HISTORY * 2:
-        conversations[uid].pop(1); conversations[uid].pop(1)
-    return reply
-```
+Each user gets their own thread — a `system` prompt at index 0, then `user` / `assistant` turns. That is why a follow-up like *"and their devices?"* still knows who "their" refers to. Two things keep it from growing forever:
 
-So each user gets their own thread — a `system` prompt at index 0, then the back-and-forth of `user` and `assistant` turns. That is why you can ask a follow-up like *"and their devices?"* and the agent still knows who "their" refers to.
-
-Three things keep it from growing forever:
-
-- **A rolling window.** `MAX_HISTORY` (default `20`, set in `.env`) caps the history at the last 20 exchanges. Past that, the oldest user+assistant pair is dropped — the system prompt at index 0 always stays.
+- **A rolling window.** `MAX_HISTORY` (default `20`, set in `.env`) caps the history at the last 20 exchanges. Past that, the oldest pair is dropped — the system prompt at index 0 always stays. The dict is in-memory only: restart the bot and every thread is gone.
 - **A reset command.** Texting `/reset` clears that user's history and starts a fresh thread.
-- **Restart.** `conversations` is an in-memory dict. Stop the bot and every thread is gone — nothing is written to disk.
 
 !!! Note "Two kinds of memory, one clean history"
     The tool-call scaffolding from the loop never enters the stored history.
