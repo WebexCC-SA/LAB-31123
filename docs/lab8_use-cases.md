@@ -165,37 +165,37 @@ and the prompt meta-tools all sit in one flat namespace.
 The loop never asks where a tool came from — it just calls it.
 
     ??? Tip "The agentic loop — the 20 lines that drive every agent"
-    ```python
-    def agentic_loop(messages, model, max_iter=10,
-                     extra_tools=None, dispatch=None):
-        all_tools = list(_tools) + (extra_tools or [])
-        msgs = list(messages)
-        if _resources_text:
-            msgs.insert(0, {"role": "system",
-                             "content": _resources_text})
-        for _ in range(max_iter):
-            resp = _openai.chat.completions.create(
-                model=model, messages=msgs, tools=all_tools or None,
-            )
-            choice = resp.choices[0]
-            if not choice.message.tool_calls:
-                return choice.message.content or ""
-            msgs.append(choice.message.model_dump())
-            declined = False
-            for tc in choice.message.tool_calls:
-                args = json.loads(tc.function.arguments) if tc.function.arguments else {}
-                if dispatch and tc.function.name in dispatch:
-                    result = dispatch[tc.function.name](args)
-                else:
-                    result = call_tool(tc.function.name, args)
-                msgs.append({"role": "tool", "tool_call_id": tc.id, "content": result})
-                if isinstance(result, str) and "Confirmation was declined or dismissed" in result:
-                    declined = True
-            if declined:
-                return ("The confirmation card expired or was declined, so nothing "
-                        "was changed. Ask again when you're ready to confirm.")
-        return "Hit tool-call limit — try a simpler request."
-    ```
+        ```python
+        def agentic_loop(messages, model, max_iter=10,
+                         extra_tools=None, dispatch=None):
+            all_tools = list(_tools) + (extra_tools or [])
+            msgs = list(messages)
+            if _resources_text:
+                msgs.insert(0, {"role": "system",
+                                 "content": _resources_text})
+            for _ in range(max_iter):
+                resp = _openai.chat.completions.create(
+                    model=model, messages=msgs, tools=all_tools or None,
+                )
+                choice = resp.choices[0]
+                if not choice.message.tool_calls:
+                    return choice.message.content or ""
+                msgs.append(choice.message.model_dump())
+                declined = False
+                for tc in choice.message.tool_calls:
+                    args = json.loads(tc.function.arguments) if tc.function.arguments else {}
+                    if dispatch and tc.function.name in dispatch:
+                        result = dispatch[tc.function.name](args)
+                    else:
+                        result = call_tool(tc.function.name, args)
+                    msgs.append({"role": "tool", "tool_call_id": tc.id, "content": result})
+                    if isinstance(result, str) and "Confirmation was declined or dismissed" in result:
+                        declined = True
+                if declined:
+                    return ("The confirmation card expired or was declined, so nothing "
+                            "was changed. Ask again when you're ready to confirm.")
+            return "Hit tool-call limit — try a simpler request."
+        ```
 
 !!! Tip "The conversation is the memory"
     The loop keeps no state of its own. Every tool call and every result is appended to `msgs`, so when the next round is sent the model sees its own history. That is why step 4 exists — drop it and the model repeats itself forever.
@@ -204,13 +204,13 @@ Here is what the loop actually does when someone asks *"Can Ana see the Sales-EM
 
 ```terminal
 Round 1
-  LLM sees : system prompt, the question, ~10 tools
+  LLM sees : system prompt, the question, 10 tools
   LLM wants: list_agents({})
-  Bot runs : -> "Jane Smith, agentProfileId 323cffeb..."
+  Bot runs : -> {"count":1, "agents":[{"name":"Ana Ruiz", "desktop_profile_id":"323cffeb..."}]}
   Appended to the conversation
 
 Round 2
-  LLM sees : everything above, including Jane's profile id
+  LLM sees : everything above, including Ana's desktop_profile_id
   LLM wants: get_desktop_profile({"id": "323cffeb..."})
   Bot runs : -> {"name": "Sales Desktop", "addressBookId": null}
   Appended to the conversation
@@ -218,7 +218,7 @@ Round 2
 Round 3
   LLM sees : everything above, including addressBookId = null
   LLM wants: nothing — it replies with text
-  -> "Jane's profile has no address book assigned."
+  -> "Ana's Sales Desktop profile has no address book assigned."
 
 Loop exits. 3 rounds, 2 tool calls, 1 answer.
 ```
