@@ -2,7 +2,7 @@
 
 Now, you will compose the modules that you have been building into three real troubleshooting agents.
 
-In this lab you meet the engine as **complete, self-contained use cases**. Each use case is a single folder that carries *everything* it needs — its own `utils/`, `local_agent_tools/`, `skills/`, `mcp_servers/`, persona, and `agentbot.py`. Open one folder and you see every moving part.
+In this lab, you will meet the engine as **complete, self-contained use cases**. Each use case is a single folder that carries *everything* it needs — its own `utils/`, `local_agent_tools/`, `skills/`, `mcp_servers/`, persona, and `agentbot.py`. Open one folder and you see every moving part.
 
 This lab has three use cases, each a self-contained agent built from the same engine: 
 
@@ -24,7 +24,7 @@ This lab has three use cases, each a self-contained agent built from the same en
 
 ## Section 1 — Webex Contact Center Agent
 
-The scenario: a Contact Center manager reports that an agent's address book is wrong on their desktop. This agent investigates across two MCP servers, diagnoses the misconfiguration, and — with your approval on an Adaptive Card — fixes it.
+The scenario: A Contact Center manager reports that an agent's address book is wrong on their desktop. This agent investigates across two MCP servers, diagnoses the misconfiguration, and — with your approval on an Adaptive Card — fixes it.
 
 ### Architecture
 
@@ -208,7 +208,7 @@ The loop never asks where a tool came from — it just calls it.
 #### A concrete run
 
 Nothing to type here. This traces what the loop *already does* when a user
-asks the agent something in Step 1.6.
+asks the agent something in Step 8.1.5.
 
 Someone asks *"Can Ana see the Sales-EMEA contacts?"*. The loop turns over
 three times:
@@ -395,12 +395,12 @@ Open `agentbot.py`. It is short — because the hard parts are already in `utils
     ```
 
 !!! Note "What you are NOT writing"
-    No agentic loop. No MCP session handling. No elicitation logic. No WebSocket. No card decoding. All of that lives in `utils/` — see Step 1.0 for where each module came from. This file only **names the servers, loads the skill, and routes messages and card taps**.
+    No agentic loop. No MCP session handling. No elicitation logic. No WebSocket. No card decoding. All of that lives in `utils/` — see the previous labs for where each module came from. This file only **names the servers, loads the skill, and routes messages and card taps**.
 
 ### Step 8.1.5: Run the agent
 
-!!! Prerequisite "Before you start 
-    Copy the environment template under 08_use_cases\01_webex_cc_agent and fill in your values:
+!!! Prerequisite "Before you start"
+    Copy the environment template under `08_use_cases/01_webex_cc_agent` and fill in your values:
 
     - cp .env.example .env
 
@@ -421,7 +421,7 @@ Open `agentbot.py`. It is short — because the hard parts are already in `utils
     Listening as WebexOne-... via Webex Websockets (messages + cards)...
     ```
 
-    That is Step 1.2 in one screen: six tools and a prompt from server 06, four tools and no prompt from server 07.
+    That is Step 8.1.1 in one screen: six tools and a prompt from server 06, four tools and no prompt from server 07.
 
 4. In the Webex space, start with a read:
 
@@ -647,7 +647,7 @@ is what happened, why, the fix, and the rule you can carry to your own MCP work.
         )
     ```
 
-    That is the code you will find at the top of `agentbot.py` today, and it is why Step 1.6 lists `MODEL` as required with no default.
+    That is the code you will find at the top of `agentbot.py` today, and it is why Step 8.1.5 lists `MODEL` as required with no default.
 
     > **Principle.** The `OpenAI()` client already reads `OPENAI_API_KEY` and `OPENAI_BASE_URL` from the environment. Externalise `MODEL` too and the same code runs against OpenAI, Azure, Ollama, or any compatible provider with zero edits.
 
@@ -687,7 +687,7 @@ is what happened, why, the fix, and the rule you can carry to your own MCP work.
 
 ### Step 8.1.7: Architecture at a glance
 
-Everything from Steps 1.1 to 1.7, on one page:
+Everything from Steps 8.1.1 to 8.1.6, on one page:
 
 ```mermaid
 flowchart TB
@@ -800,7 +800,7 @@ flowchart LR
 
 ### Step 8.2.1: MCP servers
 
-This agent connects to three MCP servers — all of them ones you already have previous labs.
+This agent connects to three MCP servers — all of them ones you already built in previous labs.
 
 | Server | Tools it exposes | Role here |
 | --- | --- | --- |
@@ -1118,7 +1118,7 @@ Either mechanism breaks the call to 1-800-444-4444; the steps below use the exac
         ![Use Cases](assets/use_case_21.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
         ![Use Cases](assets/use_case_22.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-6. Dial **1-800-444-4444 once more. It connects again, and the tenant is exactly as you found it
+6. Dial **1-800-444-4444** once more. It connects again, and the tenant is exactly as you found it.
 
 ---
 
@@ -1147,8 +1147,9 @@ This agent connects to a single MCP server — a copy of the general `troublesho
 
 | Tool | What it does |
 | --- | --- |
-| `list_ended_meetings` | Meetings that already ended, each with an `id`, title, and start/end |
+| `list_ended_meetings` | Meetings that already ended, each with an `id`, title, and start/end; scope to one person with `host_email` |
 | `get_meeting_qualities` | Per-participant audio/video quality analytics for one meeting id |
+| `list_meeting_participants` | Who attended an ended meeting, with each participant's join/leave times and audio device |
 
 !!! Tip "The server is general; the agent is specific"
     You are not building a meeting-only server. You reuse the same troubleshooting server as Section 2 and let the **persona** and **skill** narrow the model's attention to meetings. That is the cheapest way to make a focused agent out of a broad toolbox.
@@ -1158,6 +1159,7 @@ This agent connects to a single MCP server — a copy of the general `troublesho
 The `meeting-quality` skill (`skills/meeting-quality/SKILL.md`) is the whole point of this agent: it pulls a meeting's per-participant quality and reports it, then — when the metrics show trouble — separates one participant's bad network from a meeting-wide fault. Both files that shape this agent are shown below.
 
 ??? Tip "system_prompt.txt"
+    ```text
     You are a Webex Meeting quality assistant reachable from Webex. You help
     administrators and hosts review and report meeting quality — pulling a
     meeting's per-participant audio and video analytics, reporting how it looked
@@ -1165,34 +1167,37 @@ The `meeting-quality` skill (`skills/meeting-quality/SKILL.md`) is the whole poi
     Be concise and accurate.
 
     Working principles:
-    - Investigate with the tools. Never guess at IDs, licenses, numbers, or call
-      outcomes — always look them up with a tool first, then reason over the
-      results the tool returned.
-    - Only check platform status (incidents) when the user reports something is
-      not working — a failed or failing call, or a service that is down or slow.
-      In that case, if there is an active Webex incident, say so and stop before
-      digging into a user's setup. Plain listing or reporting requests never need
-      an incident check.
-    - When asked to list or report data, present a concise, readable result
-      yourself — do not ask the user to choose a format. Default to active users
-      and their calling-related licenses.
-    - Show human-readable license names, not IDs. A person's `licenses` come back
-      as IDs; resolve them by joining `list_people` with `list_licenses`
-      (`id` -> `name`) before presenting.
-    - Read before you write. Investigation (listing and pulling data) is always
-      safe. A management action that changes the organization — creating or
-      deleting a workspace, location, or device — must be confirmed. Call the
-      tool directly; the server presents a confirmation card and handles approval.
-      Do not ask the user to confirm in plain text.
-    - When a skill matches the reported problem, load it and follow its steps in
-      order.
-    - Report results plainly, including any errors the tools return (for example,
-      a 403 usually means the token lacks the required scope or user context).
-    - If a request is ambiguous — which user, which time window, which location —
-      ask one brief clarifying question.
+    - Investigate with the tools. Never guess at meeting IDs, participants, or
+      quality numbers — list the meetings first, then pull the quality data for
+      the specific meeting, then reason over what the tool returned.
+    - Match the depth to the request. If the user only asks to list or find
+      meetings, just list them and stop — do not pull quality data unasked. Only
+      when they ask how a meeting went (quality, audio/video, who was affected)
+      should you pull the quality data.
+    - Be brief. Lead with a one- or two-line verdict — healthy, or who had trouble.
+      Only quote metrics for a participant whose media was actually poor, and only
+      the two or three numbers that prove it. Do not print a full metrics table for
+      participants who were fine.
+    - Read the raw numbers correctly. A value of -1 means "not measured", never
+      zero — never report it as "no video", "no frames", or an outage. A metric
+      belongs only to the participant whose record it came from; never carry one
+      person's latency or jitter onto another. Judge quality mainly on packet loss
+      and latency/jitter; low frame rate on a short or low-motion call is normal. No
+      packet loss, sub-100 ms latency and single-digit jitter is healthy.
+    - Identify the pattern. If one participant is bad while everyone else is fine,
+      it is likely that participant's network or device. If everyone degrades at
+      the same time, it points at the meeting or a wider issue.
+    - This agent is read-only. You review and explain quality; you do not change
+      any configuration.
+    - Report results plainly, including any errors the tools return. A 403 usually
+      means the token lacks the scope or user context the analytics API requires;
+      an empty result may just mean the time window held no ended meetings.
+    - If the request is ambiguous — which meeting, which day, whose meetings — ask
+      one brief clarifying question.
 
     When the meeting-quality skill matches the request, load it and follow its
     steps in order.
+    ```
 
 ??? Tip "SKILL.md"
     ```markdown
@@ -1217,34 +1222,104 @@ The `meeting-quality` skill (`skills/meeting-quality/SKILL.md`) is the whole poi
     ## Tools you use
 
     - `list_ended_meetings` (troubleshooting server) — meetings that already
-      ended, each with an `id`, title, and start/end.
+      ended, each with an `id`, title, and start/end. When the request names a
+      specific user, pass their email as `host_email` to scope the list to that
+      person's meetings rather than the whole org.
     - `get_meeting_qualities` (troubleshooting server) — per-participant
       audio/video metrics for one meeting id.
+    - `list_meeting_participants` (troubleshooting server) — who attended an ended
+      meeting, with each participant's join/leave times and audio device. Use the
+      same `meeting_id` as `get_meeting_qualities`.
 
     ## Steps
 
     1. Clarify scope only if it is missing: which meeting (title/host) or which
        window to review, and whether the whole meeting or one participant.
     2. Call `list_ended_meetings` for the window and pick the meeting(s) that
-       match. Note each `id`.
-    3. For each meeting, call `get_meeting_qualities` with `meeting_id` set to the
-       `id` from step 2.
-    4. Report the quality per participant — audio and video — with the actual
-       numbers. This answers most requests on its own.
-    5. If everyone's media was fine, say so plainly; any complaint is likely about
-       content or scheduling, not the network.
-    6. If a participant's media was poor, flag them and read the pattern:
+       match. When the request is about a specific user, pass their email as
+       `host_email` so you only pull that person's meetings, not the whole org.
+       Note each `id`. **If the user only asked to list or find meetings, stop here
+       and report the list — do not pull quality data unasked.**
+    3. Only when the request is about how a meeting went (quality, audio/video, who
+       was affected): for each meeting, call `get_meeting_qualities` with
+       `meeting_id` set to the `id` from step 2.
+    4. Lead with a one- or two-line verdict for the meeting: healthy, or which
+       participant(s) had trouble on audio or video. Keep it short — do not print a
+       metrics table for everyone.
+    5. If everyone's media was fine, say so in a sentence and stop; any complaint is
+       likely about content or scheduling, not the network. Do not list per-metric
+       numbers for healthy participants.
+    6. Only for a participant whose media was actually poor: name them and quote the
+       two or three numbers that prove it (the high jitter, the frame-rate collapse,
+       the loss), then read the pattern:
        - One participant bad, the rest fine → that participant's network or device.
        - Everyone degrades together, especially at the same time → a meeting-wide
          or network-path problem, not an individual.
+    7. When the request is about *who* attended, or you need to tie a quality dip to
+       a specific person, call `list_meeting_participants` with the same `meeting_id`
+       and line the join/leave timeline up against the metrics.
+
+    ## What "poor" means
+
+    For each participant and media type (audio, video), treat it as poor when, for
+    a sustained period: packet loss is high (well above a fraction of a percent),
+    latency / round-trip time is high enough to disrupt conversation (hundreds of
+    ms), jitter is high (the usual cause of choppy audio), or video
+    resolution/bitrate collapses. Quote the numbers you found — they are the
+    evidence.
+
+    Judge "poor" mainly on **packet loss and latency/jitter**. A low video frame
+    rate on a short or low-motion call (a 1:1, a static screen) is normal — do not
+    flag it as a problem on its own.
+
+    ### Reading the raw values — do this before you judge anything
+
+    - **`-1` means "not measured", not zero.** It is a sentinel for a missing
+      sample. Never read `-1` as "no video", "no frames", or "no audio", and never
+      report it as a failure. If a stream is all `-1`, that metric simply was not
+      captured for that participant — say nothing was recorded, do not infer an
+      outage. The same goes for empty streams.
+    - **A participant can send fine while inbound is unmeasured.** If `videoIn` is
+      all `-1` but `videoOut` shows real frame rates and bitrate, that person's
+      video was working — only the inbound measurement is missing.
+    - **Attribute every number to the right person.** A latency or jitter value
+      belongs only to the participant whose record it came from. Never carry one
+      participant's number over to another.
+    - **Values are usually `[start, end]` pairs.** A bitrate or frame rate dropping
+      to 0/`-1` at the very end often just means that person left before the meeting
+      ended — not a failure.
+    - **No packet loss + sub-100 ms latency + single-digit jitter = healthy**, even
+      if frame rates are low or many fields are `-1`.
+
+    `list_ended_meetings` gives the `id`; pass it as `meeting_id` to
+    `get_meeting_qualities`, which returns the per-participant items.
+
+    ## Edge cases
+
+    - **No ended meetings in the window** — offer to widen `days_back`; do not
+      report "healthy".
+    - **Meeting found but no quality data** — very short meetings, or data not yet
+      processed. Say so rather than inventing metrics.
+    - **403 from the qualities API** — the token lacks the scope or user context
+      the analytics API requires; report it as a permission problem.
+
+    ## Guardrails
+
+    - Read-only — this agent reviews and reports; it never changes config.
+    - Only use a `meeting_id` returned by `list_ended_meetings`; never guess one.
+    - Every "poor" flag must cite the metric and value from the tool result;
+      never invent participants or numbers.
+    - `-1` is "not measured", never a measurement. Do not turn it into "no video",
+      "no frames", or an outage, and do not score it as poor.
     ```
 
 The skill's steps, in short:
 
 | Step | Tool | Owned by |
 | --- | --- | --- |
-| Find the meeting(s) | `list_ended_meetings` | troubleshooting server |
+| Find the meeting(s), optionally scoped to one host | `list_ended_meetings` | troubleshooting server |
 | Pull the quality data | `get_meeting_qualities` | troubleshooting server |
+| See who attended and when | `list_meeting_participants` | troubleshooting server |
 | Report quality per participant | *(reasoning over metrics)* | — |
 | Flag poor audio/video (if any) | *(reasoning)* | — |
 | One bad participant vs. meeting-wide | *(reasoning)* | — |
@@ -1262,7 +1337,7 @@ The skill defines what "poor" means (packet loss, latency, jitter, collapsed vid
 
     ```terminal
     webex-troubleshooting-complex running on stdio - waiting for a client (Ctrl+C to stop).
-    MCP ready — 10 tool(s), 0 chars of resource text, 0 prompt(s), elicitation=auto-accept
+    MCP ready — 11 tool(s), 0 chars of resource text, 0 prompt(s), elicitation=auto-accept
     Skills: 1 — ['meeting-quality']
     Listening as webexone-...@webex.bot via Webex Websockets (messages + cards)... (Ctrl+C to stop)
     WebSocket connected — listening for messages and cards
@@ -1270,35 +1345,32 @@ The skill defines what "poor" means (packet loss, latency, jitter, collapsed vid
 
 3. In the Webex space, start with plain reporting:
 
-    * List the meetings that ended in the last 7 days
+    - List the meetings that ended in the last 30 days
 
-         ![Use Cases](assets/use_case_5.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }    
-    
-    * Show me the quality for <meeting title>
+        ![Use Cases](assets/use_case_26.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-         ![Use Cases](assets/use_case_6.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }    
+    - What meetings did user1@webexone-ai-assistant.wbx.ai host in the last 30 days?
 
-4. Then let the skill add the analysis:
+         ![Use Cases](assets/use_case_23.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-    * How did <meeting title> look and sound — any audio or video problems, and who was affected?
+4. Review how that meeting went:
 
-         ![Use Cases](assets/use_case_7.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }    
+    * How did "1:1 User1/User2" look and sound — any audio or video problems, and who was affected?
 
-    The agent lists the ended meetings, pulls `get_meeting_qualities` for the one you named, and reports the per-participant audio and video with the actual numbers. If a participant's media was poor, it flags them, decides whether it is one person or the whole meeting, and leads with the worst-affected. If everyone was fine, it says so.
+         ![Use Cases](assets/use_case_24.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-### Exercises
+    The agent pulls `get_meeting_qualities` and reports the per-participant audio
+    and video with the actual numbers. If a participant's media was poor, it
+    flags them, decides whether it is one person or the whole meeting, and leads
+    with the worst-affected. If everyone was fine, it says so.
 
-#### Exercise 1 — summarize a week of meetings
+5. Tie the numbers to the room — who was there and when:
 
-Ask the agent to review a week of meetings and give a one-line quality summary
-for each. This works on a healthy tenant — a clean week is a valid result.
+    * Who attended "1:1 User1/User2", and when did each person join and leave?
 
-??? Solution
-    No code change. Ask: *"Review the last 7 days of meetings and give me a one-line quality summary for each, worst first."* The skill already calls `list_ended_meetings` for the window and `get_meeting_qualities` per meeting; the persona keeps it read-only. It reports each meeting and orders them by how the media held up.
+         ![Use Cases](assets/use_case_25.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-#### Exercise 2 — combine with the platform-status check
-
-Have the agent rule out a platform incident before blaming a participant.
-
-??? Solution
-    The troubleshooting server already exposes `unresolved_incidents`. Add a first line to the skill's steps: *"Call `unresolved_incidents`; if an incident overlapped the meeting time, note it as a possible cause before analyzing individual participants."* No code change needed — the tool is already offered by the connected server.
+    Here the agent calls `list_meeting_participants` for the join/leave timeline
+    and lines it up against the quality it just read — so a dip at a given minute
+    can be pinned to who was actually in the meeting then. Everything stays
+    read-only: no confirmation card, nothing changed.
