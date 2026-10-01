@@ -2,7 +2,7 @@
 
 Now, you will compose the modules that you have been building into three real troubleshooting agents.
 
-In this lab, you will meet the engine as **complete, self-contained use cases**. Each use case is a single folder that carries *everything* it needs — its own `utils/`, `local_agent_tools/`, `skills/`, `mcp_servers/`, persona, and `agentbot.py`. Open one folder and you see every moving part.
+In this lab you meet the engine as **complete, self-contained use cases**. Each use case is a single folder that carries *everything* it needs — its own `utils/`, `skills/`, `mcp_servers/`, persona, and `agentbot.py`. Open one folder and you see every moving part.
 
 This lab has three use cases, each a self-contained agent built from the same engine: 
 
@@ -24,7 +24,7 @@ This lab has three use cases, each a self-contained agent built from the same en
 
 ## Section 1 — Webex Contact Center Agent
 
-The scenario: A Contact Center manager reports that an agent's address book is wrong on their desktop. This agent investigates across two MCP servers, diagnoses the misconfiguration, and — with your approval on an Adaptive Card — fixes it.
+The scenario: a Contact Center manager reports that an agent's address book is wrong on their desktop. This agent investigates across two MCP servers, diagnoses the misconfiguration, and — with your approval on an Adaptive Card — fixes it.
 
 ### Architecture
 
@@ -37,7 +37,6 @@ flowchart LR
     Loop <-->|stdio| S07["mcp_servers/07<br/>Desktop Profiles"]
     S06 <-->|REST| CC[Webex CC Config API]
     S07 <-->|REST| CC
-    Loop <-->|local call| Status[check_webex_status]
 ```
 
 ### Step 8.1.1: The two MCP servers
@@ -76,8 +75,8 @@ It also exposes one resource, `lab://desktop-profile-reference`.
     | "What does the profile API return?" | server tool |
     | "Agent can't see contacts — do X then Y" | client-side skill |
 
-!!! Note "Server 07 ships no prompt — on purpose"
-    Server 06 has a prompt. Server 07 has none. The troubleshooting workflow needs tools from *both* servers plus a local one, and a prompt cannot reach outside its own server. So that logic lives in a skill instead. Step 8.1.2 makes the rule general.
+!!! Note "Neither server ships a prompt — on purpose"
+    The troubleshooting workflow needs tools from *both* servers plus a reasoning step, and a prompt cannot reach outside its own server. So that logic lives in a skill instead. Step 8.1.2 makes the rule general.
 
 ### Step 8.1.2: Four places knowledge can live
 
@@ -97,7 +96,7 @@ flowchart TB
     subgraph OnDemand["ON DEMAND"]
         direction LR
         S["<b>Skill</b> — client<br/>SKILL.md via load_skill<br/><i>how to solve THIS problem</i>"]
-        M["<b>MCP Prompt</b> — server<br/>set_up_address_book<br/><i>run THIS server's workflow</i>"]
+        M["<b>MCP Prompt</b> — server<br/><i>(none in this agent — the<br/>workflow crosses two servers,<br/>so it needs a skill instead)</i>"]
     end
     AlwaysLoaded ~~~ OnDemand
 ```
@@ -114,7 +113,7 @@ SYSTEM_PROMPT = (
 ```
 
 Open `system_prompt.txt` and notice what it *omits*. It says "look things up with
-a tool, confirm before writing, check status first" — and never explains what an
+a tool, confirm before writing" — and never explains what an
 `addressBookId` is. It does not need to: that fact is sitting in the next cell
 over, published by the server that owns the API.
 
@@ -127,7 +126,6 @@ Look at what the workflow actually touches:
 
 | Step | Tool | Owned by |
 | --- | --- | --- |
-| Rule out an outage | `check_webex_status` | **local tool** — no server at all |
 | Find the agent | `list_agents` | server 07 |
 | Read their profile | `get_desktop_profile` | server 07 |
 | Find the desired book | `list_address_books` | server 06 |
@@ -135,26 +133,17 @@ Look at what the workflow actually touches:
 | Compare the two IDs | *(reasoning — no tool)* | — |
 | Fix, with approval | `update_desktop_profile` | server 07 |
 
-Three sources, plus a reasoning step that belongs to no one. Now read that back
+Two servers, plus a reasoning step that belongs to no one. Now read that back
 against the grid: a resource describes one server's data and cannot sequence
 anything. A prompt can sequence, but only over its own server's tools. The
-persona is always loaded, so putting a seven-step runbook there would spend the
+persona is always loaded, so putting a multi-step runbook there would spend the
 context budget on every "what time is it?" message.
 
-Only the client-owned, on-demand cell can reference server 06, server 07, and a
-local function in one flow — and load itself only when the problem matches. That
-is the skill.
+Only the client-owned, on-demand cell can reference server 06 and server 07 in
+one flow — and load itself only when the problem matches. That is the skill.
 
 !!! Note "MCP provides the tools; the skill provides the judgment"
-    This is not an argument against prompts. `set_up_address_book` is a good prompt precisely because it stays inside server 06. The rule is about *reach*: pick the narrowest container that can see everything the job needs.
-
-??? Note "The fourth cell is live too — the model can call the prompt"
-    `agentbot.py` registers every connected server's prompts as meta-tools:
-
-    ```python
-    extra_tools = [...] + mcp_client.get_prompt_tools()
-    dispatch = {..., **mcp_client.get_prompt_dispatch()}
-    ```
+    A prompt stays inside one server. The skill crosses both servers plus a reasoning step that lives in neither. Pick the narrowest container that can see everything the job needs.
 
 ### Step 8.1.3: Inside the engine
 
@@ -198,8 +187,8 @@ Read it as five steps:
 4. Append the results to the conversation and go back to step 1.
 5. After `max_iter` rounds, stop.
 
-The `dispatch` dictionary is what makes it flexible. MCP tools, the local status
-check, `load_skill`, and the prompt meta-tools all sit in one flat namespace.
+The `dispatch` dictionary is what makes it flexible. MCP tools, `load_skill`,
+and the prompt meta-tools all sit in one flat namespace.
 The loop never asks where a tool came from — it just calls it.
 
 !!! Tip "The conversation is the memory"
@@ -208,14 +197,14 @@ The loop never asks where a tool came from — it just calls it.
 #### A concrete run
 
 Nothing to type here. This traces what the loop *already does* when a user
-asks the agent something in Step 8.1.5.
+asks the agent something in Step 1.6.
 
 Someone asks *"Can Ana see the Sales-EMEA contacts?"*. The loop turns over
 three times:
 
 ```terminal
 Round 1
-  LLM sees : system prompt, the question, ~12 tools
+  LLM sees : system prompt, the question, ~10 tools
   LLM wants: list_agents({})
   Bot runs : -> "Jane Smith, agentProfileId 323cffeb..."
   Appended to the conversation
@@ -366,7 +355,6 @@ Open `agentbot.py`. It is short — because the hard parts are already in `utils
     # Own-folder imports — this folder is the import root.
     from utils import mcp_client, skills, elicit
     from utils.websocket import WebSocketClientCards
-    from local_agent_tools import webex_status
 
     # Connect to THIS agent's own two servers (address books + desktop profiles).
     _configs = [
@@ -381,26 +369,24 @@ Open `agentbot.py`. It is short — because the hard parts are already in `utils
     elicit.init(bot_token)
     mcp_client.set_elicit_bridge(elicit)
 
-    # Discover this folder's skills, offer the local status tool, and expose
-    # each server's prompts as prompt__* meta-tools.
+    # Discover this folder's skills and expose each server's prompts as
+    # prompt__* meta-tools.
     skills_catalog = skills.discover(SKILLS_DIR)
     extra_tools = ([skills.tool_spec(skills_catalog)] if skills_catalog else []) \
-        + [webex_status.status_tool_spec()] \
         + mcp_client.get_prompt_tools()
     dispatch = {
         "load_skill": lambda a: skills.load_skill(skills_catalog, a.get("name", "")),
-        **webex_status.status_dispatch(),
         **mcp_client.get_prompt_dispatch(),
     }
     ```
 
 !!! Note "What you are NOT writing"
-    No agentic loop. No MCP session handling. No elicitation logic. No WebSocket. No card decoding. All of that lives in `utils/` — see the previous labs for where each module came from. This file only **names the servers, loads the skill, and routes messages and card taps**.
+    No agentic loop. No MCP session handling. No elicitation logic. No WebSocket. No card decoding. All of that lives in `utils/` — see Step 1.0 for where each module came from. This file only **names the servers, loads the skill, and routes messages and card taps**.
 
 ### Step 8.1.5: Run the agent
 
-!!! Prerequisite "Before you start"
-    Copy the environment template under `08_use_cases/01_webex_cc_agent` and fill in your values:
+!!! Prerequisite "Before you start 
+    Copy the environment template under 08_use_cases\01_webex_cc_agent and fill in your values:
 
     - cp .env.example .env
 
@@ -415,13 +401,13 @@ Open `agentbot.py`. It is short — because the hard parts are already in `utils
 3. Confirm both servers connect. You should see two "MCP ready" lines — one per server:
 
     ```terminal
-    MCP ready — 6 tool(s), ... resource text, 1 prompt(s)
+    MCP ready — 6 tool(s), ... resource text, 0 prompt(s)
     MCP ready — 4 tool(s), ... resource text, 0 prompt(s)
     Skills: 1 — ['troubleshoot-address-books']
     Listening as WebexOne-... via Webex Websockets (messages + cards)...
     ```
 
-    That is Step 8.1.1 in one screen: six tools and a prompt from server 06, four tools and no prompt from server 07.
+    That is Step 1.2 in one screen: six tools from server 06, four tools and no prompt from server 07.
 
 4. In the Webex space, start with a read:
 
@@ -608,14 +594,13 @@ is what happened, why, the fix, and the rule you can carry to your own MCP work.
     The full dependency shape of this skill:
 
     ```terminal
-    Step 1  check_webex_status      — independent
-    Step 2  ask the user            — independent
-    Step 3  list_agents             — independent
-    Step 4  get_desktop_profile     — needs agentProfileId from step 3
-    Step 5  list_address_books      — independent (can run alongside 3-4)
-    Step 6  list_entries            — needs id from step 5
-    Step 7  compare                 — needs results from steps 4 AND 5
-    Step 8  update_desktop_profile  — needs values from steps 3 AND 5
+    Step 1  ask the user            — independent
+    Step 2  list_agents             — independent
+    Step 3  get_desktop_profile     — needs agentProfileId from step 2
+    Step 4  list_address_books      — independent (can run alongside 2-3)
+    Step 5  list_entries            — needs id from step 4
+    Step 6  compare                 — needs results from steps 3 AND 4
+    Step 7  update_desktop_profile  — needs values from steps 2 AND 4
     ```
 
     > **Principle.** A skill's job is not only to list the steps — it is to say which steps depend on which. Without explicit markers the model guesses, and sometimes it guesses wrong.
@@ -647,7 +632,7 @@ is what happened, why, the fix, and the rule you can carry to your own MCP work.
         )
     ```
 
-    That is the code you will find at the top of `agentbot.py` today, and it is why Step 8.1.5 lists `MODEL` as required with no default.
+    That is the code you will find at the top of `agentbot.py` today, and it is why Step 1.6 lists `MODEL` as required with no default.
 
     > **Principle.** The `OpenAI()` client already reads `OPENAI_API_KEY` and `OPENAI_BASE_URL` from the environment. Externalise `MODEL` too and the same code runs against OpenAI, Azure, Ollama, or any compatible provider with zero edits.
 
@@ -687,7 +672,7 @@ is what happened, why, the fix, and the rule you can carry to your own MCP work.
 
 ### Step 8.1.7: Architecture at a glance
 
-Everything from Steps 8.1.1 to 8.1.6, on one page:
+Everything from Steps 1.1 to 1.7, on one page:
 
 ```mermaid
 flowchart TB
@@ -704,19 +689,18 @@ flowchart TB
             SK["skills.py<br/>progressive discovery"]
             WS["websocket.py<br/>messages + card taps"]
         end
-        Local["local_agent_tools/webex_status.py<br/><b>check_webex_status</b>"]
     end
 
     subgraph S06["server 06 — Address Books"]
         direction TB
         T06["list_address_books · list_entries<br/>create_address_book · add_entry<br/>delete_address_book · delete_entry"]
-        R06["resource: lab://address-books<br/>prompt: set_up_address_book"]
+        R06["resource: lab://address-books"]
     end
 
     subgraph S07["server 07 — Desktop Profiles"]
         direction TB
         T07["list_agents · list_desktop_profiles<br/>get_desktop_profile · update_desktop_profile"]
-        R07["resource: lab://desktop-profile-reference<br/><i>no prompt</i>"]
+        R07["resource: lab://desktop-profile-reference"]
     end
 
     CC["Webex CC Config API"]
@@ -729,7 +713,6 @@ flowchart TB
     MC <-->|"tools + results"| LLM
     MC <-->|stdio| S06
     MC <-->|stdio| S07
-    MC --> Local
     EL -.->|"Adaptive Card"| User
     S06 <-->|REST| CC
     S07 <-->|REST| CC
@@ -745,7 +728,7 @@ copy 01_webex_cc_agent/  ->  0N_new_agent/
     swap  system_prompt.txt   (new persona)
     swap  skills/             (new runbook)
     swap  mcp_servers/ + _configs in agentbot.py   (new servers)
-    keep  utils/ + local_agent_tools/              (the engine — unchanged)
+    keep  utils/                                   (the engine — unchanged)
 ```
 
 That is exactly how the next two use cases are set up.
@@ -759,12 +742,12 @@ Change the Contact Center agent so it *diagnoses but never writes* — it should
 ??? Solution
     Edit `system_prompt.txt` to add a rule: "You are read-only. Never call write tools such as `update_desktop_profile`. Instead, report the exact change an admin should make." The skill still guides the diagnosis; the persona stops the write.
 
-#### Exercise 2 — add a third tool source
+#### Exercise 2 — handle an empty address book
 
-Give the agent the `check_webex_status` local tool a bigger role: make the skill's first step always report platform status, even when everything is healthy.
+What happens when the agent's profile points to an address book that exists but has zero entries? Update the skill so it explicitly reports this case instead of proceeding to fix the assignment.
 
 ??? Solution
-    In `SKILL.md`, change step 1 to: "Always call `check_webex_status` and include the platform state in your summary, healthy or not." Restart the agent — no code change needed, because `webex_status` is already offered via `extra_tools`.
+    In `SKILL.md`, expand the compare step (step 6): after "Match — the book is assigned correctly", add: "If the book is empty (step 5 returned zero entries), report that the assignment is correct but the book has no contacts — the fix is to add entries with `add_entry`, not to change the profile." The skill already lists this edge case, but making the step explicit prevents the model from offering to reassign the profile when the real problem is missing contacts.
 
 ---
 
