@@ -133,14 +133,12 @@ Look at what the workflow actually touches:
 | Compare the two IDs | *(reasoning — no tool)* | — |
 | Fix, with approval | `update_desktop_profile` | desktop-profiles server |
 
-Two servers, plus a reasoning step that belongs to no one. Now read that back
-against the grid: a resource describes one server's data and cannot sequence
-anything. A prompt can sequence, but only over its own server's tools. The
-persona is always loaded, so putting a multi-step runbook there would spend the
-context budget on every "what time is it?" message.
+Two servers, plus a reasoning step that belongs to no one. So where does this workflow live?
 
-Only the client-owned, on-demand cell can reference the address-books and desktop-profiles servers in
-one flow — and load itself only when the problem matches. That is the skill.
+- **Not the persona** — it is always loaded. A multi-step runbook there would spend context on every message, even "what time is it?"
+- **Not a resource** — a resource describes what fields mean, not what to do with them.
+- **Not an MCP prompt** — a prompt can sequence steps, but only within its own server. This workflow needs tools from *both* servers.
+- **A skill** — it lives on the client, loads only when the problem matches, and can reach any connected server. That is why this is a skill.
 
 !!! Note "MCP provides the tools; the skill provides the judgment"
     A prompt stays inside one server. The skill crosses both servers plus a reasoning step that lives in neither. Pick the narrowest container that can see everything the job needs.
