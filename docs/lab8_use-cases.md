@@ -106,7 +106,7 @@ The always-loaded row is literally the system prompt, assembled in `agentbot.py`
 ```python
 SYSTEM_PROMPT = (
     load_persona()                       # client, always — tone + rules
-    + skills.catalog_prompt(catalog)     # one line per skill, so the model knows what exists
+    + skills.catalog_prompt(skills_catalog)  # one line per skill, so the model knows what exists
     + "\n\n"
     + mcp_client.get_resources_text()    # server, always — the domain facts
 )
@@ -151,42 +151,51 @@ You can run this agent without reading this step. Open it when you want to know
 #### How a question becomes an answer
 
 Everything plugs into one function in `utils/mcp_client.py` — the agentic loop.
-It works in five steps:
+It works in six steps:
 
 1. Send the conversation to the LLM along with every available tool.
 2. If the LLM replies with text, return it — done.
 3. If it replies with tool calls, execute each one.
-4. Append the results to the conversation and go back to step 1.
-5. After `max_iter` rounds, stop.
+4. If a confirmation card was declined or expired, stop immediately — do not let the model chase the request with another gated tool.
+5. Append the results to the conversation and go back to step 1.
+6. After `max_iter` rounds, stop.
 
 The `dispatch` dictionary is what makes it flexible. MCP tools, `load_skill`,
 and the prompt meta-tools all sit in one flat namespace.
 The loop never asks where a tool came from — it just calls it.
 
 ??? Tip "The agentic loop — the 20 lines that drive every agent"
-
-    def agentic_loop(messages, model, max_iter=10,
-                 extra_tools=None, dispatch=None):
-    all_tools = list(_tools) + (extra_tools or [])
-    msgs = list(messages)
-    if _resources_text:
-        msgs.insert(0, {"role": "system", "content": _resources_text})
-    for _ in range(max_iter):
-        resp = _openai.chat.completions.create(
-            model=model, messages=msgs, tools=all_tools or None,
-        )
-        choice = resp.choices[0]
-        if not choice.message.tool_calls:
-            return choice.message.content or ""   # done — text reply
-        msgs.append(choice.message.model_dump())
-        for tc in choice.message.tool_calls:
-            args = json.loads(tc.function.arguments) if tc.function.arguments else {}
-            if dispatch and tc.function.name in dispatch:
-                result = dispatch[tc.function.name](args)
-            else:
-                result = call_tool(tc.function.name, args)
-            msgs.append({"role": "tool", "tool_call_id": tc.id,
-                         "content": result})
+        ```python
+        def agentic_loop(messages, model, max_iter=10,
+                         extra_tools=None, dispatch=None):
+            all_tools = list(_tools) + (extra_tools or [])
+            msgs = list(messages)
+            if _resources_text:
+                msgs.insert(0, {"role": "system",
+                                 "content": _resources_text})
+            for _ in range(max_iter):
+                resp = _openai.chat.completions.create(
+                    model=model, messages=msgs, tools=all_tools or None,
+                )
+                choice = resp.choices[0]
+                if not choice.message.tool_calls:
+                    return choice.message.content or ""
+                msgs.append(choice.message.model_dump())
+                declined = False
+                for tc in choice.message.tool_calls:
+                    args = json.loads(tc.function.arguments) if tc.function.arguments else {}
+                    if dispatch and tc.function.name in dispatch:
+                        result = dispatch[tc.function.name](args)
+                    else:
+                        result = call_tool(tc.function.name, args)
+                    msgs.append({"role": "tool", "tool_call_id": tc.id, "content": result})
+                    if isinstance(result, str) and "Confirmation was declined or dismissed" in result:
+                        declined = True
+                if declined:
+                    return ("The confirmation card expired or was declined, so nothing "
+                            "was changed. Ask again when you're ready to confirm.")
+            return "Hit tool-call limit — try a simpler request."
+        ```
 
 !!! Tip "The conversation is the memory"
     The loop keeps no state of its own. Every tool call and every result is appended to `msgs`, so when the next round is sent the model sees its own history. That is why step 4 exists — drop it and the model repeats itself forever.
