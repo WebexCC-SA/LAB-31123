@@ -429,6 +429,7 @@ flowchart TB
 4. In the Webex space, start with a read:
 
     * List my address books
+![listbooks](./assets/lab8/addressbooklist.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 5. Now describe the problem and let the skill drive:
 
