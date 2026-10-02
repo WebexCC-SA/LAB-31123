@@ -444,6 +444,12 @@ User2 agent cannot see the contacts.
 
 6. The agent works through the skill, and when it reaches the fix it posts an **Adaptive Card** asking you to confirm — because `update_desktop_profile` affects **all** agents on that profile. Tap **Confirm**:
 
+![listbooks](./assets/lab8/analysis.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+
+Here is the root cause of the issue when you check the controlhub
+![controlhub](./assets/lab8/hub.gif){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
 ![fixbook](./assets/lab8/fixbook.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     ```terminal
@@ -452,6 +458,8 @@ User2 agent cannot see the contacts.
     ```
 
     Tap **Decline** and nothing changes.
+
+   
 
 ### Step 8.1.6: Design lessons
 
