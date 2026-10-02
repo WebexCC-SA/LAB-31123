@@ -435,9 +435,7 @@ flowchart TB
 
     * Agent User2 can't see Internal contacts on the desktop but Agent User1 can see them. Investigate and fix it.
 
-<video width="500" controls style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;">
-  <source src="./assets/lab8/user1issue.mp4" type="video/mp4">
-</video>
+![user1video](./assets/lab8/user1video.gif){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 <video width="500" controls style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;">
   <source src="./assets/lab8/user2issue.mp4" type="video/mp4">
