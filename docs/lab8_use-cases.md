@@ -435,11 +435,12 @@ flowchart TB
 
     * Agent User2 can't see Internal contacts on the desktop but Agent User1 can see them. Investigate and fix it.
 
-![user1video](./assets/lab8/user1video.gif){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+User1 agent can see the contacts
 
-<video width="500" controls style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;">
-  <source src="./assets/lab8/user2issue.mp4" type="video/mp4">
-</video>
+![user1video](./assets/lab8/user1video.gif){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
+User2 agent cannot see the contacts.
+![user2video](./assets/lab8/user2video.gif){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 6. The agent works through the skill, and when it reaches the fix it posts an **Adaptive Card** asking you to confirm — because `update_desktop_profile` affects **all** agents on that profile. Tap **Confirm**:
 
