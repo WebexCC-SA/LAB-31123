@@ -433,11 +433,15 @@ flowchart TB
 
 5. Now describe the problem and let the skill drive:
 
-    * Agent Ana can't see the Sales-EMEA contacts on her desktop. Investigate and fix it.
+    * Agent User2 can't see Internal contacts on the desktop but Agent User1 can see them. Investigate and fix it.
 
-![user1agent](./assets/lab8/user1issue.mp4){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+<video width="500" controls style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;">
+  <source src="./assets/lab8/user1issue.mp4" type="video/mp4">
+</video>
 
-![user2agent](./assets/lab8/user2issue.mp4){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+<video width="500" controls style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;">
+  <source src="./assets/lab8/user2issue.mp4" type="video/mp4">
+</video>
 
 6. The agent works through the skill, and when it reaches the fix it posts an **Adaptive Card** asking you to confirm — because `update_desktop_profile` affects **all** agents on that profile. Tap **Confirm**:
 
