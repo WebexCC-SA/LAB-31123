@@ -444,6 +444,8 @@ User2 agent cannot see the contacts.
 
 6. The agent works through the skill, and when it reaches the fix it posts an **Adaptive Card** asking you to confirm — because `update_desktop_profile` affects **all** agents on that profile. Tap **Confirm**:
 
+![fixbook](./assets/lab8/fixbook.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+
     ```terminal
     INFO Card tap: confirmed
     INFO Sent to ...: Done — Ana's desktop profile now points at Sales-EMEA.
