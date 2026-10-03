@@ -1,0 +1,2867 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="LAB-31123: Building an AI Assistant to Manage and Troubleshoot Your Organization">
+      
+      
+        <meta name="author" content="Diego Manuel Jimenez Moreno">
+      
+      
+      
+        <link rel="prev" href="../lab7_skills/">
+      
+      
+        <link rel="next" href="../conclusion/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../template_assets/webex75.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Lab 8 - Use Cases - LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-8-use-cases" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" class="md-header__button md-logo" aria-label="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" data-md-component="logo">
+      
+  <img src="../template_assets/webexLogo91.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 8 - Use Cases
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../overview/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Lab
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" class="md-nav__button md-logo" aria-label="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" data-md-component="logo">
+      
+  <img src="../template_assets/webexLogo91.png" alt="logo">
+
+    </a>
+    LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab1_webex-mcp-in-ide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 1 - Webex MCP Servers in Your IDE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab2_agent-skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2 - Agent Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab3_webex-apis-troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 3 - Webex APIs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab4_custom-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 4 - Build MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab5_bot-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 5 - Integrate an AI Assistant with a Webex Bot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab6_mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 6 - MCP Servers in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab7_skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 7 - Skills in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 8 - Use Cases
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 8 - Use Cases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#section-1-webex-contact-center-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 1 — Webex Contact Center Agent
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 1 — Webex Contact Center Agent">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-811-the-two-mcp-servers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.1.1: The two MCP servers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 8.1.1: The two MCP servers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#address-book-server-you-already-wrote-every-tool-in-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Address Book Server — you already wrote every tool in it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#desktop-profile-server-the-one-genuinely-new-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Desktop Profile Server — the one genuinely new server
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-812-four-places-knowledge-can-live" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.1.2: Four places knowledge can live
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 8.1.2: Four places knowledge can live">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-the-troubleshooting-workflow-is-a-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the troubleshooting workflow is a skill
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-813-inside-the-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.1.3: Inside the engine
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 8.1.3: Inside the engine">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-a-question-becomes-an-answer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How a question becomes an answer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-across-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory across messages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-pieces-connect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the pieces connect
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-814-the-wiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.1.4: The wiring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-815-run-the-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.1.5: Run the agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-816-design-lessons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.1.6: Design lessons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-817-architecture-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.1.7: Architecture at a glance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-818-this-folder-is-a-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.1.8: This folder is a template
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercises">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercise-1-a-report-only-persona" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 1 — a report-only persona
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-2-handle-an-empty-address-book" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 2 — handle an empty address book
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-2-webex-calling-control-hub-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 2 — Webex Calling &amp; Control Hub Agent
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 2 — Webex Calling &amp; Control Hub Agent">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-821-mcp-servers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.2.1: MCP servers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-822-read-freely-write-with-approval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.2.2: Read freely, write with approval
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-823-the-investigation-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.2.3: The investigation skill
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-824-run-the-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.2.4: Run the agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-3-webex-meeting-quality-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 3 — Webex Meeting Quality Agent
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 3 — Webex Meeting Quality Agent">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-831-one-server-two-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.3.1: One server, two tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-832-report-then-analyze" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.3.2: Report, then analyze
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-833-run-the-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8.3.3: Run the agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conclusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-8-use-cases">Lab 8 - Use Cases</h1>
+<p>Now, you will compose the modules that you have been building into three real troubleshooting agents.</p>
+<p>In this lab, you meet the engine as <strong>complete, self-contained use cases</strong>. Each use case is a single folder that carries <em>everything</em> it needs — its own <code>utils/</code>, <code>skills/</code>, <code>mcp_servers/</code>, persona, and <code>agentbot.py</code>. Open one folder and you see every moving part.</p>
+<p>This lab has three use cases, each a self-contained agent built from the same engine: </p>
+<ul>
+<li><strong>Contact Center</strong> agent that fixes a misconfiguration</li>
+<li><strong>Calling / Control Hub</strong> agent that investigates a user's calls </li>
+<li><strong>Meeting Quality</strong> agent that explains why a meeting looked and sounded bad.</li>
+</ul>
+<div class="highlight"><pre><span></span><code>08_use_cases/
+    01_webex_cc_agent/        &lt;-- Contact Center — fix an address-book misconfiguration
+    02_webex_calling_agent/   &lt;-- Calling / Control Hub — investigate a user's calls
+    03_webex_meeting_agent/   &lt;-- Meeting Quality — analyze meeting audio/video
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Self-contained by design</p>
+<p>There is no shared library. Each use-case folder has its <strong>own copy</strong> of the engine. The trade-off — the same <code>utils/</code> appears in more than one folder — is deliberate: every use case is a complete, runnable, copy-paste-able example with <strong>no imports from other labs</strong> and nothing to wire up across directories. Only <code>.env</code> file is shared for simplicity.</p>
+</div>
+<hr>
+<h2 id="section-1-webex-contact-center-agent">Section 1 — Webex Contact Center Agent</h2>
+<p>The scenario: A Contact Center manager reports that an agent's address book is wrong on their desktop. This agent investigates across two MCP servers, diagnoses the misconfiguration, and — with your approval on an Adaptive Card — fixes it.</p>
+<h3 id="architecture">Architecture</h3>
+<pre class="mermaid"><code>flowchart LR
+    User[Webex User] &lt;--&gt;|Messages + Cards| Bot[01_webex_cc_agent]
+    Bot &lt;--&gt;|Prompts &amp; Responses| LLM[LLM]
+    LLM &lt;--&gt;|Tool Calls| Loop[agentic loop]
+    Loop &lt;--&gt;|stdio| S06["Address Books&lt;br/&gt;manage_address_books"]
+    Loop &lt;--&gt;|stdio| S07["Desktop Profiles&lt;br/&gt;verify_desktop_profiles"]
+    S06 &lt;--&gt;|REST| CC[Webex CC Config API]
+    S07 &lt;--&gt;|REST| CC</code></pre>
+<h3 id="step-811-the-two-mcp-servers">Step 8.1.1: The two MCP servers</h3>
+<p>The agent connects to two servers. One you have already built; one is new.</p>
+<h4 id="address-book-server-you-already-wrote-every-tool-in-it">Address Book Server — you already wrote every tool in it</h4>
+<p><code>manage_address_books.py</code> is not new code. It is the three address-book
+servers from Lab 4 merged into one file:</p>
+<h4 id="desktop-profile-server-the-one-genuinely-new-server">Desktop Profile Server — the one genuinely new server</h4>
+<p><code>verify_desktop_profiles.py</code> is the only file here you have not seen before. It
+answers one question: <em>which address book is this agent actually configured to see?</em></p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list_agents</code></td>
+<td>Every agent in the org, each with their <code>agentProfileId</code></td>
+</tr>
+<tr>
+<td><code>list_desktop_profiles</code></td>
+<td>Every desktop profile in the org</td>
+</tr>
+<tr>
+<td><code>get_desktop_profile</code></td>
+<td>One profile — crucially, including its <code>addressBookId</code></td>
+</tr>
+<tr>
+<td><code>update_desktop_profile</code></td>
+<td>Point a profile at a different address book (elicited)</td>
+</tr>
+</tbody>
+</table>
+<p>It also exposes one resource, <code>lab://desktop-profile-reference</code>.</p>
+<details class="note">
+<summary>What the resource says — and what it deliberately does not</summary>
+<p>The resource is a <strong>field glossary</strong>, not a runbook. It explains what a desktop profile is, that each agent is assigned exactly one, and that the profile's <code>addressBookId</code> determines which contacts appear on the Agent Desktop.</p>
+<p>It does <strong>not</strong> say "Step 1: do this. Step 2: do that." That is the skill's job, and Step 8.1.2 explains why the split matters.</p>
+<table>
+<thead>
+<tr>
+<th>Concern</th>
+<th>Where it lives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"What does <code>addressBookId</code> mean?"</td>
+<td>server resource</td>
+</tr>
+<tr>
+<td>"What does the profile API return?"</td>
+<td>server tool</td>
+</tr>
+<tr>
+<td>"Agent can't see contacts — do X then Y"</td>
+<td>client-side skill</td>
+</tr>
+</tbody>
+</table>
+</details>
+<div class="admonition note">
+<p class="admonition-title">Neither server ships a prompt — on purpose</p>
+<p>The troubleshooting workflow needs tools from <em>both</em> servers plus a reasoning step, and a prompt cannot reach outside its own server. So that logic lives in a skill instead. Step 8.1.2 makes the rule general.</p>
+</div>
+<h3 id="step-812-four-places-knowledge-can-live">Step 8.1.2: Four places knowledge can live</h3>
+<p>This agent knows things. That knowledge sits in four different places, and
+choosing the right one is the main design decision in the whole folder.</p>
+<p>Two questions tell them apart: <strong>who owns it</strong> — the client or the server — and
+<strong>when it enters the model's context</strong> — always, or only when needed.</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph AlwaysLoaded["ALWAYS in context"]
+        direction LR
+        P["&lt;b&gt;Persona&lt;/b&gt; — client&lt;br/&gt;system_prompt.txt&lt;br/&gt;&lt;i&gt;how to behave&lt;/i&gt;"]
+        R["&lt;b&gt;MCP Resource&lt;/b&gt; — server&lt;br/&gt;lab://address-books&lt;br/&gt;lab://desktop-profile-reference&lt;br/&gt;&lt;i&gt;what things mean&lt;/i&gt;"]
+    end
+    subgraph OnDemand["ON DEMAND"]
+        direction LR
+        S["&lt;b&gt;Skill&lt;/b&gt; — client&lt;br/&gt;SKILL.md via load_skill&lt;br/&gt;&lt;i&gt;how to solve THIS problem&lt;/i&gt;"]
+        M["&lt;b&gt;MCP Prompt&lt;/b&gt; — server&lt;br/&gt;&lt;i&gt;(none in this agent — the&lt;br/&gt;workflow crosses two servers,&lt;br/&gt;so it needs a skill instead)&lt;/i&gt;"]
+    end
+    AlwaysLoaded ~~~ OnDemand</code></pre>
+<p>The always-loaded row is literally the system prompt, assembled in <code>agentbot.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">SYSTEM_PROMPT</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">load_persona</span><span class="p">()</span>                       <span class="c1"># client, always — tone + rules</span>
+    <span class="o">+</span> <span class="n">skills</span><span class="o">.</span><span class="n">catalog_prompt</span><span class="p">(</span><span class="n">skills_catalog</span><span class="p">)</span>  <span class="c1"># one line per skill, so the model knows what exists</span>
+    <span class="o">+</span> <span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span>
+    <span class="o">+</span> <span class="n">mcp_client</span><span class="o">.</span><span class="n">get_resources_text</span><span class="p">()</span>    <span class="c1"># server, always — the domain facts</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>Open <code>system_prompt.txt</code> and notice what it <em>omits</em>. It says "look things up with
+a tool, confirm before writing" — and never explains what an
+<code>addressBookId</code> is. It does not need to: that fact is sitting in the next cell
+over, published by the server that owns the API.</p>
+<div class="admonition tip">
+<p class="admonition-title">Design choice — the persona stays domain-light</p>
+<p>Every domain fact you move out of the persona and into a server resource is a fact the server can update without anyone editing the bot. Swap the servers and the same engine fronts a different domain — which is exactly how the Calling and Meeting agents reuse this folder.</p>
+</div>
+<h4 id="why-the-troubleshooting-workflow-is-a-skill">Why the troubleshooting workflow is a skill</h4>
+<p>Look at what the workflow actually touches:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Tool</th>
+<th>Owned by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Find the agent</td>
+<td><code>list_agents</code></td>
+<td>desktop-profiles server</td>
+</tr>
+<tr>
+<td>Read their profile</td>
+<td><code>get_desktop_profile</code></td>
+<td>desktop-profiles server</td>
+</tr>
+<tr>
+<td>Find the desired book</td>
+<td><code>list_address_books</code></td>
+<td>address-books server</td>
+</tr>
+<tr>
+<td>Verify it has contacts</td>
+<td><code>list_entries</code></td>
+<td>address-books server</td>
+</tr>
+<tr>
+<td>Compare the two IDs</td>
+<td><em>(reasoning — no tool)</em></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Fix, with approval</td>
+<td><code>update_desktop_profile</code></td>
+<td>desktop-profiles server</td>
+</tr>
+</tbody>
+</table>
+<p>Two servers, plus a reasoning step that belongs to no one. So where does this workflow live?</p>
+<ul>
+<li><strong>Not the persona</strong> — it is always loaded. A multi-step runbook there would spend context on every message, even "what time is it?"</li>
+<li><strong>Not a resource</strong> — a resource describes what fields mean, not what to do with them.</li>
+<li><strong>Not an MCP prompt</strong> — a prompt can sequence steps, but only within its own server. This workflow needs tools from <em>both</em> servers.</li>
+<li><strong>A skill</strong> — it lives on the client, loads only when the problem matches, and can reach any connected server. That is why this is a skill.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">MCP provides the tools; the skill provides the judgment</p>
+<p>A prompt stays inside one server. The skill crosses both servers plus a reasoning step that lives in neither. Pick the narrowest container that can see everything the job needs.</p>
+</div>
+<h3 id="step-813-inside-the-engine">Step 8.1.3: Inside the engine</h3>
+<p>You can run this agent without reading this step. Open it when you want to know
+<em>how</em> the folder works rather than <em>what</em> it does.</p>
+<h4 id="how-a-question-becomes-an-answer">How a question becomes an answer</h4>
+<p>Everything plugs into one function in <code>utils/mcp_client.py</code> — the agentic loop.
+It works in six steps:</p>
+<ol>
+<li>Send the conversation to the LLM along with every available tool.</li>
+<li>If the LLM replies with text, return it — done.</li>
+<li>If it replies with tool calls, execute each one.</li>
+<li>If a confirmation card was declined or expired, stop immediately — do not let the model chase the request with another gated tool.</li>
+<li>Append the results to the conversation and go back to step 1.</li>
+<li>After <code>max_iter</code> rounds, stop.</li>
+</ol>
+<p>The <code>dispatch</code> dictionary is what makes it flexible. MCP tools, <code>load_skill</code>,
+and the prompt meta-tools all sit in one flat namespace.
+The loop never asks where a tool came from — it just calls it.</p>
+<details class="tip">
+<summary>The agentic loop — the 20 lines that drive every agent</summary>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">agentic_loop</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                 <span class="n">extra_tools</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dispatch</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">all_tools</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">_tools</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">extra_tools</span> <span class="ow">or</span> <span class="p">[])</span>
+    <span class="n">msgs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">_resources_text</span><span class="p">:</span>
+        <span class="n">msgs</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"system"</span><span class="p">,</span>
+                         <span class="s2">"content"</span><span class="p">:</span> <span class="n">_resources_text</span><span class="p">})</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_iter</span><span class="p">):</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">_openai</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">messages</span><span class="o">=</span><span class="n">msgs</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">all_tools</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">choice</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">choice</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">choice</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span> <span class="ow">or</span> <span class="s2">""</span>
+        <span class="n">msgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">choice</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span>
+        <span class="n">declined</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">tc</span> <span class="ow">in</span> <span class="n">choice</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">tc</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span> <span class="k">if</span> <span class="n">tc</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">arguments</span> <span class="k">else</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="n">dispatch</span> <span class="ow">and</span> <span class="n">tc</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">dispatch</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">dispatch</span><span class="p">[</span><span class="n">tc</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">name</span><span class="p">](</span><span class="n">args</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">call_tool</span><span class="p">(</span><span class="n">tc</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+            <span class="n">msgs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"tool"</span><span class="p">,</span> <span class="s2">"tool_call_id"</span><span class="p">:</span> <span class="n">tc</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">"Confirmation was declined or dismissed"</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+                <span class="n">declined</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">declined</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="s2">"The confirmation card expired or was declined, so nothing "</span>
+                    <span class="s2">"was changed. Ask again when you're ready to confirm."</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">"Hit tool-call limit — try a simpler request."</span>
+</code></pre></div>
+</details>
+<div class="admonition tip">
+<p class="admonition-title">The conversation is the memory</p>
+<p>The loop keeps no state of its own. Every tool call and every result is appended to <code>msgs</code>, so when the next round is sent the model sees its own history. That is why step 4 exists — drop it and the model repeats itself forever.</p>
+</div>
+<details class="tip" open="open">
+<summary>A concrete run — 3 rounds, 2 tool calls, 1 answer</summary>
+<p>Someone asks <em>"Can Ana see the Sales-EMEA contacts?"</em></p>
+<div class="highlight"><pre><span></span><code>Round 1
+  LLM sees : system prompt, the question, 10 tools
+  LLM wants: list_agents({})
+  Bot runs : -&gt; {"count":1, "agents":[{"name":"Ana Ruiz", "desktop_profile_id":"323cffeb..."}]}
+  Appended to the conversation
+
+Round 2
+  LLM sees : everything above, including Ana's desktop_profile_id
+  LLM wants: get_desktop_profile({"id": "323cffeb..."})
+  Bot runs : -&gt; {"name": "Sales Desktop", "addressBookId": null}
+  Appended to the conversation
+
+Round 3
+  LLM sees : everything above, including addressBookId = null
+  LLM wants: nothing — it replies with text
+  -&gt; "Ana's Sales Desktop profile has no address book assigned."
+
+Loop exits. 3 rounds, 2 tool calls, 1 answer.
+</code></pre></div>
+</details>
+<h4 id="memory-across-messages">Memory across messages</h4>
+<p>The loop remembers tool calls within a single question; <code>agentbot.py</code> remembers the conversation <em>across</em> questions. It keeps one history list per user, keyed by email and capped by <code>MAX_HISTORY</code>.</p>
+<details class="tip">
+<summary>The per-user history — 10 lines in agentbot.py</summary>
+<div class="highlight"><pre><span></span><code><span class="c1"># Per-user conversation history.</span>
+<span class="n">conversations</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_run_agent</span><span class="p">(</span><span class="n">uid</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">room_id</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">uid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">conversations</span><span class="p">:</span>
+        <span class="n">conversations</span><span class="p">[</span><span class="n">uid</span><span class="p">]</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"system"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">SYSTEM_PROMPT</span><span class="p">}]</span>
+    <span class="n">conversations</span><span class="p">[</span><span class="n">uid</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">text</span><span class="p">})</span>
+    <span class="n">reply</span> <span class="o">=</span> <span class="n">mcp_client</span><span class="o">.</span><span class="n">agentic_loop</span><span class="p">(</span><span class="n">conversations</span><span class="p">[</span><span class="n">uid</span><span class="p">],</span> <span class="o">...</span><span class="p">)</span>
+    <span class="n">conversations</span><span class="p">[</span><span class="n">uid</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"assistant"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">reply</span><span class="p">})</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">conversations</span><span class="p">[</span><span class="n">uid</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">MAX_HISTORY</span> <span class="o">*</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">conversations</span><span class="p">[</span><span class="n">uid</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="n">conversations</span><span class="p">[</span><span class="n">uid</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">reply</span>
+</code></pre></div>
+</details>
+<p>Each user gets their own thread — a <code>system</code> prompt at index 0, then <code>user</code> / <code>assistant</code> turns. That is why a follow-up like <em>"and their devices?"</em> still knows who "their" refers to. Two things keep it from growing forever:</p>
+<ul>
+<li><strong>A rolling window.</strong> <code>MAX_HISTORY</code> (default <code>20</code>, set in <code>.env</code>) caps the history at the last 20 exchanges. Past that, the oldest pair is dropped — the system prompt at index 0 always stays. The dict is in-memory only: restart the bot and every thread is gone.</li>
+<li><strong>A reset command.</strong> Texting <code>/reset</code> clears that user's history and starts a fresh thread.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Two kinds of memory, one clean history</p>
+<p>The tool-call scaffolding from the loop never enters the stored history.</p>
+<p><code>agentic_loop</code> works on a <em>copy</em> (<code>msgs = list(messages)</code>) and only the final text reply is appended back. So the per-user thread stays a clean sequence of system, user, and assistant messages — which is also why trimming a pair at a time (<code>pop(1); pop(1)</code>) never splits a tool call from its result.</p>
+</div>
+<h4 id="how-the-pieces-connect">How the pieces connect</h4>
+<p>The loop is deliberately ignorant: it calls tools and appends results, nothing
+more. The rest of <code>mcp_client.py</code> handles reaching the servers, and three
+companion modules in <code>utils/</code> handle everything else — one concern each:</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>The concern it owns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mcp_client.py</code> (connections)</td>
+<td>one connection per server, one flat tool list</td>
+</tr>
+<tr>
+<td><code>elicit.py</code></td>
+<td>turn a server's "are you sure?" into a Webex card</td>
+</tr>
+<tr>
+<td><code>skills.py</code></td>
+<td>load a playbook only when it is needed</td>
+</tr>
+<tr>
+<td><code>websocket.py</code></td>
+<td>carry messages and card taps to and from Webex</td>
+</tr>
+</tbody>
+</table>
+<p>Expand whichever you are curious about.</p>
+<details class="note">
+<summary>mcp_client.py — one connection per server, one flat tool list</summary>
+<p><strong><code>MCPConnection</code></strong> wraps a single server: its session, its tools, its resources, its prompts. Each instance runs its own asyncio event loop on a background thread, so a slow address-books server never blocks desktop-profiles.</p>
+<p><strong><code>connect_all(configs)</code></strong> creates one <code>MCPConnection</code> per entry, connects each, then merges their tools into module-level state. This is Lab 6's <code>McpHub</code>, moved inside the client.</p>
+<p><strong>Routing</strong> happens through a <code>_tool_to_conn</code> dictionary built at connect time:</p>
+<div class="highlight"><pre><span></span><code>list_address_books      -&gt; address-books connection
+list_entries            -&gt; address-books connection
+list_agents             -&gt; desktop-profiles connection
+get_desktop_profile     -&gt; desktop-profiles connection
+update_desktop_profile  -&gt; desktop-profiles connection
+</code></pre></div>
+<p><code>call_tool(name, args)</code> looks the name up and forwards the call. If two servers registered the same tool name the first config wins — these two have no overlap.</p>
+<p>The single-server <code>connect()</code> from Lab 6 still works; it just builds a one-entry version of the same state.</p>
+</details>
+<details class="note">
+<summary>elicit.py — approval without a webhook</summary>
+<p>When a server calls <code>elicit()</code> — before deleting a book, or before updating a profile — the user is in Webex, not at a terminal. This module bridges that gap:</p>
+<div class="highlight"><pre><span></span><code>Server          mcp_client       elicit.py          Webex          websocket.py
+  |                 |                |                 |                 |
+  |-- elicit() ----&gt;|                |                 |                 |
+  |                 |-- request() --&gt;|                 |                 |
+  |                 |                |-- POST card ---&gt;|                 |
+  |                 |                |   (blocks...)   |                 |
+  |                 |                |                 |&lt;-- user taps ---|
+  |                 |                |                 |--- cardAction -&gt;|
+  |                 |                |&lt;-- resolve() ---|                 |
+  |                 |&lt;-- True/False -|                 |                 |
+  |&lt;- accept/decline|                |                 |                 |
+</code></pre></div>
+<p>Step by step:</p>
+<ol>
+<li>The server elicits during a tool call.</li>
+<li><code>mcp_client</code>'s <code>_on_elicit</code> callback fires on the background thread.</li>
+<li><code>elicit.request(message)</code> generates an id, posts a branded Adaptive Card with <strong>Confirm</strong> / <strong>Decline</strong>, and blocks on a <code>threading.Event</code>.</li>
+<li>The user taps a button in Webex.</li>
+<li><code>websocket.py</code> receives the <code>cardAction</code> frame.</li>
+<li><code>agentbot.on_card</code> calls <code>elicit.resolve(elicit_id, confirmed)</code>.</li>
+<li><code>resolve()</code> sets the event, unblocking <code>request()</code>, which returns <code>True</code> or <code>False</code>.</li>
+<li><code>_on_elicit</code> returns <code>accept</code> or <code>decline</code>; the server proceeds or cancels.</li>
+</ol>
+<p>No response in three minutes and <code>request()</code> times out, deletes the stale card, posts an expiry notice, and returns <code>False</code>.</p>
+<p>The server never learns any of this happened. It called <code>elicit()</code> and got an answer.</p>
+<div class="admonition warning">
+<p class="admonition-title">One number has to stay bigger than the other</p>
+<p>The card waits up to 180 seconds. The tool-call timeout in <code>mcp_client.call_tool()</code> is 210. Invert those and the tool gives up before the user can tap.</p>
+</div>
+</details>
+<details class="note">
+<summary>skills.py — progressive disclosure in three stages</summary>
+<p>Loading every skill at startup would spend context on skills nobody asks for. The <a href="https://agentskills.io/specification" target="_blank">agentskills.io specification</a> defines three stages, and this file implements the first two:</p>
+<p><strong>Stage 1 — discovery, at startup.</strong> <code>discover()</code> scans <code>skills/</code>, parses only the YAML frontmatter of each <code>SKILL.md</code>, and returns a catalog with <code>body: None</code>. <code>catalog_prompt()</code> turns that into one line per skill in the system prompt. Roughly 50 tokens each.</p>
+<p><strong>Stage 2 — activation, on demand.</strong> The model calls <code>load_skill("troubleshoot-address-books")</code>. Only then is the full body read from disk — and it is cached on the catalog entry, so the file is read once.</p>
+<p><strong>Stage 3 — execution.</strong> Larger skills load extra <code>scripts/</code> or <code>references/</code> as their instructions reference them. This skill is small enough not to need it.</p>
+<p>Ten skills at 100 lines each would cost 1,000 lines of context on every single message. This costs ten lines, and the full body arrives only when the model decides it is relevant.</p>
+</details>
+<details class="note">
+<summary>websocket.py — messages and card taps on one socket</summary>
+<p>The bot needs two things from Webex: text messages and Adaptive Card button taps. A webhook would need a public URL, a tunnel, and certificates. Websockets is an <strong>outbound</strong> connection, so it works behind NAT, firewalls, and VPNs with no inbound connection at all.</p>
+<p><code>WebSocketClientCards</code> opens one socket and sorts frames by verb — <code>cardAction</code> goes to <code>on_card</code>, <code>post</code> goes to <code>on_message</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">verb</span> <span class="o">==</span> <span class="s2">"cardAction"</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_card</span><span class="p">:</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_card_inputs</span><span class="p">(</span><span class="n">activity</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">on_card</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">card_room</span><span class="p">)</span>          <span class="c1"># -&gt; elicit.resolve()</span>
+    <span class="k">continue</span>
+<span class="k">if</span> <span class="n">verb</span> <span class="o">==</span> <span class="s2">"post"</span><span class="p">:</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_message</span><span class="p">(</span><span class="n">activity</span><span class="p">,</span> <span class="n">room_id</span><span class="p">)</span>
+    <span class="n">loop</span><span class="o">.</span><span class="n">run_in_executor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safe_on_message</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Why messages run in a worker thread</p>
+<p><code>run_in_executor</code> is not an optimisation — it prevents a deadlock. <code>on_message</code> blocks while an elicitation waits for a tap. If it blocked the WebSocket loop, the loop could not receive the very tap it is waiting for. The bot would hang until the card expired, every time.</p>
+</div>
+</details>
+<div class="admonition tip">
+<p class="admonition-title">This page works the way the agent does</p>
+<p>Those collapsed blocks are the same idea as <code>skills.py</code>: one line up front so you know what is there, the full body only when you ask for it. Progressive disclosure is a documentation pattern before it is a model one.</p>
+</div>
+<h3 id="step-814-the-wiring">Step 8.1.4: The wiring</h3>
+<p>Open <code>agentbot.py</code>. It is short — because the hard parts are already in <code>utils/</code>.</p>
+<details class="tip">
+<summary>Python Code — the wiring that makes it a Contact Center agent</summary>
+<div class="highlight"><pre><span></span><code><span class="c1"># Own-folder imports — this folder is the import root.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">mcp_client</span><span class="p">,</span> <span class="n">skills</span><span class="p">,</span> <span class="n">elicit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utils.websocket</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebSocketClientCards</span>
+
+<span class="c1"># Connect to THIS agent's own two servers (address books + desktop profiles).</span>
+<span class="n">_configs</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"address-books"</span><span class="p">,</span>   <span class="s2">"command"</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
+     <span class="s2">"args"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"manage_address_books.py"</span><span class="p">],</span>    <span class="s2">"cwd"</span><span class="p">:</span> <span class="n">MCP_SERVERS_DIR</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"desktop-profiles"</span><span class="p">,</span><span class="s2">"command"</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
+     <span class="s2">"args"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"verify_desktop_profiles.py"</span><span class="p">],</span> <span class="s2">"cwd"</span><span class="p">:</span> <span class="n">MCP_SERVERS_DIR</span><span class="p">},</span>
+<span class="p">]</span>
+<span class="n">mcp_client</span><span class="o">.</span><span class="n">connect_all</span><span class="p">(</span><span class="n">_configs</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Wire the Adaptive Card elicitation bridge.</span>
+<span class="n">elicit</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">bot_token</span><span class="p">)</span>
+<span class="n">mcp_client</span><span class="o">.</span><span class="n">set_elicit_bridge</span><span class="p">(</span><span class="n">elicit</span><span class="p">)</span>
+
+<span class="c1"># Discover this folder's skills and expose each server's prompts as</span>
+<span class="c1"># prompt__* meta-tools.</span>
+<span class="n">skills_catalog</span> <span class="o">=</span> <span class="n">skills</span><span class="o">.</span><span class="n">discover</span><span class="p">(</span><span class="n">SKILLS_DIR</span><span class="p">)</span>
+<span class="n">extra_tools</span> <span class="o">=</span> <span class="p">([</span><span class="n">skills</span><span class="o">.</span><span class="n">tool_spec</span><span class="p">(</span><span class="n">skills_catalog</span><span class="p">)]</span> <span class="k">if</span> <span class="n">skills_catalog</span> <span class="k">else</span> <span class="p">[])</span> \
+    <span class="o">+</span> <span class="n">mcp_client</span><span class="o">.</span><span class="n">get_prompt_tools</span><span class="p">()</span>
+<span class="n">dispatch</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"load_skill"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">skills</span><span class="o">.</span><span class="n">load_skill</span><span class="p">(</span><span class="n">skills_catalog</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)),</span>
+    <span class="o">**</span><span class="n">mcp_client</span><span class="o">.</span><span class="n">get_prompt_dispatch</span><span class="p">(),</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+<div class="admonition note">
+<p class="admonition-title">What you are NOT writing</p>
+<p>No agentic loop. No MCP session handling. No elicitation logic. No WebSocket. No card decoding. All of that lives in <code>utils/</code>. This file only <strong>names the servers, loads the skill, and routes messages and card taps</strong>.</p>
+</div>
+<pre class="mermaid"><code>flowchart TB
+    WS["websocket.py"] --&gt;|"message arrives"| Bot["agentbot.py"]
+    WS --&gt;|"card tap arrives"| Bot
+    Bot --&gt;|"agentic_loop()"| MC["mcp_client.py"]
+    Bot --&gt;|"resolve()"| EL["elicit.py"]
+    MC -.-&gt;|"load_skill()"| SK["skills.py"]
+    MC -.-&gt;|"request() — blocks"| EL</code></pre>
+<h3 id="step-815-run-the-agent">Step 8.1.5: Run the agent</h3>
+<div class="admonition prerequisite">
+<p class="admonition-title">Before you start</p>
+<p>Make sure you have already filled in the shared <code>WebexOne2026/.env</code> from the environment template at the top of the lab folder — all three use cases read the same file.</p>
+</div>
+<ol>
+<li>
+<p>Change into the use-case folder:</p>
+<ul>
+<li>cd ../01_webex_cc_agent</li>
+</ul>
+</li>
+<li>
+<p>Run it:</p>
+<ul>
+<li>python agentbot.py</li>
+</ul>
+</li>
+<li>
+<p>Confirm both servers connect. You should see two "MCP ready" lines — one per server:</p>
+<div class="highlight"><pre><span></span><code>MCP ready — 6 tool(s), ... resource text, 0 prompt(s)
+MCP ready — 4 tool(s), ... resource text, 0 prompt(s)
+Skills: 1 — ['troubleshoot-address-books']
+Listening as WebexOne-... via Webex Websockets (messages + cards)...
+</code></pre></div>
+<p>That is the two servers in one screen: six tools from the address-books server, four tools and no prompt from the desktop-profiles server.</p>
+</li>
+<li>
+<p>In the Webex space, start with a read:</p>
+<ul>
+<li>
+<p>List my address books</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/lab8/addressbooklist.png" data-title="listbooks" data-desc-position="top"><img alt="listbooks" src="../assets/lab8/addressbooklist.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="500"></a></p>
+</li>
+</ul>
+</li>
+<li>
+<p>Now describe the problem and let the skill drive:</p>
+<ul>
+<li>
+<p>Agent User2 can't see Internal contacts on the desktop but Agent User1 can see them. Investigate and fix it.</p>
+<p>User1 can see the contacts on the Agent Desktop:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/lab8/user1video.gif" data-title="user1video" data-desc-position="top"><img alt="user1video" src="../assets/lab8/user1video.gif" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="850"></a></p>
+<p>User2 cannot:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/lab8/user2video.gif" data-title="user2video" data-desc-position="top"><img alt="user2video" src="../assets/lab8/user2video.gif" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="850"></a></p>
+</li>
+</ul>
+</li>
+<li>
+<p>The agent loads the troubleshooting skill, investigates both agents' profiles, and reports its findings — using human-readable names, not raw IDs:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/lab8/analysis.png" data-title="analysis" data-desc-position="top"><img alt="analysis" src="../assets/lab8/analysis.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="750"></a></p>
+<p>You can confirm the root cause in Control Hub: User2's desktop profile has no address book assigned.</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/lab8/hub.gif" data-title="controlhub" data-desc-position="top"><img alt="controlhub" src="../assets/lab8/hub.gif" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="850"></a></p>
+</li>
+<li>
+<p>When the agent reaches the fix, it posts an <strong>Adaptive Card</strong> showing the profile name and address book name, asking you to confirm — because <code>update_desktop_profile</code> affects <strong>all</strong> agents on that profile. Tap <strong>Confirm</strong>:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/lab8/fixbook2.png" data-title="fixbook-card" data-desc-position="top"><img alt="fixbook-card" src="../assets/lab8/fixbook2.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="500"></a></p>
+<div class="highlight"><pre><span></span><code>INFO Card tap: confirmed
+INFO Sent to ...: Done — user's desktop profile now points at Internal Directory.
+</code></pre></div>
+<p>Tap <strong>Decline</strong> and nothing changes.</p>
+</li>
+<li>
+<p>After the fix, the agent confirms the update and User2 can now see the Internal Directory contacts on the Agent Desktop:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/lab8/postchanges.png" data-title="postchanges" data-desc-position="top"><img alt="postchanges" src="../assets/lab8/postchanges.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="500"></a></p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/lab8/user2fix.gif" data-title="user2fix" data-desc-position="top"><img alt="user2fix" src="../assets/lab8/user2fix.gif" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="850"></a></p>
+</li>
+</ol>
+<h3 id="step-816-design-lessons">Step 8.1.6: Design lessons</h3>
+<p>Every server and every line of the skill in this folder looks the way it does
+because something went wrong first. These are the five that shaped it — each one
+is what happened, why, the fix, and the rule you can carry to your own MCP work.</p>
+<details class="note">
+<summary>Lesson 1 — surface the data your consumers need</summary>
+<p><strong>What happened.</strong> An agent reports <em>"I can't see the Sales address book on my desktop."</em> The bot loads the skill, calls <code>list_agents</code>, calls <code>get_desktop_profile</code> — and then stalls:</p>
+<blockquote>
+<p><em>"I can see the Sales book exists. I'm not sure which book is assigned to this profile..."</em></p>
+</blockquote>
+<p><strong>Why.</strong> The tool was throwing the answer away:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Before — the API returned addressBookId, the tool dropped it</span>
+<span class="k">return</span> <span class="p">{</span>
+    <span class="s2">"id"</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"id"</span><span class="p">),</span>
+    <span class="s2">"name"</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"name"</span><span class="p">),</span>
+    <span class="s2">"description"</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"description"</span><span class="p">),</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The bot could see the profile's <em>name</em> but had no way to learn which book it pointed at. And the skill said "compare: does the profile have the right books?" without naming a field — so the model had nothing to compare and nothing to compare it with.</p>
+<p><strong>The fix, in two layers.</strong> Return the field:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># After — include the fields the skill reasons over</span>
+<span class="k">return</span> <span class="p">{</span>
+    <span class="s2">"id"</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"id"</span><span class="p">),</span>
+    <span class="s2">"name"</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"name"</span><span class="p">),</span>
+    <span class="s2">"description"</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"description"</span><span class="p">),</span>
+    <span class="s2">"addressBookId"</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"addressBookId"</span><span class="p">),</span>
+    <span class="s2">"outdialEnabled"</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"outdialEnabled"</span><span class="p">),</span>
+    <span class="s2">"active"</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"active"</span><span class="p">),</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Then tell the skill what to do with it:</p>
+<div class="highlight"><pre><span></span><code><span class="k">7.</span> Compare the profile's <span class="sb">`addressBookId`</span> with the desired book's id:
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>Match -&gt; the book is assigned correctly; the problem is elsewhere.
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>Mismatch or null -&gt; proceed to fix.
+</code></pre></div>
+<blockquote>
+<p><strong>Principle.</strong> A tool must return the fields its consumers reason over, and a skill must explain the <em>reasoning</em>, not just the <em>sequence</em>. The model needs to know what to look <strong>for</strong>, not only what to call.</p>
+</blockquote>
+</details>
+<details class="note">
+<summary>Lesson 2 — write to the right resource</summary>
+<p><strong>What happened.</strong> The first write tool tried to move an agent to a different profile by updating the <strong>user</strong> record. It returned <code>400 Bad Request</code>, every time.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Before — update the user to change their agentProfileId</span>
+<span class="n">got</span> <span class="o">=</span> <span class="k">await</span> <span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ORG</span><span class="si">}</span><span class="s2">/user/</span><span class="si">{</span><span class="n">agent_id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">HEADERS</span><span class="p">)</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">got</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="n">agent</span><span class="p">[</span><span class="s2">"agentProfileId"</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_profile_id</span>
+<span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">http</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ORG</span><span class="si">}</span><span class="s2">/user/</span><span class="si">{</span><span class="n">agent_id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">HEADERS</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">agent</span><span class="p">)</span>
+<span class="c1"># -&gt; 400 Bad Request</span>
+</code></pre></div>
+<p><strong>Why.</strong> Two reasons, and the second is worse. The <code>GET</code> returns the full user object including read-only fields — <code>id</code>, <code>ciUserId</code>, <code>links</code>, <code>systemDefault</code> — which the <code>PUT</code> rejects. But even on success the approach was backwards: <em>"move Jane from Profile A to Profile B"</em> does not fix Profile A, which still has no address book. And what if no Profile B exists with the right book?</p>
+<p><strong>The fix.</strong> Update the <strong>profile</strong>, not the user, and strip the read-only fields first:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># After — set the profile's addressBookId</span>
+<span class="n">got</span> <span class="o">=</span> <span class="k">await</span> <span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ORG</span><span class="si">}{</span><span class="n">DESKTOP_PROFILE_PATH</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">desktop_profile_id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                     <span class="n">headers</span><span class="o">=</span><span class="n">HEADERS</span><span class="p">)</span>
+<span class="n">profile</span> <span class="o">=</span> <span class="n">got</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">_PROFILE_READ_ONLY</span><span class="p">:</span>
+    <span class="n">profile</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">profile</span><span class="p">[</span><span class="s2">"addressBookId"</span><span class="p">]</span> <span class="o">=</span> <span class="n">address_book_id</span>
+<span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">http</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ORG</span><span class="si">}{</span><span class="n">DESKTOP_PROFILE_PATH</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">desktop_profile_id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                   <span class="n">headers</span><span class="o">=</span><span class="n">HEADERS</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">profile</span><span class="p">)</span>
+</code></pre></div>
+<p>The elicitation then makes the blast radius explicit: <em>"This affects ALL agents assigned to this profile."</em></p>
+<blockquote>
+<p><strong>Principle.</strong> When a write returns <code>400</code>, ask two questions: are you calling the API that actually owns the change, and are you sending back fields the <code>PUT</code> will not accept?</p>
+</blockquote>
+</details>
+<details class="note">
+<summary>Lesson 3 — speak the API's language</summary>
+<p><strong>What happened.</strong> The tool rejected its own caller:</p>
+<div class="highlight"><pre><span></span><code>Tool 'update_desktop_profile' rejected arguments:
+  ['address_book_id', 'desktop_profile_id']
+</code></pre></div>
+<p><strong>Why.</strong> The Python function used <code>snake_case</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Before</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_desktop_profile</span><span class="p">(</span><span class="n">desktop_profile_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                  <span class="n">address_book_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</code></pre></div>
+<p>But the previous tool's response used the API's names — <code>{"id": "...", "addressBookId": "..."}</code> — and <strong>the model echoes the field names it sees</strong>. It does not translate between naming conventions. So it sent <code>id</code> and <code>addressBookId</code>, and Pydantic refused them.</p>
+<p><strong>The fix.</strong> Match the API:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># After — the names the model will naturally provide</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_desktop_profile</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                  <span class="n">addressBookId</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</code></pre></div>
+<p>Now outputs flow straight into inputs with no translation step:</p>
+<div class="highlight"><pre><span></span><code>Tool A output:  {"id": "abc", "addressBookId": "xyz"}
+     └──&gt; Tool B input:  (id="abc", addressBookId="xyz")
+</code></pre></div>
+<p>This applies <strong>across</strong> servers too. The address-books server returns a book as <code>{"id": "9ba275fa..."}</code>; the desktop-profiles server refers to the same thing as <code>{"addressBookId": "9ba275fa..."}</code>; the skill has to state that those are the same value. Same concept, same name, everywhere — or document the join explicitly.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Checklist for MCP tool authors</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Tool parameters use API field names</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Tool responses use API field names</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Skills document data flow, not schemas</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Resources explain field meanings</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Shared concepts use one name across servers</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Principle.</strong> MCP tool parameters should use the same names as the API they wrap. The model echoes what it sees.</p>
+</blockquote>
+</details>
+<details class="note">
+<summary>Lesson 4 — tell the model what to wait for</summary>
+<p><strong>What happened.</strong> Four tool calls failed in 31 milliseconds:</p>
+<div class="highlight"><pre><span></span><code>07:04:01.727  list_entries rejected arguments    &lt;- 4 failures
+07:04:01.741  list_entries rejected arguments
+07:04:01.745  list_entries rejected arguments
+07:04:01.758  list_entries rejected arguments
+
+07:04:02.552  list_address_books: GET ...        &lt;- still in flight!
+07:04:03.527  list_address_books: HTTP 200       &lt;- the IDs arrive here
+</code></pre></div>
+<p><strong>Why.</strong> A model with function calling can emit several tool calls in one response, and usually that is a win. Here it fired <code>list_entries</code> four times <em>before</em> <code>list_address_books</code> had returned the book IDs those calls needed. The skill had said only:</p>
+<div class="highlight"><pre><span></span><code><span class="k">5.</span> Check the book has entries — call <span class="sb">`list_entries`</span>.
+</code></pre></div>
+<p>Nothing in that sentence says "you need a value from step 4 first", so steps 4 and 5 read as independent and ran in parallel.</p>
+<p><strong>The fix.</strong> Flag every dependency in the skill's own words:</p>
+<div class="highlight"><pre><span></span><code><span class="k">4.</span> Call <span class="sb">`get_desktop_profile`</span> with <span class="sb">`id`</span> set to the <span class="sb">`agentProfileId`</span> from
+   step 3 — don't call this until step 3 has returned.
+
+<span class="k">5.</span> Call <span class="sb">`list_address_books`</span> to find the desired address book.
+   This doesn't depend on steps 3-4 — it can run alongside them.
+
+<span class="k">6.</span> Call <span class="sb">`list_entries`</span> with the book's <span class="sb">`id`</span> from step 5. You need
+   that <span class="sb">`id`</span> first — don't call this until step 5 has returned.
+</code></pre></div>
+<p>Three phrasings carry the whole pattern:</p>
+<ul>
+<li><strong>"from step N"</strong> — names where each value comes from</li>
+<li><strong>"don't call this until"</strong> — blocks a premature call</li>
+<li><strong>"this doesn't depend on"</strong> — tells the model where parallelism <em>is</em> safe</li>
+</ul>
+<p>The full dependency shape of this skill:</p>
+<div class="highlight"><pre><span></span><code>Step 1  ask the user            — independent
+Step 2  list_agents             — independent
+Step 3  get_desktop_profile     — needs agentProfileId from step 2
+Step 4  list_address_books      — independent (can run alongside 2-3)
+Step 5  list_entries            — needs id from step 4
+Step 6  compare                 — needs results from steps 3 AND 4
+Step 7  update_desktop_profile  — needs values from steps 2 AND 4
+</code></pre></div>
+<blockquote>
+<p><strong>Principle.</strong> A skill's job is not only to list the steps — it is to say which steps depend on which. Without explicit markers the model guesses, and sometimes it guesses wrong.</p>
+</blockquote>
+</details>
+<details class="note">
+<summary>Lesson 5 — never hardcode the model</summary>
+<p><strong>What happened.</strong> A harmless-looking default:</p>
+<div class="highlight"><pre><span></span><code><span class="n">MODEL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"OPENAI_MODEL"</span><span class="p">,</span> <span class="s2">"gpt-4o-mini"</span><span class="p">)</span>
+</code></pre></div>
+<p>Then a teammate ran the bot against an OpenAI project without access to that model:</p>
+<div class="highlight"><pre><span></span><code>Error code: 403 - Project `proj_...` does not have access to model `gpt-4o-mini`
+</code></pre></div>
+<p><strong>Why.</strong> A default model name is a silent assumption about someone else's billing account.</p>
+<p><strong>The fix.</strong> Require it, and fail with instructions rather than a stack trace:</p>
+<div class="highlight"><pre><span></span><code><span class="n">MODEL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"OPENAI_MODEL"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">MODEL</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span>
+        <span class="s2">"ERROR: OPENAI_MODEL is not set in .env. Set it to the model your "</span>
+        <span class="s2">"OpenAI project has access to, e.g.:</span><span class="se">\n</span><span class="s2">"</span>
+        <span class="s2">"  OPENAI_MODEL=gpt-5-nano</span><span class="se">\n</span><span class="s2">"</span>
+    <span class="p">)</span>
+</code></pre></div>
+<p>That is the code you will find at the top of <code>agentbot.py</code> today, and it is why <code>OPENAI_MODEL</code> is required with no default.</p>
+<blockquote>
+<p><strong>Principle.</strong> The <code>OpenAI()</code> client already reads <code>OPENAI_API_KEY</code> and <code>OPENAI_BASE_URL</code> from the environment. Externalise <code>OPENAI_MODEL</code> too and the same code runs against OpenAI, Azure, Ollama, or any compatible provider with zero edits.</p>
+</blockquote>
+</details>
+<div class="admonition tip">
+<p class="admonition-title">The five in one line each</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Lesson</th>
+<th>One-liner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Surface the data</td>
+<td>Return the fields your consumers reason over</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Right resource</td>
+<td><code>PUT</code> the endpoint that owns the change</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Align names</td>
+<td>Match tool parameters to API field names</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Flag dependencies</td>
+<td>Tell the model what to wait for</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Externalise the model</td>
+<td>Never hardcode — read it from config</td>
+</tr>
+</tbody>
+</table>
+</div>
+<details class="note">
+<summary>How this skill matured (v1 → v2)</summary>
+<p>Every lesson above left a mark on <code>SKILL.md</code>. Comparing the two versions shows what a skill gains as it grows up:</p>
+<table>
+<thead>
+<tr>
+<th>What</th>
+<th>v1</th>
+<th>v2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Description</td>
+<td>one narrow trigger phrase</td>
+<td>10+ trigger keywords</td>
+</tr>
+<tr>
+<td>"Why a skill?"</td>
+<td>missing</td>
+<td>explained up front</td>
+</tr>
+<tr>
+<td>Data flow</td>
+<td>none</td>
+<td>explicit bullet chain</td>
+</tr>
+<tr>
+<td>Field names</td>
+<td><code>desktop_profile_id</code> (snake_case)</td>
+<td><code>agentProfileId</code> (API-aligned)</td>
+</tr>
+<tr>
+<td>Comparison logic</td>
+<td>"does it have the right books?"</td>
+<td>"compare <code>addressBookId</code> with book <code>id</code>"</td>
+</tr>
+<tr>
+<td>Dependencies</td>
+<td>implicit</td>
+<td>explicit ("don't call until…")</td>
+</tr>
+<tr>
+<td>Edge cases</td>
+<td>none</td>
+<td>agent-not-found, null book, empty book, shared profile</td>
+</tr>
+<tr>
+<td>Write tool</td>
+<td><code>reassign_desktop_profile</code> (wrong API)</td>
+<td><code>update_desktop_profile</code> (correct API)</td>
+</tr>
+<tr>
+<td>Spec compliance</td>
+<td><code>name</code> + <code>description</code> only</td>
+<td>plus <code>compatibility</code>, <code>metadata</code></td>
+</tr>
+</tbody>
+</table>
+<p>A skill is not a list of tools to call in order. It is orchestration logic, and it provides five things MCP tools cannot:</p>
+<ol>
+<li><strong>Cross-server wiring</strong> — "the <code>agentProfileId</code> from the desktop-profiles server becomes the <code>id</code> for <code>get_desktop_profile</code>"</li>
+<li><strong>Reasoning instructions</strong> — "compare field X with field Y"</li>
+<li><strong>Edge-case handling</strong> — "if null, it was never assigned, not just wrong"</li>
+<li><strong>Dependency markers</strong> — "don't call this until step 5 returns"</li>
+<li><strong>Portability</strong> — the same file works in any <a href="https://agentskills.io/clients" target="_blank">agentskills.io-compatible</a> client</li>
+</ol>
+<p>MCP provides the <strong>tools</strong>. Skills provide the <strong>judgment</strong>.</p>
+</details>
+<h3 id="step-817-architecture-at-a-glance">Step 8.1.7: Architecture at a glance</h3>
+<p>Everything from Steps 1.1 to 1.7, on one page:</p>
+<pre class="mermaid"><code>flowchart TB
+    User["Webex User"]
+
+    subgraph Agent["01_webex_cc_agent — the MCP client"]
+        direction TB
+        Bot["agentbot.py&lt;br/&gt;&lt;i&gt;wiring + routing&lt;/i&gt;"]
+        Know["system_prompt.txt — persona&lt;br/&gt;SKILL.md — orchestration"]
+        subgraph Engine["utils/"]
+            direction TB
+            MC["mcp_client.py&lt;br/&gt;agentic loop + routing"]
+            EL["elicit.py&lt;br/&gt;elicitation -&gt; card"]
+            SK["skills.py&lt;br/&gt;progressive discovery"]
+            WS["websocket.py&lt;br/&gt;messages + card taps"]
+        end
+    end
+
+    subgraph S06["Address Books — manage_address_books"]
+        direction TB
+        T06["list_address_books · list_entries&lt;br/&gt;create_address_book · add_entry&lt;br/&gt;delete_address_book · delete_entry"]
+        R06["resource: lab://address-books"]
+    end
+
+    subgraph S07["Desktop Profiles — verify_desktop_profiles"]
+        direction TB
+        T07["list_agents · list_desktop_profiles&lt;br/&gt;get_desktop_profile · update_desktop_profile"]
+        R07["resource: lab://desktop-profile-reference"]
+    end
+
+    CC["Webex CC Config API"]
+    LLM["LLM"]
+
+    User &lt;--&gt;|"messages + card taps"| WS
+    WS &lt;--&gt; Bot
+    Bot --&gt; Know
+    Bot --&gt; MC
+    MC &lt;--&gt;|"tools + results"| LLM
+    MC &lt;--&gt;|stdio| S06
+    MC &lt;--&gt;|stdio| S07
+    EL -.-&gt;|"Adaptive Card"| User
+    S06 &lt;--&gt;|REST| CC
+    S07 &lt;--&gt;|REST| CC</code></pre>
+<h3 id="step-818-this-folder-is-a-template">Step 8.1.8: This folder is a template</h3>
+<p>To build a new agent, you don't start from scratch — you copy this folder and swap three things:</p>
+<div class="highlight"><pre><span></span><code>copy 01_webex_cc_agent/  -&gt;  0N_new_agent/
+    swap  system_prompt.txt   (new persona)
+    swap  skills/             (new runbook)
+    swap  mcp_servers/ + _configs in agentbot.py   (new servers)
+    keep  utils/                                   (the engine — unchanged)
+</code></pre></div>
+<p>That is exactly how the next two use cases are set up.</p>
+<h3 id="exercises">Exercises</h3>
+<h4 id="exercise-1-a-report-only-persona">Exercise 1 — a report-only persona</h4>
+<p>Change the Contact Center agent so it <em>diagnoses but never writes</em> — it should explain what to fix, but not call <code>update_desktop_profile</code>.</p>
+<details class="solution">
+<summary>Solution</summary>
+<p>Edit <code>system_prompt.txt</code> to add a rule: "You are read-only. Never call write tools such as <code>update_desktop_profile</code>. Instead, report the exact change an admin should make." The skill still guides the diagnosis; the persona stops the write.</p>
+</details>
+<h4 id="exercise-2-handle-an-empty-address-book">Exercise 2 — handle an empty address book</h4>
+<p>What happens when the agent's profile points to an address book that exists but has zero entries? Update the skill so it explicitly reports this case instead of proceeding to fix the assignment.</p>
+<details class="solution">
+<summary>Solution</summary>
+<p>In <code>SKILL.md</code>, expand the compare step (step 6): after "Match — the book is assigned correctly", add: "If the book is empty (step 5 returned zero entries), report that the assignment is correct but the book has no contacts — the fix is to add entries with <code>add_entry</code>, not to change the profile." The skill already lists this edge case, but making the step explicit prevents the model from offering to reassign the profile when the real problem is missing contacts.</p>
+</details>
+<hr>
+<h2 id="section-2-webex-calling-control-hub-agent">Section 2 — Webex Calling &amp; Control Hub Agent</h2>
+<p>The Contact Center agent <em>fixed</em> a misconfiguration. This second use case does something you will reach for far more often in practice: it <strong>reports and investigates</strong>. An administrator asks <em>"show me this user's calls"</em> — or <em>"did any of them fail, and why?"</em> — and the agent pulls the evidence, reports what happened, and, when a call did not succeed, explains the cause.</p>
+<p>This is a deliberate contrast. The engine is identical. What changes is the MCP servers used, an investigation skill instead of a fix skill, and a persona that reads freely but gates every write.</p>
+<div class="admonition tip">
+<p class="admonition-title">Same engine, different agent</p>
+<p>You are not writing an agentic loop, an MCP client, or a WebSocket again.</p>
+<p>This section is about <strong>wiring</strong> — which is the whole point of the template.</p>
+</div>
+<h3 id="scenario">Scenario</h3>
+<p>Most of the time an admin just wants to see what happened: <em>"show me this user's recent calls."</em> Every call the org makes is already recorded as a <strong>CDR</strong> (Call Detail Record) — who called whom, how long, and the <code>outcome</code>. The agent pulls those records and reports them. And because a failed call carries an <code>outcome</code> and an <code>outcomeReason</code> in that same data, the agent can also flag the ones that did not succeed and explain why — without you having to <em>stage</em> a broken call.</p>
+<h3 id="architecture_1">Architecture</h3>
+<pre class="mermaid"><code>flowchart LR
+    User[Webex User] &lt;--&gt;|Messages + Cards| Bot[02_webex_calling_agent]
+    Bot &lt;--&gt;|Prompts &amp; Responses| LLM[LLM]
+    LLM &lt;--&gt;|Tool Calls| Loop[agentic loop]
+    Loop &lt;--&gt;|stdio| CH["mcp_servers/&lt;br/&gt;controlhub_mcp"]
+    Loop &lt;--&gt;|stdio| CA["mcp_servers/&lt;br/&gt;calling_mcp"]
+    Loop &lt;--&gt;|stdio| TR["mcp_servers/&lt;br/&gt;troubleshooting_mcp"]
+    CH &lt;--&gt;|REST| API[Webex APIs]
+    CA &lt;--&gt;|REST| API
+    TR &lt;--&gt;|REST + Analytics| API</code></pre>
+<h3 id="step-821-mcp-servers">Step 8.2.1: MCP servers</h3>
+<p>This agent connects to three MCP servers — all of them ones you already built in previous labs.</p>
+<table>
+<thead>
+<tr>
+<th>Server</th>
+<th>Tools it exposes</th>
+<th>Role here</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>controlhub_mcp.py</code></td>
+<td><code>list_people</code>, <code>list_licenses</code>, <code>list_roles</code>, <code>list_workspaces</code>, <code>create_workspace</code>, <code>delete_workspace</code></td>
+<td>Who the user is and what they are entitled to</td>
+</tr>
+<tr>
+<td><code>calling_mcp.py</code></td>
+<td><code>list_numbers</code>, <code>list_locations</code>, <code>get_location_call_settings</code>, <code>list_devices</code>, <code>list_dial_plans</code>, <code>create_location</code>, <code>delete_device</code>, <code>get_call_forwarding</code>, <code>update_call_forwarding</code>, <code>list_blocked_numbers</code>, <code>block_number</code>, <code>unblock_number</code>, <code>get_calling_permissions</code>, <code>block_toll_free</code>, <code>unblock_toll_free</code></td>
+<td>How the user is provisioned to call</td>
+</tr>
+<tr>
+<td><code>troubleshooting_mcp.py</code></td>
+<td><code>unresolved_incidents</code>, <code>get_detailed_call_history</code> (CDRs), <code>audit events</code>, <code>reports</code>, <code>meeting quality</code></td>
+<td>Platform health and the call evidence</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Rule out an outage — only when something failed</p>
+<p>When a call actually failed, the <code>investigate-calls</code> skill rules out a known Webex incident (<code>unresolved_incidents</code>) before blaming a user's configuration — the same guardrail as the Contact Center agent. Plain listing and reporting requests skip the incident check entirely; it only runs when there is a problem to explain.</p>
+</div>
+<h3 id="step-822-read-freely-write-with-approval">Step 8.2.2: Read freely, write with approval</h3>
+<p>Section 1 taught elicitation with a single write (<code>update_desktop_profile</code>). This agent keeps that lesson but frames it as a rule for the whole domain:</p>
+<ul>
+<li><strong>Investigation is always safe.</strong> Listing people, licenses, numbers and devices, and pulling CDRs, changes nothing — the agent does it without asking.</li>
+<li><strong>Management is gated.</strong> The write tools here (<code>create_workspace</code>, <code>delete_workspace</code>, <code>create_location</code>, <code>delete_device</code>, <code>update_call_forwarding</code>, <code>block_number</code>, <code>unblock_number</code>, <code>block_toll_free</code>, <code>unblock_toll_free</code>) change the organization. The <code>delete_*</code> tools, <code>update_call_forwarding</code>, <code>block_number</code>, <code>unblock_number</code>, <code>block_toll_free</code>, and <code>unblock_toll_free</code> elicit, so the server posts an Adaptive Card and waits for <strong>Confirm</strong>.</li>
+</ul>
+<p>The persona (<code>system_prompt.txt</code>) states this split explicitly, so the model never "fixes" something it was only asked to investigate.</p>
+<h3 id="step-823-the-investigation-skill">Step 8.2.3: The investigation skill</h3>
+<p>The <code>investigate-calls</code> skill tells the agent how to pull call records, report them, and — when a call did not succeed — correlate the user's provisioning to explain why. Both files that shape this agent are shown below.</p>
+<details class="tip">
+<summary>system_prompt.txt</summary>
+<div class="highlight"><pre><span></span><code>You are a Webex Calling and Control Hub troubleshooting assistant reachable
+from Webex. You help administrators investigate users, licenses, phone
+numbers, devices, locations, and call history, and you can make a small number
+of Control Hub changes when asked. Be concise and accurate.
+
+Working principles:
+- Investigate with the tools. Never guess at IDs, licenses, numbers, or call
+outcomes — always look them up with a tool first, then reason over the
+results the tool returned.
+- Identify who a request is about first. In this organization people are named
+"Pod 0", "Pod 1", and so on, so a subject like "Pod N" is a user — never a
+location, site, or device. Resolve a named person (a "Pod N", a display name,
+or an email) with `list_people`, and a phone number with `list_numbers`. Don't
+ask whether a named subject is a user, location, or device — look it up. Ask
+only when the request names no subject at all.
+- Only check platform status (incidents) when the user reports something wrong
+that is happening now — a call failing right now, or a service currently down
+or slow. `unresolved_incidents` lists only currently-open outages, so it can
+never explain a failure from the past; never blame a current incident for a
+past-dated call. Even for a live problem, cite an incident only when it
+affects the same service involved (for example, Webex Calling) and its
+timeframe overlaps the failure — an unrelated service's incident (for example,
+Contact Center) is not your cause. Plain listing or reporting requests never
+need an incident check.
+- When asked to list or report data, answer it fully in one reply: cover every
+matching record — never resolve just one and then ask whether to do the rest.
+Keep each entry concise (don't dump every field); completeness comes first,
+brevity second.
+- Know what you can and cannot do, and only offer what you can. Your connected
+servers let you look up and report on people, licenses, and workspaces; on
+calling provisioning and routing; and on call history, incidents, audit
+events, and reports — plus the specific changes those servers expose, each
+behind a confirmation card. You reply only as chat text: you cannot place or
+test calls, read trunk/PSTN configuration, or attach, upload, export, or
+download files. Never offer a capability your tools don't provide, and only
+propose a next step you can actually perform.
+- Present readable names, not raw IDs. When a record references another object
+by ID, resolve it to its name before showing the result. For user licenses,
+this means calling `list_licenses` to map the IDs found on the user to their
+human-readable names.
+- Read before you write. Investigation (listing and pulling data) is always
+safe. A management action that changes the organization must be confirmed.
+Call the tool directly; the server presents a confirmation card and handles
+approval. Do not ask the user to confirm in plain text.
+- When a skill matches the reported problem, load it and follow its steps in
+order.
+- Report results plainly, including any errors the tools return.
+- When something failed, keep explanations short and evidence-based; do not
+pad with a generic checklist of possibilities.
+- If a request is genuinely ambiguous, ask one brief clarifying question.
+
+Domain facts (what a CDR outcome means, which analytics need user context)
+come from the connected servers' resources — read them before acting.
+</code></pre></div>
+<details class="note">
+<summary>Why the persona names the 'Pod' convention</summary>
+<p>This query exposed a strong model bias:</p>
+<ul>
+<li><strong>The problem:</strong> The agent assumed "Pod 0" was a location (since "pod" is a networking term) and refused to look up user licenses.</li>
+<li><strong>The failed fix:</strong> A generic rule saying <em>"treat named subjects as users"</em> didn't work. The model kept second-guessing the word "Pod".</li>
+<li><strong>The working fix:</strong> Stating the exact fact in the persona: <em>"in this organization people are named Pod 0"</em>.</li>
+</ul>
+<p><strong>The takeaway:</strong> When a model misunderstands your domain's vocabulary, state the facts explicitly instead of relying on general guidance.</p>
+</details>
+</details>
+<details class="tip">
+<summary>SKILL.md</summary>
+<div class="highlight"><pre><span></span><code>---
+name: investigate-calls
+description: &gt;-
+  Use for any question about a user's or a number's Webex calls — show or
+  summarize call history, list who called whom, review recent calls, or look
+  into a specific call. Reports the call records (CDRs) plainly, and when a
+  call did not succeed it flags that call and explains the likely cause by
+  correlating the user's license, phone number, and device. Also answers
+<span class="gu">  "can this user make calls at all?".</span>
+<span class="gu">---</span>
+
+<span class="gh"># Investigate Calls</span>
+
+You are asked about a user's or a number's calls. Pull the actual call
+records first, report what you find, and only dig into causes if something
+did not succeed — you do not need a failed call to be useful. Most requests
+are simply "show me what happened".
+
+<span class="gu">## Tools you use</span>
+
+<span class="k">-</span><span class="w"> </span><span class="sb">`get_detailed_call_history`</span> (troubleshooting server) — the call records
+  (CDRs) for a recent window.
+<span class="k">-</span><span class="w"> </span><span class="sb">`unresolved_incidents`</span> (troubleshooting server) — is there a live outage?
+<span class="k">-</span><span class="w"> </span><span class="sb">`list_people`</span>, <span class="sb">`list_licenses`</span> (control-hub server) — who the user is and
+  what they are entitled to. Licenses appear on a person as IDs; join them to
+  <span class="sb">`list_licenses`</span> (<span class="sb">`id`</span> -&gt; <span class="sb">`name`</span>) and report the names, not the IDs.
+<span class="k">-</span><span class="w"> </span><span class="sb">`list_numbers`</span>, <span class="sb">`list_devices`</span> (calling server) — how the user is
+  provisioned to call.
+<span class="k">-</span><span class="w"> </span><span class="sb">`get_call_forwarding`</span> (calling server) — a user's call forwarding. If their
+  inbound calls are not arriving, forwarding may be sending them elsewhere.
+<span class="k">-</span><span class="w"> </span><span class="sb">`list_blocked_numbers`</span> (calling server) — the specific numbers a user is
+  blocked from dialing (outgoing-permission digit patterns). If a user cannot
+  reach one particular number while other calls work, that number may have a
+  BLOCK pattern here.
+<span class="k">-</span><span class="w"> </span><span class="sb">`get_calling_permissions`</span> (calling server) — a user's outgoing permissions by
+  call type. If a user cannot reach a whole category of numbers while other
+  calls work, check whether that call type is set to BLOCK here.
+
+<span class="gu">## Steps</span>
+
+<span class="k">1.</span> Identify the subject — a person (resolve with <span class="sb">`list_people`</span>, matching display
+   name or email) or a number (<span class="sb">`list_numbers`</span>); CDRs also carry a <span class="sb">`user`</span> display
+   name you can match directly. If a user has multiple addresses, use all of
+   them to match their calls. If the request names no subject, summarize all
+   calls in the window. The window is either a recent span or a specific past
+   date/time.
+<span class="k">2.</span> Pull the records with <span class="sb">`get_detailed_call_history`</span>. Call this tool **exactly
+   once per user request** — the CDR feed is rate-limited to roughly one request
+   per minute, so a second call fails with <span class="sb">`429 Too Many Requests`</span>. Your very
+   first call to this tool must already carry the right window: resolve the
+   subject and work out the window, then make one call. Never call it bare or
+   with empty parameters to "see recent calls" first — that reflexive pull wastes
+   the single request you get and makes the real query fail.
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>If the user names a specific date or time, that single call MUST pass
+     <span class="sb">`start_time`</span> and <span class="sb">`end_time`</span> (UTC — a date or an ISO 8601 timestamp). Never
+     call with empty parameters when a date was requested: an empty call returns
+     only the last 12 hours ending now and will miss the requested window
+     entirely. The tool fully supports past windows — never claim otherwise.
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>Only if the user just wants recent calls, call with <span class="sb">`hours_back`</span> (max 12)
+     and no start/end.
+
+   Do not fall back to the most recent 12 hours if a past date is requested. The
+   window is capped at a 12-hour span and must end at least ~5 minutes in the
+   past. Report exactly what the feed returns: the calls, an empty window, or the
+   API's error.
+<span class="k">3.</span> Report the calls that match the user or number in question — who called
+   whom, when, how long, and the outcome. If the user asks you to summarize,
+   provide a summary instead of just listing every call. If you could not
+   resolve the named subject, report all calls in the window and say you could
+   not narrow to that subject — do not block.
+<span class="k">4.</span> If every call succeeded, say so plainly and stop; there is nothing to fix.
+<span class="k">5.</span> If one or more calls did not succeed, flag them and find out why:
+<span class="w">   </span><span class="k">-</span><span class="w"> </span><span class="sb">`unresolved_incidents`</span> — only relevant when the failure is happening now.
+     It lists currently-open outages and cannot explain a past-dated call. Cite
+     an incident only if it affects Webex Calling and overlaps the failure's
+     time; ignore incidents for other services (for example, Contact Center).
+<span class="w">   </span><span class="k">-</span><span class="w"> </span><span class="sb">`list_people`</span> / <span class="sb">`list_licenses`</span> — is the user active and licensed to call?
+<span class="w">   </span><span class="k">-</span><span class="w"> </span><span class="sb">`list_numbers`</span> / <span class="sb">`list_devices`</span> — do they own the number and have a
+     registered device?
+<span class="w">   </span><span class="k">-</span><span class="w"> </span><span class="sb">`get_call_forwarding`</span> — if inbound calls are not arriving, is forwarding
+     sending them elsewhere?
+<span class="w">   </span><span class="k">-</span><span class="w"> </span><span class="sb">`list_blocked_numbers`</span> — if the user cannot dial one specific number (for
+     example 1-800-444-4444) while other calls work, check whether that number
+     has a BLOCK digit pattern.
+<span class="w">   </span><span class="k">-</span><span class="w"> </span><span class="sb">`get_calling_permissions`</span> — if the user cannot dial a number, check whether
+     that call or call type (e.g. TOLL_FREE) is set to BLOCK.
+   Correlate: no license or no number explains a user who cannot call; a call
+   rejected for one specific number while others succeed on healthy provisioning
+   points at a blocked digit pattern; a whole call type failing (e.g. all
+   toll-free) points at a blocked call-type permission; a routing <span class="sb">`outcomeReason`</span>
+   on otherwise healthy provisioning points at dial plans or the destination, not
+   the user.
+<span class="k">6.</span> For any non-successful call, quote its <span class="sb">`outcomeReason`</span> — it is the API's
+   own explanation and the single most useful field.
+
+<span class="gu">## Reporting a diagnosis</span>
+
+Keep the whole reply short. Name the most likely cause the evidence supports —
+anchored to the specific <span class="sb">`outcomeReason`</span> and the pattern you saw, not to a
+coincidental incident whose service or timeframe does not match — then stop
+reasoning. Do not infer a cause the <span class="sb">`outcomeReason`</span> does not state, and do not
+assume a fixed cause for a given reason; let the evidence drive it.
+
+End with one short list of one or two concrete next actions: specific tool calls
+you would run or a clear recommendation, never a conditional hedge ("if you have
+a dial plan id", "if possible", "may require permissions"). Give a single such
+list — not separate "what I can check", "what I can do", and "suggested next
+steps" sections. Do not re-list the calls you already showed, do not pad with a
+long list of possibilities, and skip incidental tool errors that are not the
+cause.
+</code></pre></div>
+</details>
+<p>The skill reports first and diagnoses second. Its steps, in short:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Tool</th>
+<th>Owned by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pull the call records</td>
+<td><code>get_detailed_call_history</code></td>
+<td>troubleshooting server</td>
+</tr>
+<tr>
+<td>Report the matching calls</td>
+<td><em>(reasoning over CDR fields)</em></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Rule out an outage (if a call failed)</td>
+<td><code>unresolved_incidents</code></td>
+<td>troubleshooting server</td>
+</tr>
+<tr>
+<td>Is the user active / licensed?</td>
+<td><code>list_people</code>, <code>list_licenses</code></td>
+<td>control-hub server</td>
+</tr>
+<tr>
+<td>Does the user own the number / a device?</td>
+<td><code>list_numbers</code>, <code>list_devices</code></td>
+<td>calling server</td>
+</tr>
+<tr>
+<td>Explain the cause</td>
+<td><em>(reasoning)</em></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>When a call did not succeed, the skill joins its <code>user</code> and <code>callingNumber</code> to <code>list_people</code> and <code>list_numbers</code> to tell a <em>provisioning</em> problem (no license, no number) from a <em>routing</em> problem (healthy provisioning, but a routing <code>outcomeReason</code>).</p>
+<h3 id="step-824-run-the-agent">Step 8.2.4: Run the agent</h3>
+<ol>
+<li>
+<p>Change into the folder and run it:</p>
+<ul>
+<li>cd ../02_webex_calling_agent</li>
+<li>python agentbot.py</li>
+</ul>
+</li>
+<li>
+<p>Confirm all three servers connect — you should see three "MCP ready" lines and both skills discovered:</p>
+<div class="highlight"><pre><span></span><code>webex-control-hub-complex running on stdio - waiting for a client (Ctrl+C to stop).
+MCP ready — 6 tool(s), 0 chars of resource text, 0 prompt(s), elicitation=auto-accept
+webex-calling-complex running on stdio - waiting for a client (Ctrl+C to stop).
+MCP ready — 15 tool(s), 0 chars of resource text, 0 prompt(s), elicitation=auto-accept
+webex-troubleshooting-complex running on stdio - waiting for a client (Ctrl+C to stop).
+MCP ready — 10 tool(s), 0 chars of resource text, 0 prompt(s), elicitation=auto-accept
+Skills: 2 — ['investigate-calls', 'troubleshoot-status']
+Listening as webexone-...@webex.bot via Webex Websockets (messages + cards)... (Ctrl+C to stop)
+WebSocket connected — listening for messages and cards
+</code></pre></div>
+</li>
+<li>
+<p>In the Webex space, start with plain reporting:</p>
+<ul>
+<li>
+<p>What calling licenses does Pod 0 have?</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/use_case_11.png" data-title="Use Cases" data-desc-position="top"><img alt="Use Cases" src="../assets/use_case_11.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="750"></a></p>
+<p>The agent looks the user up, resolves each license ID to its readable name, and answers directly with that user's calling licenses — no incident check, since nothing was reported as broken.</p>
+</li>
+<li>
+<p>Show me the call history for Pod 0</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/use_case_12.png" data-title="Use Cases" data-desc-position="top"><img alt="Use Cases" src="../assets/use_case_12.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="700"></a></p>
+<p>By default this returns the <strong>last 12 hours</strong>, so a quiet window can come back empty. To look further back, name a window and the agent passes it straight through to the CDR feed — for example <em>"Show me the call history on 2026-09-24 between 05:00 and 08:30 UTC"</em>. Webex caps any single request at a 12-hour span and needs the end to be at least ~5 minutes in the past, and CDRs older than the feed's retention are simply gone.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This call is limited to 1 per minute. If you try many consecutives calls the agent will get a 429 Too Many Request error.</p>
+</div>
+</li>
+<li>
+<p>Show me the call history for Pod 0 on 2026-09-24 between 05:00 and 08:30 UTC</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/use_case_13.png" data-title="Use Cases" data-desc-position="top"><img alt="Use Cases" src="../assets/use_case_13.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="800"></a></p>
+</li>
+</ul>
+</li>
+<li>
+<p>Now let the skill drive a deeper look:</p>
+<ul>
+<li>
+<p>Summarize Pod 0's calls on 2026-09-24 between 05:00 and 08:30 UTC and flag anything that did not connect</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/use_case_14.png" data-title="Use Cases" data-desc-position="top"><img alt="Use Cases" src="../assets/use_case_14.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="800"></a></p>
+</li>
+<li>
+<p>Did Pod 0 have any failed calls, and if so why?</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/use_case_15.png" data-title="Use Cases" data-desc-position="top"><img alt="Use Cases" src="../assets/use_case_15.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="800"></a>    </p>
+</li>
+</ul>
+<p>The agent pulls the CDRs and reports them. If a call did not succeed, it flags those and correlates each with the user's license, number, and device to explain the likely cause — quoting the <code>outcomeReason</code> back to you. If every call succeeded, it simply says so.</p>
+<ul>
+<li>
+<p>Investigate possible causes</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/use_case_16.png" data-title="Use Cases" data-desc-position="top"><img alt="Use Cases" src="../assets/use_case_16.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="750"></a> </p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="exercise">Exercise</h3>
+<p>This is the full loop the agent was built for: you make a configuration change that breaks a real call, let the call fail, ask the agent to investigate, and then have the agent put the configuration back. It exercises <strong>both</strong> sides of this section — a gated write and a real investigation — on one live call you place yourself.</p>
+<p>The target is <strong>1-800-444-4444</strong>, a free, always-on toll-free test number that reads your caller ID back to you. You block it for a single user without touching anything else, and the agent offers two ways to do it:</p>
+<ul>
+<li><strong>Block the exact number</strong> (<code>block_number</code> / <code>unblock_number</code>) — adds a per-user <strong>outgoing-permission digit pattern</strong> for that exact number with action <code>BLOCK</code>, so only calls to 1-800-444-4444 fail while every other call keeps working.</li>
+<li><strong>Block the whole toll-free call type</strong> (<code>block_toll_free</code> / <code>unblock_toll_free</code>) — sets the user's <strong>outgoing-permission call type</strong> <code>TOLL_FREE</code> to <code>BLOCK</code>, so every toll-free call fails while other calls keep working.</li>
+</ul>
+<p>Either mechanism breaks the call to 1-800-444-4444; the steps below use the exact-number block, but you can swap in the toll-free call-type block the same way. Use your own Webex user so you can place the call and hear the result yourself.</p>
+<ol>
+<li>
+<p>From your Webex app or desk phone, dial <strong>1-800-444-4444</strong>. It should connect and read your number back:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/use_case_17.png" data-title="Use Cases" data-desc-position="top"><img alt="Use Cases" src="../assets/use_case_17.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="500"></a> </p>
+</li>
+<li>
+<p>Ask the agent to block toll-free calling for your user:</p>
+<ul>
+<li>
+<p>Block toll-free (1-800) calls for Pod 0</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/use_case_18.png" data-title="Use Cases" data-desc-position="top"><img alt="Use Cases" src="../assets/use_case_18.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a>
+<a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/use_case_19.png" data-title="Use Cases" data-desc-position="top"><img alt="Use Cases" src="../assets/use_case_19.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="750"></a> </p>
+</li>
+</ul>
+</li>
+<li>
+<p>Dial <strong>1-800-444-4444</strong> again. This time it is rejected. </p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Wait about five minutes so the failed call lands in the CDR feed (which reports calls a few minutes in the past).</p>
+</div>
+</li>
+<li>
+<p>Ask the agent, as an admin would:</p>
+<ul>
+<li>
+<p>Why did Pod 0 call to 1-800-444-4444 fail?</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/use_case_20.png" data-title="Use Cases" data-desc-position="top"><img alt="Use Cases" src="../assets/use_case_20.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="750"></a></p>
+</li>
+</ul>
+<p>The <code>investigate-calls</code> skill pulls your recent CDRs, flags the failed toll-free call and quotes its <code>outcomeReason</code>, confirms your license, number, and device are healthy, then reads <code>get_outgoing_permission</code> and finds <code>TOLL_FREE</code> set to <code>BLOCK</code> — the cause. It reports that in a short diagnosis and recommends allowing toll-free again.</p>
+</li>
+<li>
+<p>Have the agent undo the change:</p>
+<ul>
+<li>
+<p>Allow toll-free calls for Pod 0</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/use_case_21.png" data-title="Use Cases" data-desc-position="top"><img alt="Use Cases" src="../assets/use_case_21.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="450"></a>
+<a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/use_case_22.png" data-title="Use Cases" data-desc-position="top"><img alt="Use Cases" src="../assets/use_case_22.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="700"></a></p>
+</li>
+</ul>
+</li>
+<li>
+<p>Dial <strong>1-800-444-4444</strong> once more. It connects again, and the tenant is exactly as you found it.</p>
+</li>
+</ol>
+<hr>
+<h2 id="section-3-webex-meeting-quality-agent">Section 3 — Webex Meeting Quality Agent</h2>
+<p>The first two agents answered <em>"is it configured correctly?"</em> This third one answers a different kind of question: <em>"how did that meeting look and sound?"</em> An administrator or host names a meeting, and the agent pulls its <strong>quality analytics</strong> and reports — per participant — how the audio and video held up. When the numbers show trouble, it explains what degraded and who was affected.</p>
+<h3 id="scenario_1">Scenario</h3>
+<p>You usually just want to see how a meeting went — <em>"pull the quality for yesterday's all-hands."</em> Webex recorded per-participant quality metrics while it happened, so the agent finds the meeting and reports those metrics. If someone does complain it was <em>"choppy for half the room,"</em> the same data tells you whether one person's network was bad or the whole meeting degraded — with no need to reproduce it.</p>
+<h3 id="architecture_2">Architecture</h3>
+<pre class="mermaid"><code>flowchart LR
+    User[Webex User] &lt;--&gt;|Messages| Bot[03_webex_meeting_agent]
+    Bot &lt;--&gt;|Prompts &amp; Responses| LLM[LLM]
+    LLM &lt;--&gt;|Tool Calls| Loop[agentic loop]
+    Loop &lt;--&gt;|stdio| TR["mcp_servers/&lt;br/&gt;troubleshooting_mcp"]
+    TR &lt;--&gt;|REST + Analytics| API[Webex Meetings + Analytics APIs]</code></pre>
+<h3 id="step-831-one-server-two-tools">Step 8.3.1: One server, two tools</h3>
+<p>This agent connects to a single MCP server — a copy of the general <code>troubleshooting_mcp.py</code>. Of everything that server exposes, the skill uses two tools:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list_ended_meetings</code></td>
+<td>Meetings that already ended, each with an <code>id</code>, title, and start/end; scope to one person with <code>host_email</code></td>
+</tr>
+<tr>
+<td><code>get_meeting_qualities</code></td>
+<td>Per-participant audio/video quality analytics for one meeting id</td>
+</tr>
+<tr>
+<td><code>list_meeting_participants</code></td>
+<td>Who attended an ended meeting, with each participant's join/leave times and audio device</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">The server is general; the agent is specific</p>
+<p>You are not building a meeting-only server. You reuse the same troubleshooting server as Section 2 and let the <strong>persona</strong> and <strong>skill</strong> narrow the model's attention to meetings. That is the cheapest way to make a focused agent out of a broad toolbox.</p>
+</div>
+<h3 id="step-832-report-then-analyze">Step 8.3.2: Report, then analyze</h3>
+<p>The <code>meeting-quality</code> skill (<code>skills/meeting-quality/SKILL.md</code>) is the whole point of this agent: it pulls a meeting's per-participant quality and reports it, then — when the metrics show trouble — separates one participant's bad network from a meeting-wide fault. Both files that shape this agent are shown below.</p>
+<details class="tip">
+<summary>system_prompt.txt</summary>
+<div class="highlight"><pre><span></span><code>You are a Webex Meeting quality assistant reachable from Webex. You help
+administrators and hosts review and report meeting quality — pulling a
+meeting's per-participant audio and video analytics, reporting how it looked
+and sounded, and, when media was poor, explaining what degraded and to whom.
+Be concise and accurate.
+
+Working principles:
+- Investigate with the tools. Never guess at meeting IDs, participants, or
+  quality numbers — list the meetings first, then pull the quality data for
+  the specific meeting, then reason over what the tool returned.
+- Match the depth to the request. If the user only asks to list or find
+  meetings, just list them and stop — do not pull quality data unasked. Only
+  when they ask how a meeting went (quality, audio/video, who was affected)
+  should you pull the quality data.
+- Be brief. Lead with a one- or two-line verdict — healthy, or who had trouble.
+  Only quote metrics for a participant whose media was actually poor, and only
+  the two or three numbers that prove it. Do not print a full metrics table for
+  participants who were fine.
+- Read the raw numbers correctly. A value of -1 means "not measured", never
+  zero — never report it as "no video", "no frames", or an outage. A metric
+  belongs only to the participant whose record it came from; never carry one
+  person's latency or jitter onto another. Judge quality mainly on packet loss
+  and latency/jitter; low frame rate on a short or low-motion call is normal. No
+  packet loss, sub-100 ms latency and single-digit jitter is healthy.
+- Identify the pattern. If one participant is bad while everyone else is fine,
+  it is likely that participant's network or device. If everyone degrades at
+  the same time, it points at the meeting or a wider issue.
+- This agent is read-only. You review and explain quality; you do not change
+  any configuration.
+- Report results plainly, including any errors the tools return. A 403 usually
+  means the token lacks the scope or user context the analytics API requires;
+  an empty result may just mean the time window held no ended meetings.
+- If the request is ambiguous — which meeting, which day, whose meetings — ask
+  one brief clarifying question.
+
+When the meeting-quality skill matches the request, load it and follow its
+steps in order.
+</code></pre></div>
+</details>
+<details class="tip">
+<summary>SKILL.md</summary>
+<div class="highlight"><pre><span></span><code>---
+name: meeting-quality
+description: &gt;-
+  Use for any question about a Webex meeting's audio/video quality — show or
+  review a meeting's quality, report how a meeting looked and sounded, check
+  which recent meetings had issues, or explain why a meeting was choppy. Pulls
+  the per-participant quality analytics and reports them, and when media was
+  poor it flags the affected participants and explains whether it was one
+<span class="gu">  person's network or a meeting-wide problem.</span>
+<span class="gu">---</span>
+
+<span class="gh"># Meeting Quality</span>
+
+You are asked about a meeting's quality. Find the meeting, pull its
+per-participant quality data, and report it. You do not need a complaint to be
+useful — most requests are simply "show me how this meeting went". Add the
+analysis only when the numbers show a problem.
+
+<span class="gu">## Tools you use</span>
+
+<span class="k">-</span><span class="w"> </span><span class="sb">`list_ended_meetings`</span> (troubleshooting server) — meetings that already
+  ended, each with an <span class="sb">`id`</span>, title, and start/end. When the request names a
+  specific user, pass their email as <span class="sb">`host_email`</span> to scope the list to that
+  person's meetings rather than the whole org.
+<span class="k">-</span><span class="w"> </span><span class="sb">`get_meeting_qualities`</span> (troubleshooting server) — per-participant
+  audio/video metrics for one meeting id.
+<span class="k">-</span><span class="w"> </span><span class="sb">`list_meeting_participants`</span> (troubleshooting server) — who attended an ended
+  meeting, with each participant's join/leave times and audio device. Use the
+  same <span class="sb">`meeting_id`</span> as <span class="sb">`get_meeting_qualities`</span>.
+
+<span class="gu">## Steps</span>
+
+<span class="k">1.</span> Clarify scope only if it is missing: which meeting (title/host) or which
+   window to review, and whether the whole meeting or one participant.
+<span class="k">2.</span> Call <span class="sb">`list_ended_meetings`</span> for the window and pick the meeting(s) that
+   match. When the request is about a specific user, pass their email as
+   <span class="sb">`host_email`</span> so you only pull that person's meetings, not the whole org.
+   Note each <span class="sb">`id`</span>. **If the user only asked to list or find meetings, stop here
+   and report the list — do not pull quality data unasked.**
+<span class="k">3.</span> Only when the request is about how a meeting went (quality, audio/video, who
+   was affected): for each meeting, call <span class="sb">`get_meeting_qualities`</span> with
+   <span class="sb">`meeting_id`</span> set to the <span class="sb">`id`</span> from step 2.
+<span class="k">4.</span> Lead with a one- or two-line verdict for the meeting: healthy, or which
+   participant(s) had trouble on audio or video. Keep it short — do not print a
+   metrics table for everyone.
+<span class="k">5.</span> If everyone's media was fine, say so in a sentence and stop; any complaint is
+   likely about content or scheduling, not the network. Do not list per-metric
+   numbers for healthy participants.
+<span class="k">6.</span> Only for a participant whose media was actually poor: name them and quote the
+   two or three numbers that prove it (the high jitter, the frame-rate collapse,
+   the loss), then read the pattern:
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>One participant bad, the rest fine → that participant's network or device.
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>Everyone degrades together, especially at the same time → a meeting-wide
+     or network-path problem, not an individual.
+<span class="k">7.</span> When the request is about <span class="ge">*who*</span> attended, or you need to tie a quality dip to
+   a specific person, call <span class="sb">`list_meeting_participants`</span> with the same <span class="sb">`meeting_id`</span>
+   and line the join/leave timeline up against the metrics.
+
+<span class="gu">## What "poor" means</span>
+
+For each participant and media type (audio, video), treat it as poor when, for
+a sustained period: packet loss is high (well above a fraction of a percent),
+latency / round-trip time is high enough to disrupt conversation (hundreds of
+ms), jitter is high (the usual cause of choppy audio), or video
+resolution/bitrate collapses. Quote the numbers you found — they are the
+evidence.
+
+Judge "poor" mainly on <span class="gs">**packet loss and latency/jitter**</span>. A low video frame
+rate on a short or low-motion call (a 1:1, a static screen) is normal — do not
+flag it as a problem on its own.
+
+<span class="gu">### Reading the raw values — do this before you judge anything</span>
+
+<span class="k">-</span><span class="w"> </span><span class="gs">**`-1` means "not measured", not zero.**</span> It is a sentinel for a missing
+  sample. Never read <span class="sb">`-1`</span> as "no video", "no frames", or "no audio", and never
+  report it as a failure. If a stream is all <span class="sb">`-1`</span>, that metric simply was not
+  captured for that participant — say nothing was recorded, do not infer an
+  outage. The same goes for empty streams.
+<span class="k">-</span><span class="w"> </span><span class="gs">**A participant can send fine while inbound is unmeasured.**</span> If <span class="sb">`videoIn`</span> is
+  all <span class="sb">`-1`</span> but <span class="sb">`videoOut`</span> shows real frame rates and bitrate, that person's
+  video was working — only the inbound measurement is missing.
+<span class="k">-</span><span class="w"> </span><span class="gs">**Attribute every number to the right person.**</span> A latency or jitter value
+  belongs only to the participant whose record it came from. Never carry one
+  participant's number over to another.
+<span class="k">-</span><span class="w"> </span><span class="gs">**Values are usually `[start, end]` pairs.**</span> A bitrate or frame rate dropping
+  to 0/`-1` at the very end often just means that person left before the meeting
+  ended — not a failure.
+<span class="k">-</span><span class="w"> </span><span class="gs">**No packet loss + sub-100 ms latency + single-digit jitter = healthy**</span>, even
+  if frame rates are low or many fields are <span class="sb">`-1`</span>.
+
+<span class="sb">`list_ended_meetings`</span> gives the <span class="sb">`id`</span>; pass it as <span class="sb">`meeting_id`</span> to
+<span class="sb">`get_meeting_qualities`</span>, which returns the per-participant items.
+
+<span class="gu">## Edge cases</span>
+
+<span class="k">-</span><span class="w"> </span><span class="gs">**No ended meetings in the window**</span> — offer to widen <span class="sb">`days_back`</span>; do not
+  report "healthy".
+<span class="k">-</span><span class="w"> </span><span class="gs">**Meeting found but no quality data**</span> — very short meetings, or data not yet
+  processed. Say so rather than inventing metrics.
+<span class="k">-</span><span class="w"> </span><span class="gs">**403 from the qualities API**</span> — the token lacks the scope or user context
+  the analytics API requires; report it as a permission problem.
+
+<span class="gu">## Guardrails</span>
+
+<span class="k">-</span><span class="w"> </span>Read-only — this agent reviews and reports; it never changes config.
+<span class="k">-</span><span class="w"> </span>Only use a <span class="sb">`meeting_id`</span> returned by <span class="sb">`list_ended_meetings`</span>; never guess one.
+<span class="k">-</span><span class="w"> </span>Every "poor" flag must cite the metric and value from the tool result;
+  never invent participants or numbers.
+<span class="k">-</span><span class="w"> </span><span class="sb">`-1`</span> is "not measured", never a measurement. Do not turn it into "no video",
+  "no frames", or an outage, and do not score it as poor.
+</code></pre></div>
+</details>
+<p>The skill's steps, in short:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Tool</th>
+<th>Owned by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Find the meeting(s), optionally scoped to one host</td>
+<td><code>list_ended_meetings</code></td>
+<td>troubleshooting server</td>
+</tr>
+<tr>
+<td>Pull the quality data</td>
+<td><code>get_meeting_qualities</code></td>
+<td>troubleshooting server</td>
+</tr>
+<tr>
+<td>See who attended and when</td>
+<td><code>list_meeting_participants</code></td>
+<td>troubleshooting server</td>
+</tr>
+<tr>
+<td>Report quality per participant</td>
+<td><em>(reasoning over metrics)</em></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Flag poor audio/video (if any)</td>
+<td><em>(reasoning)</em></td>
+<td>—</td>
+</tr>
+<tr>
+<td>One bad participant vs. meeting-wide</td>
+<td><em>(reasoning)</em></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>The skill defines what "poor" means (packet loss, latency, jitter, collapsed video) and insists the agent quote the actual numbers as evidence.</p>
+<h3 id="step-833-run-the-agent">Step 8.3.3: Run the agent</h3>
+<ol>
+<li>
+<p>Change into the folder and run it:</p>
+<ul>
+<li>cd ../03_webex_meeting_agent</li>
+<li>python agentbot.py</li>
+</ul>
+</li>
+<li>
+<p>Confirm the server connects and the skill is discovered:</p>
+<div class="highlight"><pre><span></span><code>webex-troubleshooting-complex running on stdio - waiting for a client (Ctrl+C to stop).
+MCP ready — 11 tool(s), 0 chars of resource text, 0 prompt(s), elicitation=auto-accept
+Skills: 1 — ['meeting-quality']
+Listening as webexone-...@webex.bot via Webex Websockets (messages + cards)... (Ctrl+C to stop)
+WebSocket connected — listening for messages and cards
+</code></pre></div>
+</li>
+<li>
+<p>In the Webex space, start with plain reporting:</p>
+<ul>
+<li>
+<p>List the meetings that ended in the last 30 days</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/use_case_26.png" data-title="Use Cases" data-desc-position="top"><img alt="Use Cases" src="../assets/use_case_26.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="750"></a></p>
+</li>
+<li>
+<p>What meetings did user1@webexone-ai-assistant.wbx.ai host in the last 30 days?</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/use_case_23.png" data-title="Use Cases" data-desc-position="top"><img alt="Use Cases" src="../assets/use_case_23.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="750"></a></p>
+</li>
+</ul>
+</li>
+<li>
+<p>Review how that meeting went:</p>
+<ul>
+<li>
+<p>How did "1:1 User1/User2" look and sound — any audio or video problems, and who was affected?</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/use_case_24.png" data-title="Use Cases" data-desc-position="top"><img alt="Use Cases" src="../assets/use_case_24.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="800"></a></p>
+</li>
+</ul>
+<p>The agent pulls <code>get_meeting_qualities</code> and reports the per-participant audio
+and video with the actual numbers. If a participant's media was poor, it
+flags them, decides whether it is one person or the whole meeting, and leads
+with the worst-affected. If everyone was fine, it says so.</p>
+</li>
+<li>
+<p>Tie the numbers to the room — who was there and when:</p>
+<ul>
+<li>
+<p>Who attended "1:1 User1/User2", and when did each person join and leave?</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/use_case_25.png" data-title="Use Cases" data-desc-position="top"><img alt="Use Cases" src="../assets/use_case_25.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="700"></a></p>
+</li>
+</ul>
+<p>Here the agent calls <code>list_meeting_participants</code> for the join/leave timeline
+and lines it up against the quality it just read — so a dip at a given minute
+can be pinned to who was actually in the meeting then. Everything stays
+read-only: no confirmation card, nothing changed.</p>
+</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../lab7_skills/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Lab 7 - Skills in AI Assistant">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Lab 7 - Skills in AI Assistant
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../conclusion/" class="md-footer__link md-footer__link--next" aria-label="Next: Conclusion">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Conclusion
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2026 Cisco
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.instant", "navigation.top", "navigation.footer", "search.suggest", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../template_assets/js/newLoad.js"></script>
+      
+        <script src="../template_assets/js/setInfo.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": false, "openEffect": "fade", "closeEffect": "fade", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

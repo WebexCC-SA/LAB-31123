@@ -1,0 +1,1470 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="LAB-31123: Building an AI Assistant to Manage and Troubleshoot Your Organization">
+      
+      
+        <meta name="author" content="Diego Manuel Jimenez Moreno">
+      
+      
+      
+        <link rel="prev" href="../lab6_mcp/">
+      
+      
+        <link rel="next" href="../lab8_use-cases/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../template_assets/webex75.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Lab 7 - Skills in AI Assistant - LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-7-skills-in-the-ai-assistant" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" class="md-header__button md-logo" aria-label="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" data-md-component="logo">
+      
+  <img src="../template_assets/webexLogo91.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 7 - Skills in AI Assistant
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../overview/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Lab
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" class="md-nav__button md-logo" aria-label="LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant" data-md-component="logo">
+      
+  <img src="../template_assets/webexLogo91.png" alt="logo">
+
+    </a>
+    LAB-31123: Troubleshoot and Manage Your Organization with an AI Assistant
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lab
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab1_webex-mcp-in-ide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 1 - Webex MCP Servers in Your IDE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab2_agent-skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2 - Agent Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab3_webex-apis-troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 3 - Webex APIs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab4_custom-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 4 - Build MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab5_bot-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 5 - Integrate an AI Assistant with a Webex Bot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab6_mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 6 - MCP Servers in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 7 - Skills in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 7 - Skills in AI Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-request-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Request Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-71-the-skillloader-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7.1: The SkillLoader class
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-72-discover-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7.2: Discover skills
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-73-progressive-disclosure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7.3: Progressive disclosure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-74-compare-the-same-question-with-and-without-the-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7.4: Compare the same question with and without the skill
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-75-run-the-full-bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7.5: Run the full bot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise-add-a-new-skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise: Add a new skill
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercise: Add a new skill">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-add-troubleshoot-address-books" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Add troubleshoot-address-books
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-confirm-the-loader-sees-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Confirm the loader sees it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-ask-the-bot-to-use-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Ask the bot to use it
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab8_use-cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 8 - Use Cases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conclusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-7-skills-in-the-ai-assistant">Lab 7 - Skills in the AI Assistant</h1>
+<p>Before, when you added the <code>meeting-review</code> skill to <strong>VS Code Chat (Agent mode)</strong>, Agent was looking for it. VS Code, and any other host that follows the Agent Skills standard, finds <code>SKILL.md</code> files on its own. At startup it reads only each skill's name and description. When your request matches that description, the host loads the rest of the file into the conversation.</p>
+<p>A bot you write in Python does not do that. The model only sees the system prompt and the tools you send on that request. A <code>SKILL.md</code> file in the repository stays invisible until your code offers it. This section builds that piece: a <strong>skill loader</strong> that reads the same <code>SKILL.md</code> file, a one-line summary you place in the system prompt, and a tool the model calls when it needs the full instructions.</p>
+<p>Same skill file. Same format. The host is what changed.</p>
+<h2 id="architecture">Architecture</h2>
+<pre class="mermaid"><code>flowchart LR
+    User[Webex User] &lt;--&gt;|Messages| Bot[Webex Bot]
+    Bot &lt;--&gt;|Prompts and responses| Agent[LLM]
+    Agent &lt;--&gt;|Tool calls| MCP[MCP Client]
+    MCP &lt;--&gt;|MCP protocol| Servers[Webex MCP Servers]
+    Servers &lt;--&gt;|REST| API[Webex APIs]
+    Agent &lt;--&gt;|read_skill_runbook| Loader[SkillLoader]
+    Loader --&gt; File["SKILL.md"]</code></pre>
+<h3 id="the-request-flow">The Request Flow</h3>
+<p>Here is how a single question travels through that architecture:</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant U as Webex User
+    participant B as Webex Bot
+    participant A as LLM
+    participant L as SkillLoader
+    participant C as MCP Client
+
+    U-&gt;&gt;B: Help me prepare for upcoming meetings
+    B-&gt;&gt;A: Message plus skill summaries
+    A-&gt;&gt;L: read_skill_runbook meeting-review
+    L--&gt;&gt;A: Full runbook
+    A-&gt;&gt;C: List meetings, then check agenda, invitees, overlaps
+    C--&gt;&gt;A: Tool results
+    A-&gt;&gt;B: What passed, what is missing, what to do next
+    B-&gt;&gt;U: Reply in the space</code></pre>
+<h2 id="step-71-the-skillloader-class">Step 7.1: The SkillLoader class</h2>
+<p>Every script in this folder imports the same class. Read it before you run anything.</p>
+<ol>
+<li>
+<p>In VS Code, make sure your terminal is in the correct folder:</p>
+<ul>
+<li>cd ../07_skills_bot</li>
+</ul>
+</li>
+<li>
+<p>Navigate to <code>07_skills_bot/skill_loader.py</code> and review the code:</p>
+<details class="tip">
+<summary>Python Code</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Skill</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">instructions</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instructions</span> <span class="o">=</span> <span class="n">instructions</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SkillLoader</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skills_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skills_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">skills_dir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skills</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_skills</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_skills</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">skills_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Warning: Skills directory </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">skills_dir</span><span class="si">}</span><span class="s2"> not found."</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">for</span> <span class="n">skill_path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">skills_dir</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span><span class="s2">"SKILL.md"</span><span class="p">):</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">skill_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
+
+            <span class="c1"># Split front matter and body</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"---"</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">frontmatter_str</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">body</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">metadata</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">frontmatter_str</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error parsing YAML in </span><span class="si">{</span><span class="n">skill_path</span><span class="si">}</span><span class="s2">: front matter is not a mapping."</span><span class="p">)</span>
+                        <span class="k">continue</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="n">skill_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                    <span class="n">description</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"description"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">description</span><span class="p">)</span>
+                    <span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">skills</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Skill</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error parsing YAML in </span><span class="si">{</span><span class="n">skill_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_skill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Skill</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">skills</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_skills_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">skills</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">"No skills loaded."</span>
+
+        <span class="n">summary</span> <span class="o">=</span> <span class="s2">"Available Skills (Runbooks):</span><span class="se">\n</span><span class="s2">"</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">skill</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">skills</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">summary</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"- </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">skill</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span>
+        <span class="k">return</span> <span class="n">summary</span>
+</code></pre></div>
+</details>
+</li>
+</ol>
+<p>The class does three things:</p>
+<ol>
+<li><strong>Discover.</strong> It scans a directory for <code>SKILL.md</code> files and reads the YAML front matter.</li>
+<li><strong>Summarize.</strong> <code>get_all_skills_summary()</code> returns one line per skill. That line is what goes into the system prompt at startup.</li>
+<li><strong>Activate.</strong> <code>get_skill(name).instructions</code> returns the full body when the model asks for that skill.</li>
+</ol>
+<p>One class, one parser, shared by every script below. If the skills directory is missing, the loader warns you and continues with an empty catalog. If a file's front matter is not valid YAML, that file is skipped and the others still load.</p>
+<h2 id="step-72-discover-skills">Step 7.2: Discover skills</h2>
+<p>To see the Skill Loader in action, we will first run a script that scans the directory and prints the discovered skills. This simulates the startup phase where the system prompt is populated with skill summaries.</p>
+<ol>
+<li>
+<p>Run the script:</p>
+<ul>
+<li>python 01_list_skills.py</li>
+</ul>
+</li>
+<li>
+<p>You should see that there is one skill already, the one we created previously:</p>
+<div class="highlight"><pre><span></span><code>meeting-review: Use when the user asks to prepare for, review readiness of, check what is missing from, or fix readiness gaps in their meetings. Triggers on phrases like 'help me prepare', 'am I ready for', 'checkmy schedule for gaps', or 'add an agenda to my meetings'. This skill evaluates agendas, invitees, and conflicts, and can update missing meeting details. Do NOT use it for plain requests to list meetings.
+</code></pre></div>
+</li>
+</ol>
+<p>The script creates a <code>SkillLoader</code>, points it at <code>skills/</code>, and prints the <code>name</code> and <code>description</code> of every skill it finds. You should see <code>meeting-review</code>.</p>
+<p>This is the <strong>Discovery</strong> stage: the only thing the agent knows about each skill at startup.</p>
+<h2 id="step-73-progressive-disclosure">Step 7.3: Progressive disclosure</h2>
+<p>Skills can be quite long, and loading all of them into the system prompt would consume too many tokens. The progressive disclosure pattern solves this by only loading the full instructions when the model requests them. Let's see the size difference between the discovery and activation stages.</p>
+<ol>
+<li>
+<p>Run the script:</p>
+<ul>
+<li>python 02_skill_size.py</li>
+</ul>
+</li>
+<li>
+<p>You will see the following in the terminal:</p>
+<div class="highlight"><pre><span></span><code>Skills discovered: 1
+Discovery, one skill (meeting-review description): ~100 tokens
+Activation, one skill (meeting-review body):       ~744 tokens
+The body is 7x the description.
+Every description together: ~112 tokens
+Every full body together:   ~744 tokens
+</code></pre></div>
+</li>
+</ol>
+<p>The script prints how big the description is, how big the full body is, and the same comparison for every skill in the folder:</p>
+<p>Startup should send the descriptions. The body is loaded only when the agent decides that skill is relevant. Ten skills the size of <code>meeting-review</code> would be about 1,000 tokens of descriptions, or about 7,400 tokens if every body were loaded up front.</p>
+<h2 id="step-74-compare-the-same-question-with-and-without-the-skill">Step 7.4: Compare the same question with and without the skill</h2>
+<p>Now let's see how the skill actually changes the LLM's behavior. We will ask the exact same question twice: once with the standard system prompt, and once with the <code>meeting-review</code> runbook injected.</p>
+<ol>
+<li>
+<p>Run the script:</p>
+<ul>
+<li>python 03_llm.py</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For this script, logging has been disabled for clean output.
+If you want to see the detailed logs of the tool calls, you can run the script with the <code>-v</code> flag: <code>python 03_llm.py -v</code>.</p>
+</div>
+</li>
+<li>
+<p>You will see the following:</p>
+<div class="highlight"><pre><span></span><code>WITHOUT skill
+-------------
+Here’s what I found for your next Webex meeting:
+
+- Budget Review
+- When: 2026-09-27, 16:00–17:00 UTC
+- Link: https://webexone-ai-assistant-sbx.webex.com/webexone-ai-assistant-sbx/j.php?MTID=mdf108c380b230a7999254e7ab52b0f2e
+- Host: Pod 0
+- Meeting type: scheduledMeeting
+- Invitees: not set (empty)
+
+Quick prep plan (pick any you want me to do):
+- Draft a concise agenda (objectives, topics, timeboxes)
+- Attach or share pre-read docs (budget spreadsheet, prior period reports)
+- Confirm attendees and assign roles (chair, note-taker, timekeeper, co-host)
+- Add calendar reminders (e.g., 24 hours and 30 minutes prior)
+- Prepare materials for share-out and screen-sharing order
+- Run through tech check (join link works, audio/video, screen sharing)
+
+Would you like me to:
+- Create and share an agenda?
+- Invite attendees? If yes, please provide emails.
+- Add pre-read documents?
+- Set reminders or add this to your calendar?
+
+WITH skill
+----------
+### Meeting readiness
+
+&gt; **Budget Review** · Sunday 18:00–19:00
+&gt; Agenda · missing
+&gt; Invitees · none
+&gt; Conflict · none
+
+**To do**
+1. Approve the proposed agenda draft for Budget Review (Proposed agenda: 1) Budget status and variances, 2) Decisions needed, 3) Action items and owners, 4) Next steps and deadlines). If approved, I will update the meeting agenda in Webex.
+</code></pre></div>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Without the skill</th>
+<th>With the skill</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Meetings</td>
+<td>listed</td>
+<td>listed</td>
+</tr>
+<tr>
+<td>Agenda, invitees, and conflicts</td>
+<td>not checked</td>
+<td>checked</td>
+</tr>
+<tr>
+<td>Checks that passed</td>
+<td>hidden</td>
+<td>reported</td>
+</tr>
+<tr>
+<td>What you can do next</td>
+<td>nothing</td>
+<td>a to-do list</td>
+</tr>
+</tbody>
+</table>
+<p>The skill puts the runbook into the system prompt with <code>SkillLoader.get_skill("meeting-review").instructions</code>.</p>
+<p>It is the same class you used in the first two scripts. No new tool is involved. The runbook is what changes the answer.</p>
+<h2 id="step-75-run-the-full-bot">Step 7.5: Run the full bot</h2>
+<p>Finally, let's put it all together. We will run the Webex bot with the Skill Loader and the MCP client connected. This allows you to interact with the assistant in Webex and see it dynamically load and execute the skill.</p>
+<ol>
+<li>
+<p>Run the bot:</p>
+<ul>
+<li>python 04_bot.py</li>
+</ul>
+</li>
+</ol>
+<p>This is the bot we built in the previous section, connected to the messaging, meeting, and custom MCP servers, with <code>SkillLoader</code> wired in. On startup it does three things:</p>
+<ol>
+<li>Discovers the skills.</li>
+<li>Injects the summaries into the system prompt with <code>get_all_skills_summary()</code>.</li>
+<li>Gives the model a <code>read_skill_runbook</code> tool that returns <code>get_skill(name).instructions</code>.</li>
+</ol>
+<p>The model decides when to load a skill. That is the same progressive disclosure pattern as in Lab 2.</p>
+<ol>
+<li>
+<p>In Webex, ask:</p>
+<ul>
+<li>Help me prepare for the upcoming Webex meetings for podX@webexone-ai-assistant.wbx.ai. Check agendas, invitees, and overlaps.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Replace podX for your user.</p>
+</div>
+</li>
+<li>
+<p>The bot will reply with the information:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/skill_21.png" data-title="Skill" data-desc-position="top"><img alt="Skill" src="../assets/skill_21.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="750"></a></p>
+</li>
+<li>
+<p>And the following in the terminal:</p>
+<div class="highlight"><pre><span></span><code>2026-09-26 17:44:27,954 INFO Loaded 1 skill(s): meeting-review
+2026-09-26 17:44:30,383 INFO Listening as webexone-diejimen1@webex.bot via WebSocket... (Ctrl+C to stop)
+2026-09-26 17:45:35,935 INFO Received from pod0@webexone-ai-assistant.wbx.ai: Help me prepare for the upcoming Webex meetings for pod0@webexone-ai-assistant.wbx.ai. Check agendas, invitees, and overlaps.
+...
+2026-09-26 17:45:41,596 INFO read-books running on stdio - waiting for a client (Ctrl+C to stop).
+2026-09-26 17:45:41,661 INFO Offering 11 tool(s) to gpt-5-nano
+2026-09-26 17:45:48,473 INFO LLM asked for read_skill_runbook {'skill_name': 'meeting-review'}
+2026-09-26 17:45:48,473 INFO LLM reading skill: meeting-review
+...
+2026-09-26 17:46:18,531 INFO Sent to pod0@webexone-ai-assistant.wbx.ai: ### Meeting readiness
+
+&gt; **Budget Review** · Sunday 18:00–19:00
+&gt; Agenda · missing
+&gt; Invitees · none
+&gt; Conflict · none
+
+**To do**
+1. Provide agenda topics to include in Budget Review so I can add them to the meeting after your approval.
+</code></pre></div>
+</li>
+</ol>
+<p>The model sees <code>meeting-review</code> in the summary, calls <code>read_skill_runbook</code>, reads the runbook, and follows it.</p>
+<h2 id="exercise-add-a-new-skill">Exercise: Add a new skill</h2>
+<p>Adding a skill does not change <code>skill_loader.py</code> or the bot. You add a folder whose name matches the <code>name</code> in the front matter, with a single <code>SKILL.md</code> inside.</p>
+<h3 id="1-add-troubleshoot-address-books">1. Add troubleshoot-address-books</h3>
+<ol>
+<li>
+<p>Create <code>07_skills_bot/skills/troubleshoot-address-books/SKILL.md</code> and paste the skill:</p>
+<details class="tip">
+<summary>SKILL.md</summary>
+<div class="highlight"><pre><span></span><code>---
+name: troubleshoot-address-books
+description: &gt;-
+  Use when a contact-center agent reports a problem with address books
+  or contacts on the Webex Contact Center desktop — contacts missing,
+  wrong address book showing, empty contact list, or address book not
+  assigned. Investigates the agent's desktop profile, its address book
+  assignment, and the book's entries. Can fix a misassigned or missing
+  address book by updating the desktop profile. Combines a local
+  platform-status check with MCP tools from the address-book server (06)
+  and the desktop-profile server (07).
+compatibility: &gt;-
+  Requires MCP servers 06_manage_address_books and
+  07_verify_desktop_profiles, plus local tool check_webex_status.
+metadata:
+  author: webex-mcp-lab
+  version: "3.0"
+<span class="gu">  lab-chapter: "7"</span>
+<span class="gu">---</span>
+
+<span class="gh"># Troubleshoot Address Books</span>
+
+<span class="gu">## Why a skill, not an MCP prompt?</span>
+
+This workflow spans three tool sources — a local tool, MCP server 06,
+and MCP server 07. An MCP server prompt can only reference its own tools.
+A skill lives client-side and orchestrates tools from any connected server,
+plus local tools and pure reasoning steps that no single server provides.
+
+<span class="gu">## How it works</span>
+
+<span class="k">1.</span> <span class="gs">**Check platform status**</span> — call <span class="sb">`check_webex_status`</span> (local tool) to
+   rule out an outage before digging into config.
+<span class="k">2.</span> <span class="gs">**Find the agent**</span> — call <span class="sb">`list_agents`</span> (server 07) and grab their
+   <span class="sb">`agentProfileId`</span>.
+<span class="k">3.</span> <span class="gs">**Look at their profile**</span> — call <span class="sb">`get_desktop_profile`</span> (server 07) with
+   that id. The key field is <span class="sb">`addressBookId`</span>.
+<span class="k">4.</span> <span class="gs">**Find the right address book**</span> — call <span class="sb">`list_address_books`</span> (server 06)
+   to get the desired book's <span class="sb">`id`</span>.
+<span class="k">5.</span> <span class="gs">**Check the book has entries**</span> — call <span class="sb">`list_entries`</span> (server 06) with
+   the book's <span class="sb">`id`</span> from step 4. You need that <span class="sb">`id`</span> first.
+<span class="k">6.</span> <span class="gs">**Compare**</span> — does the profile's <span class="sb">`addressBookId`</span> match the desired
+   book's <span class="sb">`id`</span>? This is a reasoning step, no tool needed.
+<span class="k">7.</span> <span class="gs">**Fix if needed**</span> — call <span class="sb">`update_desktop_profile`</span> (server 07) to point
+   the profile at the right book.
+
+<span class="gu">## Data flow</span>
+
+Tool outputs chain directly into tool inputs. Field names match the API.
+Use them exactly as shown.
+
+<span class="k">-</span><span class="w"> </span><span class="sb">`list_agents`</span> returns each agent's <span class="sb">`agentProfileId`</span>.
+<span class="k">-</span><span class="w"> </span>Pass that as the <span class="sb">`id`</span> to <span class="sb">`get_desktop_profile`</span>. It returns the
+  profile's <span class="sb">`addressBookId`</span>.
+<span class="k">-</span><span class="w"> </span><span class="sb">`list_address_books`</span> returns each book's <span class="sb">`id`</span>.
+<span class="k">-</span><span class="w"> </span>Compare the profile's <span class="sb">`addressBookId`</span> with the desired book's <span class="sb">`id`</span>.
+<span class="k">-</span><span class="w"> </span>If they don't match, pass both to <span class="sb">`update_desktop_profile`</span>
+  (<span class="sb">`id`</span> = the profile, <span class="sb">`addressBookId`</span> = the desired book).
+
+<span class="gu">## Steps</span>
+
+<span class="k">1.</span> Ask for the symptom:
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>Which agent (name or email)? What do they see on their desktop?
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>Which address book should they see? (name or id)
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>Are contacts missing entirely, or is the address book empty?
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>When did it start? (config changes take a few minutes to propagate)
+<span class="k">2.</span> Call <span class="sb">`check_webex_status`</span> first. If an incident is active, stop and
+   report it.
+<span class="k">3.</span> Call <span class="sb">`list_agents`</span> to find the agent. Note their <span class="sb">`agentProfileId`</span>.
+<span class="k">4.</span> Call <span class="sb">`get_desktop_profile`</span> with <span class="sb">`id`</span> set to the <span class="sb">`agentProfileId`</span> from
+   step 3. Do not call this until step 3 has returned.
+   Note the <span class="sb">`addressBookId`</span> field.
+<span class="k">5.</span> Call <span class="sb">`list_address_books`</span> to find the desired address book and its <span class="sb">`id`</span>.
+   This does not depend on steps 3 and 4, so it can run alongside them.
+<span class="k">6.</span> Call <span class="sb">`list_entries`</span> with the book's <span class="sb">`id`</span> from step 5. You need that <span class="sb">`id`</span>
+   first. Do not call this until step 5 has returned. An empty book is as
+   useless as no book.
+<span class="k">7.</span> Compare the profile's <span class="sb">`addressBookId`</span> (from step 4) with the desired
+   book's <span class="sb">`id`</span> (from step 5). Both must be available before you compare:
+<span class="w">   </span><span class="k">-</span><span class="w"> </span><span class="gs">**Match**</span> — the book is assigned correctly; the problem is elsewhere
+     (check if the book is empty, or if there is a platform incident).
+<span class="w">   </span><span class="k">-</span><span class="w"> </span><span class="gs">**Mismatch or null**</span> — the agent's profile points to the wrong book
+     (or none). Proceed to step 8.
+<span class="k">8.</span> Fix with approval: call <span class="sb">`update_desktop_profile`</span> with <span class="sb">`id`</span> set to the
+   <span class="sb">`agentProfileId`</span> from step 3 and <span class="sb">`addressBookId`</span> set to the desired
+   book's <span class="sb">`id`</span> from step 5. The server shows a confirmation card warning
+   that all agents on this profile will be affected. It will not proceed
+   until the user approves.
+<span class="k">9.</span> Summarize findings and what was changed.
+
+<span class="gu">## Edge cases</span>
+
+<span class="k">-</span><span class="w"> </span><span class="gs">**Agent not found**</span> — may be inactive or in a different org.
+<span class="k">-</span><span class="w"> </span><span class="gs">**`addressBookId` is null**</span> — profile was never assigned a book, not just
+  the wrong one.
+<span class="k">-</span><span class="w"> </span><span class="gs">**Address book exists but is empty**</span> — correct assignment, wrong content.
+  The fix is to add entries, not change the profile.
+<span class="k">-</span><span class="w"> </span><span class="gs">**Multiple agents share the profile**</span> — updating the profile affects all
+  of them. The confirmation card makes this explicit.
+
+<span class="gu">## Guardrails</span>
+
+<span class="k">-</span><span class="w"> </span><span class="gs">**Confirm before writing.**</span> Never update a profile without approval.
+  <span class="sb">`update_desktop_profile`</span> shows a confirmation card. It will not proceed
+  until the user approves. Remind the user that updating a profile affects
+  every agent assigned to it, not just the one being investigated.
+<span class="k">-</span><span class="w"> </span><span class="gs">**Validate before writing.**</span> Before calling <span class="sb">`update_desktop_profile`</span>,
+  verify that the <span class="sb">`addressBookId`</span> belongs to an actual book (it appeared
+  in <span class="sb">`list_address_books`</span> results) and the profile <span class="sb">`id`</span> belongs to an
+  actual profile (it appeared in <span class="sb">`get_desktop_profile`</span> results). Never
+  pass values you constructed or guessed. Only use IDs that came from
+  a tool response.
+</code></pre></div>
+</details>
+</li>
+</ol>
+<h3 id="2-confirm-the-loader-sees-it">2. Confirm the loader sees it</h3>
+<ol>
+<li>
+<p>Run discovery again:</p>
+<ul>
+<li>python 01_list_skills.py</li>
+</ul>
+</li>
+<li>
+<p>You should see <code>meeting-review</code> and <code>troubleshoot-address-books</code>:</p>
+<div class="highlight"><pre><span></span><code>meeting-review: Use when the user asks to prepare for, review readiness of, check what is missing from, orfix readiness gaps in their meetings. Triggers on phrases like 'help me prepare', 'am I ready for', 'checkmy schedule for gaps', or 'add an agenda to my meetings'. This skill evaluates agendas, invitees, and conflicts, and can update missing meeting details. Do NOT use it for plain requests to list meetings.
+troubleshoot-address-books: Use when a contact-center agent reports a problem with address books or contacts on the Webex Contact Center desktop — contacts missing, wrong address book showing, empty contact list, or address book not assigned. Investigates the agent's desktop profile, its address book assignment, and the book's entries. Can fix a misassigned or missing address book by updating the desktop profile. Combines alocal platform-status check with MCP tools from the address-book server (06) and the desktop-profile server (07).
+</code></pre></div>
+</li>
+</ol>
+<h3 id="3-ask-the-bot-to-use-it">3. Ask the bot to use it</h3>
+<ol>
+<li>
+<p>Restart <code>04_bot.py</code>. The loader scans <code>skills/</code> at startup, so the new skill is offered with no Python change.</p>
+<div class="highlight"><pre><span></span><code>2026-09-26 18:03:12,329 INFO Loaded 2 skill(s): meeting-review, troubleshoot-address-books
+2026-09-26 18:03:13,940 INFO Listening as webexone-diejimen1@webex.bot via WebSocket... (Ctrl+C to stop)
+</code></pre></div>
+</li>
+<li>
+<p>In Webex, ask:</p>
+<ul>
+<li>An agent says they cannot see any contacts in their address book on the desktop. Can you investigate?</li>
+</ul>
+<p>The model loads <code>troubleshoot-address-books</code> and follows that runbook.</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../assets/skill_22.png" data-title="Skill" data-desc-position="top"><img alt="Skill" src="../assets/skill_22.png" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" width="950"></a></p>
+</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../lab6_mcp/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Lab 6 - MCP Servers in AI Assistant">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Lab 6 - MCP Servers in AI Assistant
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../lab8_use-cases/" class="md-footer__link md-footer__link--next" aria-label="Next: Lab 8 - Use Cases">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Lab 8 - Use Cases
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2026 Cisco
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.instant", "navigation.top", "navigation.footer", "search.suggest", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../template_assets/js/newLoad.js"></script>
+      
+        <script src="../template_assets/js/setInfo.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": false, "openEffect": "fade", "closeEffect": "fade", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
