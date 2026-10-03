@@ -1075,7 +1075,7 @@ When a call did not succeed, the skill joins its `user` and `callingNumber` to `
 
     - Show me the call history for Pod 0
 
-        ![Use Cases](assets/use_case_12.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![Use Cases](assets/use_case_12.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
         By default this returns the **last 12 hours**, so a quiet window can come back empty. To look further back, name a window and the agent passes it straight through to the CDR feed — for example *"Show me the call history on 2026-09-24 between 05:00 and 08:30 UTC"*. Webex caps any single request at a 12-hour span and needs the end to be at least ~5 minutes in the past, and CDRs older than the feed's retention are simply gone.
 
@@ -1084,17 +1084,17 @@ When a call did not succeed, the skill joins its `user` and `callingNumber` to `
 
     - Show me the call history for Pod 0 on 2026-09-24 between 05:00 and 08:30 UTC
 
-        ![Use Cases](assets/use_case_13.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![Use Cases](assets/use_case_13.png){ width="800" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 4. Now let the skill drive a deeper look:
 
     - Summarize Pod 0's calls on 2026-09-24 between 05:00 and 08:30 UTC and flag anything that did not connect
 
-        ![Use Cases](assets/use_case_14.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![Use Cases](assets/use_case_14.png){ width="800" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     
     - Did Pod 0 have any failed calls, and if so why?
 
-        ![Use Cases](assets/use_case_15.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }    
+        ![Use Cases](assets/use_case_15.png){ width="800" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }    
 
     The agent pulls the CDRs and reports them. If a call did not succeed, it flags those and correlates each with the user's license, number, and device to explain the likely cause — quoting the `outcomeReason` back to you. If every call succeeded, it simply says so.
 
@@ -1121,7 +1121,7 @@ Either mechanism breaks the call to 1-800-444-4444; the steps below use the exac
 
     - Block toll-free (1-800) calls for Pod 0
 
-        ![Use Cases](assets/use_case_18.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![Use Cases](assets/use_case_18.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
         ![Use Cases](assets/use_case_19.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" } 
 
 3. Dial **1-800-444-4444** again. This time it is rejected. 
@@ -1133,7 +1133,7 @@ Either mechanism breaks the call to 1-800-444-4444; the steps below use the exac
 
     - Why did Pod 0 call to 1-800-444-4444 fail?
 
-        ![Use Cases](assets/use_case_20.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![Use Cases](assets/use_case_20.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     The `investigate-calls` skill pulls your recent CDRs, flags the failed toll-free call and quotes its `outcomeReason`, confirms your license, number, and device are healthy, then reads `get_outgoing_permission` and finds `TOLL_FREE` set to `BLOCK` — the cause. It reports that in a short diagnosis and recommends allowing toll-free again.
 
@@ -1141,8 +1141,8 @@ Either mechanism breaks the call to 1-800-444-4444; the steps below use the exac
 
     - Allow toll-free calls for Pod 0
 
-        ![Use Cases](assets/use_case_21.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-        ![Use Cases](assets/use_case_22.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![Use Cases](assets/use_case_21.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![Use Cases](assets/use_case_22.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 6. Dial **1-800-444-4444** once more. It connects again, and the tenant is exactly as you found it.
 
@@ -1383,7 +1383,7 @@ The skill defines what "poor" means (packet loss, latency, jitter, collapsed vid
 
     * How did "1:1 User1/User2" look and sound — any audio or video problems, and who was affected?
 
-         ![Use Cases](assets/use_case_24.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+         ![Use Cases](assets/use_case_24.png){ width="800" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     The agent pulls `get_meeting_qualities` and reports the per-participant audio
     and video with the actual numbers. If a participant's media was poor, it
@@ -1394,7 +1394,7 @@ The skill defines what "poor" means (packet loss, latency, jitter, collapsed vid
 
     * Who attended "1:1 User1/User2", and when did each person join and leave?
 
-         ![Use Cases](assets/use_case_25.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+         ![Use Cases](assets/use_case_25.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     Here the agent calls `list_meeting_participants` for the join/leave timeline
     and lines it up against the quality it just read — so a dip at a given minute
