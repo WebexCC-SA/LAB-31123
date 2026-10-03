@@ -429,27 +429,28 @@ flowchart TB
 4. In the Webex space, start with a read:
 
     * List my address books
-![listbooks](./assets/lab8/addressbooklist.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    
+        ![listbooks](./assets/lab8/addressbooklist.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 5. Now describe the problem and let the skill drive:
 
     * Agent User2 can't see Internal contacts on the desktop but Agent User1 can see them. Investigate and fix it.
 
-    User1 can see the contacts on the Agent Desktop:
+        User1 can see the contacts on the Agent Desktop:
 
-    ![user1video](./assets/lab8/user1video.gif){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        ![user1video](./assets/lab8/user1video.gif){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-    User2 cannot:
+        User2 cannot:
 
-    ![user2video](./assets/lab8/user2video.gif){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        ![user2video](./assets/lab8/user2video.gif){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 6. The agent loads the troubleshooting skill, investigates both agents' profiles, and reports its findings — using human-readable names, not raw IDs:
 
-    ![analysis](./assets/lab8/analysis.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![analysis](./assets/lab8/analysis.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     You can confirm the root cause in Control Hub: User2's desktop profile has no address book assigned.
 
-    ![controlhub](./assets/lab8/hub.gif){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![controlhub](./assets/lab8/hub.gif){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 7. When the agent reaches the fix, it posts an **Adaptive Card** showing the profile name and address book name, asking you to confirm — because `update_desktop_profile` affects **all** agents on that profile. Tap **Confirm**:
 
@@ -466,7 +467,7 @@ flowchart TB
 
     ![postchanges](./assets/lab8/postchanges.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-    ![user2fix](./assets/lab8/user2fix.gif){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+    ![user2fix](./assets/lab8/user2fix.gif){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 
 ### Step 8.1.6: Design lessons
