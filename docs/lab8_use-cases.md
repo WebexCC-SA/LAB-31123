@@ -2,7 +2,7 @@
 
 Now, you will compose the modules that you have been building into three real troubleshooting agents.
 
-In this lab you meet the engine as **complete, self-contained use cases**. Each use case is a single folder that carries *everything* it needs — its own `utils/`, `skills/`, `mcp_servers/`, persona, and `agentbot.py`. Open one folder and you see every moving part.
+In this lab, you meet the engine as **complete, self-contained use cases**. Each use case is a single folder that carries *everything* it needs — its own `utils/`, `skills/`, `mcp_servers/`, persona, and `agentbot.py`. Open one folder and you see every moving part.
 
 This lab has three use cases, each a self-contained agent built from the same engine: 
 
@@ -24,7 +24,7 @@ This lab has three use cases, each a self-contained agent built from the same en
 
 ## Section 1 — Webex Contact Center Agent
 
-The scenario: a Contact Center manager reports that an agent's address book is wrong on their desktop. This agent investigates across two MCP servers, diagnoses the misconfiguration, and — with your approval on an Adaptive Card — fixes it.
+The scenario: A Contact Center manager reports that an agent's address book is wrong on their desktop. This agent investigates across two MCP servers, diagnoses the misconfiguration, and — with your approval on an Adaptive Card — fixes it.
 
 ### Architecture
 
@@ -1004,7 +1004,7 @@ The `investigate-calls` skill tells the agent how to pull call records, report t
          example 1-800-444-4444) while other calls work, check whether that number
          has a BLOCK digit pattern.
        - `get_calling_permissions` — if the user cannot dial a number, check whether
-         that calls or call type (e.g. TOLL_FREE) is set to BLOCK.
+         that call or call type (e.g. TOLL_FREE) is set to BLOCK.
        Correlate: no license or no number explains a user who cannot call; a call
        rejected for one specific number while others succeed on healthy provisioning
        points at a blocked digit pattern; a whole call type failing (e.g. all
