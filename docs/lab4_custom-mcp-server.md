@@ -7,7 +7,7 @@ In this chapter, you will build a custom MCP server that lets an AI assistant ma
     
     This means you can take a collection of Webex API calls and instantly expose them as tools to an AI assistant with zero code. You can even use the [Postman Webex Public Workspace](https://www.postman.com/webexdev/webex-public-workspace/overview){:target="_blank"} to try this yourself:
 
-    ![MCP Generator](assets/mcp_generator.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![MCP Generator](assets/mcp_generator.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 **From API Exploration to Custom Control**
 
