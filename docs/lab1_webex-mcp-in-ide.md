@@ -151,7 +151,7 @@ As a user, the first thing you will need to do is get the token to access the MC
     These are the 20 tools available in this MCP server:
 
     ??? Note "Tools"
-        ![Tools](./assets/tools_2.png){ width="300" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+        ![Tools](./assets/tools_51.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 ## Step 1.2: Adding the LLM to VS Code
 
