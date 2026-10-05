@@ -1,14 +1,14 @@
 # Lab 8 - Use Cases
 
-Now, you will compose the modules that you have been building into three real troubleshooting agents.
+Now, you will compose the modules that you have been building into three real troubleshooting AI assistants.
 
 In this lab, you meet the engine as **complete, self-contained use cases**. Each use case is a single folder that carries *everything* it needs — its own `utils/`, `skills/`, `mcp_servers/`, persona, and `agentbot.py`. Open one folder and you see every moving part.
 
-This lab has three use cases, each a self-contained agent built from the same engine: 
+This lab has three use cases, each a self-contained AI assistant built from the same engine: 
 
-- **Contact Center** agent that fixes a misconfiguration
-- **Calling / Control Hub** agent that investigates a user's calls 
-- **Meeting Quality** agent that explains why a meeting looked and sounded bad.
+- **Contact Center** AI assistant that fixes a misconfiguration
+- **Calling / Control Hub** AI assistant that investigates a user's calls 
+- **Meeting Quality** AI assistant that explains why a meeting looked and sounded bad.
 
 ```
 08_use_cases/
@@ -22,9 +22,9 @@ This lab has three use cases, each a self-contained agent built from the same en
 
 ---
 
-## Section 1 — Webex Contact Center Agent
+## Section 1 — Webex Contact Center AI Assistant
 
-The scenario: A Contact Center manager reports that an agent's address book is wrong on their desktop. This agent investigates across two MCP servers, diagnoses the misconfiguration, and — with your approval on an Adaptive Card — fixes it.
+The scenario: A Contact Center manager reports that an agent's address book is wrong on their desktop. This AI assistant investigates across two MCP servers, diagnoses the misconfiguration, and — with your approval on an Adaptive Card — fixes it.
 
 ### Architecture
 
@@ -41,7 +41,7 @@ flowchart LR
 
 ### Step 8.1.1: The two MCP servers
 
-The agent connects to two servers. One you have already built; one is new.
+The AI assistant connects to two servers. One you have already built; one is new.
 
 #### Address Book Server — you already wrote every tool in it
 
@@ -80,7 +80,7 @@ It also exposes one resource, `lab://desktop-profile-reference`.
 
 ### Step 8.1.2: Four places knowledge can live
 
-This agent knows things. That knowledge sits in four different places, and
+This AI assistant knows things. That knowledge sits in four different places, and
 choosing the right one is the main design decision in the whole folder.
 
 Two questions tell them apart: **who owns it** — the client or the server — and
@@ -96,7 +96,7 @@ flowchart TB
     subgraph OnDemand["ON DEMAND"]
         direction LR
         S["<b>Skill</b> — client<br/>SKILL.md via load_skill<br/><i>how to solve THIS problem</i>"]
-        M["<b>MCP Prompt</b> — server<br/><i>(none in this agent — the<br/>workflow crosses two servers,<br/>so it needs a skill instead)</i>"]
+        M["<b>MCP Prompt</b> — server<br/><i>(none in this AI assistant — the<br/>workflow crosses two servers,<br/>so it needs a skill instead)</i>"]
     end
     AlwaysLoaded ~~~ OnDemand
 ```
@@ -145,7 +145,7 @@ Two servers, plus a reasoning step that belongs to no one. So where does this wo
 
 ### Step 8.1.3: Inside the engine
 
-You can run this agent without reading this step. Open it when you want to know
+You can run this AI assistant without reading this step. Open it when you want to know
 *how* the folder works rather than *what* it does.
 
 #### How a question becomes an answer
@@ -164,7 +164,7 @@ The `dispatch` dictionary is what makes it flexible. MCP tools, `load_skill`,
 and the prompt meta-tools all sit in one flat namespace.
 The loop never asks where a tool came from — it just calls it.
 
-??? Tip "The agentic loop — the 20 lines that drive every agent"
+??? Tip "The agentic loop — the 20 lines that drive every AI assistant"
     ```python
     def agentic_loop(messages, model, max_iter=10,
                      extra_tools=None, dispatch=None):
@@ -352,20 +352,20 @@ Expand whichever you are curious about.
     !!! Warning "Why messages run in a worker thread"
         `run_in_executor` is not an optimisation — it prevents a deadlock. `on_message` blocks while an elicitation waits for a tap. If it blocked the WebSocket loop, the loop could not receive the very tap it is waiting for. The bot would hang until the card expired, every time.
 
-!!! Tip "This page works the way the agent does"
+!!! Tip "This page works the way the AI assistant does"
     Those collapsed blocks are the same idea as `skills.py`: one line up front so you know what is there, the full body only when you ask for it. Progressive disclosure is a documentation pattern before it is a model one.
 
 ### Step 8.1.4: The wiring
 
 Open `agentbot.py`. It is short — because the hard parts are already in `utils/`.
 
-??? Tip "Python Code — the wiring that makes it a Contact Center agent"
+??? Tip "Python Code — the wiring that makes it a Contact Center AI assistant"
     ```python
     # Own-folder imports — this folder is the import root.
     from utils import mcp_client, skills, elicit
     from utils.websocket import WebSocketClientCards
 
-    # Connect to THIS agent's own two servers (address books + desktop profiles).
+    # Connect to THIS AI assistant's own two servers (address books + desktop profiles).
     _configs = [
         {"name": "address-books",   "command": sys.executable,
          "args": ["manage_address_books.py"],    "cwd": MCP_SERVERS_DIR},
@@ -402,72 +402,59 @@ flowchart TB
     MC -.->|"request() — blocks"| EL
 ```
 
-### Step 8.1.5: Run the agent
+### Step 8.1.5: See it in action
 
-!!! Prerequisite "Before you start"
-    Make sure you have already filled in the shared `WebexOne2026/.env` from the environment template at the top of the lab folder — all three use cases read the same file.
+Here is the AI assistant working a real ticket end to end. You don't need to run anything yet — read it as a story first, then prove the skill yourself in the exercise at the end of this section.
 
-1. Change into the use-case folder:
+The AI assistant comes up with both MCP servers connected — two "MCP ready" lines, one per server:
 
-    - cd ../01_webex_cc_agent
+```terminal
+MCP ready — 6 tool(s), ... resource text, 0 prompt(s)
+MCP ready — 4 tool(s), ... resource text, 0 prompt(s)
+Skills: 1 — ['troubleshoot-address-books']
+Listening as WebexOne-... via Webex Websockets (messages + cards)...
+```
 
-2. Run it:
+That is the two servers in one screen: six tools from the address-books server, four tools and no prompt from the desktop-profiles server.
 
-    - python agentbot.py
+It starts with a read — *"List my address books"* — just to see what is there:
 
-3. Confirm both servers connect. You should see two "MCP ready" lines — one per server:
+![listbooks](./assets/lab8/addressbooklist.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-    ```terminal
-    MCP ready — 6 tool(s), ... resource text, 0 prompt(s)
-    MCP ready — 4 tool(s), ... resource text, 0 prompt(s)
-    Skills: 1 — ['troubleshoot-address-books']
-    Listening as WebexOne-... via Webex Websockets (messages + cards)...
-    ```
+Then the real ticket lands: *Agent User2 can't see the Internal contacts on the desktop, but Agent User1 can.* User1 sees the contacts on the Agent Desktop:
 
-    That is the two servers in one screen: six tools from the address-books server, four tools and no prompt from the desktop-profiles server.
+![user1video](./assets/lab8/user1video.gif){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-4. In the Webex space, start with a read:
+User2 does not:
 
-    * List my address books
-    
-        ![listbooks](./assets/lab8/addressbooklist.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![user2video](./assets/lab8/user2video.gif){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-5. Now describe the problem and let the skill drive:
+The AI assistant loads the troubleshooting skill, compares both agents' profiles, and reports what it found — in human-readable names, not raw IDs:
 
-    * Agent User2 can't see Internal contacts on the desktop but Agent User1 can see them. Investigate and fix it.
+![analysis](./assets/lab8/analysis.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-        User1 can see the contacts on the Agent Desktop:
+The same root cause is visible in Control Hub: User2's desktop profile has no address book assigned.
 
-        ![user1video](./assets/lab8/user1video.gif){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![controlhub](./assets/lab8/hub.gif){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-        User2 cannot:
+When it reaches the fix, the AI assistant does not just make the change. `update_desktop_profile` affects **all** agents on that profile, so the server gates it behind an **Adaptive Card** that shows the profile name and the address book name and waits for a human to confirm:
 
-        ![user2video](./assets/lab8/user2video.gif){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![fixbook-card](./assets/lab8/fixbook2.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-6. The agent loads the troubleshooting skill, investigates both agents' profiles, and reports its findings — using human-readable names, not raw IDs:
+Tapping **Confirm** applies the change:
 
-    ![analysis](./assets/lab8/analysis.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+```terminal
+INFO Card tap: confirmed
+INFO Sent to ...: Done — user's desktop profile now points at Internal Directory.
+```
 
-    You can confirm the root cause in Control Hub: User2's desktop profile has no address book assigned.
+Tapping **Decline** changes nothing. This is the elicitation pattern from Step 8.1.2 in action: the AI assistant reads freely, but a write that touches every agent on a profile has to be approved first.
 
-    ![controlhub](./assets/lab8/hub.gif){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+With the profile pointed at the Internal Directory, User2 can now see the contacts on the Agent Desktop:
 
-7. When the agent reaches the fix, it posts an **Adaptive Card** showing the profile name and address book name, asking you to confirm — because `update_desktop_profile` affects **all** agents on that profile. Tap **Confirm**:
+![postchanges](./assets/lab8/postchanges.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-    ![fixbook-card](./assets/lab8/fixbook2.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-    ```terminal
-    INFO Card tap: confirmed
-    INFO Sent to ...: Done — user's desktop profile now points at Internal Directory.
-    ```
-
-    Tap **Decline** and nothing changes.
-
-8. After the fix, the agent confirms the update and User2 can now see the Internal Directory contacts on the Agent Desktop:
-
-    ![postchanges](./assets/lab8/postchanges.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-
-    ![user2fix](./assets/lab8/user2fix.gif){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
+![user2fix](./assets/lab8/user2fix.gif){ width="850" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
 
 ### Step 8.1.6: Design lessons
@@ -689,31 +676,6 @@ is what happened, why, the fix, and the rule you can carry to your own MCP work.
     | 4 | Flag dependencies | Tell the model what to wait for |
     | 5 | Externalise the model | Never hardcode — read it from config |
 
-??? Note "How this skill matured (v1 → v2)"
-    Every lesson above left a mark on `SKILL.md`. Comparing the two versions shows what a skill gains as it grows up:
-
-    | What | v1 | v2 |
-    | --- | --- | --- |
-    | Description | one narrow trigger phrase | 10+ trigger keywords |
-    | "Why a skill?" | missing | explained up front |
-    | Data flow | none | explicit bullet chain |
-    | Field names | `desktop_profile_id` (snake_case) | `agentProfileId` (API-aligned) |
-    | Comparison logic | "does it have the right books?" | "compare `addressBookId` with book `id`" |
-    | Dependencies | implicit | explicit ("don't call until…") |
-    | Edge cases | none | agent-not-found, null book, empty book, shared profile |
-    | Write tool | `reassign_desktop_profile` (wrong API) | `update_desktop_profile` (correct API) |
-    | Spec compliance | `name` + `description` only | plus `compatibility`, `metadata` |
-
-    A skill is not a list of tools to call in order. It is orchestration logic, and it provides five things MCP tools cannot:
-
-    1. **Cross-server wiring** — "the `agentProfileId` from the desktop-profiles server becomes the `id` for `get_desktop_profile`"
-    2. **Reasoning instructions** — "compare field X with field Y"
-    3. **Edge-case handling** — "if null, it was never assigned, not just wrong"
-    4. **Dependency markers** — "don't call this until step 5 returns"
-    5. **Portability** — the same file works in any [agentskills.io-compatible](https://agentskills.io/clients){:target="_blank"} client
-
-    MCP provides the **tools**. Skills provide the **judgment**.
-
 ### Step 8.1.7: Architecture at a glance
 
 Everything from Steps 1.1 to 1.7, on one page:
@@ -765,7 +727,7 @@ flowchart TB
 ### Step 8.1.8: This folder is a template
 
 
-To build a new agent, you don't start from scratch — you copy this folder and swap three things:
+To build a new AI assistant, you don't start from scratch — you copy this folder and swap three things:
 
 ```
 copy 01_webex_cc_agent/  ->  0N_new_agent/
@@ -777,38 +739,85 @@ copy 01_webex_cc_agent/  ->  0N_new_agent/
 
 That is exactly how the next two use cases are set up.
 
-### Exercises
+## Exercises
 
-#### Exercise 1 — a report-only persona
+In this section, you can test your knowledge of what we have covered so far. If you need help, you can check the solution.
 
-Change the Contact Center agent so it *diagnoses but never writes* — it should explain what to fix, but not call `update_desktop_profile`.
+### The case of the empty HR directory
+
+Your pod has two address books. The **Internal Directory** works perfectly — you just watched the AI assistant fix exactly that kind of problem. But there is a second book, **HR Contacts**, that is assigned to your desktop profile and yet shows nothing when you open it on the Agent Desktop. Same profile, same kind of assignment, no contacts.
+
+Your job: work with the AI assistant to find out why, and get two colleagues — **Sarah Mitchell** and **James Rodriguez** — showing up in HR Contacts.
+
+You will need two logins:
+
+| Role | Username | Password |
+| --- | --- | --- |
+| Pod user (Agent Desktop) | `podX@webexone-ai-assistant.wbx.ai` (replace **X** with your pod number) | `WebexOne2026!` |
+| Admin (Control Hub) | `admin@webexone-ai-assistant.wbx.ai` | `rDZBN4gZe#` |
 
 ??? Solution
-    Edit `system_prompt.txt` to add a rule: "You are read-only. Never call write tools such as `update_desktop_profile`. Instead, report the exact change an admin should make." The skill still guides the diagnosis; the persona stops the write.
 
-#### Exercise 2 — handle an empty address book
+    1. Start the AI assistant. Make sure the shared `WebexOne2026/.env` is filled in first — all three use cases read the same file — then run it:
 
-What happens when the agent's profile points to an address book that exists but has zero entries? Update the skill so it explicitly reports this case instead of proceeding to fix the assignment.
+        ```
+        cd ../01_webex_cc_agent
+        python agentbot.py
+        ```
 
-??? Solution
-    In `SKILL.md`, expand the compare step (step 6): after "Match — the book is assigned correctly", add: "If the book is empty (step 5 returned zero entries), report that the assignment is correct but the book has no contacts — the fix is to add entries with `add_entry`, not to change the profile." The skill already lists this edge case, but making the step explicit prevents the model from offering to reassign the profile when the real problem is missing contacts.
+        You should see the two "MCP ready" lines and the skill load, exactly as in Step 8.1.5.
+
+        <!-- screenshot: terminal showing both MCP servers ready and the troubleshoot-address-books skill loaded -->
+
+    2. Log into the **Agent Desktop** with your pod credentials and open your address books. **HR Contacts** is listed, but when you open it there are no contacts inside.
+
+        <!-- screenshot: Agent Desktop showing HR Contacts book with 0 entries -->
+
+    3. In the Webex space, ask the AI assistant to investigate:
+
+        * I can't see any HR contacts on my Agent Desktop. Investigate why.
+
+        It loads the troubleshooting skill and checks your desktop profile — and this time the assignment is fine: the HR Contacts book **is** attached to your profile. The problem is that the book itself holds **zero entries**. Notice how this differs from Step 8.1.5: there the fix was correcting a *wrong assignment*; here the assignment is right and the book is simply *empty*.
+
+        <!-- screenshot: AI assistant reporting HR Contacts is assigned but has 0 entries -->
+
+    4. Ask the AI assistant to add the first contact:
+
+        * Add Sarah Mitchell, +12025550143, to the HR Contacts address book.
+
+        This time **no Adaptive Card appears** — the contact is added directly. That is not a bug. In Step 8.1.5 the write was `update_desktop_profile`, which affects **every** agent on a profile, so the server author gated it behind a confirmation card. Adding a single entry to one book uses `add_entry`, which the author chose **not** to gate. Elicitation is a per-tool decision the server makes — not something MCP adds for you automatically.
+
+        <!-- screenshot: AI assistant confirming Sarah Mitchell was added, with no confirmation card -->
+
+        Now add the second contact in a **separate** message:
+
+        * Add James Rodriguez, +14085550276, to the HR Contacts address book.
+
+        !!! Note "One write per turn"
+            Ask for the contacts **one at a time**. The assistant's persona only performs a single write per turn — if you ask for both in one message, it will list them and ask you to choose rather than adding both at once. One request, one contact.
+
+    5. Back on the Agent Desktop, refresh and open **HR Contacts** again. Both Sarah Mitchell and James Rodriguez now appear.
+
+        <!-- screenshot: Agent Desktop showing HR Contacts with Sarah Mitchell and James Rodriguez -->
+
+        If you want to confirm the root cause the way the AI assistant saw it, log into **Control Hub** with the admin credentials and open **Contact Center → Address Books → HR Contacts** — the two entries you just added through the assistant are there.
 
 ---
 
-## Section 2 — Webex Calling & Control Hub Agent
+## Section 2 — Webex Calling & Control Hub AI Assistant
 
-The Contact Center agent *fixed* a misconfiguration. This second use case does something you will reach for far more often in practice: it **reports and investigates**. An administrator asks *"show me this user's calls"* — or *"did any of them fail, and why?"* — and the agent pulls the evidence, reports what happened, and, when a call did not succeed, explains the cause.
+The Contact Center AI assistant *fixed* a misconfiguration. This second use case does something you will reach for far more often in practice: it **reports and investigates**. An administrator asks *"show me this user's calls"* — or *"did any of them fail, and why?"* — and the AI assistant pulls the evidence, reports what happened, and, when a call did not succeed, explains the cause.
 
 This is a deliberate contrast. The engine is identical. What changes is the MCP servers used, an investigation skill instead of a fix skill, and a persona that reads freely but gates every write.
 
-!!! Tip "Same engine, different agent"
+!!! Tip "Same engine, different AI assistant"
     You are not writing an agentic loop, an MCP client, or a WebSocket again.
     
     This section is about **wiring** — which is the whole point of the template.
 
 ### Scenario
 
-Most of the time an admin just wants to see what happened: *"show me this user's recent calls."* Every call the org makes is already recorded as a **CDR** (Call Detail Record) — who called whom, how long, and the `outcome`. The agent pulls those records and reports them. And because a failed call carries an `outcome` and an `outcomeReason` in that same data, the agent can also flag the ones that did not succeed and explain why — without you having to *stage* a broken call.
+Most of the time an admin just wants to see what happened: *"show me this user's recent calls."* Every call the org makes is already recorded as a **CDR** (Call Detail Record) — who called whom, how long, and the `outcome`. The AI assistant pulls those records and reports them. And because a failed call carries an `outcome` and an `outcomeReason` in that same data, the AI assistant can also flag the ones that did not succeed and explain why — without you having to *stage* a broken call.
 
 ### Architecture
 
@@ -827,7 +836,7 @@ flowchart LR
 
 ### Step 8.2.1: MCP servers
 
-This agent connects to three MCP servers — all of them ones you already built in previous labs.
+This AI assistant connects to three MCP servers — all of them ones you already built in previous labs.
 
 | Server | Tools it exposes | Role here |
 | --- | --- | --- |
@@ -836,20 +845,20 @@ This agent connects to three MCP servers — all of them ones you already built 
 | `troubleshooting_mcp.py` | `unresolved_incidents`, `get_detailed_call_history` (CDRs), `audit events`, `reports`, `meeting quality` | Platform health and the call evidence |
 
 !!! Note "Rule out an outage — only when something failed"
-    When a call actually failed, the `investigate-calls` skill rules out a known Webex incident (`unresolved_incidents`) before blaming a user's configuration — the same guardrail as the Contact Center agent. Plain listing and reporting requests skip the incident check entirely; it only runs when there is a problem to explain.
+    When a call actually failed, the `investigate-calls` skill rules out a known Webex incident (`unresolved_incidents`) before blaming a user's configuration — the same guardrail as the Contact Center AI assistant. Plain listing and reporting requests skip the incident check entirely; it only runs when there is a problem to explain.
 
 ### Step 8.2.2: Read freely, write with approval
 
-Section 1 taught elicitation with a single write (`update_desktop_profile`). This agent keeps that lesson but frames it as a rule for the whole domain:
+Section 1 taught elicitation with a single write (`update_desktop_profile`). This AI assistant keeps that lesson but frames it as a rule for the whole domain:
 
-- **Investigation is always safe.** Listing people, licenses, numbers and devices, and pulling CDRs, changes nothing — the agent does it without asking.
+- **Investigation is always safe.** Listing people, licenses, numbers and devices, and pulling CDRs, changes nothing — the AI assistant does it without asking.
 - **Management is gated.** The write tools here (`create_workspace`, `delete_workspace`, `create_location`, `delete_device`, `update_call_forwarding`, `block_number`, `unblock_number`, `block_toll_free`, `unblock_toll_free`) change the organization. The `delete_*` tools, `update_call_forwarding`, `block_number`, `unblock_number`, `block_toll_free`, and `unblock_toll_free` elicit, so the server posts an Adaptive Card and waits for **Confirm**.
 
 The persona (`system_prompt.txt`) states this split explicitly, so the model never "fixes" something it was only asked to investigate.
 
 ### Step 8.2.3: The investigation skill
 
-The `investigate-calls` skill tells the agent how to pull call records, report them, and — when a call did not succeed — correlate the user's provisioning to explain why. Both files that shape this agent are shown below.
+The `investigate-calls` skill tells the AI assistant how to pull call records, report them, and — when a call did not succeed — correlate the user's provisioning to explain why. Both files that shape this AI assistant are shown below.
 
 ??? Tip "system_prompt.txt"
     ```
@@ -1045,7 +1054,7 @@ The skill reports first and diagnoses second. Its steps, in short:
 
 When a call did not succeed, the skill joins its `user` and `callingNumber` to `list_people` and `list_numbers` to tell a *provisioning* problem (no license, no number) from a *routing* problem (healthy provisioning, but a routing `outcomeReason`).
 
-### Step 8.2.4: Run the agent
+### Step 8.2.4: Run the AI assistant
 
 1. Change into the folder and run it:
 
@@ -1072,16 +1081,16 @@ When a call did not succeed, the skill joins its `user` and `callingNumber` to `
 
         ![Use Cases](assets/use_case_11.png){ width="750" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-        The agent looks the user up, resolves each license ID to its readable name, and answers directly with that user's calling licenses — no incident check, since nothing was reported as broken.
+        The AI assistant looks the user up, resolves each license ID to its readable name, and answers directly with that user's calling licenses — no incident check, since nothing was reported as broken.
 
     - Show me the call history for Pod 0
 
         ![Use Cases](assets/use_case_12.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-        By default this returns the **last 12 hours**, so a quiet window can come back empty. To look further back, name a window and the agent passes it straight through to the CDR feed — for example *"Show me the call history on 2026-09-24 between 05:00 and 08:30 UTC"*. Webex caps any single request at a 12-hour span and needs the end to be at least ~5 minutes in the past, and CDRs older than the feed's retention are simply gone.
+        By default this returns the **last 12 hours**, so a quiet window can come back empty. To look further back, name a window and the AI assistant passes it straight through to the CDR feed — for example *"Show me the call history on 2026-09-24 between 05:00 and 08:30 UTC"*. Webex caps any single request at a 12-hour span and needs the end to be at least ~5 minutes in the past, and CDRs older than the feed's retention are simply gone.
 
         !!! Warning
-            This call is limited to 1 per minute. If you try many consecutives calls the agent will get a 429 Too Many Request error.
+            This call is limited to 1 per minute. If you try many consecutives calls the AI assistant will get a 429 Too Many Request error.
 
     - Show me the call history for Pod 0 on 2026-09-24 between 05:00 and 08:30 UTC
 
@@ -1097,7 +1106,7 @@ When a call did not succeed, the skill joins its `user` and `callingNumber` to `
 
         ![Use Cases](assets/use_case_15.png){ width="800" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }    
 
-    The agent pulls the CDRs and reports them. If a call did not succeed, it flags those and correlates each with the user's license, number, and device to explain the likely cause — quoting the `outcomeReason` back to you. If every call succeeded, it simply says so.
+    The AI assistant pulls the CDRs and reports them. If a call did not succeed, it flags those and correlates each with the user's license, number, and device to explain the likely cause — quoting the `outcomeReason` back to you. If every call succeeded, it simply says so.
 
     - Investigate possible causes
 
@@ -1105,9 +1114,9 @@ When a call did not succeed, the skill joins its `user` and `callingNumber` to `
     
 ### Exercise
 
-This is the full loop the agent was built for: you make a configuration change that breaks a real call, let the call fail, ask the agent to investigate, and then have the agent put the configuration back. It exercises **both** sides of this section — a gated write and a real investigation — on one live call you place yourself.
+This is the full loop the AI assistant was built for: you make a configuration change that breaks a real call, let the call fail, ask the AI assistant to investigate, and then have the AI assistant put the configuration back. It exercises **both** sides of this section — a gated write and a real investigation — on one live call you place yourself.
 
-The target is **1-800-444-4444**, a free, always-on toll-free test number that reads your caller ID back to you. You block it for a single user without touching anything else, and the agent offers two ways to do it:
+The target is **1-800-444-4444**, a free, always-on toll-free test number that reads your caller ID back to you. You block it for a single user without touching anything else, and the AI assistant offers two ways to do it:
 
 - **Block the exact number** (`block_number` / `unblock_number`) — adds a per-user **outgoing-permission digit pattern** for that exact number with action `BLOCK`, so only calls to 1-800-444-4444 fail while every other call keeps working.
 - **Block the whole toll-free call type** (`block_toll_free` / `unblock_toll_free`) — sets the user's **outgoing-permission call type** `TOLL_FREE` to `BLOCK`, so every toll-free call fails while other calls keep working.
@@ -1118,7 +1127,7 @@ Either mechanism breaks the call to 1-800-444-4444; the steps below use the exac
 
     ![Use Cases](assets/use_case_17.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" } 
 
-2. Ask the agent to block toll-free calling for your user:
+2. Ask the AI assistant to block toll-free calling for your user:
 
     - Block toll-free (1-800) calls for Pod 0
 
@@ -1130,7 +1139,7 @@ Either mechanism breaks the call to 1-800-444-4444; the steps below use the exac
     !!! Warning
         Wait about five minutes so the failed call lands in the CDR feed (which reports calls a few minutes in the past).
 
-4. Ask the agent, as an admin would:
+4. Ask the AI assistant, as an admin would:
 
     - Why did Pod 0 call to 1-800-444-4444 fail?
 
@@ -1138,7 +1147,7 @@ Either mechanism breaks the call to 1-800-444-4444; the steps below use the exac
 
     The `investigate-calls` skill pulls your recent CDRs, flags the failed toll-free call and quotes its `outcomeReason`, confirms your license, number, and device are healthy, then reads `get_outgoing_permission` and finds `TOLL_FREE` set to `BLOCK` — the cause. It reports that in a short diagnosis and recommends allowing toll-free again.
 
-5. Have the agent undo the change:
+5. Have the AI assistant undo the change:
 
     - Allow toll-free calls for Pod 0
 
@@ -1149,13 +1158,13 @@ Either mechanism breaks the call to 1-800-444-4444; the steps below use the exac
 
 ---
 
-## Section 3 — Webex Meeting Quality Agent
+## Section 3 — Webex Meeting Quality AI Assistant
 
-The first two agents answered *"is it configured correctly?"* This third one answers a different kind of question: *"how did that meeting look and sound?"* An administrator or host names a meeting, and the agent pulls its **quality analytics** and reports — per participant — how the audio and video held up. When the numbers show trouble, it explains what degraded and who was affected.
+The first two AI assistants answered *"is it configured correctly?"* This third one answers a different kind of question: *"how did that meeting look and sound?"* An administrator or host names a meeting, and the AI assistant pulls its **quality analytics** and reports — per participant — how the audio and video held up. When the numbers show trouble, it explains what degraded and who was affected.
 
 ### Scenario
 
-You usually just want to see how a meeting went — *"pull the quality for yesterday's all-hands."* Webex recorded per-participant quality metrics while it happened, so the agent finds the meeting and reports those metrics. If someone does complain it was *"choppy for half the room,"* the same data tells you whether one person's network was bad or the whole meeting degraded — with no need to reproduce it.
+You usually just want to see how a meeting went — *"pull the quality for yesterday's all-hands."* Webex recorded per-participant quality metrics while it happened, so the AI assistant finds the meeting and reports those metrics. If someone does complain it was *"choppy for half the room,"* the same data tells you whether one person's network was bad or the whole meeting degraded — with no need to reproduce it.
 
 ### Architecture
 
@@ -1170,7 +1179,7 @@ flowchart LR
 
 ### Step 8.3.1: One server, two tools
 
-This agent connects to a single MCP server — a copy of the general `troubleshooting_mcp.py`. Of everything that server exposes, the skill uses two tools:
+This AI assistant connects to a single MCP server — a copy of the general `troubleshooting_mcp.py`. Of everything that server exposes, the skill uses two tools:
 
 | Tool | What it does |
 | --- | --- |
@@ -1178,12 +1187,12 @@ This agent connects to a single MCP server — a copy of the general `troublesho
 | `get_meeting_qualities` | Per-participant audio/video quality analytics for one meeting id |
 | `list_meeting_participants` | Who attended an ended meeting, with each participant's join/leave times and audio device |
 
-!!! Tip "The server is general; the agent is specific"
-    You are not building a meeting-only server. You reuse the same troubleshooting server as Section 2 and let the **persona** and **skill** narrow the model's attention to meetings. That is the cheapest way to make a focused agent out of a broad toolbox.
+!!! Tip "The server is general; the AI assistant is specific"
+    You are not building a meeting-only server. You reuse the same troubleshooting server as Section 2 and let the **persona** and **skill** narrow the model's attention to meetings. That is the cheapest way to make a focused AI assistant out of a broad toolbox.
 
 ### Step 8.3.2: Report, then analyze
 
-The `meeting-quality` skill (`skills/meeting-quality/SKILL.md`) is the whole point of this agent: it pulls a meeting's per-participant quality and reports it, then — when the metrics show trouble — separates one participant's bad network from a meeting-wide fault. Both files that shape this agent are shown below.
+The `meeting-quality` skill (`skills/meeting-quality/SKILL.md`) is the whole point of this AI assistant: it pulls a meeting's per-participant quality and reports it, then — when the metrics show trouble — separates one participant's bad network from a meeting-wide fault. Both files that shape this AI assistant are shown below.
 
 ??? Tip "system_prompt.txt"
     ```text
@@ -1351,9 +1360,9 @@ The skill's steps, in short:
 | Flag poor audio/video (if any) | *(reasoning)* | — |
 | One bad participant vs. meeting-wide | *(reasoning)* | — |
 
-The skill defines what "poor" means (packet loss, latency, jitter, collapsed video) and insists the agent quote the actual numbers as evidence.
+The skill defines what "poor" means (packet loss, latency, jitter, collapsed video) and insists the AI assistant quote the actual numbers as evidence.
 
-### Step 8.3.3: Run the agent
+### Step 8.3.3: Run the AI assistant
 
 1. Change into the folder and run it:
 
@@ -1386,7 +1395,7 @@ The skill defines what "poor" means (packet loss, latency, jitter, collapsed vid
 
          ![Use Cases](assets/use_case_24.png){ width="800" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-    The agent pulls `get_meeting_qualities` and reports the per-participant audio
+    The AI assistant pulls `get_meeting_qualities` and reports the per-participant audio
     and video with the actual numbers. If a participant's media was poor, it
     flags them, decides whether it is one person or the whole meeting, and leads
     with the worst-affected. If everyone was fine, it says so.
@@ -1397,7 +1406,7 @@ The skill defines what "poor" means (packet loss, latency, jitter, collapsed vid
 
          ![Use Cases](assets/use_case_25.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-    Here the agent calls `list_meeting_participants` for the join/leave timeline
+    Here the AI assistant calls `list_meeting_participants` for the join/leave timeline
     and lines it up against the quality it just read — so a dip at a given minute
     can be pinned to who was actually in the meeting then. Everything stays
     read-only: no confirmation card, nothing changed.
