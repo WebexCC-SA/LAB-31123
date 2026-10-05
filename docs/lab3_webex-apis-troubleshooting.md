@@ -148,20 +148,17 @@ Every Webex API call has the same anatomy: a method, a URL, and an `Authorizatio
 | **Bruno** | Exploring an API properly: saved requests, the token in an environment variable, and IDs from one response feeding the next. |
 | **Python** | The form an assistant needs. This is the shape your Lab 4 MCP tools take. |
 
-### Calling APIs using cURL
+### Example: Calling APIs using cURL
 
-Start with the smallest possible call: who does this token belong to?
+To illustrate how these API calls are structured, let's look at the smallest possible call: asking who a token belongs to.
 
-!!! Warning
-    Replace `YOUR_ACCESS_TOKEN` with the token from your `.env` file.
-
-1. Run the following command from the **VS Code terminal**:
+1. Here is how that request looks using cURL from a terminal:
 
     ```bash
     curl -s -H "Authorization: Bearer YOUR_ACCESS_TOKEN" "https://webexapis.com/v1/people/me" | python -m json.tool
     ```
 
-    The response is your own user record:
+    The response would be the user's record:
 
     ??? Tip "Full response"
         ```powershell
@@ -203,11 +200,8 @@ Start with the smallest possible call: who does this token belong to?
             ]
         }
         ```
-
-    !!! Warning
-        If this returns `401`, your token is wrong or expired, and no call will work.
-    
-2. Now something only an administrator can ask — what is the organization entitled to?
+  
+2. Here is another example showing a request that only an administrator can make—asking what the organization is entitled to:
 
     ```bash
     curl -s -H "Authorization: Bearer YOUR_ACCESS_TOKEN" "https://webexapis.com/v1/licenses" | python -m json.tool
@@ -1770,4 +1764,3 @@ These are not competing choices. MCP does not replace the APIs. The HTTP call st
 The current official MCP servers explored before wrap messaging, meetings, and workspaces, and more, but they are user-oriented: they act on *a person's* meetings, messages, and rooms. There is no official server for Webex Calling or Control Hub troubleshooting, which is exactly the set of APIs you just called by hand, and that is the organization-level capability we are after.
 
 In the next section will wrap them yourself: the same endpoints, the same token, now exposed as tools. The assistant will then concatenate them the way you concatenated them in Bruno, automatically.
-
