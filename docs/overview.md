@@ -9,7 +9,6 @@ In this hands-on session, participants will learn how to build an AI assistant u
 This session covers:
 
 - Understanding and utilizing MCP servers within your IDE
-- Calling Webex APIs
 - Developing a custom MCP server to unlock new functionalities
 - Integrating an AI Assistant with a Webex Bot
 
