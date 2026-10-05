@@ -1,6 +1,21 @@
 # Lab 4 - Build a Custom MCP Server
 
-In this chapter you will build an MCP server that lets an AI assistant manage Webex Contact Center address books.
+In this chapter, you will build a custom MCP server that lets an AI assistant manage Webex Contact Center address books.
+
+!!! Tip "Did you know? Postman can auto-generate MCP servers"
+    API tools are evolving quickly alongside AI. Postman recently introduced a feature that automatically generates an MCP server directly from an API collection ([Postman MCP Generator](https://www.postman.com/explore/mcp-generator){:target="_blank"}).
+    
+    This means you can take a collection of Webex API calls and instantly expose them as tools to an AI assistant with zero code. You can even use the [Postman Webex Public Workspace](https://www.postman.com/webexdev/webex-public-workspace/overview){:target="_blank"} to try this yourself:
+
+    ![MCP Generator](assets/mcp_generator.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+
+**From API Exploration to Custom Control**
+
+In the previous lab, we used Bruno to explore Webex APIs. Using API clients like Bruno or Postman is a best practice to easily test endpoints and understand data flows before building an integration. As AI tooling rapidly evolves, platforms are now offering powerful solutions that can handle the coding for you, such as auto-generating an MCP server straight from those API collections.
+
+While auto-generation is fantastic for rapid deployment, building a custom MCP server from scratch provides a much deeper learning experience and gives you absolute control over your application. 
+
+By coding it manually with Python in this chapter, you will learn exactly how the engine works under the hood. You will see how to define tools, structure schemas, securely handle authentication, and implement human-in-the-loop approvals (elicitation)—vital orchestration concepts that automated tools abstract away.
 
 ## Step 4.1: Building an MCP Server
 
