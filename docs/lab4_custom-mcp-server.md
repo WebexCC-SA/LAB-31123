@@ -93,7 +93,7 @@ We will use the official `mcp` Python SDK to create our server. The SDK makes it
     | **Command**       	| Python |
     | **Arguments**       	| 01_hello_mcp.py |
 
-    ![MCP Inspector Start](assets/inspector_2.png){ width="350" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![MCP Inspector Start](assets/inspector_2.png){ width="200" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 6. In the MCP Inspector web interface, click on the **Tools** tab, then **List Tools** and you will see the `format_phone` tool listed.
 
@@ -219,7 +219,7 @@ We will be using the [List Address Book(s) API](https://developer.webex.com/webe
 
 You can test directly in the UI:
 
-![Control Hub](assets/addressbooks_3.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+![Control Hub](assets/addressbooks_3.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 Response should look like:
 
@@ -600,10 +600,6 @@ Now, we are going to include the tools that perform writing actions. We are goin
 2. Go to the MCP Inspector. Click on **Disconnect**.
 3. Change **Arguments** to `04_write_books.py` and click **Connect**.
 4. Click on **Tools** and then **List Tools**. You will see both `create_address_book` and `add_entry`. You will be testing both now.
-
-   !!! Warning
-       For these API calls to work, your user needs Contact Center admin rights with write access (the PAT inherits them). If you get a `403`, copy a fresh Developer Token into `ACCESS_TOKEN`.
-
 5. Create an Address Book with name "WebexOne - Username":
 
     ![Create Address Book](assets/tools_6.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
@@ -708,8 +704,8 @@ In this section, you will add and test your custom MCP servers directly in VS Co
 
         - Ask: *"Clean the number (415) 555-0101."*
     
-            ![Chat Format](assets/test1.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-            ![Chat Format](assets/test2.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![Chat Format](assets/test1.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![Chat Format](assets/test2.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     2. **Testing 02_hello_resource_prompt.py:**
     
@@ -726,47 +722,47 @@ In this section, you will add and test your custom MCP servers directly in VS Co
                 - At the bottom of the chat window, click  **+**, then **Add Context** -> **MCP Resources** -> `lab://greeting-rules`
     
                 ??? Note "Images"
-                    ![Ask Rules](assets/test3.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-                    ![Ask Rules](assets/test4.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-                    ![Ask Rules](assets/test5.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                    ![Ask Rules](assets/test3.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                    ![Ask Rules](assets/test4.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                    ![Ask Rules](assets/test5.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     
             - Ask: *"What are the greeting rules?"*
             
-                ![Ask Rules](assets/test6.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                ![Ask Rules](assets/test6.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
         2. To test a prompt, you will load it on demand, start typing "/mcp" in the chat, and you will see the prompt:
 
-            ![Prompt](assets/prompt_1.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![Prompt](assets/prompt_1.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
             - Select "Insert as text":
 
-                ![Prompt](assets/prompt_2.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                ![Prompt](assets/prompt_2.png){ width="550" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
         
             - Complete with the following test: *"Hello! I'm Sam and I'll obviously get back to you ASAP with a full resolution of your issue as soon as humanly possible."*
 
-                ![Prompt](assets/prompt_3.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-                ![Prompt](assets/prompt_4.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-                ![Prompt](assets/prompt_5.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                ![Prompt](assets/prompt_3.png){ width="450" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                ![Prompt](assets/prompt_4.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+                ![Prompt](assets/prompt_5.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     4. **Testing 03_read_books.py:**
     
         - Ask: *"List my address books, then show me the entries for WebexOne - Diejimen"*
     
-            ![List Books](assets/test7.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-            ![List Books](assets/test8.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-            ![List Books](assets/test9.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![List Books](assets/test7.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![List Books](assets/test8.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![List Books](assets/test9.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     5. **Testing 04_write_books.py:**
     
         - Ask: *"Create an address book called WebexOne - Diejimen2"*  
         
-            ![Create Book](assets/test10.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-            ![Create Book](assets/test11.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![Create Book](assets/test10.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![Create Book](assets/test11.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
         - Ask: *"Add an entry to the book, for number +1415555-0101"*
         
-            ![Created Book](assets/test12.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-            ![Created Book](assets/test13.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![Created Book](assets/test12.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+            ![Created Book](assets/test13.png){ width="400" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
             As no more information was provided, the agent added the name "Test Contact"
 
@@ -1457,23 +1453,23 @@ In Chat, ask a question that needs **multiple** tools across different servers, 
 
 - Ask: "*List the phone numbers in this organization. Then tell me how many users we have, and whether Webex has any unresolved incidents.*"
 
-    ![Chat Tools](assets/exercise_1.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Chat Tools](assets/exercise_1.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 - Ask: "*List our locations. Then pick the first location and get its call settings. Finally, show me all the devices we have registered.*"
 
-    ![Chat Tools](assets/exercise_4.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Chat Tools](assets/exercise_4.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 - Ask: "*What licenses do we have available? Also, please list all the workspaces and the available admin roles.*"
 
-    ![Chat Tools](assets/exercise_5.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Chat Tools](assets/exercise_5.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 - Ask: "*Check the last three admin audit events and the last three security audit events for any recent sign-ins, and list any available reports we have generated.*"
 
-    ![Chat Tools](assets/exercise_66.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Chat Tools](assets/exercise_66.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 - Ask: "*Find the most recent meeting that ended and show me its quality data.*"
 
-    ![Chat Tools](assets/exercise_7.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Chat Tools](assets/exercise_7.png){ width="500" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 #### Test with MCP Inspector (Optional)
 
