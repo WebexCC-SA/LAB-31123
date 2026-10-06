@@ -90,8 +90,7 @@ Visual Studio Code will be used for Python-based bot development, the agentic ap
 
 2. Create a virtual environment using Pythong 3.12 and install dependencies:
 
-    - winget install -e --id Python.Python.3.12
-    - py -3.12 -m venv webexone
+    - python -m venv webexone
     - .\webexone\Scripts\Activate.ps1
     - pip install -r requirements.txt
 
