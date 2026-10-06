@@ -87,7 +87,7 @@ We will use the official `mcp` Python SDK to create our server. The SDK makes it
 
 5. Turn on the toggle to `Connect`:
 
-    ![MCP Inspector Start](assets/inspector_32.png){ width="200" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![MCP Inspector Start](assets/inspector_32.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 6. In the MCP Inspector web interface, click on the **Tools** tab and you will see the `format_phone` tool listed.
 
@@ -102,7 +102,7 @@ We will use the official `mcp` Python SDK to create our server. The SDK makes it
     !!! Note
         You may need to scroll down
 
-    ![MCP Inspector Tool Run](assets/inspector_34.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![MCP Inspector Tool Run](assets/inspector_34.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     This confirms your server works perfectly in isolation! You can stop the MCP in your terminal with `Ctrl+C`, we will still use the MCP inspector in the next exercise.
 
@@ -1481,12 +1481,9 @@ You can also test each of these servers in isolation using the MCP Inspector, ju
 
 1. In your terminal, run the inspector for the Calling MCP:
 
-    npx @modelcontextprotocol/inspector python 06_calling_mcp.py
+    - npx @modelcontextprotocol/inspector python 06_calling_mcp.py
 
 2. Connect in the browser, list tools, and test them.
-
-    ![Chat Tools](assets/exercise_8.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
-
 3. Repeat for `07_control_hub_mcp.py` and `08_troubleshooting_mcp.py`.
 
 ## Extra: Accelerating MCP Development
