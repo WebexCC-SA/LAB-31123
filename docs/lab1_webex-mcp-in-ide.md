@@ -71,7 +71,7 @@ Now that you have allowed your users to use MCP, every user will be able to gene
 As a user, the first thing you will need to do is get the token to access the MCP servers.
 
 1. Log into [developer.webex.com](https://developer.webex.com/){:target="_blank"} with the credentials that were provided.
-2. In the top right corner of the page, click your avatar and then select [Manage Webex Agentic MCP App token](https://developer.webex.com/agentic-token){:target="_blank"}.
+2. In the top right corner of the page, click your avatar and then select [Webex Agentic MCP App token](https://developer.webex.com/agentic-token){:target="_blank"}.
 3. Under "Generate token", click on "Generate now":
    
     ![Create_token](./assets/token_1.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
