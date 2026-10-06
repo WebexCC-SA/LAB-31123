@@ -174,21 +174,44 @@ Earlier we opened the Chat, but now we will set up the agent.
 
 4. Enter the API Key that was provided to you. You should see it now:
 
+    ??? "API Keys"
+        |||
+        | Pod 1 | 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 |
+        | Pod 3 | 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 |
+        | Pod 4 | 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 |
+        | Pod 5 | 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 |
+        | Pod 7 | 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 |
+        | Pod 8 | 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 |
+        | Pod 9 | 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 |
+        | Pod 10 | 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 |
+        | Pod 11 | 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 |
+        | Pod 12 | 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 |
+        | Pod 13 | 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 |
+        | Pod 14 | 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 |
+        | Pod 15 | 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 |
+        | Pod 16 | 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 |
+        | Pod 17 | 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 |
+        | Pod 18 | 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 |
+        | Pod 19 | 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 |
+        | Pod 21 | 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 |
+        | Pod 22 | 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 |
+        | Pod 23 | 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 |
+        | Pod 24 | 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 |
+        | Pod 25 | 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 |
+        | Pod 27 | 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 |
+        | Pod 28 | |
+        | Pod 29 | |
+        | Pod 30 | |
+        | Pod 31 | |
+        | Pod 32 | |
+        | Pod 33 | |
+        | Pod 34 | |
+
     ![Create_token](./assets/vscode_10.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
     !!! Note
         GPT-5 Nano is the only model available.
 
-<!--
-5. Check the **utility model** setting. Open **Settings** (`Ctrl+,`), search for `chat.byokUtilityModelDefault`, and confirm it is set to **mainAgent**.
-
-    - Open **Settings** (`Ctrl+,`) and search for `chat.byokUtilityModelDefault`.
-    - Change it from **GitHub Copilot** to **mainAgent**.
-
-        ![VS Code](./assets/vscode_19.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
-        
-    - Reload the window: `Ctrl+Shift+P` → `Developer: Reload Window`.
--->
 6. To test it, make sure you select the model in the chat, and say "Hello":
 
     ![Create_token](./assets/vscode_11.png){ width="350" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
