@@ -172,7 +172,7 @@ Earlier we opened the Chat, but now we will set up the agent.
 
     ![Create_token](./assets/vscode_9.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-4. Enter the API Key that was provided to you. You should see it now:
+4. Enter the API Key that was provided to you directly in Webex. You should see the available models now:
 
     ![Create_token](./assets/vscode_10.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
