@@ -173,7 +173,7 @@ Next, we are going to build a single script that demonstrates the entire MCP arc
 
 2. Close the previous MCP Inspector from the terminal with `Ctrl + C` and run the following command:
 
-   - npx @modelcontextprotocol/inspector python 02_hello_resource_prompt.py
+    - npx @modelcontextprotocol/inspector python 02_hello_resource_prompt.py
 
 3. Click on **Resources** and then **List Resources**. You will see `lab://greeting-rules`. You can click it to read the greeting rules.
    
@@ -438,12 +438,12 @@ We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC
 
 2. Close the previous MCP Inspector from the terminal with `Ctrl + C` and run the following command:
 
-   - npx @modelcontextprotocol/inspector python 03_read_books.py
+    - npx @modelcontextprotocol/inspector python 03_read_books.py
 
 3. Click on **Tools** and then **List Tools**. You will see both `list_address_books` and `list_entries`. Now, we will test them.
 4. Run the `list_address_books` tool:
 
-    ![List Address Books](assets/tools_4.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![List Address Books](assets/inspector_38.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     
     ??? Note "Result"
         ```json
@@ -475,7 +475,7 @@ We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC
         ```
 6. Run the `list_entries` tool:
 
-    ![List Entries](assets/tools_5.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![List Entries](assets/inspector_39.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     
     ??? Note "Result"
         ```json
@@ -599,12 +599,14 @@ Now, we are going to include the tools that perform writing actions. We are goin
                 log.info("Stopped.")
         ```
 
-2. Go to the MCP Inspector. Click on **Disconnect**.
-3. Change **Arguments** to `04_write_books.py` and click **Connect**.
-4. Click on **Tools** and then **List Tools**. You will see both `create_address_book` and `add_entry`. You will be testing both now.
-5. Create an Address Book with name "WebexOne - Username":
+2. Close the previous MCP Inspector from the terminal with `Ctrl + C` and run the following command:
 
-    ![Create Address Book](assets/tools_6.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    - npx @modelcontextprotocol/inspector python 04_write_books.py
+
+3. Click on **Tools** and then **List Tools**. You will see both `create_address_book` and `add_entry`. You will be testing both now.
+4. Create an Address Book with name "WebexOne - Username":
+
+    ![Create Address Book](assets/inspector_40.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     !!! Note "Result"
         ```json
         {
@@ -616,7 +618,7 @@ Now, we are going to include the tools that perform writing actions. We are goin
 
 6. Using the `address_book_id` provided, create an Entry, with your name and number:
 
-    ![Add Entry](assets/tools_7.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![Add Entry](assets/inspector_41.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     !!! Note "Result"
         ```json
         {
@@ -1478,9 +1480,9 @@ In Chat, ask a question that needs **multiple** tools across different servers, 
 You can also test each of these servers in isolation using the MCP Inspector, just as you did before:
 
 1. In your terminal, run the inspector for the Calling MCP:
-   ```bash
-   npx @modelcontextprotocol/inspector python 06_calling_mcp.py
-   ```
+
+    npx @modelcontextprotocol/inspector python 06_calling_mcp.py
+
 2. Connect in the browser, list tools, and test them.
 
     ![Chat Tools](assets/exercise_8.png){ width="650" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
