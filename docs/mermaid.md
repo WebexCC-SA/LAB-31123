@@ -1,16 +1,24 @@
 ```mermaid
 block-beta
-    columns 5
+    columns 4
 
-    space L["LLM"] space space space
+    space
+    block:llmSlot
+        columns 1
+        L["LLM"]
+    end
+    space space
 
-    H["Human"]
+    block:humanSlot
+        columns 1
+        H["Human"]
+    end
     block:host:2
         columns 3
         A["AI Agent"] space C["MCP Client"]
         space HL["MCP Host"] space
     end
-    block:server:2
+    block:server
         columns 1
         T["Tools"]
         R["Resources"]
@@ -23,6 +31,8 @@ block-beta
     A <--> C
     C <--> server
 
+    style llmSlot fill:none,stroke:none
+    style humanSlot fill:none,stroke:none
     style host fill:#ffffff,stroke:#333333,stroke-width:2px
     style server fill:#ffffff,stroke:#333333,stroke-width:2px
     style HL fill:none,stroke:none,color:#1496d4
