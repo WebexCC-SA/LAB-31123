@@ -1,14 +1,15 @@
 ```mermaid
-flowchart TB
-    L[LLM] <--> A[AI Agent]
+block-beta
+    columns 4
 
-    subgraph Main_Flow[" "]
-        direction LR
-        H[Human] <--> A
-        A <--> C[MCP Client]
-        C <--> R[Resources]
-    end
+    space L["LLM"] space T["Tools"]
+    H["Human"] A["AI Agent"] C["MCP Client"] R["Resources"]
+    space space space P["Prompts"]
 
-    C <--> T[Tools]
-    C <--> P[Prompts]
+    H <--> A
+    L <--> A
+    A <--> C
+    C <--> T
+    C <--> R
+    C <--> P
 ```
