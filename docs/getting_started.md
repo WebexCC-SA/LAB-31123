@@ -88,19 +88,16 @@ Visual Studio Code will be used for Python-based bot development, the agentic ap
 
         ![VS Code](./assets/vscode_43.png){ width="700" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;"}
 
-2. Create a virtual environment and install dependencies:
+2. Create a virtual environment using Pythong 3.12 and install dependencies:
 
-    ```bash
-    python -m venv webexone
-    .\webexone\Scripts\Activate.ps1
-    pip install -r requirements.txt
-    ```
+    - winget install -e --id Python.Python.3.12
+    - py -3.12 -m venv webexone
+    - .\webexone\Scripts\Activate.ps1
+    - pip install -r requirements.txt
 
-3. Copy the environment template and fill in your values:
+4. Copy the environment template and fill in your values:
 
-    ```bash
-    cp .env.example .env
-    ```
+    - cp .env.example .env
 
 ### Open the Chat
 
