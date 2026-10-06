@@ -183,12 +183,17 @@ Next, we are going to build a single script that demonstrates the entire MCP arc
 2. Go to the MCP Inspector. Click on **Disconnect**.
 3. Change **Arguments** to `02_hello_resource_prompt.py` and click **Connect**.
 4. Click on **Resources** and then **List Resources**. You will see `lab://greeting-rules`. You can click it to read the greeting rules.
+   
     ??? Note "Resources"
         ![MCP Inspector Tool Run](assets/resources.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        
 5. Click on **Prompts** and then **List Prompts**. You will see `review_greeting`.
+
     ??? Note "Prompts"
         ![MCP Inspector Tool Run](assets/prompts.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        
 6. Click on **Tools** and then **List Tools**. You will see `count_words`. You can test it by providing a `"text"` argument.
+
     ??? Note "Tools"
         ![MCP Inspector Tool Run](assets/tools.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
@@ -444,6 +449,7 @@ We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC
 5. Run the `list_address_books` tool:
 
     ![List Address Books](assets/tools_4.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    
     ??? Note "Result"
         ```json
         {
@@ -475,6 +481,7 @@ We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC
 6. Run the `list_entries` tool:
 
     ![List Entries](assets/tools_5.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    
     ??? Note "Result"
         ```json
         {
