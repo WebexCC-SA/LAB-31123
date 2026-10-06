@@ -77,41 +77,32 @@ We will use the official `mcp` Python SDK to create our server. The SDK makes it
 
         ```terminal
         Need to install the following packages:
-        @modelcontextprotocol/inspector@1.0.2
+        @modelcontextprotocol/inspector@2.9
         Ok to proceed? (y) 
         ```
 
 4. Once it starts, it should open a new tab for you, if not, it will provide a local URL (usually `http://localhost:6274`). Open that URL in your browser.
 
-    ![MCP Inspector Start](assets/inspector_start.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![MCP Inspector Start](assets/inspector_31.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-5. Select the following and click `Connect`:
+5. Turn on the toggle to `Connect`:
 
-    |        	|           |
-    |-----------------------	|--------------|
-    | **Transport Type**       	| STDIO |
-    | **Command**       	| Python |
-    | **Arguments**       	| 01_hello_mcp.py |
+    ![MCP Inspector Start](assets/inspector_32.png){ width="200" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-    ![MCP Inspector Start](assets/inspector_2.png){ width="200" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+6. In the MCP Inspector web interface, click on the **Tools** tab and you will see the `format_phone` tool listed.
 
-6. In the MCP Inspector web interface, click on the **Tools** tab, then **List Tools** and you will see the `format_phone` tool listed.
+    ![MCP Inspector Start](assets/inspector_33.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
-    ![MCP Inspector Start](assets/inspector_3.png){ style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+7. Click on **format_phone**. In the arguments provide a messy phone number:
 
-7. Click on **format_phone**. In the arguments JSON editor, provide a messy phone number:
-    ```json
-    {
-      "number": "(415) 555-0101"
-    }
-    ```
+    - "number": "(415) 555-0101"
 
 8. Click **Run Tool**. You should see the result `+14155550101` returned immediately.
 
     !!! Note
         You may need to scroll down
 
-    ![MCP Inspector Tool Run](assets/inspector_run.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+    ![MCP Inspector Tool Run](assets/inspector_34.png){ width="600" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
     This confirms your server works perfectly in isolation! You can stop the MCP in your terminal with `Ctrl+C`, we will still use the MCP inspector in the next exercise.
 
@@ -180,22 +171,24 @@ Next, we are going to build a single script that demonstrates the entire MCP arc
                 log.info("Stopped.")
         ```
 
-2. Go to the MCP Inspector. Click on **Disconnect**.
-3. Change **Arguments** to `02_hello_resource_prompt.py` and click **Connect**.
-4. Click on **Resources** and then **List Resources**. You will see `lab://greeting-rules`. You can click it to read the greeting rules.
+2. Close the previous MCP Inspector from the terminal with `Ctrl + C` and run the following command:
+
+   - npx @modelcontextprotocol/inspector python 02_hello_resource_prompt.py
+
+3. Click on **Resources** and then **List Resources**. You will see `lab://greeting-rules`. You can click it to read the greeting rules.
    
     ??? Note "Resources"
-        ![MCP Inspector Tool Run](assets/resources.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![MCP Inspector Tool Run](assets/inspector_35.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
         
 5. Click on **Prompts** and then **List Prompts**. You will see `review_greeting`.
 
     ??? Note "Prompts"
-        ![MCP Inspector Tool Run](assets/prompts.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![MCP Inspector Tool Run](assets/inspector_36.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
         
 6. Click on **Tools** and then **List Tools**. You will see `count_words`. You can test it by providing a `"text"` argument.
 
     ??? Note "Tools"
-        ![MCP Inspector Tool Run](assets/tools.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
+        ![MCP Inspector Tool Run](assets/inspector_37.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
 
 ### Step 4.1.3: Reading from Webex Contact Center API
 
@@ -443,10 +436,12 @@ We will need the following three values `ACCESS_TOKEN`, `WEBEX_ORG_ID` and `WXCC
                 log.info("Stopped.")
         ```
 
-2. Go to the MCP Inspector. Click on **Disconnect**.
-3. Change **Arguments** to `03_read_books.py` and click **Connect**.
-4. Click on **Tools** and then **List Tools**. You will see both `list_address_books` and `list_entries`. Now, we will test them.
-5. Run the `list_address_books` tool:
+2. Close the previous MCP Inspector from the terminal with `Ctrl + C` and run the following command:
+
+   - npx @modelcontextprotocol/inspector python 03_read_books.py
+
+3. Click on **Tools** and then **List Tools**. You will see both `list_address_books` and `list_entries`. Now, we will test them.
+4. Run the `list_address_books` tool:
 
     ![List Address Books](assets/tools_4.png){ width="950" style="display: block; margin: 0 auto; border: 1px solid lightgray; border-radius: 8px;" }
     
