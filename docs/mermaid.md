@@ -1,11 +1,14 @@
 ```mermaid
-flowchart LR
-    H[Human] <--> A[AI Agent]
-    A <--> C[MCP Client]
+flowchart TB
+    L[LLM] <--> A[AI Agent]
 
-    L[LLM] <--> A
+    subgraph Main_Flow[" "]
+        direction LR
+        H[Human] <--> A
+        A <--> C[MCP Client]
+        C <--> R[Resources]
+    end
 
     C <--> T[Tools]
-    C <--> R[Resources]
     C <--> P[Prompts]
 ```
